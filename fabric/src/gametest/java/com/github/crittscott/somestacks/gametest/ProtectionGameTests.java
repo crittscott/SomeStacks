@@ -8,13 +8,12 @@ import com.github.crittscott.somestacks.block.StorageStackBlock;
 import com.github.crittscott.somestacks.server.AutomationActor;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.StackMode;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
-import net.minecraft.world.phys.shapes.Shapes;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.StackMode;
 import net.fabricmc.fabric.api.entity.FakePlayer;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -25,6 +24,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.player.Player;
@@ -35,10 +35,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.border.WorldBorder;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -436,7 +439,7 @@ public final class ProtectionGameTests implements FabricGameTest {
     static {
         UseBlockCallback.EVENT.register((player, level, hand, hit) ->
                 player == deniedPlayer && hit.getBlockPos().equals(deniedPosition)
-                        ? net.minecraft.world.InteractionResult.FAIL : net.minecraft.world.InteractionResult.PASS);
+                        ? InteractionResult.FAIL : InteractionResult.PASS);
         PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
             if (level != removalLevel || !pos.equals(automatedRemovalPosition)) return true;
             removalNotices.add(new RemovalNotice("before", player, state, blockEntity));
@@ -563,7 +566,7 @@ public final class ProtectionGameTests implements FabricGameTest {
                     ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
                     var hit = InteractionChecks.aim(player, clicked, 0.125, 0.125);
                     UseBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND,
-                            new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
+                            new BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
                     checkEquals(0, GameTestScaffold.count(singles.getItems(), Items.STONE), "Denied adjacent deposit");
                 }
             }
@@ -575,7 +578,7 @@ public final class ProtectionGameTests implements FabricGameTest {
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             var hit = InteractionChecks.aim(player, clicked, 0.125, 0.125);
             UseBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND,
-                    new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
+                    new BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
             checkEquals(1, GameTestScaffold.count(singles.getItems(), Items.STONE), "Allowed adjacent deposit");
         }
         helper.succeed();
@@ -626,7 +629,7 @@ public final class ProtectionGameTests implements FabricGameTest {
             // Vanilla's server block use invokes Fabric's callback and then calls the block.
             player.gameMode.useItemOn(player, player.serverLevel(), player.getMainHandItem(),
                     InteractionHand.MAIN_HAND,
-                    new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), face, clicked, false));
+                    new BlockHitResult(hit.getLocation(), face, clicked, false));
             result = player.getMainHandItem().copy();
         }
         player.setItemInHand(InteractionHand.MAIN_HAND, result);

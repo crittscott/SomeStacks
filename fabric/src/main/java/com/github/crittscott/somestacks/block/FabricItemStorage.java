@@ -9,14 +9,10 @@ public final class FabricItemStorage {
     }
 
     public static void init() {
-        ItemStorage.SIDED.registerForBlockEntity(
+        ItemStorage.SIDED.registerForBlockEntities(
                 (blockEntity, direction) -> ((FabricStorageOwner) blockEntity).someStacksStorage(),
-                FabricRegistry.STORAGE_STACK_BE);
-        ItemStorage.SIDED.registerForBlockEntity(
-                (blockEntity, direction) -> ((FabricStorageOwner) blockEntity).someStacksStorage(),
-                FabricRegistry.SINGLES_STACK_BE);
-        ItemStorage.SIDED.registerForBlockEntity(
-                (blockEntity, direction) -> ((FabricStorageOwner) blockEntity).someStacksStorage(),
+                FabricRegistry.STORAGE_STACK_BE,
+                FabricRegistry.SINGLES_STACK_BE,
                 FabricRegistry.BAR_STACK_BE);
     }
 }

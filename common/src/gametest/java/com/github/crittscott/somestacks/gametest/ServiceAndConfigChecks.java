@@ -11,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -38,6 +39,33 @@ public final class ServiceAndConfigChecks {
         helper.succeed();
     }
 
+    /**
+     * Synthetic raw policy inputs obey the same numeric ranges before either loader publishes them.
+     * To check valid boundaries in-game, set pile height to 1 or 64, gallery permission to 0 or 4,
+     * and gallery speed to 1 in the world config, then reload and use the affected features. Invalid
+     * file values also pass through loader-specific parsing/correction; this fixture isolates the
+     * shared policy constructor and does not change the running world's policy.
+     */
+    public static void numericPolicyRangesAreShared(GameTestHelper helper) {
+        ServerConfig.Settings defaults = ServerConfig.Settings.defaults();
+        // Input height/speed/permission, followed by their expected normalized values.
+        int[][] cases = {
+                {Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, 1, 1, 0},
+                {Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, 64, Integer.MAX_VALUE, 4},
+                {5, 17, 2, 5, 17, 2}
+        };
+        for (int[] values : cases) {
+            ServerConfig.Settings policy = new ServerConfig.Settings(values[0],
+                    defaults.enableStorageStackBlock(), defaults.enableSinglesStackBlock(),
+                    defaults.enableBarStackBlock(), defaults.disableMods(), defaults.disableItems(),
+                    values[1], defaults.galleryEnabled(), values[2], defaults.genMods(), defaults.genItems());
+            checkEquals(values[3], policy.maxPileHeight(), "Pile height range");
+            checkEquals(values[4], policy.renderGalleryPlacementsPerTick(), "Gallery speed range");
+            checkEquals(values[5], policy.galleryPermissionLevel(), "Gallery permission range");
+        }
+        helper.succeed();
+    }
+
     /** To reproduce in-game: add then remove a namespace through /ss deny mod; policy and admission change immediately while other settings remain unchanged. */
     public static void listEditsPublishImmutablePolicy(GameTestHelper helper) {
         ServerConfig.Settings before = ServerConfig.settings();
@@ -50,7 +78,7 @@ public final class ServiceAndConfigChecks {
             check(after != before, "Policy list edit reused mutable settings");
             check(!before.disableMods().contains(marker), "Previous policy snapshot changed");
             check(after.disableMods().contains(marker), "New policy omitted edit");
-            check(ServerConfig.isModDisabled(marker.toUpperCase(java.util.Locale.ROOT)),
+            check(ServerConfig.isModDisabled(marker.toUpperCase(Locale.ROOT)),
                     "Admission cache did not follow edit");
             try {
                 ServerConfig.ListSetting.DISABLE_MODS.get().add("unexpected");

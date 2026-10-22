@@ -39,7 +39,7 @@
   "somestacks.command.gallery.items": "items",
   "somestacks.command.gallery.ingots": "ingots",
   "somestacks.command.unknown_item": "Unknown item: %s",
-  "somestacks.command.unknown_render_mode": "Unknown render mode '%s', expected 2d, 3d, block, or gui",
+  "somestacks.command.unknown_render_mode": "Unknown render mode '%s', expected %s",
   "somestacks.command.override_set": "Set render override for %s: mode=%s, scale=%s, offset=[%s,%s,%s]",
   "somestacks.command.override_reset": "Reset render override for %s; it now uses built-in or measured settings",
   "somestacks.command.mod_disabled": "%s is disabled in server config",

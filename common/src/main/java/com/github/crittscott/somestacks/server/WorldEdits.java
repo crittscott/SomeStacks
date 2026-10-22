@@ -1,13 +1,14 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.util.ViewRays;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -26,15 +27,9 @@ public final class WorldEdits {
     }
 
     private static final ThreadLocal<Boolean> consultingAdjacent = ThreadLocal.withInitial(() -> false);
-    private static EditAuthority authority;
-
-    /** Installed once by the loader's entry point before any world logic can run. */
-    public static void setAuthority(EditAuthority impl) {
-        authority = impl;
-    }
 
     private static EditAuthority authority() {
-        return authority;
+        return PlatformServices.editAuthority();
     }
 
     /** Vanilla's own gate on a block interaction: world border and spawn protection. */

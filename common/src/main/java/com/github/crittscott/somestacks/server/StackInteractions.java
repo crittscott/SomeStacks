@@ -10,6 +10,7 @@ import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StackMode;
@@ -41,7 +42,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Creative deposits retain held items, and edits retain the player for protection and game events.
  */
 public final class StackInteractions {
-    private static final int DEGREES_PER_ROTATION = 90;
 
     private StackInteractions() {}
 
@@ -426,12 +426,12 @@ public final class StackInteractions {
         int rotation;
         if (type == BlockType.SINGLES_STACK
                 && player.level().getBlockEntity(pos) instanceof SinglesStackBE singles) {
-            rotation = (singles.getRotation() + 1) % 4;
+            rotation = (singles.getRotation() + 1) % CubeGrid.ROTATIONS;
             singles.setRotation(rotation);
             StackSounds.playRotation(player, pos, CommonRegistry.SINGLES_ROTATE_SOUND.get());
         } else if (type == BlockType.STORAGE_STACK
                 && player.level().getBlockEntity(pos) instanceof StorageStackBE storage) {
-            rotation = (storage.getRotation() + 1) % 4;
+            rotation = (storage.getRotation() + 1) % CubeGrid.ROTATIONS;
             storage.setRotation(rotation);
             StackSounds.playRotation(player, pos, CommonRegistry.STORAGE_ROTATE_SOUND.get());
         } else {
@@ -440,7 +440,7 @@ public final class StackInteractions {
 
         emitBlockChange(player, pos, player.level().getBlockState(pos));
         player.displayClientMessage(Component.translatable(
-                "somestacks.message.rotation", rotation * DEGREES_PER_ROTATION), true);
+                "somestacks.message.rotation", rotation * CubeGrid.DEGREES_PER_ROTATION), true);
     }
 
     private static void rotateItem(ServerPlayer player, BlockPos pos, ViewRay ray) {
@@ -451,13 +451,13 @@ public final class StackInteractions {
         if (index < 0 || singles.getItems().getStackInSlot(index).isEmpty()) {
             return;
         }
-        int rotation = (singles.getCubeRotation(index) + 1) % 4;
+        int rotation = (singles.getCubeRotation(index) + 1) % CubeGrid.ROTATIONS;
         singles.setCubeRotation(index, rotation);
         emitBlockChange(player, pos, player.level().getBlockState(pos));
 
         StackSounds.playRotation(player, pos, CommonRegistry.SINGLES_ROTATE_ITEM_SOUND.get());
         player.displayClientMessage(Component.translatable(
-                "somestacks.message.item_rotation", rotation * DEGREES_PER_ROTATION), true);
+                "somestacks.message.item_rotation", rotation * CubeGrid.DEGREES_PER_ROTATION), true);
     }
 
     private static void togglePermanent(ServerPlayer player, BlockPos pos) {

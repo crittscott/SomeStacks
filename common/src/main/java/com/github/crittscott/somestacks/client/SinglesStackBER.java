@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -50,7 +51,7 @@ public class SinglesStackBER implements BlockEntityRenderer<SinglesStackBE> {
             int cubeRotation = be.getCubeRotation(storageIndex);
             float centre = CubeRenderHelper.CELL_LOCAL_CENTRE;
             pose.translate(centre, centre, centre);
-            pose.mulPose(Axis.YP.rotationDegrees(cubeRotation * 90));
+            pose.mulPose(Axis.YP.rotationDegrees(cubeRotation * CubeGrid.DEGREES_PER_ROTATION));
             pose.translate(-centre, -centre, -centre);
 
             CubeRenderHelper.renderItemInCube(stack, pose, buffers, light, blockRenderer, be.getLevel());

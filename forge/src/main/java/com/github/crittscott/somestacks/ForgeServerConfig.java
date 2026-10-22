@@ -1,6 +1,10 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.ServerConfig.Settings;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -30,54 +34,56 @@ public final class ForgeServerConfig {
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-        builder.comment("Stack piles: vertical runs of one stack type that share one inventory.").push("piles");
+        builder.comment("Stack piles: vertical runs of one stack type that share one inventory.").push(ServerConfig.Keys.PILES);
         MAX_HEIGHT = builder
                 .comment("Tallest a run of one stack type may grow, in blocks. Player deposits and automation stop growing a run at this height.")
-                .defineInRange("max_pile_height", DEFAULTS.maxPileHeight(), 1, ServerConfig.MAX_PILE_HEIGHT_LIMIT);
+                .defineInRange(ServerConfig.Keys.MAX_PILE_HEIGHT, DEFAULTS.maxPileHeight(), ServerConfig.MIN_PILE_HEIGHT, ServerConfig.MAX_PILE_HEIGHT_LIMIT);
         builder.pop();
 
         builder.comment("Which stack types players and automation may create.",
-                "Turning a type off blocks new placement and growth only; existing stacks keep working and their contents stay extractable.").push("stacks");
+                "Turning a type off blocks new placement and growth only; existing stacks keep working and their contents stay extractable.").push(ServerConfig.Keys.STACKS);
         STORAGE_ENABLED = builder
-                .comment("Storage Stack: 27 item stacks per block that merge, sort, and pack down.")
-                .define("enable_storage_stack_block", DEFAULTS.enableStorageStackBlock());
+                .comment("Storage Stack: %d item stacks per block that merge, sort, and pack down.".formatted(StorageCubeIdx.CELLS))
+                .define(ServerConfig.Keys.ENABLE_STORAGE_STACK_BLOCK, DEFAULTS.enableStorageStackBlock());
         SINGLES_ENABLED = builder
-                .comment("Singles Stack: a 4 x 4 x 4 display grid holding one item per cell.")
-                .define("enable_singles_stack_block", DEFAULTS.enableSinglesStackBlock());
+                .comment("Singles Stack: a %d x %d x %d display grid holding one item per cell."
+                        .formatted(SinglesCubeIdx.GRID_EDGE, SinglesCubeIdx.GRID_EDGE, SinglesCubeIdx.GRID_EDGE))
+                .define(ServerConfig.Keys.ENABLE_SINGLES_STACK_BLOCK, DEFAULTS.enableSinglesStackBlock());
         BAR_ENABLED = builder
-                .comment("Bar Stack: 64 ingots per block in eight alternating layers; ingots are the somestacks:ingots item tag.")
-                .define("enable_bar_stack_block", DEFAULTS.enableBarStackBlock());
+                .comment("Bar Stack: %d ingots per block in %d alternating layers; ingots are the %s item tag."
+                        .formatted(BarCubeIdx.CELLS, BarCubeIdx.CELLS / BarCubeIdx.LAYER_SIZE, BarStackBE.INGOTS.location()))
+                .define(ServerConfig.Keys.ENABLE_BAR_STACK_BLOCK, DEFAULTS.enableBarStackBlock());
         builder.pop();
 
-        builder.comment("Items refused by stacks. Disabling never removes or ejects existing contents.").push("compatibility");
+        builder.comment("Items refused by stacks. Disabling never removes or ejects existing contents.").push(ServerConfig.Keys.COMPATIBILITY);
         DISABLE_MODS = strings(builder.comment(
                         "Mod ids (item namespaces) whose items players and automation may not put into stacks, e.g. [\"examplemod\"].",
                         "Galleries skip these mods. Edit in game with /ss deny."),
-                "disable_mods", DEFAULTS.disableMods());
+                ServerConfig.Keys.DISABLE_MODS, DEFAULTS.disableMods());
         DISABLE_ITEMS = strings(builder.comment(
                         "Item ids players may not deposit into stacks, e.g. [\"minecraft:stone\"]. Automation is not affected.",
                         "Galleries skip these items. The default lists items known to crash clients when drawn. Edit in game with /ss deny."),
-                "disable_items", DEFAULTS.disableItems());
+                ServerConfig.Keys.DISABLE_ITEMS, DEFAULTS.disableItems());
         builder.pop();
 
         builder.comment("Render galleries: /ss gallery and /ss ingotgallery build rows of stacks showing every item of chosen mods,",
-                "for checking how items render. Galleries bypass placement protection, so they are off by default.").push("render_gallery");
+                "for checking how items render. Galleries bypass placement protection, so they are off by default.").push(ServerConfig.Keys.RENDER_GALLERY);
         GALLERY_ENABLED = builder
                 .comment("Whether /ss gallery and /ss ingotgallery are available.")
-                .define("enabled", DEFAULTS.galleryEnabled());
+                .define(ServerConfig.Keys.ENABLED, DEFAULTS.galleryEnabled());
         GALLERY_PERMISSION = builder
                 .comment("Permission level needed to run the gallery commands (0 = everyone, 4 = owner).")
-                .defineInRange("required_permission_level", DEFAULTS.galleryPermissionLevel(),
-                        0, ServerConfig.GALLERY_PERMISSION_LEVEL_MAX);
+                .defineInRange(ServerConfig.Keys.REQUIRED_PERMISSION_LEVEL, DEFAULTS.galleryPermissionLevel(),
+                        ServerConfig.MIN_GALLERY_PERMISSION_LEVEL, ServerConfig.GALLERY_PERMISSION_LEVEL_MAX);
         PLACEMENTS_PER_TICK = builder
                 .comment("Stacks a gallery places per server tick; lower values spread the work over more ticks.")
-                .defineInRange("placements_per_tick", DEFAULTS.renderGalleryPlacementsPerTick(), 1, Integer.MAX_VALUE);
+                .defineInRange(ServerConfig.Keys.PLACEMENTS_PER_TICK, DEFAULTS.renderGalleryPlacementsPerTick(), ServerConfig.MIN_PLACEMENTS_PER_TICK, Integer.MAX_VALUE);
         GEN_MODS = strings(builder.comment(
                         "Mod ids the gallery 'list' form builds, one column per mod. Edit in game with /ss gen."),
-                "gen_mods", DEFAULTS.genMods());
+                ServerConfig.Keys.GEN_MODS, DEFAULTS.genMods());
         GEN_ITEMS = strings(builder.comment(
                         "Item ids the gallery 'items' form builds as a single column. Edit in game with /ss gen."),
-                "gen_items", DEFAULTS.genItems());
+                ServerConfig.Keys.GEN_ITEMS, DEFAULTS.genItems());
         builder.pop();
 
         SPEC = builder.build();

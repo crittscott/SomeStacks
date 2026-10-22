@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks;
 
+import net.minecraft.commands.Commands;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -15,8 +16,35 @@ import java.util.function.Supplier;
 public final class ServerConfig {
     private ServerConfig() {}
 
+    /** Section and field names shared by the loader config formats. */
+    public static final class Keys {
+        private Keys() {}
+
+        public static final String PILES = "piles";
+        public static final String MAX_PILE_HEIGHT = "max_pile_height";
+        public static final String STACKS = "stacks";
+        public static final String ENABLE_STORAGE_STACK_BLOCK = "enable_storage_stack_block";
+        public static final String ENABLE_SINGLES_STACK_BLOCK = "enable_singles_stack_block";
+        public static final String ENABLE_BAR_STACK_BLOCK = "enable_bar_stack_block";
+        public static final String COMPATIBILITY = "compatibility";
+        public static final String DISABLE_MODS = "disable_mods";
+        public static final String DISABLE_ITEMS = "disable_items";
+        public static final String RENDER_GALLERY = "render_gallery";
+        public static final String PLACEMENTS_PER_TICK = "placements_per_tick";
+        public static final String ENABLED = "enabled";
+        public static final String REQUIRED_PERMISSION_LEVEL = "required_permission_level";
+        public static final String GEN_MODS = "gen_mods";
+        public static final String GEN_ITEMS = "gen_items";
+    }
+
+    public static final int MIN_PILE_HEIGHT = 1;
+    public static final int MIN_PLACEMENTS_PER_TICK = 1;
+    public static final int MIN_GALLERY_PERMISSION_LEVEL = Commands.LEVEL_ALL;
+    public static final int DEFAULT_MAX_PILE_HEIGHT = 8;
+    public static final int DEFAULT_PLACEMENTS_PER_TICK = 64;
+    public static final int DEFAULT_GALLERY_PERMISSION_LEVEL = Commands.LEVEL_ADMINS;
     public static final int MAX_PILE_HEIGHT_LIMIT = 64;
-    public static final int GALLERY_PERMISSION_LEVEL_MAX = 4;
+    public static final int GALLERY_PERMISSION_LEVEL_MAX = Commands.LEVEL_OWNERS;
     /** Items whose models are known to crash clients when drawn. */
     public static final List<String> DEFAULT_DISABLE_ITEMS = List.of("evilcraft:broom_part");
 
@@ -40,6 +68,10 @@ public final class ServerConfig {
             List<String> genMods,
             List<String> genItems) {
         public Settings {
+            maxPileHeight = Math.max(MIN_PILE_HEIGHT, Math.min(MAX_PILE_HEIGHT_LIMIT, maxPileHeight));
+            renderGalleryPlacementsPerTick = Math.max(MIN_PLACEMENTS_PER_TICK, renderGalleryPlacementsPerTick);
+            galleryPermissionLevel = Math.max(MIN_GALLERY_PERMISSION_LEVEL,
+                    Math.min(GALLERY_PERMISSION_LEVEL_MAX, galleryPermissionLevel));
             disableMods = List.copyOf(disableMods);
             disableItems = List.copyOf(disableItems);
             genMods = List.copyOf(genMods);
@@ -48,15 +80,15 @@ public final class ServerConfig {
 
         public static Settings defaults() {
             return new Settings(
-                    8,
+                    DEFAULT_MAX_PILE_HEIGHT,
                     true,
                     true,
                     true,
                     List.of(),
                     DEFAULT_DISABLE_ITEMS,
-                    64,
+                    DEFAULT_PLACEMENTS_PER_TICK,
                     false,
-                    3,
+                    DEFAULT_GALLERY_PERMISSION_LEVEL,
                     List.of(),
                     List.of());
         }

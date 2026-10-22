@@ -10,9 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -23,13 +20,6 @@ import net.minecraftforge.registries.RegistryObject;
  * glue behind them.
  * Common code never registers anything itself; {@link CommonRegistry} is populated below so it can
  * still read back what got registered.
- *
- * <p>There are deliberately no block items, no recipes, and no menus: stacks reach the world only
- * through a player gesture or capability-driven growth, and their contents are reached by clicking
- * the rendered cells rather than by opening a screen.
- *
- * <p>Singles and Bar declare a dynamic shape, because theirs follows their contents. All three
- * block piston movement, since a moved stack would leave its block entity behind.
  */
 public final class ModRegistry {
     private ModRegistry() {}
@@ -41,56 +31,36 @@ public final class ModRegistry {
     public static final DeferredRegister<SoundEvent> SOUNDS =
             DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, SomeStacks.MODID);
 
-    public static final RegistryObject<Block> BAR_STACK_BLOCK = BLOCKS.register("bar_stack_block",
-            () -> new BarStackBlock(BlockBehaviour.Properties.of()
-                    .dynamicShape()
-                    .mapColor(MapColor.METAL)
-                    .noOcclusion()
-                    .pushReaction(PushReaction.BLOCK)
-                    .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(BarStackBlock.LIGHT_LEVEL))
-            ));
+    public static final RegistryObject<Block> BAR_STACK_BLOCK = BLOCKS.register(CommonRegistry.BAR_STACK_BLOCK_ID,
+            () -> new BarStackBlock(BarStackBlock.properties()));
 
-    public static final RegistryObject<Block> SINGLES_STACK_BLOCK = BLOCKS.register("singles_stack_block",
-            () -> new SinglesStackBlock(BlockBehaviour.Properties.of()
-                    .dynamicShape()
-                    .mapColor(MapColor.WOOD)
-                    .noOcclusion()
-                    .pushReaction(PushReaction.BLOCK)
-                    .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(SinglesStackBlock.LIGHT_LEVEL))
-            ));
+    public static final RegistryObject<Block> SINGLES_STACK_BLOCK = BLOCKS.register(CommonRegistry.SINGLES_STACK_BLOCK_ID,
+            () -> new SinglesStackBlock(SinglesStackBlock.properties()));
 
-    public static final RegistryObject<Block> STORAGE_STACK_BLOCK = BLOCKS.register("storage_stack_block",
-            () -> new StorageStackBlock(BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.METAL)
-                    .noOcclusion()
-                    .pushReaction(PushReaction.BLOCK)
-                    .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StorageStackBlock.LIGHT_LEVEL))
-            ));
+    public static final RegistryObject<Block> STORAGE_STACK_BLOCK = BLOCKS.register(CommonRegistry.STORAGE_STACK_BLOCK_ID,
+            () -> new StorageStackBlock(StorageStackBlock.properties()));
 
     public static final RegistryObject<BlockEntityType<BarStackBE>> BAR_STACK_BE =
-            BLOCK_ENTITIES.register("bar_stack_be",
+            BLOCK_ENTITIES.register(CommonRegistry.BAR_STACK_BE_ID,
                     () -> BlockEntityType.Builder.of(BarStackBE::new, BAR_STACK_BLOCK.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<SinglesStackBE>> SINGLES_STACK_BE =
-            BLOCK_ENTITIES.register("singles_stack_be",
+            BLOCK_ENTITIES.register(CommonRegistry.SINGLES_STACK_BE_ID,
                     () -> BlockEntityType.Builder.of(SinglesStackBE::new, SINGLES_STACK_BLOCK.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<StorageStackBE>> STORAGE_STACK_BE =
-            BLOCK_ENTITIES.register("stack_be",
+            BLOCK_ENTITIES.register(CommonRegistry.STORAGE_STACK_BE_ID,
                     () -> BlockEntityType.Builder.of(StorageStackBE::new, STORAGE_STACK_BLOCK.get()).build(null));
 
-    public static final RegistryObject<SoundEvent> STORAGE_DEPOSIT_SOUND = sound("block.storage_stack.deposit");
-    public static final RegistryObject<SoundEvent> STORAGE_EXTRACT_SOUND = sound("block.storage_stack.extract");
-    public static final RegistryObject<SoundEvent> STORAGE_ROTATE_SOUND = sound("block.storage_stack.rotate");
-    public static final RegistryObject<SoundEvent> SINGLES_DEPOSIT_SOUND = sound("block.singles_stack.deposit");
-    public static final RegistryObject<SoundEvent> SINGLES_EXTRACT_SOUND = sound("block.singles_stack.extract");
-    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_SOUND = sound("block.singles_stack.rotate");
-    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_ITEM_SOUND = sound("block.singles_stack.rotate_item");
-    public static final RegistryObject<SoundEvent> BAR_DEPOSIT_SOUND = sound("block.bar_stack.deposit");
-    public static final RegistryObject<SoundEvent> BAR_EXTRACT_SOUND = sound("block.bar_stack.extract");
+    public static final RegistryObject<SoundEvent> STORAGE_DEPOSIT_SOUND = sound(CommonRegistry.STORAGE_DEPOSIT_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> STORAGE_EXTRACT_SOUND = sound(CommonRegistry.STORAGE_EXTRACT_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> STORAGE_ROTATE_SOUND = sound(CommonRegistry.STORAGE_ROTATE_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> SINGLES_DEPOSIT_SOUND = sound(CommonRegistry.SINGLES_DEPOSIT_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> SINGLES_EXTRACT_SOUND = sound(CommonRegistry.SINGLES_EXTRACT_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_SOUND = sound(CommonRegistry.SINGLES_ROTATE_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_ITEM_SOUND = sound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> BAR_DEPOSIT_SOUND = sound(CommonRegistry.BAR_DEPOSIT_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> BAR_EXTRACT_SOUND = sound(CommonRegistry.BAR_EXTRACT_SOUND_PATH);
 
     static {
         // Populated eagerly, not lazily: the method references are cheap and deferred by

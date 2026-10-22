@@ -7,6 +7,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** Coordinate conversion, rotation, and cell boxes for a regular cubic item grid. */
 public final class CubeGrid {
+    public static final int ROTATIONS = 4;
+    public static final int DEGREES_PER_ROTATION = 90;
+
     private final int edge;
     private final int layerSize;
     private final int cells;
@@ -25,7 +28,7 @@ public final class CubeGrid {
         this.maxCoord = edge - 1;
         this.localBoxes = new AABB[cells];
         this.localShapes = new VoxelShape[cells];
-        this.rotatedIndices = new int[4][cells];
+        this.rotatedIndices = new int[ROTATIONS][cells];
         for (int y = 0; y < edge; y++) {
             for (int z = 0; z < edge; z++) {
                 for (int x = 0; x < edge; x++) {
@@ -87,8 +90,7 @@ public final class CubeGrid {
     }
 
     private static int rotationIndex(int rotation) {
-        int remainder = rotation % 4;
-        return remainder < 0 ? 0 : remainder;
+        return Math.floorMod(rotation, ROTATIONS);
     }
 
     private int indexFromXYZ(int x, int y, int z) {

@@ -175,7 +175,11 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce: fill Singles and Bar blocks completely, then leave only alternating positions.
  Their occupied collision/outline regions stay aligned with the visible items at every Singles
  block rotation. The fixture compares these unions with individually optimized shape merges
- and checks fixed bounds in both orientations of the Bar layout.</div>
+ and checks fixed bounds in both orientations of the Bar layout.
+ Negative and full turns also preserve cell bounds and visual-column round trips. To check
+ the visible facing cycle, Shift-click Storage and Singles with a redstone torch four times:
+ the layouts turn north, west, south, east, then return to north. Negative turns are synthetic
+ setter inputs; normal gestures supply normalized rotations.</div>
 </section>
 </li>
 <li>

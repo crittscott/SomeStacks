@@ -75,7 +75,12 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Loader-neutral access to the registered blocks, block entity types, and sound events. The loader's own
  registration glue (Forge's <code>ModRegistry</code>, or its Fabric equivalent) assigns these once
- registration is set up; common code never registers anything itself, only reads these back.</div>
+ registration is set up; common code never registers anything itself, only reads these back.
+
+ <p>There are no block items, recipes, or menus: stacks enter the world through player gestures
+ or automation, and players access contents by clicking rendered cells. Each block class supplies
+ its own shared properties. Singles and Bar use dynamic shapes; all types block pistons because
+ moving a stack would leave its block entity behind.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,50 +96,97 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#BAR_DEPOSIT_SOUND" class="member-name-link">BAR_DEPOSIT_SOUND</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#BAR_EXTRACT_SOUND" class="member-name-link">BAR_EXTRACT_SOUND</a></code></div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#BAR_DEPOSIT_SOUND_PATH" class="member-name-link">BAR_DEPOSIT_SOUND_PATH</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#BAR_EXTRACT_SOUND" class="member-name-link">BAR_EXTRACT_SOUND</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#BAR_EXTRACT_SOUND_PATH" class="member-name-link">BAR_EXTRACT_SOUND_PATH</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&gt;&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#BAR_STACK_BE" class="member-name-link">BAR_STACK_BE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.Block&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#BAR_STACK_BLOCK" class="member-name-link">BAR_STACK_BLOCK</a></code></div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#BAR_STACK_BE_ID" class="member-name-link">BAR_STACK_BE_ID</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.Block&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#BAR_STACK_BLOCK" class="member-name-link">BAR_STACK_BLOCK</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#BAR_STACK_BLOCK_ID" class="member-name-link">BAR_STACK_BLOCK_ID</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#SINGLES_DEPOSIT_SOUND" class="member-name-link">SINGLES_DEPOSIT_SOUND</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_EXTRACT_SOUND" class="member-name-link">SINGLES_EXTRACT_SOUND</a></code></div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#SINGLES_DEPOSIT_SOUND_PATH" class="member-name-link">SINGLES_DEPOSIT_SOUND_PATH</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#SINGLES_EXTRACT_SOUND" class="member-name-link">SINGLES_EXTRACT_SOUND</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#SINGLES_EXTRACT_SOUND_PATH" class="member-name-link">SINGLES_EXTRACT_SOUND_PATH</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#SINGLES_ROTATE_ITEM_SOUND" class="member-name-link">SINGLES_ROTATE_ITEM_SOUND</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_ROTATE_SOUND" class="member-name-link">SINGLES_ROTATE_SOUND</a></code></div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#SINGLES_ROTATE_ITEM_SOUND_PATH" class="member-name-link">SINGLES_ROTATE_ITEM_SOUND_PATH</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#SINGLES_ROTATE_SOUND" class="member-name-link">SINGLES_ROTATE_SOUND</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#SINGLES_ROTATE_SOUND_PATH" class="member-name-link">SINGLES_ROTATE_SOUND_PATH</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&gt;&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#SINGLES_STACK_BE" class="member-name-link">SINGLES_STACK_BE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.Block&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_STACK_BLOCK" class="member-name-link">SINGLES_STACK_BLOCK</a></code></div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#SINGLES_STACK_BE_ID" class="member-name-link">SINGLES_STACK_BE_ID</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.Block&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#SINGLES_STACK_BLOCK" class="member-name-link">SINGLES_STACK_BLOCK</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#SINGLES_STACK_BLOCK_ID" class="member-name-link">SINGLES_STACK_BLOCK_ID</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#STORAGE_DEPOSIT_SOUND" class="member-name-link">STORAGE_DEPOSIT_SOUND</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">One sound event per stack action, <code>somestacks:block.&lt;type&gt;.&lt;action&gt;</code>.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#STORAGE_EXTRACT_SOUND" class="member-name-link">STORAGE_EXTRACT_SOUND</a></code></div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#STORAGE_DEPOSIT_SOUND_PATH" class="member-name-link">STORAGE_DEPOSIT_SOUND_PATH</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#STORAGE_EXTRACT_SOUND" class="member-name-link">STORAGE_EXTRACT_SOUND</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#STORAGE_EXTRACT_SOUND_PATH" class="member-name-link">STORAGE_EXTRACT_SOUND_PATH</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#STORAGE_ROTATE_SOUND" class="member-name-link">STORAGE_ROTATE_SOUND</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#STORAGE_STACK_BE" class="member-name-link">STORAGE_STACK_BE</a></code></div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#STORAGE_ROTATE_SOUND_PATH" class="member-name-link">STORAGE_ROTATE_SOUND_PATH</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&gt;&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#STORAGE_STACK_BE" class="member-name-link">STORAGE_STACK_BE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#STORAGE_STACK_BE_ID" class="member-name-link">STORAGE_STACK_BE_ID</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.Block&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#STORAGE_STACK_BLOCK" class="member-name-link">STORAGE_STACK_BLOCK</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#STORAGE_STACK_BLOCK_ID" class="member-name-link">STORAGE_STACK_BLOCK_ID</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Registry paths shared by the loader registration mechanisms.</div>
+</div>
 </div>
 </section>
 </li>
@@ -156,6 +208,217 @@ loadScripts(document, 'script');</script>
 <section class="field-details" id="field-detail">
 <h2>Field Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="STORAGE_STACK_BLOCK_ID">
+<h3>STORAGE_STACK_BLOCK_ID</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STORAGE_STACK_BLOCK_ID</span></div>
+<div class="block">Registry paths shared by the loader registration mechanisms.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.STORAGE_STACK_BLOCK_ID">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="SINGLES_STACK_BLOCK_ID">
+<h3>SINGLES_STACK_BLOCK_ID</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_STACK_BLOCK_ID</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_STACK_BLOCK_ID">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="BAR_STACK_BLOCK_ID">
+<h3>BAR_STACK_BLOCK_ID</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">BAR_STACK_BLOCK_ID</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.BAR_STACK_BLOCK_ID">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="STORAGE_STACK_BE_ID">
+<h3>STORAGE_STACK_BE_ID</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STORAGE_STACK_BE_ID</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.STORAGE_STACK_BE_ID">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="SINGLES_STACK_BE_ID">
+<h3>SINGLES_STACK_BE_ID</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_STACK_BE_ID</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_STACK_BE_ID">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="BAR_STACK_BE_ID">
+<h3>BAR_STACK_BE_ID</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">BAR_STACK_BE_ID</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.BAR_STACK_BE_ID">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="STORAGE_DEPOSIT_SOUND_PATH">
+<h3>STORAGE_DEPOSIT_SOUND_PATH</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STORAGE_DEPOSIT_SOUND_PATH</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.STORAGE_DEPOSIT_SOUND_PATH">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="STORAGE_EXTRACT_SOUND_PATH">
+<h3>STORAGE_EXTRACT_SOUND_PATH</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STORAGE_EXTRACT_SOUND_PATH</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.STORAGE_EXTRACT_SOUND_PATH">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="STORAGE_ROTATE_SOUND_PATH">
+<h3>STORAGE_ROTATE_SOUND_PATH</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STORAGE_ROTATE_SOUND_PATH</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.STORAGE_ROTATE_SOUND_PATH">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="SINGLES_DEPOSIT_SOUND_PATH">
+<h3>SINGLES_DEPOSIT_SOUND_PATH</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_DEPOSIT_SOUND_PATH</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_DEPOSIT_SOUND_PATH">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="SINGLES_EXTRACT_SOUND_PATH">
+<h3>SINGLES_EXTRACT_SOUND_PATH</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_EXTRACT_SOUND_PATH</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_EXTRACT_SOUND_PATH">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="SINGLES_ROTATE_SOUND_PATH">
+<h3>SINGLES_ROTATE_SOUND_PATH</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_ROTATE_SOUND_PATH</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_ROTATE_SOUND_PATH">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="SINGLES_ROTATE_ITEM_SOUND_PATH">
+<h3>SINGLES_ROTATE_ITEM_SOUND_PATH</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_ROTATE_ITEM_SOUND_PATH</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_ROTATE_ITEM_SOUND_PATH">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="BAR_DEPOSIT_SOUND_PATH">
+<h3>BAR_DEPOSIT_SOUND_PATH</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">BAR_DEPOSIT_SOUND_PATH</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.BAR_DEPOSIT_SOUND_PATH">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="BAR_EXTRACT_SOUND_PATH">
+<h3>BAR_EXTRACT_SOUND_PATH</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">BAR_EXTRACT_SOUND_PATH</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.BAR_EXTRACT_SOUND_PATH">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="STORAGE_STACK_BLOCK">
 <h3>STORAGE_STACK_BLOCK</h3>

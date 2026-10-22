@@ -4,7 +4,6 @@ import com.github.crittscott.somestacks.client.ClientSetup;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.PlayerReach;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -36,7 +35,6 @@ public class SomeStacks {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         PlatformServices.install(new ForgePlatformServices());
-        WorldEdits.setAuthority(PlatformServices.editAuthority());
         PlayerReach.setProvider(player -> player.getBlockReach());
 
         ModRegistry.init(modBus);

@@ -9,16 +9,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -29,6 +19,17 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 
 /**
  * The server-side {@code ss} command: render gallery generation, server list editing, and
@@ -49,7 +50,9 @@ import net.minecraft.world.item.Item;
  */
 public final class SsCommand {
     /** Vanilla's gamerule and world-editing level, the gate on the administrative subcommands. */
-    private static final int ADMIN_PERMISSION_LEVEL = 2;
+    private static final int ADMIN_PERMISSION_LEVEL = Commands.LEVEL_GAMEMASTERS;
+    /** Command root shared by the client and server trees. */
+    public static final String ROOT = "ss";
 
     private static final String DISABLED_MODS_LABEL = "somestacks.command.label.disabled_mods";
     private static final String DISABLED_ITEMS_LABEL = "somestacks.command.label.disabled_items";
@@ -60,7 +63,7 @@ public final class SsCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
-                Commands.literal("ss")
+                Commands.literal(ROOT)
                         .then(galleryTree("gallery", RenderGalleryGenerator.Kind.STORAGE)
                                 .then(Commands.literal("items")
                                         .executes(SsCommand::galleryItems)))

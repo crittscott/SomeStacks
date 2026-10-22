@@ -6,6 +6,7 @@ import com.github.crittscott.somestacks.block.SinglesColumn;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -237,7 +238,7 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void installedServicesAndLogoutResetPacing(GameTestHelper helper) {
-        ServiceAndConfigChecks.installedServicesAndLogoutResetPacing(helper, net.fabricmc.fabric.api.entity.FakePlayer.get(helper.getLevel()));
+        ServiceAndConfigChecks.installedServicesAndLogoutResetPacing(helper, FakePlayer.get(helper.getLevel()));
     }
 
     /**
@@ -248,6 +249,12 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void listEditsPublishImmutablePolicy(GameTestHelper helper) {
         ServiceAndConfigChecks.listEditsPublishImmutablePolicy(helper);
+    }
+
+    /** See {@link ServiceAndConfigChecks#numericPolicyRangesAreShared}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void numericPolicyRangesAreShared(GameTestHelper helper) {
+        ServiceAndConfigChecks.numericPolicyRangesAreShared(helper);
     }
 
     /** See {@link ServiceAndConfigChecks#reloadCommandPublishesStoredPolicy}. */

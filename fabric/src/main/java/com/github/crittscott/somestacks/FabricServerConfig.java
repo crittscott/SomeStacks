@@ -51,45 +51,45 @@ public final class FabricServerConfig {
         }
 
         private static Settings decode(JsonObject root, Settings defaults) {
-            JsonObject piles = obj(root, "piles");
-            JsonObject stacks = obj(root, "stacks");
-            JsonObject compatibility = obj(root, "compatibility");
-            JsonObject gallery = obj(root, "render_gallery");
+            JsonObject piles = obj(root, ServerConfig.Keys.PILES);
+            JsonObject stacks = obj(root, ServerConfig.Keys.STACKS);
+            JsonObject compatibility = obj(root, ServerConfig.Keys.COMPATIBILITY);
+            JsonObject gallery = obj(root, ServerConfig.Keys.RENDER_GALLERY);
             return new Settings(
-                    clamp(intOr(piles, "max_pile_height", defaults.maxPileHeight()), 1, ServerConfig.MAX_PILE_HEIGHT_LIMIT),
-                    boolOr(stacks, "enable_storage_stack_block", defaults.enableStorageStackBlock()),
-                    boolOr(stacks, "enable_singles_stack_block", defaults.enableSinglesStackBlock()),
-                    boolOr(stacks, "enable_bar_stack_block", defaults.enableBarStackBlock()),
-                    stringListOr(compatibility, "disable_mods", defaults.disableMods()),
-                    stringListOr(compatibility, "disable_items", defaults.disableItems()),
-                    Math.max(1, intOr(gallery, "placements_per_tick", defaults.renderGalleryPlacementsPerTick())),
-                    boolOr(gallery, "enabled", defaults.galleryEnabled()),
-                    clamp(intOr(gallery, "required_permission_level", defaults.galleryPermissionLevel()), 0, ServerConfig.GALLERY_PERMISSION_LEVEL_MAX),
-                    stringListOr(gallery, "gen_mods", defaults.genMods()),
-                    stringListOr(gallery, "gen_items", defaults.genItems()));
+                    intOr(piles, ServerConfig.Keys.MAX_PILE_HEIGHT, defaults.maxPileHeight()),
+                    boolOr(stacks, ServerConfig.Keys.ENABLE_STORAGE_STACK_BLOCK, defaults.enableStorageStackBlock()),
+                    boolOr(stacks, ServerConfig.Keys.ENABLE_SINGLES_STACK_BLOCK, defaults.enableSinglesStackBlock()),
+                    boolOr(stacks, ServerConfig.Keys.ENABLE_BAR_STACK_BLOCK, defaults.enableBarStackBlock()),
+                    stringListOr(compatibility, ServerConfig.Keys.DISABLE_MODS, defaults.disableMods()),
+                    stringListOr(compatibility, ServerConfig.Keys.DISABLE_ITEMS, defaults.disableItems()),
+                    intOr(gallery, ServerConfig.Keys.PLACEMENTS_PER_TICK, defaults.renderGalleryPlacementsPerTick()),
+                    boolOr(gallery, ServerConfig.Keys.ENABLED, defaults.galleryEnabled()),
+                    intOr(gallery, ServerConfig.Keys.REQUIRED_PERMISSION_LEVEL, defaults.galleryPermissionLevel()),
+                    stringListOr(gallery, ServerConfig.Keys.GEN_MODS, defaults.genMods()),
+                    stringListOr(gallery, ServerConfig.Keys.GEN_ITEMS, defaults.genItems()));
         }
 
         void write(Settings values) {
             JsonObject piles = new JsonObject();
-            piles.addProperty("max_pile_height", values.maxPileHeight());
+            piles.addProperty(ServerConfig.Keys.MAX_PILE_HEIGHT, values.maxPileHeight());
             JsonObject stacks = new JsonObject();
-            stacks.addProperty("enable_storage_stack_block", values.enableStorageStackBlock());
-            stacks.addProperty("enable_singles_stack_block", values.enableSinglesStackBlock());
-            stacks.addProperty("enable_bar_stack_block", values.enableBarStackBlock());
+            stacks.addProperty(ServerConfig.Keys.ENABLE_STORAGE_STACK_BLOCK, values.enableStorageStackBlock());
+            stacks.addProperty(ServerConfig.Keys.ENABLE_SINGLES_STACK_BLOCK, values.enableSinglesStackBlock());
+            stacks.addProperty(ServerConfig.Keys.ENABLE_BAR_STACK_BLOCK, values.enableBarStackBlock());
             JsonObject compatibility = new JsonObject();
-            compatibility.add("disable_mods", stringArray(values.disableMods()));
-            compatibility.add("disable_items", stringArray(values.disableItems()));
+            compatibility.add(ServerConfig.Keys.DISABLE_MODS, stringArray(values.disableMods()));
+            compatibility.add(ServerConfig.Keys.DISABLE_ITEMS, stringArray(values.disableItems()));
             JsonObject gallery = new JsonObject();
-            gallery.addProperty("placements_per_tick", values.renderGalleryPlacementsPerTick());
-            gallery.addProperty("enabled", values.galleryEnabled());
-            gallery.addProperty("required_permission_level", values.galleryPermissionLevel());
-            gallery.add("gen_mods", stringArray(values.genMods()));
-            gallery.add("gen_items", stringArray(values.genItems()));
+            gallery.addProperty(ServerConfig.Keys.PLACEMENTS_PER_TICK, values.renderGalleryPlacementsPerTick());
+            gallery.addProperty(ServerConfig.Keys.ENABLED, values.galleryEnabled());
+            gallery.addProperty(ServerConfig.Keys.REQUIRED_PERMISSION_LEVEL, values.galleryPermissionLevel());
+            gallery.add(ServerConfig.Keys.GEN_MODS, stringArray(values.genMods()));
+            gallery.add(ServerConfig.Keys.GEN_ITEMS, stringArray(values.genItems()));
             JsonObject root = new JsonObject();
-            root.add("piles", piles);
-            root.add("stacks", stacks);
-            root.add("compatibility", compatibility);
-            root.add("render_gallery", gallery);
+            root.add(ServerConfig.Keys.PILES, piles);
+            root.add(ServerConfig.Keys.STACKS, stacks);
+            root.add(ServerConfig.Keys.COMPATIBILITY, compatibility);
+            root.add(ServerConfig.Keys.RENDER_GALLERY, gallery);
             try {
                 Files.createDirectories(file.getParent());
                 Files.writeString(file, GSON.toJson(root));
@@ -125,10 +125,6 @@ public final class FabricServerConfig {
             JsonArray array = new JsonArray();
             values.forEach(array::add);
             return array;
-        }
-
-        private static int clamp(int value, int min, int max) {
-            return Math.max(min, Math.min(max, value));
         }
 
     }

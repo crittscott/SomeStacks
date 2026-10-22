@@ -17,6 +17,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
@@ -33,10 +34,10 @@ import java.util.regex.Pattern;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestSupport.count;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+import static com.github.crittscott.somestacks.gametest.GameTestSupport.count;
 
 /**
  * The automation surface and the saved state behind it: the item handler exposed on every side,
@@ -254,7 +255,7 @@ public final class CapabilityAndPersistenceGameTests {
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void installedServicesAndLogoutResetPacing(GameTestHelper helper) {
-        ServiceAndConfigChecks.installedServicesAndLogoutResetPacing(helper, net.minecraftforge.common.util.FakePlayerFactory.getMinecraft(helper.getLevel()));
+        ServiceAndConfigChecks.installedServicesAndLogoutResetPacing(helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
     }
 
     /**
@@ -265,6 +266,12 @@ public final class CapabilityAndPersistenceGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void listEditsPublishImmutablePolicy(GameTestHelper helper) {
         ServiceAndConfigChecks.listEditsPublishImmutablePolicy(helper);
+    }
+
+    /** See {@link ServiceAndConfigChecks#numericPolicyRangesAreShared}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void numericPolicyRangesAreShared(GameTestHelper helper) {
+        ServiceAndConfigChecks.numericPolicyRangesAreShared(helper);
     }
 
     /** See {@link ServiceAndConfigChecks#reloadCommandPublishesStoredPolicy}. */

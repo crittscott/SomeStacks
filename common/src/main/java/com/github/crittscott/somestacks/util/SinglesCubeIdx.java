@@ -6,10 +6,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * Geometry and slot indexing shared by Singles Stack rendering, collision, ray targeting, and
@@ -98,7 +98,7 @@ public final class SinglesCubeIdx {
      * {@code r} is {@code (4 - r) % 4}.
      */
     public static int storageColumnFromVisual(int visualColumn, int blockRotation) {
-        return GRID.visualIndex(visualColumn, (4 - blockRotation % 4) % 4);
+        return GRID.visualIndex(visualColumn, (CubeGrid.ROTATIONS - Math.floorMod(blockRotation, CubeGrid.ROTATIONS)) % CubeGrid.ROTATIONS);
     }
 
     /** Reads the top cell beneath a bottom-layer cell in the same visual column. */

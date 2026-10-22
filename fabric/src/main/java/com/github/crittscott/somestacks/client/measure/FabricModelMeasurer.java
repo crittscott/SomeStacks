@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.client.measure;
 
+import com.github.crittscott.somestacks.client.ClientRenderPlatform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -64,10 +65,10 @@ public final class FabricModelMeasurer implements ModelMeasurement.Backend {
         RandomSource random = RandomSource.create();
 
         for (Direction direction : Direction.values()) {
-            random.setSeed(42L);
+            random.setSeed(ClientRenderPlatform.ITEM_MODEL_SEED);
             collectQuads(model.getQuads(null, direction, random), matrix, collector);
         }
-        random.setSeed(42L);
+        random.setSeed(ClientRenderPlatform.ITEM_MODEL_SEED);
         collectQuads(model.getQuads(null, null, random), matrix, collector);
 
         if (!collector.hasAny()) {

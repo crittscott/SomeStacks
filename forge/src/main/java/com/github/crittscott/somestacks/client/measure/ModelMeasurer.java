@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.client.measure;
 
+import com.github.crittscott.somestacks.client.ClientRenderPlatform;
 import com.github.crittscott.somestacks.client.ForgeRenderPlatform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -21,8 +22,8 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-import javax.annotation.Nonnull;
 import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * Measures the geometry an item will actually produce in the FIXED display context,
@@ -83,10 +84,10 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
         for (BakedModel pass : model.getRenderPasses(stack, ForgeRenderPlatform.fabulousFlag(stack, context))) {
             for (Direction direction : Direction.values()) {
                 // Seed 42 per group matches ItemRenderer.renderModelLists.
-                random.setSeed(42L);
+                random.setSeed(ClientRenderPlatform.ITEM_MODEL_SEED);
                 collectQuads(pass.getQuads(null, direction, random), matrix, collector);
             }
-            random.setSeed(42L);
+            random.setSeed(ClientRenderPlatform.ITEM_MODEL_SEED);
             collectQuads(pass.getQuads(null, null, random), matrix, collector);
         }
 

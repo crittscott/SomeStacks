@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
@@ -18,7 +19,7 @@ import java.util.Optional;
 public final class ModNetworking {
     private ModNetworking() {}
 
-    private static final String PROTOCOL = "4";
+    private static final String PROTOCOL = String.valueOf(SomeStacksCommon.PROTOCOL_VERSION);
     public static SimpleChannel CHANNEL;
 
     public static void init() {

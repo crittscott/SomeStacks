@@ -1,15 +1,17 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.SomeStacks;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import java.util.function.Function;
-import com.github.crittscott.somestacks.SomeStacks;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
+
+import java.util.function.Function;
 
 /** Loader wrappers for the reproduction scenarios documented in InteractionChecks. */
 @GameTestHolder(SomeStacks.MODID)
@@ -158,7 +160,7 @@ public final class InteractionGameTests {
     }
 
     /** Runs vanilla's server block use, which posts Forge's event and then calls the block. */
-    private static boolean click(ServerPlayer player, InteractionHand hand, net.minecraft.world.phys.BlockHitResult hit) {
+    private static boolean click(ServerPlayer player, InteractionHand hand, BlockHitResult hit) {
         return player.gameMode.useItemOn(
                 player, player.serverLevel(), player.getItemInHand(hand), hand, hit).consumesAction();
     }

@@ -39,8 +39,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
 
     @Override
     public int getSlotCount() {
-        StackRunItemAccess run = blockEntity.itemRun();
-        return run != null ? run.advertisedSlots() : blockEntity.getItems().getSlots();
+        return blockEntity.advertisedItemSlots();
     }
 
     @Override

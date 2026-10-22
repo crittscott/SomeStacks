@@ -8,6 +8,9 @@ import java.util.List;
 
 /** Loader-specific services used by shared client rendering code. */
 public final class ClientRenderPlatform {
+    /** Fixed quad-selection seed used by ItemRenderer for inventory model variants. */
+    public static final long ITEM_MODEL_SEED = 42L;
+
     private ClientRenderPlatform() {}
 
     public interface Backend {

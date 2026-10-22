@@ -90,14 +90,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="ServerConfig.ListSetting.html" class="type-name-link" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
+<div class="col-first even-row-color"><code>static final class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ServerConfig.Keys.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.Keys</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Section and field names shared by the loader config formats.</div>
+</div>
+<div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="ServerConfig.ListSetting.html" class="type-name-link" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">The named lists edited by /ss; each edit replaces the complete policy snapshot.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final record&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="ServerConfig.Settings.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ServerConfig.Settings.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">One immutable publication of server policy; lists cannot be changed by readers.</div>
 </div>
 </div>
@@ -118,10 +123,28 @@ loadScripts(document, 'script');</script>
 <div class="block">Items whose models are known to crash clients when drawn.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#GALLERY_PERMISSION_LEVEL_MAX" class="member-name-link">GALLERY_PERMISSION_LEVEL_MAX</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#DEFAULT_GALLERY_PERMISSION_LEVEL" class="member-name-link">DEFAULT_GALLERY_PERMISSION_LEVEL</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#MAX_PILE_HEIGHT_LIMIT" class="member-name-link">MAX_PILE_HEIGHT_LIMIT</a></code></div>
+<div class="col-second even-row-color"><code><a href="#DEFAULT_MAX_PILE_HEIGHT" class="member-name-link">DEFAULT_MAX_PILE_HEIGHT</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#DEFAULT_PLACEMENTS_PER_TICK" class="member-name-link">DEFAULT_PLACEMENTS_PER_TICK</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#GALLERY_PERMISSION_LEVEL_MAX" class="member-name-link">GALLERY_PERMISSION_LEVEL_MAX</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#MAX_PILE_HEIGHT_LIMIT" class="member-name-link">MAX_PILE_HEIGHT_LIMIT</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#MIN_GALLERY_PERMISSION_LEVEL" class="member-name-link">MIN_GALLERY_PERMISSION_LEVEL</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#MIN_PILE_HEIGHT" class="member-name-link">MIN_PILE_HEIGHT</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#MIN_PLACEMENTS_PER_TICK" class="member-name-link">MIN_PLACEMENTS_PER_TICK</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -233,6 +256,90 @@ loadScripts(document, 'script');</script>
 <section class="field-details" id="field-detail">
 <h2>Field Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="MIN_PILE_HEIGHT">
+<h3>MIN_PILE_HEIGHT</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MIN_PILE_HEIGHT</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MIN_PILE_HEIGHT">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MIN_PLACEMENTS_PER_TICK">
+<h3>MIN_PLACEMENTS_PER_TICK</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MIN_PLACEMENTS_PER_TICK</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MIN_PLACEMENTS_PER_TICK">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MIN_GALLERY_PERMISSION_LEVEL">
+<h3>MIN_GALLERY_PERMISSION_LEVEL</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MIN_GALLERY_PERMISSION_LEVEL</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MIN_GALLERY_PERMISSION_LEVEL">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="DEFAULT_MAX_PILE_HEIGHT">
+<h3>DEFAULT_MAX_PILE_HEIGHT</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DEFAULT_MAX_PILE_HEIGHT</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.DEFAULT_MAX_PILE_HEIGHT">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="DEFAULT_PLACEMENTS_PER_TICK">
+<h3>DEFAULT_PLACEMENTS_PER_TICK</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DEFAULT_PLACEMENTS_PER_TICK</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.DEFAULT_PLACEMENTS_PER_TICK">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="DEFAULT_GALLERY_PERMISSION_LEVEL">
+<h3>DEFAULT_GALLERY_PERMISSION_LEVEL</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DEFAULT_GALLERY_PERMISSION_LEVEL</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.DEFAULT_GALLERY_PERMISSION_LEVEL">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="MAX_PILE_HEIGHT_LIMIT">
 <h3>MAX_PILE_HEIGHT_LIMIT</h3>

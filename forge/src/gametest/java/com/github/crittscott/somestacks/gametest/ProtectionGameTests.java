@@ -9,15 +9,14 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.StackMode;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
-import net.minecraft.world.phys.shapes.Shapes;
-import java.util.function.Consumer;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -28,9 +27,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.border.WorldBorder;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -40,6 +44,8 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
+
+import java.util.function.Consumer;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -216,7 +222,7 @@ public final class ProtectionGameTests {
         var state = helper.getLevel().getBlockState(top);
         try (var events = new WorldEditChecks.EventProbe(helper.getLevel(), top)) {
             pile.settle();
-            events.expectOne(net.minecraft.world.level.gameevent.GameEvent.BLOCK_DESTROY,
+            events.expectOne(GameEvent.BLOCK_DESTROY,
                     WorldEdits.automationActor(helper.getLevel()), state);
         }
         helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
@@ -621,7 +627,7 @@ public final class ProtectionGameTests {
                 ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
                 var hit = InteractionChecks.aim(player, clicked, 0.125, 0.125);
                 ForgeHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, clicked,
-                        new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
+                        new BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
                 checkEquals(0, GameTestScaffold.count(singles.getItems(), Items.STONE), "Denied adjacent deposit");
             } finally {
                 MinecraftForge.EVENT_BUS.unregister(veto);
@@ -632,7 +638,7 @@ public final class ProtectionGameTests {
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             var hit = InteractionChecks.aim(player, clicked, 0.125, 0.125);
             ForgeHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, clicked,
-                    new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
+                    new BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
             checkEquals(1, GameTestScaffold.count(singles.getItems(), Items.STONE), "Allowed adjacent deposit");
         }
         helper.succeed();
@@ -645,11 +651,11 @@ public final class ProtectionGameTests {
         BlockPos target = helper.absolutePos(ORIGIN);
         // Changing the chest's facing captures its inventory without removing the container.
         var originalState = Blocks.CHEST.defaultBlockState();
-        var placedState = originalState.setValue(net.minecraft.world.level.block.ChestBlock.FACING, Direction.EAST);
+        var placedState = originalState.setValue(ChestBlock.FACING, Direction.EAST);
         level.setBlock(target, originalState, Block.UPDATE_ALL);
-        var chest = (net.minecraft.world.level.block.entity.ChestBlockEntity) level.getBlockEntity(target);
+        var chest = (ChestBlockEntity) level.getBlockEntity(target);
         chest.setItem(0, new ItemStack(Items.DIAMOND, 7));
-        chest.setCustomName(net.minecraft.network.chat.Component.literal("Snapshot chest"));
+        chest.setCustomName(Component.literal("Snapshot chest"));
         var before = chest.saveWithFullMetadata();
         int[] neighbors = {0};
         boolean[] deny = {true};
@@ -660,7 +666,7 @@ public final class ProtectionGameTests {
             if (event.getLevel() == level && event.getPos().equals(target)) {
                 checkEquals(0, neighbors[0], "Placement published before acceptance");
                 if (deny[0]) {
-                    ((net.minecraft.world.level.block.entity.ChestBlockEntity) level.getBlockEntity(target))
+                    ((ChestBlockEntity) level.getBlockEntity(target))
                             .setItem(0, new ItemStack(Items.DIRT));
                     event.setCanceled(true);
                 }
@@ -685,7 +691,7 @@ public final class ProtectionGameTests {
                     placedState.getCollisionShape(level, target, CollisionContext.empty())), "Accepted placement rejected");
             check(neighbors[0] > 0, "Accepted placement never notified neighbors");
             checkEquals(placedState, level.getBlockState(target), "Accepted placement state");
-            events.expectOne(net.minecraft.world.level.gameevent.GameEvent.BLOCK_PLACE, player, placedState);
+            events.expectOne(GameEvent.BLOCK_PLACE, player, placedState);
         } finally {
             MinecraftForge.EVENT_BUS.unregister(observe);
             MinecraftForge.EVENT_BUS.unregister(placement);
@@ -730,14 +736,14 @@ public final class ProtectionGameTests {
             player.getAbilities().instabuild = creative;
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             var hit = InteractionChecks.aim(player, clicked, 0.5, 0.5);
-            useBlock(player, new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), face, clicked, false));
+            useBlock(player, new BlockHitResult(hit.getLocation(), face, clicked, false));
             result = player.getMainHandItem().copy();
         }
         player.setItemInHand(InteractionHand.MAIN_HAND, result);
     }
 
     /** Runs vanilla's server block use, which posts Forge's event and then calls the block. */
-    private static void useBlock(ServerPlayer player, net.minecraft.world.phys.BlockHitResult hit) {
+    private static void useBlock(ServerPlayer player, BlockHitResult hit) {
         player.gameMode.useItemOn(player, player.serverLevel(),
                 player.getMainHandItem(), InteractionHand.MAIN_HAND, hit);
     }

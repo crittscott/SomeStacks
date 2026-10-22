@@ -15,13 +15,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * What each item's bar looks like, loaded from {@code assets/<namespace>/textures/bars/*.json} and
@@ -47,6 +48,8 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     private static final Map<Item, BarTextureData> resolvedTextures = new IdentityHashMap<>();
     private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
     private static final BarTextureData FALLBACK = BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
+    private static final int OPAQUE_ALPHA_THRESHOLD = 127;
+    private static final int MAX_CHANNEL = 255;
     private static final float BRIGHTEN_FACTOR = 0.1f;
 
     /**
@@ -67,19 +70,19 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         }
 
         public int red() {
-            return (color >> 16) & 0xFF;
+            return FastColor.ARGB32.red(color);
         }
 
         public int green() {
-            return (color >> 8) & 0xFF;
+            return FastColor.ARGB32.green(color);
         }
 
         public int blue() {
-            return color & 0xFF;
+            return FastColor.ARGB32.blue(color);
         }
 
         public int alpha() {
-            return (color >> 24) & 0xFF;
+            return FastColor.ARGB32.alpha(color);
         }
     }
 
@@ -205,13 +208,13 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         RandomSource random = RandomSource.create();
         for (BakedModel pass : ClientRenderPlatform.renderPasses(model, stack, ItemDisplayContext.GUI)) {
             for (Direction direction : Direction.values()) {
-                random.setSeed(42L);
+                random.setSeed(ClientRenderPlatform.ITEM_MODEL_SEED);
                 List<BakedQuad> quads = pass.getQuads(null, direction, random);
                 if (!quads.isEmpty()) {
                     return quads.get(0);
                 }
             }
-            random.setSeed(42L);
+            random.setSeed(ClientRenderPlatform.ITEM_MODEL_SEED);
             List<BakedQuad> quads = pass.getQuads(null, null, random);
             if (!quads.isEmpty()) {
                 return quads.get(0);
@@ -242,10 +245,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     }
 
     private static int multiplyColors(int left, int right) {
-        int r = (((left >> 16) & 0xFF) * ((right >> 16) & 0xFF)) / 0xFF;
-        int g = (((left >> 8) & 0xFF) * ((right >> 8) & 0xFF)) / 0xFF;
-        int b = ((left & 0xFF) * (right & 0xFF)) / 0xFF;
-        return 0xFF000000 | (r << 16) | (g << 8) | b;
+        return FastColor.ARGB32.multiply(left, right) | 0xFF000000;
     }
 
     private static ResourceLocation getTextureResourceLocation(ResourceLocation spriteName) {
@@ -273,12 +273,12 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
                 int abgr = image.getPixelRGBA(x, y);
-                int a = (abgr >> 24) & 0xFF;
+                int a = FastColor.ABGR32.alpha(abgr);
 
-                if (a > 127) {
-                    int r = abgr & 0xFF;
-                    int g = (abgr >> 8) & 0xFF;
-                    int b = (abgr >> 16) & 0xFF;
+                if (a > OPAQUE_ALPHA_THRESHOLD) {
+                    int r = FastColor.ABGR32.red(abgr);
+                    int g = FastColor.ABGR32.green(abgr);
+                    int b = FastColor.ABGR32.blue(abgr);
 
                     sumR += r;
                     sumG += g;
@@ -297,11 +297,11 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         int avgB = (int) (sumB / count);
 
         // Brighten to compensate for dark outlines in ingot textures.
-        int brightR = (int) Math.min(255, avgR + (255 - avgR) * BRIGHTEN_FACTOR);
-        int brightG = (int) Math.min(255, avgG + (255 - avgG) * BRIGHTEN_FACTOR);
-        int brightB = (int) Math.min(255, avgB + (255 - avgB) * BRIGHTEN_FACTOR);
+        int brightR = (int) Math.min(MAX_CHANNEL, avgR + (MAX_CHANNEL - avgR) * BRIGHTEN_FACTOR);
+        int brightG = (int) Math.min(MAX_CHANNEL, avgG + (MAX_CHANNEL - avgG) * BRIGHTEN_FACTOR);
+        int brightB = (int) Math.min(MAX_CHANNEL, avgB + (MAX_CHANNEL - avgB) * BRIGHTEN_FACTOR);
 
-        return 0xFF000000 | (brightR << 16) | (brightG << 8) | brightB;
+        return FastColor.ARGB32.color(MAX_CHANNEL, brightR, brightG, brightB);
     }
 
     private static int parseColor(String colorStr) {

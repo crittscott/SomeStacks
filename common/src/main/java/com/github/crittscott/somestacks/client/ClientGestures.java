@@ -1,15 +1,21 @@
 package com.github.crittscott.somestacks.client;
 
-import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
-import java.util.function.Consumer;
-import java.util.Objects;
+import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.Objects;
+import java.util.function.Consumer;
 
 /** Shared client gesture state and the loader-specific packet sender behind its rules. */
 public final class ClientGestures {
     private ClientGestures() {}
+
+    public static final String STACK_MODIFIER_KEY_ID = "key.somestacks.stack_mode";
+    public static final String KEY_CATEGORY = "key.categories.somestacks";
+    public static final int DEFAULT_STACK_MODIFIER_KEY = GLFW.GLFW_KEY_V;
 
     private static StackMode stackMode = StackMode.STORAGE_STACK;
     private static StackMode lastSentMode;

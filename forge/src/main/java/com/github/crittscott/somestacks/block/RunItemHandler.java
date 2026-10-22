@@ -17,8 +17,7 @@ public final class RunItemHandler implements IItemHandler {
     /** Current run positions, including headroom; unattached/client entities expose local slots. */
     @Override
     public int getSlots() {
-        StackRunItemAccess run = blockEntity.itemRun();
-        return run != null ? run.advertisedSlots() : blockEntity.getItems().getSlots();
+        return blockEntity.advertisedItemSlots();
     }
 
     /** Current contents at a run position, or local contents when no server run is available. */

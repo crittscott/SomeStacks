@@ -6,13 +6,6 @@ import com.github.crittscott.somestacks.renderconfig.RenderProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -24,6 +17,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.BlockItem;
@@ -37,6 +31,14 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * Draws one stored item inside one cell according to its render profile. The Storage
@@ -343,10 +345,10 @@ public final class CubeRenderHelper {
         // the unculled group, reseeding per group.
         List<BakedQuad> plates = new ArrayList<>(2);
         for (Direction bucket : DIRECTIONS) {
-            RANDOM.setSeed(42L);
+            RANDOM.setSeed(ClientRenderPlatform.ITEM_MODEL_SEED);
             collectPlates(pass.getQuads(null, bucket, RANDOM), plates);
         }
-        RANDOM.setSeed(42L);
+        RANDOM.setSeed(ClientRenderPlatform.ITEM_MODEL_SEED);
         collectPlates(pass.getQuads(null, null, RANDOM), plates);
         return plates.isEmpty() ? NO_PLATES : plates.toArray(NO_PLATES);
     }
@@ -439,9 +441,9 @@ public final class CubeRenderHelper {
                 int color = tintIndex >= 0
                         ? ClientRenderPlatform.itemColor(stack, tintIndex)
                         : 0xFFFFFFFF;
-                r = (color >> 16) & 0xFF;
-                g = (color >> 8) & 0xFF;
-                b = color & 0xFF;
+                r = FastColor.ARGB32.red(color);
+                g = FastColor.ARGB32.green(color);
+                b = FastColor.ARGB32.blue(color);
             }
 
             int[] vertices = quad.getVertices();

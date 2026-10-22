@@ -103,8 +103,13 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce in-game: add then remove a namespace through /ss deny mod; policy and admission change immediately while other settings remain unchanged.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reloadCommandPublishesStoredPolicy(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">reloadCommandPublishesStoredPolicy</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#numericPolicyRangesAreShared(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">numericPolicyRangesAreShared</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Synthetic raw policy inputs obey the same numeric ranges before either loader publishes them.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reloadCommandPublishesStoredPolicy(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">reloadCommandPublishesStoredPolicy</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: while the server runs, add a mod id to render_gallery.gen_mods in the
  world's somestacks-server.toml (Forge) or somestacks-server.json (Fabric), then run
  /ss reload.</div>
@@ -132,6 +137,17 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">installedServicesAndLogoutResetPacing</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
 <div class="block">To reproduce in-game: reconnect and rotate a stack; a previous session's rotation-sound pacing must not silence the new session.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="numericPolicyRangesAreShared(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>numericPolicyRangesAreShared</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">numericPolicyRangesAreShared</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Synthetic raw policy inputs obey the same numeric ranges before either loader publishes them.
+ To check valid boundaries in-game, set pile height to 1 or 64, gallery permission to 0 or 4,
+ and gallery speed to 1 in the world config, then reload and use the affected features. Invalid
+ file values also pass through loader-specific parsing/correction; this fixture isolates the
+ shared policy constructor and does not change the running world's policy.</div>
 </section>
 </li>
 <li>

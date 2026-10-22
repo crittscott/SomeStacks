@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.function.BiFunction;
@@ -39,9 +40,9 @@ public final class ClientCallbackChecks {
                     callback.apply(InteractionHand.MAIN_HAND, hit), "Main-hand callback outputs");
             GameTestScaffold.checkEquals(new Result(true, true, true),
                     callback.apply(InteractionHand.OFF_HAND, hit), "Off-hand callback outputs");
-            GameTestScaffold.check(net.minecraft.world.item.ItemStack.matches(main, client.player.getMainHandItem()),
+            GameTestScaffold.check(ItemStack.matches(main, client.player.getMainHandItem()),
                     "Local callback changed main-hand contents");
-            GameTestScaffold.check(net.minecraft.world.item.ItemStack.matches(off, client.player.getOffhandItem()),
+            GameTestScaffold.check(ItemStack.matches(off, client.player.getOffhandItem()),
                     "Local callback changed off-hand contents");
             client.player.displayClientMessage(Component.translatable("somestacks_gametest.message.client_callback_passed"), false);
             return 1;

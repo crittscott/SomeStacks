@@ -11,6 +11,20 @@ import com.github.crittscott.somestacks.renderconfig.RenderProfile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,19 +40,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.annotation.Nullable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 /**
  * The client's item render configuration, layered by authority. The first matching entry owns the
@@ -53,8 +54,8 @@ import net.minecraft.world.item.ItemStack;
 public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path USER_FILE = PlatformServices.configFolder().resolve("somestacks/item_overrides.json");
-    private static final Path GENERATED_DIR = PlatformServices.configFolder().resolve("somestacks/generated_overrides");
+    private static final Path USER_FILE = PlatformServices.modConfigFolder().resolve("item_overrides.json");
+    private static final Path GENERATED_DIR = PlatformServices.modConfigFolder().resolve("generated_overrides");
 
     /** Bundled corpus, from client resource reload. */
     private static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();

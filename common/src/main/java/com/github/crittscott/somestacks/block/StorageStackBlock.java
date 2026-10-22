@@ -29,6 +29,8 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
@@ -52,6 +54,16 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
 
     /** The layout rotation, so structure rotation and mirroring turn the layout with the block. */
     public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
+
+    /** Shared mining, lighting, collision, and piston settings for this stack type. */
+    public static Properties properties() {
+        return Properties.of()
+                .mapColor(MapColor.METAL)
+                .noOcclusion()
+                .pushReaction(PushReaction.BLOCK)
+                .strength(0.5F, 6.0F)
+                .lightLevel(state -> state.getValue(LIGHT_LEVEL));
+    }
 
     public StorageStackBlock(Properties props) {
         super(props);

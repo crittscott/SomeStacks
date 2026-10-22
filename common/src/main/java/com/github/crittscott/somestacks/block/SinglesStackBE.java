@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import net.minecraft.core.BlockPos;
@@ -11,8 +12,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
@@ -78,7 +79,7 @@ public class SinglesStackBE extends StackBlockEntity {
         if (index < 0 || index >= SLOTS) {
             return;
         }
-        cubeRotations[index] = cubeRot % 4;
+        cubeRotations[index] = Math.floorMod(cubeRot, CubeGrid.ROTATIONS);
         setChanged();
         if (!isBatching()) {
             syncToClients();
@@ -333,7 +334,7 @@ public class SinglesStackBE extends StackBlockEntity {
         int[] rotations = tag.getIntArray(TAG_CUBE_ROTATIONS);
         if (rotations.length != SLOTS) return false;
         for (int rotation : rotations) {
-            if (rotation < 0 || rotation >= 4) return false;
+            if (rotation < 0 || rotation >= CubeGrid.ROTATIONS) return false;
         }
         return true;
     }
@@ -345,7 +346,7 @@ public class SinglesStackBE extends StackBlockEntity {
             if (loaded.length == SLOTS) {
                 cubeRotations = loaded.clone();
                 for (int i = 0; i < cubeRotations.length; i++) {
-                    cubeRotations[i] = Math.floorMod(cubeRotations[i], 4);
+                    cubeRotations[i] = Math.floorMod(cubeRotations[i], CubeGrid.ROTATIONS);
                 }
             }
         }

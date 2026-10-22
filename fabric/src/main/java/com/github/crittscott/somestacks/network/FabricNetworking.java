@@ -14,7 +14,7 @@ import java.util.function.Function;
 public final class FabricNetworking {
     private FabricNetworking() {}
 
-    public static final ResourceLocation PROTOCOL = id("protocol_4");
+    public static final ResourceLocation PROTOCOL = id("protocol_" + SomeStacksCommon.PROTOCOL_VERSION);
     public static final ResourceLocation GESTURE_STATE = id("gesture_state");
     public static final ResourceLocation CONFIG_SYNC = id("config_sync");
 

@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.client.settings.KeyConflictContext;
-import org.lwjgl.glfw.GLFW;
 
 /** The mod's key bindings. */
 public final class KeyMappings {
@@ -14,10 +13,10 @@ public final class KeyMappings {
      * gesture asks whether it is down at the moment of the click.
      */
     public static final KeyMapping STACK_MODE_KEY = new KeyMapping(
-            "key.somestacks.stack_mode",
+            ClientGestures.STACK_MODIFIER_KEY_ID,
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_V,
-            "key.categories.somestacks"
+            ClientGestures.DEFAULT_STACK_MODIFIER_KEY,
+            ClientGestures.KEY_CATEGORY
     );
 }

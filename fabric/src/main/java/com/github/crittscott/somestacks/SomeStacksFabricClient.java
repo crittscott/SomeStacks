@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.client.ClientRenderCommands;
 import com.github.crittscott.somestacks.client.FabricClientEvents;
 import com.github.crittscott.somestacks.client.FabricClientRendering;
 import com.github.crittscott.somestacks.client.FabricKeyMappings;
+import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.FabricClientNetworking;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -46,7 +47,7 @@ public final class SomeStacksFabricClient implements ClientModInitializer {
      * reports them unknown, which hands the command to vanilla's ordinary send.
      */
     private static void registerServerPassThrough(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        dispatcher.register(ClientCommandManager.literal(ClientRenderCommands.ROOT)
+        dispatcher.register(ClientCommandManager.literal(SsCommand.ROOT)
                 .then(ClientCommandManager.argument("server_command", StringArgumentType.greedyString())
                         .executes(ctx -> {
                             throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand().create();

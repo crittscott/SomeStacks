@@ -9,9 +9,12 @@ import com.github.crittscott.somestacks.block.StackRun;
 import com.github.crittscott.somestacks.block.StackRunItemAccess;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.CubeGrid;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -19,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -263,6 +267,10 @@ public final class StackFoundationChecks {
      * Their occupied collision/outline regions stay aligned with the visible items at every Singles
      * block rotation. The fixture compares these unions with individually optimized shape merges
      * and checks fixed bounds in both orientations of the Bar layout.
+     * Negative and full turns also preserve cell bounds and visual-column round trips. To check
+     * the visible facing cycle, Shift-click Storage and Singles with a redstone torch four times:
+     * the layouts turn north, west, south, east, then return to north. Negative turns are synthetic
+     * setter inputs; normal gestures supply normalized rotations.
      */
     public static void cachedGeometryPreservesOccupiedUnions(GameTestHelper helper) {
         checkEquals(new AABB(1.0 / 16, 0, 0.5 / 16, 7.0 / 16, 2.0 / 16, 3.5 / 16),
@@ -274,6 +282,37 @@ public final class StackFoundationChecks {
         BarStackBE bars = placeBar(helper, ORIGIN);
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
         var barItem = firstBarItem();
+        for (CubeGrid grid : new CubeGrid[]{StorageCubeIdx.GRID, SinglesCubeIdx.GRID}) {
+            for (int turn = 0; turn < CubeGrid.ROTATIONS; turn++) {
+                checkEquals(grid.localBox(0, turn), grid.localBox(0, turn - CubeGrid.ROTATIONS),
+                        "Negative turn changed cell bounds");
+                checkEquals(grid.localBox(0, turn), grid.localBox(0, turn + CubeGrid.ROTATIONS),
+                        "Full turn changed cell bounds");
+            }
+        }
+        for (int turn = -CubeGrid.ROTATIONS; turn <= CubeGrid.ROTATIONS; turn++) {
+            for (int column = 0; column < SinglesCubeIdx.LAYER_SIZE; column++) {
+                int visual = SinglesCubeIdx.visualColumnFromStorage(column, turn);
+                checkEquals(column, SinglesCubeIdx.storageColumnFromVisual(visual, turn),
+                        "Visual/storage column round trip");
+            }
+        }
+        singles.setCubeRotation(0, -1);
+        checkEquals(3, singles.getCubeRotation(0), "Negative item rotation");
+        singles.setCubeRotation(0, CubeGrid.ROTATIONS);
+        checkEquals(0, singles.getCubeRotation(0), "Full item rotation");
+        Direction[] facings = {Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST};
+        StorageStackBE storage = placeStorage(helper, ORIGIN.east(6));
+        for (int turn = 0; turn < facings.length; turn++) {
+            storage.setRotation(turn - CubeGrid.ROTATIONS);
+            singles.setRotation(turn - CubeGrid.ROTATIONS);
+            checkEquals(facings[turn], storage.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING),
+                    "Storage facing order");
+            checkEquals(facings[turn], singles.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING),
+                    "Singles facing order");
+            checkEquals(turn, storage.getRotation(), "Storage facing inverse");
+            checkEquals(turn, singles.getRotation(), "Singles facing inverse");
+        }
         for (int stride : new int[]{1, 2}) {
             VoxelShape expectedBars = Shapes.empty();
             for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {

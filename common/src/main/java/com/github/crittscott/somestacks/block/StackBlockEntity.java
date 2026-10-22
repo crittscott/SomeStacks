@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ServerLifecycle;
+import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.SharedConstants;
@@ -95,6 +96,12 @@ public abstract class StackBlockEntity extends BlockEntity {
         cachedRun = resolveRun(serverLevel);
         cachedRunTick = now;
         return cachedRun;
+    }
+
+    /** Run positions including headroom, or local slots when no server run is available. */
+    public final int advertisedItemSlots() {
+        StackRunItemAccess run = itemRun();
+        return run != null ? run.advertisedSlots() : items.getSlots();
     }
 
     /** Invalidates bounds after a structural edit within the same tick. */
@@ -204,7 +211,7 @@ public abstract class StackBlockEntity extends BlockEntity {
      * made before the entity belongs to a server level applies once it does.
      */
     public final void setRotation(int rotation) {
-        pendingBlockRotation = Math.floorMod(rotation, 4);
+        pendingBlockRotation = Math.floorMod(rotation, CubeGrid.ROTATIONS);
         applyPendingBlockRotation();
     }
 
@@ -234,7 +241,7 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     /** Maps the grid's counterclockwise quarter turns to a horizontal facing. */
     private static Direction facingOf(int rotation) {
-        return switch (Math.floorMod(rotation, 4)) {
+        return switch (Math.floorMod(rotation, CubeGrid.ROTATIONS)) {
             case 1 -> Direction.WEST;
             case 2 -> Direction.SOUTH;
             case 3 -> Direction.EAST;

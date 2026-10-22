@@ -77,8 +77,8 @@ loadScripts(document, 'script');</script>
  logging mod vetoes one, and how the loader reports completion. <a href="WorldEdits.html" title="class in com.github.crittscott.somestacks.server"><code>WorldEdits</code></a> owns the vanilla
  mechanics and consults this boundary for protection and notifications.
 
- <p>The loader's entry point installs an implementation via <a href="WorldEdits.html#setAuthority(com.github.crittscott.somestacks.server.EditAuthority)"><code>WorldEdits.setAuthority(com.github.crittscott.somestacks.server.EditAuthority)</code></a> before
- any world logic can run.</div>
+ <p>The loader's entry point supplies this authority through <a href="../PlatformServices.Backend.html" title="interface in com.github.crittscott.somestacks"><code>PlatformServices.Backend</code></a>
+ before any world logic can run.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

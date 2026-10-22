@@ -4,15 +4,13 @@
 
 # Some Stacks — code orientation
 
-Behavior: `orientation-player.md`; build: `orientation-build.md`.
-
 ## Project shape
 
-Java 17 / Minecraft 1.20.1; package `com.github.crittscott.somestacks`, id `somestacks`. Baselines: Forge 47.4.10, Fabric Loader 0.19.3 / API 0.92.7+1.20.1. Architectury is build-time only.
+Java 17 / Minecraft 1.20.1; package `com.github.crittscott.somestacks`, id `somestacks`. Baselines: Forge 47.4.10, Fabric Loader 0.19.3 / API 0.92.7+1.20.1. Architectury is build-time.
 
-`common` bundles into each loader JAR; loader seams install before common initialization. Fabric mixins use Loom remapping without a runtime refmap.
+`common` bundles into each loader JAR; loader seams install before common initialization. Fabric mixins use Loom remapping without a refmap.
 
-Three block/entity types; no block items, menus, recipes, or portable containers:
+Three block/entity types; no items, menus, or recipes:
 
 | Block | Block entity | Local storage |
 | --- | --- | --- |
@@ -34,7 +32,7 @@ Three block/entity types; no block items, menus, recipes, or portable containers
 | `renderconfig` | Server-safe profiles, modes, offsets, JSON codec |
 | `WorldEdits`, `EditAuthority` | Placement queries and transactions, adjacent protection, automated removal |
 | `StackInteractions`, `ServerGestureState` | Gestures, hit-point targeting, synced mode/modifier |
-| Loader entry points, registries, network | Registration (incl. sounds), lifecycle, services, transport |
+| Loader entry points, registries, network | Native registration; common IDs and block properties; lifecycle/transport |
 | Forge `RunItemHandler`, Fabric Transfer adapter | Whole-run native storage views |
 | `common/.../client` | Renderers, profiles, measurement, bar textures, `ClientRenderCommands` |
 | `SsCommand`, `RenderGalleryGenerator` | Server administration, galleries |
@@ -45,7 +43,7 @@ Three block/entity types; no block items, menus, recipes, or portable containers
 | --- | --- | --- |
 | Metadata | `META-INF/mods.toml` | `fabric.mod.json`, `somestacks.mixins.json` |
 | Entrypoints | `SomeStacks`, client `ClientSetup` | `SomeStacksFabric`, `SomeStacksFabricClient` |
-| Networking | `SimpleChannel` protocol 4; mismatch rejected | Play networking; `protocol_4` handshake gates play packets |
+| Networking | `SimpleChannel` protocol 4; mismatch rejected | Play networking; `protocol_4` handshake gates play packets; missing-mod disconnect text has an English fallback |
 | Gestures | `Block.use`; LOWEST `RightClickBlock` for sneaking/adjacent | `Block.use`; late `UseBlockCallback` for sneaking/adjacent; air-click mixin |
 | Client commands | `RegisterClientCommandsEvent` | `ClientCommandRegistrationCallback` plus server pass-through |
 | Rendering | Shared BERs through registration/render seams | Shared BERs through Renderer API-aware seams |
@@ -56,7 +54,7 @@ Three block/entity types; no block items, menus, recipes, or portable containers
 
 ## Runtime and movement
 
-`StackBlockEntity` owns slots, NBT, batches, and one-tick shared run caches. `StackRun` owns bounds, headroom, fill, comparators, and publication; concrete runs own movement. Structural edits invalidate bounds immediately.
+`StackBlockEntity` owns slots, advertised capacity, NBT, batches, and one-tick run caches. `StackRun` owns bounds, headroom, fill, comparators, and publication; concrete runs own movement. Structural edits invalidate bounds immediately.
 
 Entities do not tick. Mutations schedule base publication and Storage settlement. Blocks share a run comparator signal, with local light and waterlogging.
 
@@ -86,7 +84,7 @@ Storage accepts ordinary nonempty items. Bar accepts members of the `somestacks:
 
 Forge `RunItemHandler` uses `LazyOptional` invalidation. Fabric caches adapters per entity through `FabricStorageOwner`; all sides/blocks share the base ledger. Singles/Bar permit one extraction position per transaction. Views include headroom below maximum height. Fabric sweeps resolve one run/ledger; retained views resolve on access. Growth checks last one insertion sweep: Storage reuses obstruction; Singles/Bar check each candidate shape. Commit re-resolves and validates each mutation. `RunEdit` refuses reentrant automation.
 
-`WorldEdits` checks height, replaceability, final-shape obstruction, border, and spawn for growth/cleanup; `canGrow` asks `EditAuthority.mayPlace`. Null edit actors resolve in `WorldEdits` to `AutomationActor.PROFILE` through loader fake players. Forge uses place/break events, snapshot rollback, and `onPlace`/`markAndNotifyBlock` publication, refusing reentrancy and foreign capture.
+`WorldEdits` uses `PlatformServices.editAuthority()` and checks height, replaceability, obstruction, border, and spawn; `canGrow` asks `EditAuthority.mayPlace`. Null edit actors resolve in `WorldEdits` to `AutomationActor.PROFILE` through loader fake players. Forge uses place/break events, snapshot rollback, and `onPlace`/`markAndNotifyBlock` publication, refusing reentrancy and foreign capture.
 
 Fabric removal asks Common Protection API, then `PlayerBlockBreakEvents`. Fabric `mayPlace` ANDs the mod-gated `CommonProtectionQueries`, `FtbChunksProtection`, and `OpacProtection` before `setBlock`; adjacent deposits also ask `canInteractBlock`.
 
@@ -100,13 +98,13 @@ Vanilla checks reach and loaded chunks; `StackInteractions` validates hand, spec
 
 Client SUCCESS still sends the packet. Stack blocks consume every server use; sneaking/off-hand use does not mutate stacks. Forge item-only denial allows existing-stack gestures. Adjacent deposits check both positions, guarding recursion.
 
-`ConfigSyncPkt` carries byte-bounded generation chunks (flags, `gen_mods`, `disable_mods`), rejecting invalid counts/namespaces. `ClientRenderPacketSink` publishes complete generations to `StackState`/`ClientRenderToolState`; invalid sequences throw and clear staging, also cleared on disconnect.
+`SomeStacksCommon.PROTOCOL_VERSION` supplies both transports' wire version. `ConfigSyncPkt` carries byte-bounded generation chunks (flags, `gen_mods`, `disable_mods`), rejecting invalid counts/namespaces. `ClientRenderPacketSink` publishes complete generations to `StackState`/`ClientRenderToolState`; invalid sequences throw and clear staging, also cleared on disconnect.
 
 ## Configuration and presentation
 
-`ServerLifecycle` sends `ConfigSyncPkt.snapshot` on login/broadcast and clears sessions. Loaders install readers/savers through `ServerConfig.start`. Forge TOML reload publishes on the server thread; Fabric rereads JSON on `/ss reload`. List edits save through the loader; `gen_mods`/`disable_mods` changes resync clients.
+`ServerLifecycle` sends `ConfigSyncPkt.snapshot` on login/broadcast and clears sessions. `ServerConfig.Settings` normalizes numeric ranges; loaders install world persistence via `ServerConfig.start` and share `ServerConfig.Keys`. Forge TOML reload publishes on the server thread; Fabric rereads JSON on `/ss reload`. List edits save through the loader; `gen_mods`/`disable_mods` changes resync clients.
 
-Galleries default off/permission 3, spread across ticks, bypass placement protection, list items in id order without denied items, and clear on server start/stop.
+Galleries default off/permission 3, build incrementally in id order, skip denied items, bypass protection, and clear between sessions.
 
 Resources (`common/src/main/resources`):
 
@@ -115,16 +113,16 @@ Resources (`common/src/main/resources`):
 - `assets/<namespace>/item_render_overrides/*.json` defines Storage/Singles profiles.
 - `assets/<namespace>/textures/bars/*.json` defines Bar textures/tints.
 
-`CubeGrid` caches rotations/geometry; `BarCubeIdx` shares cached boxes/shapes across rendering and targeting. Singles/Bar unions optimize once per rebuild. All three renderers use the dispatcher's supplied packed light. Storage/Singles use `CubeRenderHelper`. Bar caches sprites/UVs, transforms scalar vertices/normals, and resolves textures/tints per item; resource reload clears client caches. Profiles use immutable `RenderOffset`; precedence is user -> resource pack -> measurement. A `2d` model that throws while its art is gathered (before drawing) joins `FLAT_CAPTURE_FAILURES` and draws `stack_cube_error` until reload, logged once. Derived Bar tints multiply the first GUI quad's sprite by its tint. `ItemRenderOverrides` caches profiles until edits or corpus/model reload.
+`CubeGrid` caches geometry and defines quarter turns; setters normalize rotations, client updates reject invalid ones; `BarCubeIdx` shares cached boxes/shapes across rendering and targeting. Singles/Bar unions optimize once per rebuild. All three renderers use the dispatcher's supplied packed light. Storage/Singles use `CubeRenderHelper`. Bar caches sprites/UVs, transforms scalar vertices/normals, and resolves textures/tints per item; resource reload clears client caches. Profiles use `RenderOffset`; precedence: user -> pack -> measurement. A `2d` model that throws while its art is gathered (before drawing) joins `FLAT_CAPTURE_FAILURES` and draws `stack_cube_error` until reload, logged once. Derived Bar tints multiply the first GUI quad's sprite by its tint. `ItemRenderOverrides` caches profiles until edits or corpus/model reload.
 
-Flat models use 2-D; others 3-D. Forge measures passes/custom vertices; custom output uses 3-D. Fabric measures quads with a 3-D ItemRenderer fallback.
+Flat models use 2-D; others 3-D. Forge measures passes/custom vertices; Fabric measures quads with a 3-D ItemRenderer fallback.
 
 `measured_cache.json` keys by format, packs, and mod versions; mismatch/reload invalidates it. Client-local `/ss item` edits memory; `/ss write changed` saves; namespace forms write output-only profiles.
 
 ## Tests
 
-`somestacks_gametest` combines shared/loader scenarios with Base64-generated fixtures.
+`somestacks_gametest` combines shared/loader scenarios.
 
-Shared checks cover batching, caches, shapes, growth, movement, persistence/recovery, client updates, rotation, comparators, gestures, admission, policy, and Bar break/cascade drops with block drops disabled. Forge adds TOML saves/reloads; Fabric covers Transfer transactions/capacity, partial-first insertion, and retained views after base removal. Protection checks cover adjacent denial, partial shapes, rollback/reentrancy, and break context; `-PwithCommonProtectionApi=true` selects provider-backed checks.
+Shared checks cover batching, geometry, persistence, movement, rotation, gestures, numeric policy ranges, and Bar drops with block drops disabled. Forge adds TOML saves/reloads; Fabric covers Transfer transactions/capacity, partial-first insertion, and retained views after base removal. Protection checks cover adjacent denial, partial shapes, rollback/reentrancy, and break context; `-PwithCommonProtectionApi=true` selects provider-backed checks.
 
-`WorldEditChecks`: events, actors, cleanup; `RenderGalleryChecks`: command gates, saved deny edits.
+`WorldEditChecks`: edits; `RenderGalleryChecks`: commands.

@@ -13,13 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -31,6 +24,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.phys.AABB;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import javax.annotation.Nullable;
 
 /**
  * Per-item cache of measured render profiles, persisted client-side so each item is normally
@@ -49,6 +50,11 @@ import net.minecraft.world.phys.AABB;
  * mod versions and resource-pack list with the current client.
  */
 public final class AutoRenderProfiles {
+    private static final String KEY_FORMAT = "format";
+    private static final String KEY_PACKS = "packs";
+    private static final String KEY_VERSIONS = "versions";
+    private static final String KEY_ENTRIES = "entries";
+
     static final int CACHE_FORMAT_VERSION = 1;
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -132,10 +138,10 @@ public final class AutoRenderProfiles {
         }
 
         JsonObject root = new JsonObject();
-        root.addProperty("format", CACHE_FORMAT_VERSION);
-        root.addProperty("packs", selectedPackIds());
-        root.add("versions", versions);
-        root.add("entries", OverrideJsonCodec.toJson(entries));
+        root.addProperty(KEY_FORMAT, CACHE_FORMAT_VERSION);
+        root.addProperty(KEY_PACKS, selectedPackIds());
+        root.add(KEY_VERSIONS, versions);
+        root.add(KEY_ENTRIES, OverrideJsonCodec.toJson(entries));
 
         Path cacheFile = cacheFile();
         try {
@@ -159,7 +165,7 @@ public final class AutoRenderProfiles {
         }
         try {
             JsonObject root = GSON.fromJson(Files.readString(cacheFile), JsonObject.class);
-            if (!isCurrentCacheFormat(root) || !root.has("entries")) {
+            if (!isCurrentCacheFormat(root) || !root.has(KEY_ENTRIES)) {
                 dirty = true;
                 SomeStacksCommon.LOGGER.info(
                         "Discarded measured render cache {} because its format is obsolete or invalid",
@@ -170,7 +176,7 @@ public final class AutoRenderProfiles {
             // Measurements read baked models, which a resource pack rewrites as surely as a mod
             // update does. A cache written under a different set of packs describes models that are
             // no longer loaded, so none of it is kept.
-            String packs = root.has("packs") ? root.get("packs").getAsString() : null;
+            String packs = root.has(KEY_PACKS) ? root.get(KEY_PACKS).getAsString() : null;
             if (packs == null || !packs.equals(selectedPackIds())) {
                 dirty = true;
                 SomeStacksCommon.LOGGER.info(
@@ -179,9 +185,9 @@ public final class AutoRenderProfiles {
                 return;
             }
 
-            JsonObject versions = root.has("versions") ? root.getAsJsonObject("versions") : new JsonObject();
+            JsonObject versions = root.has(KEY_VERSIONS) ? root.getAsJsonObject(KEY_VERSIONS) : new JsonObject();
 
-            JsonObject encodedEntries = root.getAsJsonObject("entries");
+            JsonObject encodedEntries = root.getAsJsonObject(KEY_ENTRIES);
             Map<ResourceLocation, ItemRenderConfig> entries =
                     OverrideJsonCodec.parse(encodedEntries, cacheFile.toString());
             int skipped = encodedEntries.size() - entries.size();
@@ -216,15 +222,15 @@ public final class AutoRenderProfiles {
     }
 
     private static Path cacheFile() {
-        return PlatformServices.configFolder().resolve("somestacks/measured_cache.json");
+        return PlatformServices.modConfigFolder().resolve("measured_cache.json");
     }
 
     static boolean isCurrentCacheFormat(@Nullable JsonObject root) {
-        if (root == null || !root.has("format")) {
+        if (root == null || !root.has(KEY_FORMAT)) {
             return false;
         }
         try {
-            return root.get("format").getAsInt() == CACHE_FORMAT_VERSION;
+            return root.get(KEY_FORMAT).getAsInt() == CACHE_FORMAT_VERSION;
         } catch (RuntimeException e) {
             return false;
         }

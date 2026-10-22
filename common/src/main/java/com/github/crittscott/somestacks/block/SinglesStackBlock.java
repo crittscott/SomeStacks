@@ -29,6 +29,8 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -60,6 +62,17 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     /** The layout rotation, so structure rotation and mirroring turn the layout with the block. */
     public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape FULL_BLOCK_SHAPE = Shapes.block();
+
+    /** Shared mining, lighting, collision, and piston settings for this stack type. */
+    public static Properties properties() {
+        return Properties.of()
+                .dynamicShape()
+                .mapColor(MapColor.WOOD)
+                .noOcclusion()
+                .pushReaction(PushReaction.BLOCK)
+                .strength(0.5F, 6.0F)
+                .lightLevel(state -> state.getValue(LIGHT_LEVEL));
+    }
 
     public SinglesStackBlock(Properties props) {
         super(props);

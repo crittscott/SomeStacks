@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.client;
 
+import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * The client-local {@code ss item} and {@code ss write} commands. They edit and write this
@@ -33,9 +35,6 @@ import java.util.TreeSet;
  * namespace lists from {@link ClientRenderToolState}.
  */
 public final class ClientRenderCommands {
-    /** The command root shared with the server-side {@code ss} tree. */
-    public static final String ROOT = "ss";
-
     private static final String ARG_ITEM = "item";
     private static final String ARG_MODE = "mode";
     private static final String ARG_SCALE = "scale";
@@ -53,7 +52,7 @@ public final class ClientRenderCommands {
     }
 
     public static <S> void register(CommandDispatcher<S> dispatcher, Feedback<S> feedback) {
-        dispatcher.register(LiteralArgumentBuilder.<S>literal(ROOT)
+        dispatcher.register(LiteralArgumentBuilder.<S>literal(SsCommand.ROOT)
                 .then(itemTree(feedback))
                 .then(writeTree(feedback)));
     }
@@ -143,7 +142,8 @@ public final class ClientRenderCommands {
         RenderMode mode = RenderMode.fromString(modeString);
         if (mode == null) {
             feedback.failure(ctx.getSource(), Component.translatable(
-                    "somestacks.command.unknown_render_mode", modeString));
+                    "somestacks.command.unknown_render_mode", modeString,
+                    Arrays.stream(RenderMode.values()).map(RenderMode::getId).collect(Collectors.joining(", "))));
             return 0;
         }
 

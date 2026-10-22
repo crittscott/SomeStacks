@@ -26,6 +26,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -55,6 +57,17 @@ public class BarStackBlock extends Block implements EntityBlock, SimpleWaterlogg
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private static final VoxelShape FULL_BLOCK_SHAPE = Shapes.block();
+
+    /** Shared mining, lighting, collision, and piston settings for this stack type. */
+    public static Properties properties() {
+        return Properties.of()
+                .dynamicShape()
+                .mapColor(MapColor.METAL)
+                .noOcclusion()
+                .pushReaction(PushReaction.BLOCK)
+                .strength(0.5F, 6.0F)
+                .lightLevel(state -> state.getValue(LIGHT_LEVEL));
+    }
 
     public BarStackBlock(Properties props) {
         super(props);

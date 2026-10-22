@@ -1,12 +1,14 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.PlatformServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+
 import javax.annotation.Nullable;
 
 /**
@@ -14,8 +16,8 @@ import javax.annotation.Nullable;
  * logging mod vetoes one, and how the loader reports completion. {@link WorldEdits} owns the vanilla
  * mechanics and consults this boundary for protection and notifications.
  *
- * <p>The loader's entry point installs an implementation via {@link WorldEdits#setAuthority} before
- * any world logic can run.
+ * <p>The loader's entry point supplies this authority through {@link PlatformServices.Backend}
+ * before any world logic can run.
  */
 public interface EditAuthority {
     /** The actor automation-driven growth and removal are attributed to. */
