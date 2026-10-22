@@ -124,16 +124,28 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.level.block.Block</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBlock()" class="member-name-link">getBlock</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#admits(net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">admits</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
+ net.minecraft.server.level.ServerPlayer&nbsp;depositor)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Silent admission for simulation/commit; null denotes automation, which ignores exact-item denial.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.level.block.Block</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBlock()" class="member-name-link">getBlock</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#of(net.minecraft.world.level.block.Block)" class="member-name-link">of</a><wbr>(net.minecraft.world.level.block.Block&nbsp;block)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#of(net.minecraft.world.level.block.Block)" class="member-name-link">of</a><wbr>(net.minecraft.world.level.block.Block&nbsp;block)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The type whose block this is, or null when it names none of the three.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#permitsPlayerItemAndNotify(net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">permitsPlayerItemAndNotify</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Player policy gate before placement-height/support checks.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
@@ -241,6 +253,24 @@ not permitted.)</div>
 <section class="detail" id="isEnabled()">
 <h3>isEnabled</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEnabled</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="admits(net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)">
+<h3>admits</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">admits</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack,
+ @Nullable
+ net.minecraft.server.level.ServerPlayer&nbsp;depositor)</span></div>
+<div class="block">Silent admission for simulation/commit; null denotes automation, which ignores exact-item denial.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="permitsPlayerItemAndNotify(net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)">
+<h3>permitsPlayerItemAndNotify</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">permitsPlayerItemAndNotify</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">Player policy gate before placement-height/support checks. Type admission remains silent and
+ is checked during preflight/commit. Mod denial takes message precedence.</div>
 </section>
 </li>
 </ul>

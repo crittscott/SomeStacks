@@ -6,7 +6,6 @@ import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.ViewRay;
-import com.github.crittscott.somestacks.util.ViewRays;
 import net.minecraft.core.Direction;
 
 /**
@@ -31,7 +30,7 @@ public final class DepositIntoClickedStackRule implements InteractionRule {
             return true;
         }
 
-        ViewRay ray = ViewRays.of(ctx.getPlayer());
+        ViewRay ray = ViewRay.of(ctx.getPlayer());
         var be = ctx.getLevel().getBlockEntity(ctx.getClickedPos());
 
         if (be instanceof SinglesStackBE ssbe) {

@@ -1,10 +1,10 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.command.SsCommand;
-import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
-import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
-import com.github.crittscott.somestacks.renderconfig.RenderMode;
-import com.github.crittscott.somestacks.renderconfig.RenderOffset;
+import com.github.crittscott.somestacks.client.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.client.renderconfig.OverrideJsonCodec;
+import com.github.crittscott.somestacks.client.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.client.renderconfig.RenderOffset;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * The client-local {@code ss item} and {@code ss write} commands. They edit and write this
  * client's own render profiles, so anyone may run them on any server, and no server packet can
  * invoke them. The {@code list} and {@code all} write forms read the server's gallery and disabled
- * namespace lists from {@link ClientRenderToolState}.
+ * namespace lists from {@link ClientServerSettings}.
  */
 public final class ClientRenderCommands {
     private static final String ARG_ITEM = "item";
@@ -170,7 +170,7 @@ public final class ClientRenderCommands {
 
     private static <S> int dumpSingle(CommandContext<S> ctx, Feedback<S> feedback) {
         String namespace = StringArgumentType.getString(ctx, ARG_MODID).toLowerCase(Locale.ROOT);
-        if (ClientRenderToolState.isDisabled(namespace)) {
+        if (ClientServerSettings.isDisabled(namespace)) {
             feedback.failure(ctx.getSource(), Component.translatable(
                     "somestacks.command.mod_disabled", namespace));
             return 0;
@@ -188,7 +188,7 @@ public final class ClientRenderCommands {
         List<String> namespaces = new ArrayList<>(installedNamespaces());
         List<String> disabled = new ArrayList<>();
         namespaces.removeIf(namespace -> {
-            if (ClientRenderToolState.isDisabled(namespace)) {
+            if (ClientServerSettings.isDisabled(namespace)) {
                 disabled.add(namespace);
                 return true;
             }
@@ -208,8 +208,8 @@ public final class ClientRenderCommands {
         List<String> unusable = new ArrayList<>();
         Set<String> installed = installedNamespaces();
 
-        for (String namespace : ClientRenderToolState.genMods()) {
-            if (ClientRenderToolState.isDisabled(namespace)) {
+        for (String namespace : ClientServerSettings.genMods()) {
+            if (ClientServerSettings.isDisabled(namespace)) {
                 disabled.add(namespace);
             } else if (!installed.contains(namespace)) {
                 unusable.add(namespace);
@@ -218,7 +218,7 @@ public final class ClientRenderCommands {
             }
         }
         if (namespaces.isEmpty()) {
-            feedback.failure(ctx.getSource(), ClientRenderToolState.genMods().isEmpty()
+            feedback.failure(ctx.getSource(), ClientServerSettings.genMods().isEmpty()
                     ? Component.translatable(
                             "somestacks.command.gen_mods_empty",
                             Component.translatable("somestacks.command.label.gen_mods"))

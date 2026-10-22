@@ -43,7 +43,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     private double contributionCorrection;
     private int occupiedSlots;
     private int fullSlots;
-    private StackRunItemAccess cachedRun;
+    private StackRun<?> cachedRun;
     private long cachedRunTick = Long.MIN_VALUE;
 
     /** Creates local storage with subtype admission and a deferred publication callback. */
@@ -81,11 +81,11 @@ public abstract class StackBlockEntity extends BlockEntity {
     protected abstract boolean isStoredItemValid(ItemStack stack);
 
     /** Resolves the server run without consulting this entity's per-tick cache. */
-    protected abstract StackRunItemAccess resolveRun(ServerLevel serverLevel);
+    protected abstract StackRun<?> resolveRun(ServerLevel serverLevel);
 
     /** Current server run, or null on the client or when the entity is removed. */
     @Nullable
-    public final StackRunItemAccess itemRun() {
+    public final StackRun<?> itemRun() {
         if (isRemoved() || !(level instanceof ServerLevel serverLevel)) {
             return null;
         }
@@ -100,7 +100,7 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     /** Run positions including headroom, or local slots when no server run is available. */
     public final int advertisedItemSlots() {
-        StackRunItemAccess run = itemRun();
+        StackRun<?> run = itemRun();
         return run != null ? run.advertisedSlots() : items.getSlots();
     }
 
@@ -110,7 +110,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     /** Installs the same resolved run on each member without another world walk. */
-    final void cacheRun(StackRunItemAccess run, long tick) {
+    final void cacheRun(StackRun<?> run, long tick) {
         cachedRun = run;
         cachedRunTick = tick;
     }
@@ -320,7 +320,7 @@ public abstract class StackBlockEntity extends BlockEntity {
             return;
         }
         publishPending = true;
-        StackRunItemAccess run = itemRun();
+        StackRun<?> run = itemRun();
         if (run != null) {
             run.markDirty();
         }

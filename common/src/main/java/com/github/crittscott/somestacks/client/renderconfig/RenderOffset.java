@@ -1,4 +1,4 @@
-package com.github.crittscott.somestacks.renderconfig;
+package com.github.crittscott.somestacks.client.renderconfig;
 
 /** Immutable three-axis render offset, expressed in cell widths. */
 public record RenderOffset(float x, float y, float z) {

@@ -1,4 +1,4 @@
-package com.github.crittscott.somestacks.renderconfig;
+package com.github.crittscott.somestacks.client.renderconfig;
 
 /**
  * A complete, ready-to-render presentation for one item: the output of resolving the

@@ -4,7 +4,7 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
-import com.github.crittscott.somestacks.server.RotationSoundThrottle;
+import com.github.crittscott.somestacks.server.StackSounds;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.core.BlockPos;
@@ -332,7 +332,7 @@ public final class InteractionChecks {
                                        GameEvent event, Runnable gesture) {
         var level = helper.getLevel();
         var before = level.getBlockState(pos);
-        RotationSoundThrottle.clear(player.getUUID());
+        StackSounds.clear(player.getUUID());
         try (var events = new WorldEditChecks.EventProbe(level, pos)) {
             gesture.run();
             events.expectOne(event, player, event == GameEvent.BLOCK_DESTROY ? before : level.getBlockState(pos));
@@ -363,7 +363,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.getAbilities().instabuild = false;
             ServerGestureState.clear(player.getUUID());
-            RotationSoundThrottle.clear(player.getUUID());
+            StackSounds.clear(player.getUUID());
         }
         @Override public void close() {
             player.setPos(position.x, position.y, position.z);
@@ -373,7 +373,7 @@ public final class InteractionChecks {
             player.setItemInHand(HAND, ItemStack.EMPTY);
             player.setItemInHand(InteractionHand.OFF_HAND, offhand);
             ServerGestureState.clear(player.getUUID());
-            RotationSoundThrottle.clear(player.getUUID());
+            StackSounds.clear(player.getUUID());
         }
     }
 }

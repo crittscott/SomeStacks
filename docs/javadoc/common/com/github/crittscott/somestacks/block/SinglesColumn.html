@@ -76,10 +76,6 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
 <section class="class-description" id="class-description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">SinglesColumn</span>
 <span class="extends-implements">extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&gt;</span></div>
@@ -105,8 +101,8 @@ loadScripts(document, 'script');</script>
 <section class="nested-class-summary" id="nested-class-summary">
 <h2>Nested Class Summary</h2>
 <div class="inherited-list">
-<h2 id="nested-classes-inherited-from-class-com.github.crittscott.somestacks.block.StackRunItemAccess">Nested classes/interfaces inherited from interface&nbsp;com.github.crittscott.somestacks.block.<a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></h2>
-<code><a href="StackRunItemAccess.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess.InsertionTest</a></code></div>
+<h2 id="nested-classes-inherited-from-class-com.github.crittscott.somestacks.block.StackRun">Nested classes/interfaces inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></h2>
+<code><a href="StackRun.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRun.InsertionTest</a></code></div>
 </section>
 </li>
 <!-- =========== FIELD SUMMARY =========== -->
@@ -160,10 +156,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Inserts one item into only the named empty, supported cell,
  leaving the caller's stack unchanged.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackRunItemAccess.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess.InsertionTest</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackRun.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRun.InsertionTest</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertionTest()" class="member-name-link">insertionTest</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">A short-lived insertion simulation for one read-only sweep.</div>
+<div class="block">One read-only insertion sweep.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxHeight()" class="member-name-link">maxHeight</a>()</code></div>
@@ -229,6 +225,8 @@ loadScripts(document, 'script');</script>
  A slot in advertised headroom can grow the column only when height, enablement, space,
  obstruction, and the loader's automation edit authority permit it.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRun.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)">insertAt</a></code>&nbsp;in class&nbsp;<code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>simulate</code> - when true, evaluates current capacity and growth checks without storing or growing</dd>
 <dt>Returns:</dt>
@@ -239,10 +237,14 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="insertionTest()">
 <h3>insertionTest</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackRunItemAccess.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess.InsertionTest</a></span>&nbsp;<span class="element-name">insertionTest</span>()</div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="StackRunItemAccess.html#insertionTest()">StackRunItemAccess</a></code></span></div>
-<div class="block">A short-lived insertion simulation for one read-only sweep. Discard it before any world,
- policy, permission, or live inventory mutation; commits always use fresh checks through insertAt.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackRun.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRun.InsertionTest</a></span>&nbsp;<span class="element-name">insertionTest</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="StackRun.html#insertionTest()">StackRun</a></code></span></div>
+<div class="block">One read-only insertion sweep. Discard before world, inventory, policy, or permission changes;
+ committed insertions always perform fresh validation.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRun.html#insertionTest()">insertionTest</a></code>&nbsp;in class&nbsp;<code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&gt;</code></dd>
+</dl>
 </section>
 </li>
 <li>
@@ -254,6 +256,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Takes the item at <code>flatSlot</code> through the block's own removal, so automation and the
  player leave the column in the same state: the cells above the hole shift down one layer in
  that column, drawing from the Singles Stacks above and removing any block the walk empties.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRun.html#extract(int,int,boolean)">extract</a></code>&nbsp;in class&nbsp;<code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&gt;</code></dd>
+</dl>
 </section>
 </li>
 </ul>

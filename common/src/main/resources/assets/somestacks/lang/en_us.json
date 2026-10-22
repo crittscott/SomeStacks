@@ -59,8 +59,10 @@
   "somestacks.command.gallery_created": "Created %s %s (%s %s) for %s. Rows run north.",
   "somestacks.command.gallery_warning": " WARNING: %s of %s placements failed; see log for positions and reasons.",
   "somestacks.command.gallery_building": "Building %s %s (%s %s) for %s.",
-  "somestacks.command.reloaded": "Reloaded Some Stacks server config; synced %s player(s)",
+  "somestacks.command.reloaded": "Reloaded Some Stacks server config; %s player(s) online",
   "somestacks.command.list_contains": "The %s already contains %s",
+  "somestacks.command.namespace_rejected": "Cannot add %s: use a valid namespace of at most %s characters, with at most %s namespaces per list.",
+  "somestacks.command.policy_rejected": "Server policy was not reloaded. The previous policy remains active; check the server log for namespace limits.",
   "somestacks.command.list_added": "Added %s to the %s",
   "somestacks.command.list_missing": "The %s does not contain %s",
   "somestacks.command.list_removed": "Removed %s from the %s",
@@ -123,7 +125,7 @@
 
   "somestacks.command.help.reload.usage.1": "/ss reload",
   "somestacks.command.help.reload.summary": "Re-read server policy, then re-sync players",
-  "somestacks.command.help.reload.detail.1": "Refreshes the current server policy and pushes client-facing settings to every player. Fabric rereads the world JSON file; Forge loads TOML edits through its config lifecycle. Data-pack ingot tags use /reload; render resources use a resource reload.",
+  "somestacks.command.help.reload.detail.1": "Refreshes server policy and sends changed client-facing settings to every player. Fabric rereads the world JSON file; Forge loads TOML edits through its config lifecycle. Data-pack ingot tags use /reload; render resources use a resource reload.",
 
   "somestacks.command.help.gen.usage.1": "/ss gen mod add <modid>",
   "somestacks.command.help.gen.usage.2": "/ss gen mod remove <modid>",
@@ -134,7 +136,7 @@
   "somestacks.command.help.gen.summary": "Edit the mod and item lists the render galleries build from",
   "somestacks.command.help.gen.detail.1": "The mod list feeds /ss gallery list and /ss ingotgallery list, in the order it is stored, which is the order of the gallery's columns.",
   "somestacks.command.help.gen.detail.2": "The item list feeds /ss gallery items. The row is sorted by mod id and then item name when it is built, so the stored order carries no meaning.",
-  "somestacks.command.help.gen.detail.3": "An item id is checked against the registry as it is added. A mod id is taken as typed.",
+  "somestacks.command.help.gen.detail.3": "An item id is checked against the registry as it is added. Mod ids are lowercased and checked for valid namespace syntax; the mod need not be installed. Each mod list allows 256 entries of at most 256 characters.",
 
   "somestacks.command.help.deny.usage.1": "/ss deny mod add <modid>",
   "somestacks.command.help.deny.usage.2": "/ss deny mod remove <modid>",
@@ -144,7 +146,7 @@
   "somestacks.command.help.deny.usage.6": "/ss deny item list",
   "somestacks.command.help.deny.summary": "Bar a mod's items or one item from being stored",
   "somestacks.command.help.deny.detail.1": "A disabled mod's items are refused by every stack; a disabled item is refused on the deposit gestures. Contents already stored can still be taken out.",
-  "somestacks.command.help.deny.detail.2": "A mod id is taken as typed, since it may name a mod that is not installed yet. An item id is checked against the registry, because the list is matched by exact id and a typo would sit in it looking effective.",
+  "somestacks.command.help.deny.detail.2": "Mod ids are lowercased and checked for valid namespace syntax; the mod need not be installed. Each mod list allows 256 entries of at most 256 characters. An item id is checked against the registry, because the list is matched by exact id and a typo would sit in it looking effective.",
 
 
   "somestacks.command.help.help.usage.1": "/ss help",

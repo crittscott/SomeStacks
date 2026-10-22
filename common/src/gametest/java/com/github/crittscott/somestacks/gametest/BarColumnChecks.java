@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
@@ -65,12 +66,12 @@ public final class BarColumnChecks {
         for (Item item : List.of(Items.IRON_INGOT, Items.GOLD_INGOT, Items.COPPER_INGOT,
                 Items.NETHERITE_INGOT, Items.BRICK, Items.NETHER_BRICK)) {
             check(new ItemStack(item).is(BarStackBE.INGOTS), item + " is not in the ingot tag");
-            check(BarStackBE.isValidBarItem(new ItemStack(item)), item + " was refused by Bar");
-            check(!SinglesStackBE.isValidSinglesItem(new ItemStack(item)), item + " was accepted by Singles");
+            check(BlockType.BAR_STACK.admits(new ItemStack(item), null), item + " was refused by Bar");
+            check(!BlockType.SINGLES_STACK.admits(new ItemStack(item), null), item + " was accepted by Singles");
         }
         for (Item item : List.of(Items.STICK, Items.IRON_NUGGET)) {
-            check(!BarStackBE.isValidBarItem(new ItemStack(item)), item + " was accepted by Bar");
-            check(SinglesStackBE.isValidSinglesItem(new ItemStack(item)), item + " was refused by Singles");
+            check(!BlockType.BAR_STACK.admits(new ItemStack(item), null), item + " was accepted by Bar");
+            check(BlockType.SINGLES_STACK.admits(new ItemStack(item), null), item + " was refused by Singles");
         }
         helper.succeed();
     }

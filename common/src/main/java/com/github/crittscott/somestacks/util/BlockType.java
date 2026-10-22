@@ -2,6 +2,12 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
@@ -40,4 +46,39 @@ public enum BlockType {
             case BAR_STACK -> ServerConfig.enableBarStackBlock();
         };
     }
+
+    /** Silent admission for simulation/commit; null denotes automation, which ignores exact-item denial. */
+    public boolean admits(ItemStack stack, @Nullable ServerPlayer depositor) {
+        if (policyDenial(stack, depositor != null) != Denial.NONE) return false;
+        return switch (this) {
+            case STORAGE_STACK -> true;
+            case SINGLES_STACK -> !stack.is(BarStackBE.INGOTS);
+            case BAR_STACK -> stack.is(BarStackBE.INGOTS);
+        };
+    }
+
+    /**
+     * Player policy gate before placement-height/support checks. Type admission remains silent and
+     * is checked during preflight/commit. Mod denial takes message precedence.
+     */
+    public static boolean permitsPlayerItemAndNotify(ItemStack stack, ServerPlayer player) {
+        Denial denial = policyDenial(stack, true);
+        if (denial == Denial.MOD || denial == Denial.ITEM) {
+            ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+            player.displayClientMessage(denial == Denial.MOD
+                    ? Component.translatable("somestacks.message.disabled_mod", id.getNamespace())
+                    : Component.translatable("somestacks.message.disabled_item", id), true);
+        }
+        return denial == Denial.NONE;
+    }
+
+    private static Denial policyDenial(ItemStack stack, boolean playerDeposit) {
+        if (stack.isEmpty()) return Denial.EMPTY;
+        ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        if (ServerConfig.isModDisabled(id.getNamespace())) return Denial.MOD;
+        if (playerDeposit && ServerConfig.isItemDisabled(id)) return Denial.ITEM;
+        return Denial.NONE;
+    }
+
+    private enum Denial { NONE, EMPTY, MOD, ITEM }
 }

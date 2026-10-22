@@ -1,10 +1,6 @@
 package com.github.crittscott.somestacks.util;
 
-import com.github.crittscott.somestacks.ServerConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -103,49 +99,4 @@ public final class ItemOps {
         return Math.min(totalLight, MAX_LIGHT_LEVEL);
     }
 
-    /** Whether the server config bars this item's namespace. Disabled contents may still be removed. */
-    public static boolean isItemFromDisabledMod(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        }
-
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        return ServerConfig.isModDisabled(itemId.getNamespace());
-    }
-
-    /** {@link #isItemFromDisabledMod} for a deposit path, telling the player when it refuses. */
-    public static boolean checkDisabledModAndNotify(ItemStack stack, Player player) {
-        if (isItemFromDisabledMod(stack)) {
-            String modId = BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace();
-            player.displayClientMessage(
-                    Component.translatable("somestacks.message.disabled_mod", modId),
-                    true
-            );
-            return true;
-        }
-        return false;
-    }
-
-    /** Whether the server config bars this item by id. Disabled contents may still be removed. */
-    public static boolean isItemDisabled(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        }
-
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        return ServerConfig.isItemDisabled(itemId);
-    }
-
-    /** {@link #isItemDisabled} for a deposit path, telling the player when it refuses. */
-    public static boolean checkDisabledItemAndNotify(ItemStack stack, Player player) {
-        if (isItemDisabled(stack)) {
-            ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-            player.displayClientMessage(
-                    Component.translatable("somestacks.message.disabled_item", itemId),
-                    true
-            );
-            return true;
-        }
-        return false;
-    }
 }

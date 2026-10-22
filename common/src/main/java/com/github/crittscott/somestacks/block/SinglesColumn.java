@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
@@ -117,7 +118,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
-        if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)) {
+        if (stack.isEmpty() || !BlockType.SINGLES_STACK.admits(stack, null)) {
             return 0;
         }
         if (flatSlot < 0 || flatSlot >= advertisedSlots() || !cellAccepts(flatSlot, null)) {
@@ -139,7 +140,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
     public InsertionTest insertionTest() {
         BooleanSupplier growth = oncePerSweep(this::canGrowSpace);
         return (slot, stack) -> {
-            if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)
+            if (stack.isEmpty() || !BlockType.SINGLES_STACK.admits(stack, null)
                     || slot < 0 || slot >= advertisedSlots()) return 0;
             return cellAccepts(slot, growth) ? 1 : 0;
         };

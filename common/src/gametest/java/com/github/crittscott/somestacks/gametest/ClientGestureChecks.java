@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.client.ClientGestures;
-import com.github.crittscott.somestacks.client.StackState;
+import com.github.crittscott.somestacks.client.ClientServerSettings;
 import com.github.crittscott.somestacks.client.interaction.DepositIntoAdjacentStackRule;
 import com.github.crittscott.somestacks.client.interaction.DepositIntoClickedStackRule;
 import com.github.crittscott.somestacks.client.interaction.ExtractionRule;
@@ -12,8 +12,8 @@ import com.github.crittscott.somestacks.client.interaction.PlaceAdjacentGenericR
 import com.github.crittscott.somestacks.client.interaction.RotateBlockWithRedstoneTorchRule;
 import com.github.crittscott.somestacks.client.interaction.RotateItemWithSoulTorchRule;
 import com.github.crittscott.somestacks.client.interaction.TogglePermanentRule;
+import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
-import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -207,22 +207,24 @@ public final class ClientGestureChecks {
         private final List<GestureStatePkt> sent = new ArrayList<>();
         private final Consumer<GestureStatePkt> previousSender;
         private final StackMode previousMode = ClientGestures.currentMode();
-        private final boolean[] previousFlags = new boolean[BlockType.values().length];
+        private final ConfigSyncPkt previousSettings = ClientServerSettings.snapshot();
 
         private GestureStateScope() {
-            for (BlockType type : BlockType.values()) {
-                previousFlags[type.ordinal()] = StackState.isBlockTypeEnabled(type);
-                StackState.setBlockEnabled(type, true);
-            }
+            enableAllTypes();
             previousSender = ClientGestures.setSender(sent::add);
             ClientGestures.resetSync();
         }
 
+        private void enableAllTypes() {
+            ClientServerSettings.apply(new ConfigSyncPkt(
+                    true, true, true, previousSettings.genMods(), previousSettings.disabledMods()));
+        }
+
         @Override
         public void close() {
-            for (BlockType type : BlockType.values()) StackState.setBlockEnabled(type, true);
+            enableAllTypes();
             selectMode(previousMode);
-            for (BlockType type : BlockType.values()) StackState.setBlockEnabled(type, previousFlags[type.ordinal()]);
+            ClientServerSettings.apply(previousSettings);
             ClientGestures.setSender(previousSender);
             ClientGestures.resetSync();
         }

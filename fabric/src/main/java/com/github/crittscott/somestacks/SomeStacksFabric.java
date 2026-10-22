@@ -10,8 +10,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 
 /** Fabric's common entry point and server lifecycle wiring. */
 public final class SomeStacksFabric implements ModInitializer {
@@ -33,16 +31,8 @@ public final class SomeStacksFabric implements ModInitializer {
         });
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> ServerLifecycle.stopped());
 
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            ServerPlayer player = handler.player;
-            if (!FabricNetworking.supportsClient(player)) {
-                handler.disconnect(Component.translatableWithFallback("somestacks.disconnect.protocol",
-                        "Some Stacks protocol mismatch: the mod is required on both client and server"));
-                return;
-            }
-            FabricNetworking.sendProtocol(player);
-            ServerLifecycle.login(player);
-        });
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
+                ServerLifecycle.login(handler.player));
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
                 ServerLifecycle.logout(handler.player.getUUID()));
     }

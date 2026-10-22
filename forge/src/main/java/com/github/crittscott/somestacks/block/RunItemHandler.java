@@ -24,7 +24,7 @@ public final class RunItemHandler implements IItemHandler {
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
-        StackRunItemAccess run = blockEntity.itemRun();
+        StackRun<?> run = blockEntity.itemRun();
         if (run != null) {
             return run.getSlot(slot);
         }
@@ -40,7 +40,7 @@ public final class RunItemHandler implements IItemHandler {
         if (stack.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        StackRunItemAccess run = blockEntity.itemRun();
+        StackRun<?> run = blockEntity.itemRun();
         if (run == null) {
             return stack;
         }
@@ -67,7 +67,7 @@ public final class RunItemHandler implements IItemHandler {
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        StackRunItemAccess run = blockEntity.itemRun();
+        StackRun<?> run = blockEntity.itemRun();
         if (run == null) {
             return ItemStack.EMPTY;
         }

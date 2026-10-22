@@ -251,6 +251,37 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
         ServiceAndConfigChecks.listEditsPublishImmutablePolicy(helper);
     }
 
+    /** See {@link com.github.crittscott.somestacks.network.FabricHandshakeChecks#loginProtocolPayloadIsBounded}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void loginProtocolPayloadIsBounded(GameTestHelper helper) {
+        com.github.crittscott.somestacks.network.FabricHandshakeChecks.loginProtocolPayloadIsBounded(helper);
+    }
+
+    /** See {@link NetworkPolicyChecks#publicationSyncsOnlyChangedClientPolicy}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void publicationSyncsOnlyChangedClientPolicy(GameTestHelper helper)
+            throws ReflectiveOperationException {
+        NetworkPolicyChecks.publicationSyncsOnlyChangedClientPolicy(helper);
+    }
+
+    /** See {@link NetworkPolicyChecks#admissionSeparatesPlayersAutomationAndTypes}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void admissionSeparatesPlayersAutomationAndTypes(GameTestHelper helper) {
+        NetworkPolicyChecks.admissionSeparatesPlayersAutomationAndTypes(helper, FakePlayer.get(helper.getLevel()));
+    }
+
+    /** See {@link NetworkPolicyChecks#namespacePolicyIsPreparedAndBounded}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void namespacePolicyIsPreparedAndBounded(GameTestHelper helper) {
+        NetworkPolicyChecks.namespacePolicyIsPreparedAndBounded(helper);
+    }
+
+    /** See {@link NetworkPolicyChecks#policyPacketsValidateBeforePublication}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void policyPacketsValidateBeforePublication(GameTestHelper helper) {
+        NetworkPolicyChecks.policyPacketsValidateBeforePublication(helper);
+    }
+
     /** See {@link ServiceAndConfigChecks#numericPolicyRangesAreShared}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void numericPolicyRangesAreShared(GameTestHelper helper) {

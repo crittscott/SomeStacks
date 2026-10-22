@@ -1,4 +1,4 @@
-package com.github.crittscott.somestacks.renderconfig;
+package com.github.crittscott.somestacks.client.renderconfig;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.google.gson.JsonArray;

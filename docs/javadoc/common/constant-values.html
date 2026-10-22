@@ -129,6 +129,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code id="com.github.crittscott.somestacks.ServerConfig.GALLERY_PERMISSION_LEVEL_MAX">public&nbsp;static&nbsp;final&nbsp;int</code></div>
 <div class="col-second odd-row-color"><code><a href="com/github/crittscott/somestacks/ServerConfig.html#GALLERY_PERMISSION_LEVEL_MAX">GALLERY_PERMISSION_LEVEL_MAX</a></code></div>
 <div class="col-last odd-row-color"><code>4</code></div>
+<div class="col-first even-row-color"><code id="com.github.crittscott.somestacks.ServerConfig.MAX_NAMESPACE_ENTRIES">public&nbsp;static&nbsp;final&nbsp;int</code></div>
+<div class="col-second even-row-color"><code><a href="com/github/crittscott/somestacks/ServerConfig.html#MAX_NAMESPACE_ENTRIES">MAX_NAMESPACE_ENTRIES</a></code></div>
+<div class="col-last even-row-color"><code>256</code></div>
+<div class="col-first odd-row-color"><code id="com.github.crittscott.somestacks.ServerConfig.MAX_NAMESPACE_LENGTH">public&nbsp;static&nbsp;final&nbsp;int</code></div>
+<div class="col-second odd-row-color"><code><a href="com/github/crittscott/somestacks/ServerConfig.html#MAX_NAMESPACE_LENGTH">MAX_NAMESPACE_LENGTH</a></code></div>
+<div class="col-last odd-row-color"><code>256</code></div>
 <div class="col-first even-row-color"><code id="com.github.crittscott.somestacks.ServerConfig.MAX_PILE_HEIGHT_LIMIT">public&nbsp;static&nbsp;final&nbsp;int</code></div>
 <div class="col-second even-row-color"><code><a href="com/github/crittscott/somestacks/ServerConfig.html#MAX_PILE_HEIGHT_LIMIT">MAX_PILE_HEIGHT_LIMIT</a></code></div>
 <div class="col-last even-row-color"><code>64</code></div>
@@ -207,7 +213,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color"><code>"somestacks"</code></div>
 <div class="col-first odd-row-color"><code id="com.github.crittscott.somestacks.SomeStacksCommon.PROTOCOL_VERSION">public&nbsp;static&nbsp;final&nbsp;int</code></div>
 <div class="col-second odd-row-color"><code><a href="com/github/crittscott/somestacks/SomeStacksCommon.html#PROTOCOL_VERSION">PROTOCOL_VERSION</a></code></div>
-<div class="col-last odd-row-color"><code>4</code></div>
+<div class="col-last odd-row-color"><code>5</code></div>
 </div>
 </li>
 </ul>
@@ -298,6 +304,28 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="block-list">
 <li>
+<div class="caption"><span>com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="com.github.crittscott.somestacks.client.renderconfig.OverrideJsonCodec.MAX_OFFSET">public&nbsp;static&nbsp;final&nbsp;float</code></div>
+<div class="col-second even-row-color"><code><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#MAX_OFFSET">MAX_OFFSET</a></code></div>
+<div class="col-last even-row-color"><code>1.0f</code></div>
+<div class="col-first odd-row-color"><code id="com.github.crittscott.somestacks.client.renderconfig.OverrideJsonCodec.MAX_SCALE">public&nbsp;static&nbsp;final&nbsp;float</code></div>
+<div class="col-second odd-row-color"><code><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#MAX_SCALE">MAX_SCALE</a></code></div>
+<div class="col-last odd-row-color"><code>20.0f</code></div>
+<div class="col-first even-row-color"><code id="com.github.crittscott.somestacks.client.renderconfig.OverrideJsonCodec.MIN_OFFSET">public&nbsp;static&nbsp;final&nbsp;float</code></div>
+<div class="col-second even-row-color"><code><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#MIN_OFFSET">MIN_OFFSET</a></code></div>
+<div class="col-last even-row-color"><code>-1.0f</code></div>
+<div class="col-first odd-row-color"><code id="com.github.crittscott.somestacks.client.renderconfig.OverrideJsonCodec.MIN_SCALE">public&nbsp;static&nbsp;final&nbsp;float</code></div>
+<div class="col-second odd-row-color"><code><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#MIN_SCALE">MIN_SCALE</a></code></div>
+<div class="col-last odd-row-color"><code>0.009999999776482582f</code></div>
+</div>
+</li>
+</ul>
+<ul class="block-list">
+<li>
 <div class="caption"><span>com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/SsCommand.html" title="class in com.github.crittscott.somestacks.command">SsCommand</a></span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -316,37 +344,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Constant Field</div>
 <div class="table-header col-last">Value</div>
-<div class="col-first even-row-color"><code id="com.github.crittscott.somestacks.network.ConfigSyncPkt.MAX_GENERATION_BYTES">public&nbsp;static&nbsp;final&nbsp;int</code></div>
-<div class="col-second even-row-color"><code><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_GENERATION_BYTES">MAX_GENERATION_BYTES</a></code></div>
-<div class="col-last even-row-color"><code>2114112</code></div>
-<div class="col-first odd-row-color"><code id="com.github.crittscott.somestacks.network.ConfigSyncPkt.MAX_GENERATION_CHUNKS">public&nbsp;static&nbsp;final&nbsp;int</code></div>
-<div class="col-second odd-row-color"><code><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_GENERATION_CHUNKS">MAX_GENERATION_CHUNKS</a></code></div>
-<div class="col-last odd-row-color"><code>9</code></div>
 <div class="col-first even-row-color"><code id="com.github.crittscott.somestacks.network.ConfigSyncPkt.MAX_PACKET_BYTES">public&nbsp;static&nbsp;final&nbsp;int</code></div>
 <div class="col-second even-row-color"><code><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_PACKET_BYTES">MAX_PACKET_BYTES</a></code></div>
-<div class="col-last even-row-color"><code>262144</code></div>
-</div>
-</li>
-</ul>
-<ul class="block-list">
-<li>
-<div class="caption"><span>com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Constant Field</div>
-<div class="table-header col-last">Value</div>
-<div class="col-first even-row-color"><code id="com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec.MAX_OFFSET">public&nbsp;static&nbsp;final&nbsp;float</code></div>
-<div class="col-second even-row-color"><code><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MAX_OFFSET">MAX_OFFSET</a></code></div>
-<div class="col-last even-row-color"><code>1.0f</code></div>
-<div class="col-first odd-row-color"><code id="com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec.MAX_SCALE">public&nbsp;static&nbsp;final&nbsp;float</code></div>
-<div class="col-second odd-row-color"><code><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MAX_SCALE">MAX_SCALE</a></code></div>
-<div class="col-last odd-row-color"><code>20.0f</code></div>
-<div class="col-first even-row-color"><code id="com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec.MIN_OFFSET">public&nbsp;static&nbsp;final&nbsp;float</code></div>
-<div class="col-second even-row-color"><code><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MIN_OFFSET">MIN_OFFSET</a></code></div>
-<div class="col-last even-row-color"><code>-1.0f</code></div>
-<div class="col-first odd-row-color"><code id="com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec.MIN_SCALE">public&nbsp;static&nbsp;final&nbsp;float</code></div>
-<div class="col-second odd-row-color"><code><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MIN_SCALE">MIN_SCALE</a></code></div>
-<div class="col-last odd-row-color"><code>0.009999999776482582f</code></div>
+<div class="col-last even-row-color"><code>132103</code></div>
 </div>
 </li>
 </ul>

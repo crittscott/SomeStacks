@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.renderconfig.RenderOffset;
-import com.github.crittscott.somestacks.renderconfig.RenderProfile;
+import com.github.crittscott.somestacks.client.renderconfig.RenderOffset;
+import com.github.crittscott.somestacks.client.renderconfig.RenderProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;

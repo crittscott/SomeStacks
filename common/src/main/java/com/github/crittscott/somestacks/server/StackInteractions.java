@@ -17,7 +17,6 @@ import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.github.crittscott.somestacks.util.ViewRay;
-import com.github.crittscott.somestacks.util.ViewRays;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -53,7 +52,7 @@ public final class StackInteractions {
         }
 
         ServerGestureState.State gesture = ServerGestureState.get(player);
-        ViewRay ray = ViewRays.through(player, hit.getLocation());
+        ViewRay ray = ViewRay.through(player, hit.getLocation());
         return applyExistingStack(player, hit.getBlockPos(), clickedType, hit.getDirection(), ray,
                 player.getMainHandItem(), gesture);
     }
@@ -89,7 +88,7 @@ public final class StackInteractions {
         }
 
         return applySneakingRotation(
-                player, pos, type, ViewRays.through(player, hit.getLocation()),
+                player, pos, type, ViewRay.through(player, hit.getLocation()),
                 player.getMainHandItem());
     }
 
@@ -123,7 +122,7 @@ public final class StackInteractions {
             return false;
         }
 
-        ViewRay ray = ViewRays.through(player, hit.getLocation());
+        ViewRay ray = ViewRay.through(player, hit.getLocation());
         BlockPos destination = clickedPos.relative(hit.getDirection());
         BlockType destinationType = BlockType.of(level.getBlockState(destination).getBlock());
         if (destinationType == BlockType.SINGLES_STACK || destinationType == BlockType.BAR_STACK) {
@@ -225,8 +224,7 @@ public final class StackInteractions {
         ItemStack held = player.getMainHandItem();
         ItemStack handStack = creative ? held.copy() : held;
         if (handStack.isEmpty()
-                || ItemOps.checkDisabledModAndNotify(handStack, player)
-                || ItemOps.checkDisabledItemAndNotify(handStack, player)) {
+                || !BlockType.permitsPlayerItemAndNotify(handStack, player)) {
             return;
         }
 
@@ -282,8 +280,7 @@ public final class StackInteractions {
                 || !level.getBlockState(pos).canBeReplaced()
                 || WorldEdits.isProtected(player, pos)
                 || !player.mayUseItemAt(pos, face, handStack)
-                || ItemOps.checkDisabledModAndNotify(handStack, player)
-                || ItemOps.checkDisabledItemAndNotify(handStack, player)
+                || !BlockType.permitsPlayerItemAndNotify(handStack, player)
                 || !type.isEnabled()) {
             return;
         }
@@ -347,14 +344,13 @@ public final class StackInteractions {
 
     private static boolean firstDepositWouldSucceed(BlockType type, Level level, BlockPos pos,
                                                     ItemStack handStack, int depositIndex) {
+        if (!type.admits(handStack, null)) return false;
         return switch (type) {
-            case STORAGE_STACK -> StorageStackBE.isValidStorageItem(handStack);
-            case SINGLES_STACK -> SinglesStackBE.isValidSinglesItem(handStack)
-                    && SinglesCubeIdx.freshBlockSupports(depositIndex,
+            case STORAGE_STACK -> true;
+            case SINGLES_STACK -> SinglesCubeIdx.freshBlockSupports(depositIndex,
                             level.getBlockEntity(pos.below()) instanceof SinglesStackBE below
                                     ? SinglesCubeIdx.topLayerOccupancy(below.getItems(), below.getRotation()) : null);
-            case BAR_STACK -> BarStackBE.isValidBarItem(handStack)
-                    && BarCubeIdx.freshBlockSupports(depositIndex,
+            case BAR_STACK -> BarCubeIdx.freshBlockSupports(depositIndex,
                             level.getBlockEntity(pos.below()) instanceof BarStackBE below
                                     ? BarCubeIdx.topLayerOccupancy(below.getItems()) : null);
         };

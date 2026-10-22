@@ -49,7 +49,7 @@ public final class ClientGestures {
         do {
             stackMode = StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
             if (stackMode == StackMode.TOGGLE_PERMANENT) break;
-            if (stackMode.isBlockType() && StackState.isBlockTypeEnabled(stackMode.toBlockType())) break;
+            if (stackMode.isBlockType() && ClientServerSettings.isBlockTypeEnabled(stackMode.toBlockType())) break;
             if (stackMode == startMode) break;
         } while (true);
     }

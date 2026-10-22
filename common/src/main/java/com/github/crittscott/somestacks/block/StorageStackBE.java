@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
@@ -36,20 +37,6 @@ public class StorageStackBE extends StackBlockEntity {
 
     public StorageStackBE(BlockPos pos, BlockState state) {
         super(CommonRegistry.STORAGE_STACK_BE.get(), pos, state, SLOTS, StorageStackBlock.LIGHT_LEVEL);
-    }
-
-    /**
-     * Whether Storage accepts this item. The broadest of the three rules: anything nonempty from a
-     * namespace the server has not disabled. The per-item deny list applies to player deposits only.
-     */
-    public static boolean isValidStorageItem(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        }
-        if (ItemOps.isItemFromDisabledMod(stack)) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -197,11 +184,11 @@ public class StorageStackBE extends StackBlockEntity {
 
     @Override
     protected boolean isStoredItemValid(ItemStack stack) {
-        return isValidStorageItem(stack);
+        return BlockType.STORAGE_STACK.admits(stack, null);
     }
 
     @Override
-    protected StackRunItemAccess resolveRun(ServerLevel serverLevel) {
+    protected StackRun<?> resolveRun(ServerLevel serverLevel) {
         return StoragePile.resolve(serverLevel, getBlockPos());
     }
 }

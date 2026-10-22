@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.PlatformServices;
-import com.github.crittscott.somestacks.util.ViewRays;
+import com.github.crittscott.somestacks.util.ViewRay;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -69,7 +69,7 @@ public final class WorldEdits {
     /** Destination hit reported to protection listeners for an adjacent deposit. */
     public static BlockHitResult adjacentHit(ServerPlayer player, BlockPos pos) {
         var level = player.serverLevel();
-        var ray = ViewRays.of(player);
+        var ray = ViewRay.of(player);
         BlockHitResult hit = level.getBlockState(pos).getInteractionShape(level, pos)
                 .clip(ray.eye(), ray.end(), pos);
         return hit != null ? hit

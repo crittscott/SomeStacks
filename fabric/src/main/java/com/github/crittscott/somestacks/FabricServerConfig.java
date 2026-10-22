@@ -24,7 +24,8 @@ public final class FabricServerConfig {
         Path file = server.getWorldPath(LevelResource.ROOT)
                 .resolve("serverconfig").resolve(SomeStacksCommon.MODID + "-server.json");
         Persistence persistence = new Persistence(file);
-        ServerConfig.start(() -> persistence.read(Settings.defaults()), persistence::write);
+        ServerConfig.start(() -> persistence.read(Settings.defaults()), persistence::write,
+                () -> ServerLifecycle.syncAllPlayers(server));
     }
 
     /** JSON boundary, independent of registry baking and gameplay. */

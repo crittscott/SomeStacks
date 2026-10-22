@@ -64,6 +64,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Destination hit reported to protection listeners for an adjacent deposit.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/util/BlockType.html#admits(net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">admits(ItemStack, ServerPlayer)</a> - Method in enum class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></dt>
+<dd>
+<div class="block">Silent admission for simulation/commit; null denotes automation, which ignores exact-item denial.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StoragePile.html#adoptNeighbourState(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.StorageStackBE)" class="member-name-link">adoptNeighbourState(Level, BlockPos, StorageStackBE)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></dt>
 <dd>
 <div class="block">Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it
@@ -74,10 +78,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Run positions including headroom, or local slots when no server run is available.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackRun.html#advertisedSlots()" class="member-name-link">advertisedSlots()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html#advertisedSlots()" class="member-name-link">advertisedSlots()</a> - Method in interface com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></dt>
 <dd>
-<div class="block">Positions visible to automation, numbered from the bottom block upward.</div>
+<div class="block">Positions visible to automation, including one block of headroom below the height limit.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/EditAuthority.html#afterRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">afterRemoval(ServerLevel, ServerPlayer, BlockPos, BlockState, BlockEntity)</a> - Method in interface com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a></dt>
 <dd>
@@ -85,10 +87,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html#alpha()" class="member-name-link">alpha()</a> - Method in record class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/ClientRenderPacketSink.html#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">apply(ConfigSyncPkt)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientRenderPacketSink.html" title="class in com.github.crittscott.somestacks.client">ClientRenderPacketSink</a></dt>
-<dd>
-<div class="block">Stages a decoded chunk on the client thread.</div>
-</dd>
+<dt><a href="com/github/crittscott/somestacks/client/ClientServerSettings.html#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">apply(ConfigSyncPkt)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientServerSettings.html" title="class in com.github.crittscott.somestacks.client">ClientServerSettings</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.html#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply(Map&lt;ResourceLocation, BarTextureStore.BarTextureData&gt;, ResourceManager, ProfilerFiller)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply(Map&lt;ResourceLocation, ItemRenderConfig&gt;, ResourceManager, ProfilerFiller)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
@@ -142,8 +142,7 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#bakeServerLists()" class="member-name-link">bakeServerLists()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>
-<div class="block">Resolves the server's free-form text lists into lookup sets: the disabled-mod and
- disabled-item compatibility lists.</div>
+<div class="block">Builds admission sets from prepared namespaces and free-form item ids.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html#BAR" class="member-name-link">BAR</a> - Enum constant in enum class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html" title="enum class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Kind</a></dt>
 <dd>
@@ -231,7 +230,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Claims the server-wide automation mutation guard on the server thread.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html#BLOCK" class="member-name-link">BLOCK</a> - Enum constant in enum class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html#BLOCK" class="member-name-link">BLOCK</a> - Enum constant in enum class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.client.renderconfig">RenderMode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackRun.html#blockOf(int)" class="member-name-link">blockOf(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
 <dd>
@@ -252,10 +251,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html#bounds()" class="member-name-link">bounds()</a> - Method in record class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>bounds</code> record component.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#budgetBytes()" class="member-name-link">budgetBytes()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Conservative encoded size, including bounded metadata overhead.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:C">C</h2>
@@ -304,21 +299,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Cells in one block, and therefore slots in one <a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block"><code>StorageStackBE</code></a>.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/util/ItemOps.html#checkDisabledItemAndNotify(net.minecraft.world.item.ItemStack,net.minecraft.world.entity.player.Player)" class="member-name-link">checkDisabledItemAndNotify(ItemStack, Player)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ItemOps.html" title="class in com.github.crittscott.somestacks.util">ItemOps</a></dt>
-<dd>
-<div class="block"><a href="com/github/crittscott/somestacks/util/ItemOps.html#isItemDisabled(net.minecraft.world.item.ItemStack)"><code>ItemOps.isItemDisabled(net.minecraft.world.item.ItemStack)</code></a> for a deposit path, telling the player when it refuses.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/util/ItemOps.html#checkDisabledModAndNotify(net.minecraft.world.item.ItemStack,net.minecraft.world.entity.player.Player)" class="member-name-link">checkDisabledModAndNotify(ItemStack, Player)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ItemOps.html" title="class in com.github.crittscott.somestacks.util">ItemOps</a></dt>
-<dd>
-<div class="block"><a href="com/github/crittscott/somestacks/util/ItemOps.html#isItemFromDisabledMod(net.minecraft.world.item.ItemStack)"><code>ItemOps.isItemFromDisabledMod(net.minecraft.world.item.ItemStack)</code></a> for a deposit path, telling the player when it refuses.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html#claim(net.minecraft.server.level.ServerPlayer)" class="member-name-link">claim(ServerPlayer)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html" title="class in com.github.crittscott.somestacks.server">RotationSoundThrottle</a></dt>
+<dt><a href="com/github/crittscott/somestacks/server/StackSounds.html#claimRotation(net.minecraft.server.level.ServerPlayer)" class="member-name-link">claimRotation(ServerPlayer)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/StackSounds.html" title="class in com.github.crittscott.somestacks.server">StackSounds</a></dt>
 <dd>
 <div class="block">Claims this player's rotation-sound allowance; the rotation itself has already happened.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/client/ClientRenderPacketSink.html#clear()" class="member-name-link">clear()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientRenderPacketSink.html" title="class in com.github.crittscott.somestacks.client">ClientRenderPacketSink</a></dt>
-<dd>
-<div class="block">Discards incomplete data at disconnect or after rejection.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.html#clear()" class="member-name-link">clear()</a> - Static method in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator</a></dt>
 <dd>
@@ -328,13 +311,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Releases the world reader, saver, and derived admission state on server shutdown.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html#clear(java.util.UUID)" class="member-name-link">clear(UUID)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html" title="class in com.github.crittscott.somestacks.server">RotationSoundThrottle</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/server/ServerGestureState.html#clear(java.util.UUID)" class="member-name-link">clear(UUID)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ServerGestureState.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html#clearAll()" class="member-name-link">clearAll()</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html" title="class in com.github.crittscott.somestacks.server">RotationSoundThrottle</a></dt>
+<dt><a href="com/github/crittscott/somestacks/server/StackSounds.html#clear(java.util.UUID)" class="member-name-link">clear(UUID)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/StackSounds.html" title="class in com.github.crittscott.somestacks.server">StackSounds</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/server/ServerGestureState.html#clearAll()" class="member-name-link">clearAll()</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ServerGestureState.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/server/StackSounds.html#clearAll()" class="member-name-link">clearAll()</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/StackSounds.html" title="class in com.github.crittscott.somestacks.server">StackSounds</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#clearResolvedProfiles()" class="member-name-link">clearResolvedProfiles()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
 <dd>
@@ -352,19 +335,15 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Loader-specific delivery of command feedback to the local player.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/client/ClientRenderPacketSink.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">ClientRenderPacketSink</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
-<dd>
-<div class="block">Stages config chunks and atomically publishes a complete server snapshot.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientRenderPlatform.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">ClientRenderPlatform</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
 <dd>
 <div class="block">Loader-specific services used by shared client rendering code.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientRenderPlatform.Backend.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.client">ClientRenderPlatform.Backend</a> - Interface in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">ClientRenderToolState</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/ClientServerSettings.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">ClientServerSettings</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
 <dd>
-<div class="block">Passive server lists used only when the local player invokes a render-authoring command.</div>
+<div class="block">Complete server policy snapshot, published and read on the client thread.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html#color()" class="member-name-link">color()</a> - Method in record class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></dt>
 <dd>
@@ -411,11 +390,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/package-summary.html">com.github.crittscott.somestacks.client.measure</a> - package com.github.crittscott.somestacks.client.measure</dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/package-summary.html">com.github.crittscott.somestacks.client.renderconfig</a> - package com.github.crittscott.somestacks.client.renderconfig</dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/command/package-summary.html">com.github.crittscott.somestacks.command</a> - package com.github.crittscott.somestacks.command</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/package-summary.html">com.github.crittscott.somestacks.network</a> - package com.github.crittscott.somestacks.network</dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/package-summary.html">com.github.crittscott.somestacks.renderconfig</a> - package com.github.crittscott.somestacks.renderconfig</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a> - package com.github.crittscott.somestacks.server</dt>
 <dd>&nbsp;</dd>
@@ -453,11 +432,9 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a> - Record Class in <a href="com/github/crittscott/somestacks/network/package-summary.html">com.github.crittscott.somestacks.network</a></dt>
 <dd>
-<div class="block">One byte-bounded chunk of the server settings synchronized to clients: which stack types are
- enabled, and the gallery and disabled namespace lists the client-local <code>ss write</code> forms
- read.</div>
+<div class="block">Complete server policy used by client mode cycling and local render-authoring commands.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#%3Cinit%3E(int,boolean,boolean,boolean,boolean,boolean,int,int,java.util.List,java.util.List)" class="member-name-link">ConfigSyncPkt(int, boolean, boolean, boolean, boolean, boolean, int, int, List&lt;String&gt;, List&lt;String&gt;)</a> - Constructor for record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
+<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#%3Cinit%3E(boolean,boolean,boolean,java.util.List,java.util.List)" class="member-name-link">ConfigSyncPkt(boolean, boolean, boolean, List&lt;String&gt;, List&lt;String&gt;)</a> - Constructor for record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>ConfigSyncPkt</code> record class.</div>
 </dd>
@@ -492,7 +469,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#decode(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">decode(FriendlyByteBuf)</a> - Static method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
 <dd>
-<div class="block">Decodes one chunk, rejecting anything malformed or over budget before it reaches the client.</div>
+<div class="block">Validates the entire snapshot on the network thread before any client state is changed.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/network/GestureStatePkt.html#decode(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">decode(FriendlyByteBuf)</a> - Static method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/GestureStatePkt.html" title="class in com.github.crittscott.somestacks.network">GestureStatePkt</a></dt>
 <dd>&nbsp;</dd>
@@ -565,10 +542,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Keys.html#DISABLE_MODS" class="member-name-link">DISABLE_MODS</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.Keys.html" title="class in com.github.crittscott.somestacks">ServerConfig.Keys</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html#disabledMods()" class="member-name-link">disabledMods()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html" title="class in com.github.crittscott.somestacks.client">ClientRenderToolState</a></dt>
-<dd>
-<div class="block">Immutable synchronized namespace deny set used by local authoring commands.</div>
-</dd>
+<dt><a href="com/github/crittscott/somestacks/client/ClientServerSettings.html#disabledMods()" class="member-name-link">disabledMods()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientServerSettings.html" title="class in com.github.crittscott.somestacks.client">ClientServerSettings</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#disabledMods()" class="member-name-link">disabledMods()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>disabledMods</code> record component.</div>
@@ -657,13 +632,25 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Queues a gallery for the given groups of items and returns what it will contain.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#entryToJson(com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)" class="member-name-link">entryToJson(ItemRenderConfig)</a> - Static method in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#entryToJson(com.github.crittscott.somestacks.client.renderconfig.ItemRenderConfig)" class="member-name-link">entryToJson(ItemRenderConfig)</a> - Static method in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></dt>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client.renderconfig">ItemRenderConfig</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderOffset</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderProfile</a></dt>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
@@ -680,18 +667,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/network/GestureStatePkt.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/GestureStatePkt.html" title="class in com.github.crittscott.somestacks.network">GestureStatePkt</a></dt>
-<dd>
-<div class="block">Indicates whether some other object is "equal to" this one.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></dt>
-<dd>
-<div class="block">Indicates whether some other object is "equal to" this one.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></dt>
-<dd>
-<div class="block">Indicates whether some other object is "equal to" this one.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderProfile</a></dt>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
@@ -754,10 +729,9 @@ loadScripts(document, 'script');</script>
  player leave the column in the same state: the cells above the hole shift down one layer in
  that column, drawing from the Singles Stacks above and removing any block the walk empties.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html#extract(int,int,boolean)" class="member-name-link">extract(int, int, boolean)</a> - Method in interface com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></dt>
+<dt><a href="com/github/crittscott/somestacks/block/StackRun.html#extract(int,int,boolean)" class="member-name-link">extract(int, int, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
 <dd>
-<div class="block">Extracts up to <code>amount</code> from the named current position, or only reports the result
- when <code>simulate</code> is true.</div>
+<div class="block">Extracts from a position, applying structural gravity/backfill only when not simulated.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StoragePile.html#extract(int,int,boolean)" class="member-name-link">extract(int, int, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></dt>
 <dd>
@@ -812,10 +786,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Whole-run fill computed from each block's maintained local contribution.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#first()" class="member-name-link">first()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>first</code> record component.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html#flatProjectionAvailable()" class="member-name-link">flatProjectionAvailable()</a> - Method in record class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html#param-flatProjectionAvailable"><code>flatProjectionAvailable</code></a> record component.</div>
@@ -834,7 +804,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackMode.html#fromOrdinal(int)" class="member-name-link">fromOrdinal(int)</a> - Static method in enum class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html#fromString(java.lang.String)" class="member-name-link">fromString(String)</a> - Static method in enum class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html#fromString(java.lang.String)" class="member-name-link">fromString(String)</a> - Static method in enum class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.client.renderconfig">RenderMode</a></dt>
 <dd>
 <div class="block">The mode with this id, or null when the id names none.</div>
 </dd>
@@ -863,15 +833,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Keys.html#GEN_MODS" class="member-name-link">GEN_MODS</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.Keys.html" title="class in com.github.crittscott.somestacks">ServerConfig.Keys</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#generation()" class="member-name-link">generation()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>generation</code> record component.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Settings.html#genItems()" class="member-name-link">genItems()</a> - Method in record class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>genItems</code> record component.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html#genMods()" class="member-name-link">genMods()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html" title="class in com.github.crittscott.somestacks.client">ClientRenderToolState</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/ClientServerSettings.html#genMods()" class="member-name-link">genMods()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientServerSettings.html" title="class in com.github.crittscott.somestacks.client">ClientServerSettings</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#genMods()" class="member-name-link">genMods()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
 <dd>
@@ -943,7 +909,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/InteractionContext.html#getHand()" class="member-name-link">getHand()</a> - Method in class com.github.crittscott.somestacks.client.interaction.<a href="com/github/crittscott/somestacks/client/interaction/InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html#getId()" class="member-name-link">getId()</a> - Method in enum class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html#getId()" class="member-name-link">getId()</a> - Method in enum class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.client.renderconfig">RenderMode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarStackBlock.html#getInteractionShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" class="member-name-link">getInteractionShape(BlockState, BlockGetter, BlockPos)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBlock.html" title="class in com.github.crittscott.somestacks.block">BarStackBlock</a></dt>
 <dd>
@@ -981,10 +947,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBlock.html#getShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos,net.minecraft.world.phys.shapes.CollisionContext)" class="member-name-link">getShape(BlockState, BlockGetter, BlockPos, CollisionContext)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBlock.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBlock</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackRun.html#getSlot(int)" class="member-name-link">getSlot(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html#getSlot(int)" class="member-name-link">getSlot(int)</a> - Method in interface com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></dt>
 <dd>
-<div class="block">The current stack in a run position, or empty for headroom or an invalid position.</div>
+<div class="block">Current contents, or empty for headroom and invalid positions.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#getSlotLimit(int)" class="member-name-link">getSlotLimit(int)</a> - Method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
 <dd>
@@ -1039,7 +1003,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Cells along one axis of the grid.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html#GUI" class="member-name-link">GUI</a> - Enum constant in enum class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html#GUI" class="member-name-link">GUI</a> - Enum constant in enum class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.client.renderconfig">RenderMode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html#gui3d()" class="member-name-link">gui3d()</a> - Method in record class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></dt>
 <dd>
@@ -1091,6 +1055,18 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client.renderconfig">ItemRenderConfig</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderOffset</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderProfile</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Plan.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Plan.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Plan</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
@@ -1104,18 +1080,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/network/GestureStatePkt.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/GestureStatePkt.html" title="class in com.github.crittscott.somestacks.network">GestureStatePkt</a></dt>
-<dd>
-<div class="block">Returns a hash code value for this object.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></dt>
-<dd>
-<div class="block">Returns a hash code value for this object.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></dt>
-<dd>
-<div class="block">Returns a hash code value for this object.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderProfile</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
@@ -1164,7 +1128,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The item tag defining what a Bar Stack holds; data packs add to it.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#inRange(float,float,float)" class="member-name-link">inRange(float, float, float)</a> - Static method in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#inRange(float,float,float)" class="member-name-link">inRange(float, float, float)</a> - Static method in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Whether a value is finite and within the inclusive bounds.</div>
 </dd>
@@ -1178,9 +1142,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Inserts one item into only the named empty, supported cell,
  leaving the caller's stack unchanged.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt(int, ItemStack, boolean)</a> - Method in interface com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></dt>
+<dt><a href="com/github/crittscott/somestacks/block/StackRun.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt(int, ItemStack, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
 <dd>
-<div class="block">Returns how many items the named advertised position accepts.</div>
+<div class="block">Inserts into a named position, or reports the accepted amount without mutation when simulated.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StoragePile.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt(int, ItemStack, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></dt>
 <dd>
@@ -1190,9 +1154,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesColumn.html#insertionTest()" class="member-name-link">insertionTest()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html#insertionTest()" class="member-name-link">insertionTest()</a> - Method in interface com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></dt>
+<dt><a href="com/github/crittscott/somestacks/block/StackRun.html#insertionTest()" class="member-name-link">insertionTest()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
 <dd>
-<div class="block">A short-lived insertion simulation for one read-only sweep.</div>
+<div class="block">One read-only insertion sweep.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StoragePile.html#insertionTest()" class="member-name-link">insertionTest()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></dt>
 <dd>&nbsp;</dd>
@@ -1233,13 +1197,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackMode.html#isBlockType()" class="member-name-link">isBlockType()</a> - Method in enum class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/StackState.html#isBlockTypeEnabled(com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">isBlockTypeEnabled(BlockType)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/StackState.html" title="class in com.github.crittscott.somestacks.client">StackState</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/ClientServerSettings.html#isBlockTypeEnabled(com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">isBlockTypeEnabled(BlockType)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientServerSettings.html" title="class in com.github.crittscott.somestacks.client">ClientServerSettings</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/InteractionContext.html#isClientSide()" class="member-name-link">isClientSide()</a> - Method in class com.github.crittscott.somestacks.client.interaction.<a href="com/github/crittscott/somestacks/client/interaction/InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/server/WorldEdits.html#isConsultingAdjacent()" class="member-name-link">isConsultingAdjacent()</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html#isDisabled(java.lang.String)" class="member-name-link">isDisabled(String)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html" title="class in com.github.crittscott.somestacks.client">ClientRenderToolState</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/ClientServerSettings.html#isDisabled(java.lang.String)" class="member-name-link">isDisabled(String)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientServerSettings.html" title="class in com.github.crittscott.somestacks.client">ClientServerSettings</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#isEmpty()" class="member-name-link">isEmpty()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
 <dd>
@@ -1278,14 +1242,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#isItemDisabled(net.minecraft.resources.ResourceLocation)" class="member-name-link">isItemDisabled(ResourceLocation)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>
 <div class="block">Whether the item registered as <code>itemId</code> is barred from stacks.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/util/ItemOps.html#isItemDisabled(net.minecraft.world.item.ItemStack)" class="member-name-link">isItemDisabled(ItemStack)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ItemOps.html" title="class in com.github.crittscott.somestacks.util">ItemOps</a></dt>
-<dd>
-<div class="block">Whether the server config bars this item by id.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/util/ItemOps.html#isItemFromDisabledMod(net.minecraft.world.item.ItemStack)" class="member-name-link">isItemFromDisabledMod(ItemStack)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ItemOps.html" title="class in com.github.crittscott.somestacks.util">ItemOps</a></dt>
-<dd>
-<div class="block">Whether the server config bars this item's namespace.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid(int, ItemStack)</a> - Method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
 <dd>
@@ -1343,11 +1299,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Vanilla's placement obstruction test for a block-local collision shape.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#isValidBarItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidBarItem(ItemStack)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
-<dd>
-<div class="block">Whether a Bar Stack accepts this item, the single decision point every deposit, column
- insertion and capability path consults.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#isValidClientStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">isValidClientStackData(CompoundTag)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#isValidClientStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">isValidClientStackData(CompoundTag)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
@@ -1356,13 +1307,9 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#isValidClientStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">isValidClientStackData(CompoundTag)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#isValidSinglesItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidSinglesItem(ItemStack)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
+<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#isValidNamespace(java.lang.String)" class="member-name-link">isValidNamespace(String)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>
-<div class="block">Whether Singles accepts this item.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#isValidStorageItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidStorageItem(ItemStack)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
-<dd>
-<div class="block">Whether Storage accepts this item.</div>
+<div class="block">Validates namespace syntax through the public identifier parser with a fixed valid path.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/InteractionContext.html#isVDown()" class="member-name-link">isVDown()</a> - Method in class com.github.crittscott.somestacks.client.interaction.<a href="com/github/crittscott/somestacks/client/interaction/InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></dt>
 <dd>&nbsp;</dd>
@@ -1390,11 +1337,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Item handling shared by all three stack types: what a hand can accept, how a taken stack reaches
  the player, how a broken block sheds its contents, and how stored items add up to a light level.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html" class="type-name-link" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a> - Record Class in <a href="com/github/crittscott/somestacks/renderconfig/package-summary.html">com.github.crittscott.somestacks.renderconfig</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client.renderconfig">ItemRenderConfig</a> - Record Class in <a href="com/github/crittscott/somestacks/client/renderconfig/package-summary.html">com.github.crittscott.somestacks.client.renderconfig</a></dt>
 <dd>
 <div class="block">One override entry in the shared override vocabulary.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html#%3Cinit%3E(com.github.crittscott.somestacks.renderconfig.RenderMode,java.lang.Float,com.github.crittscott.somestacks.renderconfig.RenderOffset)" class="member-name-link">ItemRenderConfig(RenderMode, Float, RenderOffset)</a> - Constructor for record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html#%3Cinit%3E(com.github.crittscott.somestacks.client.renderconfig.RenderMode,java.lang.Float,com.github.crittscott.somestacks.client.renderconfig.RenderOffset)" class="member-name-link">ItemRenderConfig(RenderMode, Float, RenderOffset)</a> - Constructor for record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client.renderconfig">ItemRenderConfig</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>ItemRenderConfig</code> record class.</div>
 </dd>
@@ -1426,10 +1373,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:L">L</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#last()" class="member-name-link">last()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>last</code> record component.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/util/BarCubeIdx.html#LAYER_SIZE" class="member-name-link">LAYER_SIZE</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/BarCubeIdx.html" title="class in com.github.crittscott.somestacks.util">BarCubeIdx</a></dt>
 <dd>
 <div class="block">Slots per layer; the two orientations arrange the same count differently.</div>
@@ -1525,10 +1468,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Coalesces server changes into one next-tick pass on the base; no immediate publication occurs.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html#markDirty()" class="member-name-link">markDirty()</a> - Method in interface com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></dt>
-<dd>
-<div class="block">Schedules the run's deferred publication or settlement pass.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StoragePile.html#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">markDirtyAt(Level, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></dt>
 <dd>
 <div class="block">Marks the pile at <code>pos</code> for settling, if one is there.</div>
@@ -1557,15 +1496,17 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/TogglePermanentRule.html#matches(com.github.crittscott.somestacks.client.interaction.InteractionContext)" class="member-name-link">matches(InteractionContext)</a> - Method in class com.github.crittscott.somestacks.client.interaction.<a href="com/github/crittscott/somestacks/client/interaction/TogglePermanentRule.html" title="class in com.github.crittscott.somestacks.client.interaction">TogglePermanentRule</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_GENERATION_BYTES" class="member-name-link">MAX_GENERATION_BYTES</a> - Static variable in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_GENERATION_CHUNKS" class="member-name-link">MAX_GENERATION_CHUNKS</a> - Static variable in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/ItemOps.html#MAX_LIGHT_LEVEL" class="member-name-link">MAX_LIGHT_LEVEL</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ItemOps.html" title="class in com.github.crittscott.somestacks.util">ItemOps</a></dt>
 <dd>
 <div class="block">The brightest a block can be, and so the top of each stack block's light property.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MAX_OFFSET" class="member-name-link">MAX_OFFSET</a> - Static variable in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
+<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#MAX_NAMESPACE_ENTRIES" class="member-name-link">MAX_NAMESPACE_ENTRIES</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
+<dd>
+<div class="block">Bounds for each namespace list, shared by policy publication and the wire decoder.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#MAX_NAMESPACE_LENGTH" class="member-name-link">MAX_NAMESPACE_LENGTH</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#MAX_OFFSET" class="member-name-link">MAX_OFFSET</a> - Static variable in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_PACKET_BYTES" class="member-name-link">MAX_PACKET_BYTES</a> - Static variable in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
 <dd>&nbsp;</dd>
@@ -1573,7 +1514,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#MAX_PILE_HEIGHT_LIMIT" class="member-name-link">MAX_PILE_HEIGHT_LIMIT</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MAX_SCALE" class="member-name-link">MAX_SCALE</a> - Static variable in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#MAX_SCALE" class="member-name-link">MAX_SCALE</a> - Static variable in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarColumn.html#maxHeight()" class="member-name-link">maxHeight()</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarColumn.html" title="class in com.github.crittscott.somestacks.block">BarColumn</a></dt>
 <dd>
@@ -1624,7 +1565,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#MIN_GALLERY_PERMISSION_LEVEL" class="member-name-link">MIN_GALLERY_PERMISSION_LEVEL</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MIN_OFFSET" class="member-name-link">MIN_OFFSET</a> - Static variable in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#MIN_OFFSET" class="member-name-link">MIN_OFFSET</a> - Static variable in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Inclusive offset bounds in cell widths.</div>
 </dd>
@@ -1632,7 +1573,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#MIN_PLACEMENTS_PER_TICK" class="member-name-link">MIN_PLACEMENTS_PER_TICK</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MIN_SCALE" class="member-name-link">MIN_SCALE</a> - Static variable in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#MIN_SCALE" class="member-name-link">MIN_SCALE</a> - Static variable in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Inclusive scale bounds shared by authored overrides and automatic measurement.</div>
 </dd>
@@ -1644,15 +1585,15 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">This mod's directory beneath the game's config directory.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html#mode()" class="member-name-link">mode()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client.renderconfig">ItemRenderConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>mode</code> record component.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html#mode()" class="member-name-link">mode()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderProfile</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>mode</code> record component.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/network/GestureStatePkt.html#mode()" class="member-name-link">mode()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/GestureStatePkt.html" title="class in com.github.crittscott.somestacks.network">GestureStatePkt</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>mode</code> record component.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html#mode()" class="member-name-link">mode()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>mode</code> record component.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html#mode()" class="member-name-link">mode()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderProfile</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>mode</code> record component.</div>
 </dd>
@@ -1718,17 +1659,17 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a snapshot of which slots in a block contain bars.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/util/ViewRays.html#of(net.minecraft.world.entity.player.Player)" class="member-name-link">of(Player)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ViewRays.html" title="class in com.github.crittscott.somestacks.util">ViewRays</a></dt>
+<dt><a href="com/github/crittscott/somestacks/util/ViewRay.html#of(net.minecraft.world.entity.player.Player)" class="member-name-link">of(Player)</a> - Static method in record class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/BlockType.html#of(net.minecraft.world.level.block.Block)" class="member-name-link">of(Block)</a> - Static method in enum class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></dt>
 <dd>
 <div class="block">The type whose block this is, or null when it names none of the three.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html#offset()" class="member-name-link">offset()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html#offset()" class="member-name-link">offset()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client.renderconfig">ItemRenderConfig</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>offset</code> record component.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html#offset()" class="member-name-link">offset()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderProfile</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html#offset()" class="member-name-link">offset()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderProfile</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>offset</code> record component.</div>
 </dd>
@@ -1766,6 +1707,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StorageStackBlock.html#onRemove(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,boolean)" class="member-name-link">onRemove(BlockState, Level, BlockPos, BlockState, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBlock.html" title="class in com.github.crittscott.somestacks.block">StorageStackBlock</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/client/RenderCacheReloadListener.html#onResourceManagerReload(net.minecraft.server.packs.resources.ResourceManager)" class="member-name-link">onResourceManagerReload(ResourceManager)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/RenderCacheReloadListener.html" title="class in com.github.crittscott.somestacks.client">RenderCacheReloadListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarStackBER.html#onResourceReload()" class="member-name-link">onResourceReload()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarStackBER.html" title="class in com.github.crittscott.somestacks.client">BarStackBER</a></dt>
 <dd>
 <div class="block">Releases atlas coordinates and sprites when resource textures change.</div>
@@ -1784,7 +1727,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Drains the queued galleries, bounded by <code>render_gallery.placements_per_tick</code>.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" class="type-name-link" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a> - Class in <a href="com/github/crittscott/somestacks/renderconfig/package-summary.html">com.github.crittscott.somestacks.renderconfig</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a> - Class in <a href="com/github/crittscott/somestacks/client/renderconfig/package-summary.html">com.github.crittscott.somestacks.client.renderconfig</a></dt>
 <dd>
 <div class="block">Parses and serializes the item render override schema shared by bundled resources, the client
  override file, and the measured cache.</div>
@@ -1792,13 +1735,17 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#parse(com.google.gson.JsonObject,java.lang.String)" class="member-name-link">parse(JsonObject, String)</a> - Static method in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#parse(com.google.gson.JsonObject,java.lang.String)" class="member-name-link">parse(JsonObject, String)</a> - Static method in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Parses every valid item entry, logging and skipping malformed entries or fields.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#parseEntry(java.lang.String,com.google.gson.JsonObject)" class="member-name-link">parseEntry(String, JsonObject)</a> - Static method in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#parseEntry(java.lang.String,com.google.gson.JsonObject)" class="member-name-link">parseEntry(String, JsonObject)</a> - Static method in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Returns the parsed entry, or null if none of its fields are valid.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/util/BlockType.html#permitsPlayerItemAndNotify(net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">permitsPlayerItemAndNotify(ItemStack, ServerPlayer)</a> - Static method in enum class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></dt>
+<dd>
+<div class="block">Player policy gate before placement-height/support checks.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#pile()" class="member-name-link">pile()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
 <dd>
@@ -1878,7 +1825,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#publish(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">publish(ServerConfig.Settings)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>
-<div class="block">Publishes one complete loader policy and rebuilds its admission sets.</div>
+<div class="block">Publishes prepared policy; an over-limit replacement leaves the current policy intact.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackRun.html#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">publishAround(Level, BlockPos, BiFunction&lt;Level, BlockPos, R&gt;)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
 <dd>
@@ -1892,7 +1839,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Publishes changed local contents and derived light, returning whether anything changed.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#putUser(net.minecraft.resources.ResourceLocation,com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)" class="member-name-link">putUser(ResourceLocation, ItemRenderConfig)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#putUser(net.minecraft.resources.ResourceLocation,com.github.crittscott.somestacks.client.renderconfig.ItemRenderConfig)" class="member-name-link">putUser(ResourceLocation, ItemRenderConfig)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
 <dd>
 <div class="block">Loads the user file if needed, then replaces this item's in-memory user override and invalidates
  resolved profiles.</div>
@@ -1932,6 +1879,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Keys.html#RENDER_GALLERY" class="member-name-link">RENDER_GALLERY</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.Keys.html" title="class in com.github.crittscott.somestacks">ServerConfig.Keys</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/client/RenderCacheReloadListener.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">RenderCacheReloadListener</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
+<dd>
+<div class="block">Clears model-dependent client caches after resource reload.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/client/RenderCacheReloadListener.html#%3Cinit%3E()" class="member-name-link">RenderCacheReloadListener()</a> - Constructor for class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/RenderCacheReloadListener.html" title="class in com.github.crittscott.somestacks.client">RenderCacheReloadListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.html" class="type-name-link" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator</a> - Class in <a href="com/github/crittscott/somestacks/command/package-summary.html">com.github.crittscott.somestacks.command</a></dt>
 <dd>
 <div class="block">Generates galleries of stacks filled with given groups of items, for reviewing render settings in
@@ -1961,15 +1914,15 @@ loadScripts(document, 'script');</script>
  <a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#resolve(net.minecraft.world.item.ItemStack)"><code>ItemRenderOverrides.resolve(net.minecraft.world.item.ItemStack)</code></a> selects for it, or draws nothing if <code>stack</code> is
  empty.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" class="type-name-link" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a> - Enum Class in <a href="com/github/crittscott/somestacks/renderconfig/package-summary.html">com.github.crittscott.somestacks.renderconfig</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html" class="type-name-link" title="enum class in com.github.crittscott.somestacks.client.renderconfig">RenderMode</a> - Enum Class in <a href="com/github/crittscott/somestacks/client/renderconfig/package-summary.html">com.github.crittscott.somestacks.client.renderconfig</a></dt>
 <dd>
 <div class="block">How a stored item is drawn inside its cell.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" class="type-name-link" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a> - Record Class in <a href="com/github/crittscott/somestacks/renderconfig/package-summary.html">com.github.crittscott.somestacks.renderconfig</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderOffset</a> - Record Class in <a href="com/github/crittscott/somestacks/client/renderconfig/package-summary.html">com.github.crittscott.somestacks.client.renderconfig</a></dt>
 <dd>
 <div class="block">Immutable three-axis render offset, expressed in cell widths.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html#%3Cinit%3E(float,float,float)" class="member-name-link">RenderOffset(float, float, float)</a> - Constructor for record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html#%3Cinit%3E(float,float,float)" class="member-name-link">RenderOffset(float, float, float)</a> - Constructor for record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderOffset</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>RenderOffset</code> record class.</div>
 </dd>
@@ -1980,17 +1933,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientRenderPlatform.html#renderPasses(net.minecraft.client.resources.model.BakedModel,net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemDisplayContext)" class="member-name-link">renderPasses(BakedModel, ItemStack, ItemDisplayContext)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientRenderPlatform.html" title="class in com.github.crittscott.somestacks.client">ClientRenderPlatform</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html" class="type-name-link" title="class in com.github.crittscott.somestacks.renderconfig">RenderProfile</a> - Record Class in <a href="com/github/crittscott/somestacks/renderconfig/package-summary.html">com.github.crittscott.somestacks.renderconfig</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderProfile</a> - Record Class in <a href="com/github/crittscott/somestacks/client/renderconfig/package-summary.html">com.github.crittscott.somestacks.client.renderconfig</a></dt>
 <dd>
 <div class="block">A complete, ready-to-render presentation for one item: the output of resolving the
  override layers, or of measuring the item's model when no layer configures it.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html#%3Cinit%3E(com.github.crittscott.somestacks.renderconfig.RenderMode,float,com.github.crittscott.somestacks.renderconfig.RenderOffset)" class="member-name-link">RenderProfile(RenderMode, float, RenderOffset)</a> - Constructor for record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderProfile</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html#%3Cinit%3E(com.github.crittscott.somestacks.client.renderconfig.RenderMode,float,com.github.crittscott.somestacks.client.renderconfig.RenderOffset)" class="member-name-link">RenderProfile(RenderMode, float, RenderOffset)</a> - Constructor for record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderProfile</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>RenderProfile</code> record class.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html#replace(java.util.List,java.util.List)" class="member-name-link">replace(List&lt;String&gt;, List&lt;String&gt;)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html" title="class in com.github.crittscott.somestacks.client">ClientRenderToolState</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerLifecycle.html#reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage.LoadResult)" class="member-name-link">reportSavedItems(ServerLevel, BlockPos, StackItemStorage.LoadResult)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerLifecycle.html" title="class in com.github.crittscott.somestacks">ServerLifecycle</a></dt>
 <dd>
 <div class="block">Logs saved item stacks a block kept aside because they could not be read.</div>
@@ -2053,11 +2004,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/CubeGrid.html#ROTATIONS" class="member-name-link">ROTATIONS</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">RotationSoundThrottle</a> - Class in <a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a></dt>
-<dd>
-<div class="block">Limits repeated rotation sounds without limiting the rotations themselves: rotation remains
- available every tick, but a held gesture does not broadcast twenty sounds per second.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/RunEdit.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">RunEdit</a> - Class in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
 <dd>
 <div class="block">Holds off an automation edit that arrives while another one is still running.</div>
@@ -2082,11 +2028,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#saveStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveStackData(CompoundTag)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html#scale()" class="member-name-link">scale()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html#scale()" class="member-name-link">scale()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client.renderconfig">ItemRenderConfig</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>scale</code> record component.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html#scale()" class="member-name-link">scale()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderProfile</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html#scale()" class="member-name-link">scale()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderProfile</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>scale</code> record component.</div>
 </dd>
@@ -2144,8 +2090,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Installs the loader-specific implementation; called once during client setup.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.html#setBackend(com.github.crittscott.somestacks.client.measure.ModelMeasurement.Backend)" class="member-name-link">setBackend(ModelMeasurement.Backend)</a> - Static method in class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/StackState.html#setBlockEnabled(com.github.crittscott.somestacks.util.BlockType,boolean)" class="member-name-link">setBlockEnabled(BlockType, boolean)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/StackState.html" title="class in com.github.crittscott.somestacks.client">StackState</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#setCubeRotation(int,int)" class="member-name-link">setCubeRotation(int, int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>&nbsp;</dd>
@@ -2257,9 +2201,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Slots in one block.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/client/ClientServerSettings.html#snapshot()" class="member-name-link">snapshot()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientServerSettings.html" title="class in com.github.crittscott.somestacks.client">ClientServerSettings</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#snapshot(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">snapshot(ServerConfig.Settings)</a> - Static method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
 <dd>
-<div class="block">Builds a new generation on the server thread describing the given policy, in send order.</div>
+<div class="block">Copies already prepared policy without changing it or emitting per-login diagnostics.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/SomeStacksCommon.html" class="type-name-link" title="class in com.github.crittscott.somestacks">SomeStacksCommon</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
 <dd>
@@ -2325,11 +2271,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a server-only run over a nonempty bottom-to-top list of same-type block entities.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a> - Interface in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
-<dd>
-<div class="block">Positional whole-run operations exposed to loader-native automation adapters.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.InsertionTest.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess.InsertionTest</a> - Interface in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
+<dt><a href="com/github/crittscott/somestacks/block/StackRun.InsertionTest.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.block">StackRun.InsertionTest</a> - Interface in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Keys.html#STACKS" class="member-name-link">STACKS</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.Keys.html" title="class in com.github.crittscott.somestacks">ServerConfig.Keys</a></dt>
 <dd>&nbsp;</dd>
@@ -2343,12 +2285,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Stack action sound levels and throttled rotation playback.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/client/StackState.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">StackState</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
-<dd>
-<div class="block">The loader-neutral client copy of which stack types the server has enabled, delivered by the configuration
- sync.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#start(java.util.function.Supplier,java.util.function.Consumer)" class="member-name-link">start(Supplier&lt;ServerConfig.Settings&gt;, Consumer&lt;ServerConfig.Settings&gt;)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
+<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#start(java.util.function.Supplier,java.util.function.Consumer,java.lang.Runnable)" class="member-name-link">start(Supplier&lt;ServerConfig.Settings&gt;, Consumer&lt;ServerConfig.Settings&gt;, Runnable)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>
 <div class="block">Starts a world with its loader's policy reader and command-save boundary, and publishes the
  policy read now.</div>
@@ -2498,15 +2435,15 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#TAG_SLOT" class="member-name-link">TAG_SLOT</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.InsertionTest.html#test(int,net.minecraft.world.item.ItemStack)" class="member-name-link">test(int, ItemStack)</a> - Method in interface com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRunItemAccess.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess.InsertionTest</a></dt>
+<dt><a href="com/github/crittscott/somestacks/block/StackRun.InsertionTest.html#test(int,net.minecraft.world.item.ItemStack)" class="member-name-link">test(int, ItemStack)</a> - Method in interface com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRun.InsertionTest</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html#texture()" class="member-name-link">texture()</a> - Method in record class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>texture</code> record component.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html#THREE_D" class="member-name-link">THREE_D</a> - Enum constant in enum class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html#THREE_D" class="member-name-link">THREE_D</a> - Enum constant in enum class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.client.renderconfig">RenderMode</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/util/ViewRays.html#through(net.minecraft.world.entity.player.Player,net.minecraft.world.phys.Vec3)" class="member-name-link">through(Player, Vec3)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ViewRays.html" title="class in com.github.crittscott.somestacks.util">ViewRays</a></dt>
+<dt><a href="com/github/crittscott/somestacks/util/ViewRay.html#through(net.minecraft.world.entity.player.Player,net.minecraft.world.phys.Vec3)" class="member-name-link">through(Player, Vec3)</a> - Static method in record class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></dt>
 <dd>
 <div class="block">Builds a reach-length ray through the exact point carried by a vanilla block interaction.</div>
 </dd>
@@ -2536,7 +2473,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/TogglePermanentRule.html#%3Cinit%3E()" class="member-name-link">TogglePermanentRule()</a> - Constructor for class com.github.crittscott.somestacks.client.interaction.<a href="com/github/crittscott/somestacks/client/interaction/TogglePermanentRule.html" title="class in com.github.crittscott.somestacks.client.interaction">TogglePermanentRule</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#toJson(java.util.Map)" class="member-name-link">toJson(Map&lt;ResourceLocation, ItemRenderConfig&gt;)</a> - Static method in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#toJson(java.util.Map)" class="member-name-link">toJson(Map&lt;ResourceLocation, ItemRenderConfig&gt;)</a> - Static method in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Serializes entries sorted by item id for stable files.</div>
 </dd>
@@ -2569,6 +2506,18 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client.renderconfig">ItemRenderConfig</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderOffset</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderProfile</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Plan.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Plan.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Plan</a></dt>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
@@ -2582,18 +2531,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/network/GestureStatePkt.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/GestureStatePkt.html" title="class in com.github.crittscott.somestacks.network">GestureStatePkt</a></dt>
-<dd>
-<div class="block">Returns a string representation of this record class.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></dt>
-<dd>
-<div class="block">Returns a string representation of this record class.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></dt>
-<dd>
-<div class="block">Returns a string representation of this record class.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderProfile</a></dt>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
@@ -2616,14 +2553,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/util/ViewRay.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></dt>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#totalDisabledMods()" class="member-name-link">totalDisabledMods()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>totalDisabledMods</code> record component.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#totalGenMods()" class="member-name-link">totalGenMods()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>totalGenMods</code> record component.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Plan.html#totalItems()" class="member-name-link">totalItems()</a> - Method in record class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Plan.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Plan</a></dt>
 <dd>
@@ -2673,7 +2602,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the nearest occupied cell intersected by the view ray, or <code>-1</code> on a miss.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html#TWO_D" class="member-name-link">TWO_D</a> - Enum constant in enum class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html#TWO_D" class="member-name-link">TWO_D</a> - Enum constant in enum class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.client.renderconfig">RenderMode</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:U">U</h2>
@@ -2693,11 +2622,11 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:V">V</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html" title="enum class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Kind</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.client.renderconfig">RenderMode</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></dt>
+<dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html" title="enum class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Kind</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
@@ -2713,12 +2642,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html#values()" class="member-name-link">values()</a> - Static method in enum class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html" title="enum class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Kind</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html#values()" class="member-name-link">values()</a> - Static method in enum class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.client.renderconfig">RenderMode</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html#values()" class="member-name-link">values()</a> - Static method in enum class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></dt>
+<dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html#values()" class="member-name-link">values()</a> - Static method in enum class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html" title="enum class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Kind</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
@@ -2750,10 +2679,6 @@ the order they are declared.</div>
 <dt><a href="com/github/crittscott/somestacks/util/ViewRay.html#%3Cinit%3E(net.minecraft.world.phys.Vec3,net.minecraft.world.phys.Vec3)" class="member-name-link">ViewRay(Vec3, Vec3)</a> - Constructor for record class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>ViewRay</code> record class.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/util/ViewRays.html" class="type-name-link" title="class in com.github.crittscott.somestacks.util">ViewRays</a> - Class in <a href="com/github/crittscott/somestacks/util/package-summary.html">com.github.crittscott.somestacks.util</a></dt>
-<dd>
-<div class="block">Builds a <a href="com/github/crittscott/somestacks/util/ViewRay.html" title="class in com.github.crittscott.somestacks.util"><code>ViewRay</code></a> from a player's eye position and block reach.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html#visualColumnFromStorage(int,int)" class="member-name-link">visualColumnFromStorage(int, int)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></dt>
 <dd>
@@ -2788,7 +2713,7 @@ the order they are declared.</div>
 </dl>
 <h2 class="title" id="I:X">X</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html#x()" class="member-name-link">x()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html#x()" class="member-name-link">x()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderOffset</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>x</code> record component.</div>
 </dd>
@@ -2803,18 +2728,18 @@ the order they are declared.</div>
 </dl>
 <h2 class="title" id="I:Y">Y</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html#y()" class="member-name-link">y()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html#y()" class="member-name-link">y()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderOffset</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>y</code> record component.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:Z">Z</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html#z()" class="member-name-link">z()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html#z()" class="member-name-link">z()</a> - Method in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderOffset</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>z</code> record component.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html#ZERO" class="member-name-link">ZERO</a> - Static variable in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html#ZERO" class="member-name-link">ZERO</a> - Static variable in record class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.client.renderconfig">RenderOffset</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:X">X</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>

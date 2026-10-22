@@ -1,4 +1,4 @@
-package com.github.crittscott.somestacks.renderconfig;
+package com.github.crittscott.somestacks.client.renderconfig;
 
 /**
  * How a stored item is drawn inside its cell. The string ids are the stable form: they appear in

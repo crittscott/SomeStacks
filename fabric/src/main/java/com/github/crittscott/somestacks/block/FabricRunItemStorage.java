@@ -81,7 +81,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         Access access = access();
         if (access.run == null) return 0;
         FabricRunItemStorage ledger = access.ledger;
-        StackRunItemAccess.InsertionTest insertion = access.run.insertionTest();
+        StackRun.InsertionTest insertion = access.run.insertionTest();
         long inserted = 0;
         int slotCount = access.run.advertisedSlots();
         // Match Transfer API stacking order: occupied slots first, then all positions bottom-up.
@@ -112,18 +112,18 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
 
     /** Resolves one current run and its base ledger for this operation only. */
     private Access access() {
-        StackRunItemAccess access = blockEntity.itemRun();
-        if (access instanceof StackRun<?> run) {
+        StackRun<?> run = blockEntity.itemRun();
+        if (run != null) {
             StackBlockEntity base = run.blocks.get(0);
             return new Access(((FabricStorageOwner) base).someStacksStorage(), run);
         }
-        return new Access(this, access);
+        return new Access(this, null);
     }
 
-    private record Access(FabricRunItemStorage ledger, StackRunItemAccess run) {}
+    private record Access(FabricRunItemStorage ledger, StackRun<?> run) {}
 
     /** Reads this ledger directly after its owner has been resolved by the caller. */
-    private ItemStack currentStack(int slot, StackRunItemAccess run) {
+    private ItemStack currentStack(int slot, StackRun<?> run) {
         ItemStack pending = staged.get(slot);
         return pending != null ? pending : run != null ? run.getSlot(slot) : ItemStack.EMPTY;
     }
@@ -147,21 +147,21 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
     }
 
     /** Records a slot's original live value once, then replaces its transaction-visible value. */
-    private void stage(int slot, ItemStack stack, TransactionContext transaction, StackRunItemAccess run) {
+    private void stage(int slot, ItemStack stack, TransactionContext transaction, StackRun<?> run) {
         updateSnapshots(transaction);
         originals.computeIfAbsent(slot, ignored -> run.getSlot(slot).copy());
         staged.put(slot, stack);
     }
 
     private void commitInsert(int slot, ItemStack stack) {
-        StackRunItemAccess run = blockEntity.itemRun();
+        StackRun<?> run = blockEntity.itemRun();
         if (run != null) {
             run.insertAt(slot, stack, false);
         }
     }
 
     private void commitExtract(int slot, int amount) {
-        StackRunItemAccess run = blockEntity.itemRun();
+        StackRun<?> run = blockEntity.itemRun();
         if (run != null) {
             run.extract(slot, amount, false);
         }
@@ -236,7 +236,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
     }
 
     private long insertSlot(int slot, ItemVariant resource, long maxAmount, TransactionContext transaction,
-                            StackRunItemAccess run, StackRunItemAccess.InsertionTest insertion) {
+                            StackRun<?> run, StackRun.InsertionTest insertion) {
         if (run == null || slot < 0 || slot >= run.advertisedSlots() || maxAmount == 0
                 || RunEdit.isInProgress() || isStructural()
                 && structuralExtractionSlot >= 0 && structuralExtractionSlot != slot) {
@@ -258,7 +258,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
     }
 
     private long extractSlot(int slot, ItemVariant resource, long maxAmount,
-                             TransactionContext transaction, StackRunItemAccess run) {
+                             TransactionContext transaction, StackRun<?> run) {
         if (run == null || slot < 0 || slot >= run.advertisedSlots() || maxAmount == 0
                 || RunEdit.isInProgress() || isStructural()
                 && structuralExtractionSlot >= 0 && structuralExtractionSlot != slot) {

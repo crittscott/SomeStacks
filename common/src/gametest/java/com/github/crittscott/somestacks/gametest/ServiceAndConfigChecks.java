@@ -4,7 +4,7 @@ import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.server.RotationSoundThrottle;
+import com.github.crittscott.somestacks.server.StackSounds;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.MinecraftServer;
@@ -29,10 +29,10 @@ public final class ServiceAndConfigChecks {
         check(PlatformServices.editAuthority() != null, "Missing edit authority");
         ServerLifecycle.logout(player.getUUID());
         try {
-            check(RotationSoundThrottle.claim(player), "Initial rotation sound refused");
-            check(!RotationSoundThrottle.claim(player), "Repeated sound accepted");
+            check(StackSounds.claimRotation(player), "Initial rotation sound refused");
+            check(!StackSounds.claimRotation(player), "Repeated sound accepted");
             ServerLifecycle.logout(player.getUUID());
-            check(RotationSoundThrottle.claim(player), "Logout retained sound pacing");
+            check(StackSounds.claimRotation(player), "Logout retained sound pacing");
         } finally {
             ServerLifecycle.logout(player.getUUID());
         }
@@ -98,7 +98,7 @@ public final class ServiceAndConfigChecks {
     /**
      * To reproduce in-game: while the server runs, add a mod id to render_gallery.gen_mods in the
      * world's somestacks-server.toml (Forge) or somestacks-server.json (Fabric), then run
-     * /ss reload. The reply counts every online player as synced, and /ss gen mod list shows the
+     * /ss reload. The reply counts online players, and /ss gen mod list shows the
      * new entry. The fixture writes the stored policy through the loader's saver without
      * publishing it, and restores both the file and the published policy afterward.
      */
@@ -120,7 +120,7 @@ public final class ServiceAndConfigChecks {
                     server.createCommandSourceStack().withSuppressedOutput());
 
             checkEquals(List.of(marker), ServerConfig.ListSetting.GEN_MODS.get(), "Reload did not publish stored policy");
-            checkEquals(server.getPlayerList().getPlayerCount(), synced, "Reload did not resync every player");
+            checkEquals(server.getPlayerList().getPlayerCount(), synced, "Reload did not count online players");
         } catch (CommandSyntaxException exception) {
             throw new AssertionError("Reload command failed", exception);
         } finally {

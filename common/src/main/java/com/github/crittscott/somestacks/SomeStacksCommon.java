@@ -12,7 +12,7 @@ public final class SomeStacksCommon {
     }
 
     /** Wire-format version shared by both loader transports. */
-    public static final int PROTOCOL_VERSION = 4;
+    public static final int PROTOCOL_VERSION = 5;
 
     public static final String MODID = "somestacks";
     public static final Logger LOGGER = LogManager.getLogger(MODID);

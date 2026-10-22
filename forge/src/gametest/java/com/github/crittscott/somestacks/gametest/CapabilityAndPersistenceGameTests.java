@@ -268,6 +268,31 @@ public final class CapabilityAndPersistenceGameTests {
         ServiceAndConfigChecks.listEditsPublishImmutablePolicy(helper);
     }
 
+    /** See {@link NetworkPolicyChecks#publicationSyncsOnlyChangedClientPolicy}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void publicationSyncsOnlyChangedClientPolicy(GameTestHelper helper)
+            throws ReflectiveOperationException {
+        NetworkPolicyChecks.publicationSyncsOnlyChangedClientPolicy(helper);
+    }
+
+    /** See {@link NetworkPolicyChecks#admissionSeparatesPlayersAutomationAndTypes}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void admissionSeparatesPlayersAutomationAndTypes(GameTestHelper helper) {
+        NetworkPolicyChecks.admissionSeparatesPlayersAutomationAndTypes(helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
+    }
+
+    /** See {@link NetworkPolicyChecks#namespacePolicyIsPreparedAndBounded}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void namespacePolicyIsPreparedAndBounded(GameTestHelper helper) {
+        NetworkPolicyChecks.namespacePolicyIsPreparedAndBounded(helper);
+    }
+
+    /** See {@link NetworkPolicyChecks#policyPacketsValidateBeforePublication}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void policyPacketsValidateBeforePublication(GameTestHelper helper) {
+        NetworkPolicyChecks.policyPacketsValidateBeforePublication(helper);
+    }
+
     /** See {@link ServiceAndConfigChecks#numericPolicyRangesAreShared}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void numericPolicyRangesAreShared(GameTestHelper helper) {

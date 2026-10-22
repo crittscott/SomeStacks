@@ -4,9 +4,7 @@
 
 # Some Stacks — player-facing behavior
 
-Structure: `orientation-code.md`.
-
-Some Stacks turns held items into visible storage. Depositing creates a stack; emptying it normally removes it. No block items, recipes, creative-tab entries, or screens.
+Some Stacks makes items visible storage: deposit to create a stack; empty it to remove it. No block items, recipes, creative entries, or screens.
 
 Requires Minecraft 1.20.1 and matching client/server loader builds: Forge 47.4.10 or later within 47.x, or Fabric Loader 0.19.3 with Fabric API 0.92.7+1.20.1.
 
@@ -36,15 +34,15 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 | Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-Only the main hand acts; torches are not spent. While `V` is held, the main-hand item is never used on air. Rotation displays its angle and can occur every tick; sound plays at most once every four ticks per player. Sneaking retains ordinary interaction except for torch gestures.
+Only the main hand acts; torches are not spent. Holding `V` prevents main-hand item use on air. Rotation shows its angle and can occur every tick; sound is limited to once per four ticks per player. Sneaking retains ordinary interaction except for torch gestures.
 
 ## Depositing and placing
 
-Placement and first deposit are atomic: they require a valid item, supported target cell, unobstructed shape, replaceable space, permitted height, and edit permission. Failure leaves no empty stack.
+Placement and first deposit are atomic, requiring a valid item, supported cell, unobstructed shape, replaceable space, permitted height, and edit permission. Failure leaves no empty stack.
 
 Water placement waterlogs the stack and preserves water. A top-face deposit onto an occupied or unsupported cell can add the selected type above the run. Different types can sit beside or atop each other; only contiguous same-type blocks share a run.
 
-Creative deposits do not spend items.
+Creative deposits spend nothing.
 
 Deposits are rejected when the server has disabled the item's mod or exact item id; existing contents stay extractable. Items the selected type does not accept simply do nothing: Bar takes only the `somestacks:ingots` item tag, Singles takes everything allowed that Bar does not.
 
@@ -56,11 +54,11 @@ Plain right-click targets the nearest rendered item along the eye ray through th
 - Singles: one item.
 - Bar: one bar, possibly collapsing unsupported bars above it.
 
-The main hand must be empty or hold matching item/damage/NBT with room. Plain stack clicks are consumed even when extraction fails.
+The main hand must be empty or hold matching item/damage/NBT with room. Stack clicks are consumed even if extraction fails.
 
 Breaking or replacing any stack block drops that block's local contents; no stack block item drops. Storage runs above and below the gap settle independently in place. Singles leaves separated runs standing. Removing a Bar Stack removes the support seam beneath the Bars above it, so unsupported bars collapse and drop.
 
-Contents and collapsed bars drop with `doTileDrops` false.
+Contents drop even with `doTileDrops` false.
 
 ## Per-type behavior
 
@@ -68,7 +66,7 @@ Contents and collapsed bars drop with `doTileDrops` false.
 
 27 ordinary stacks shown as a 3 x 3 x 3 grid; a slot holding one item and a full slot show the same item model. A contiguous pile is one inventory: deposits merge compatible partial stacks first, fill from the base up, and grow upward when full and allowed. Settlement merges exact item/damage/NBT identities, sorts, packs down, and removes empty top blocks. Extraction removes from the aimed cell first; the following scheduled block tick settles the pile.
 
-Only Storage has permanence. A permanent pile retains empty blocks; a temporary pile trims empty tops and disappears when emptied. The setting belongs to the whole pile and shows above the hotbar when toggled. A redstone torch rotates one block's visible layout, not the pile.
+Only Storage has permanence: permanent piles retain empty blocks; temporary piles trim empty tops and disappear when emptied. This pile-wide setting shows above the hotbar when toggled. A redstone torch rotates one block's layout.
 
 ### Singles
 
@@ -80,7 +78,7 @@ A redstone torch rotates a whole block; a soul torch rotates only the aimed item
 
 ### Bar
 
-64 ingots rendered as fixed bar cuboids in eight layers of eight, each layer across the one below. The tag covers the loader's common ingot/brick tags, vanilla ingots and bricks, and listed modded ones. The item model is not drawn; a resource pack supplies or derives the bar texture and tint.
+64 ingots rendered as fixed bar cuboids in eight layers of eight, each layer across the one below. The tag covers the loader's common ingot/brick tags, vanilla ingots and bricks, and listed modded ones. Resource packs supply or derive bar textures and tints; item models are not drawn.
 
 The bottom layer rests on the world. Every bar above it must overlap a bar directly below, and support crosses seams between adjacent Bar blocks. Removing a bar, or breaking a Bar block, drops every bar that loses support, possibly cascading through layers and blocks. Supported bars stay in place. Bars have no rotation gesture.
 
@@ -142,7 +140,7 @@ World policy: Forge uses `<world>/serverconfig/somestacks-server.toml`, reloaded
 | `render_gallery.gen_mods` | empty | Namespaces used by `list` gallery/write forms |
 | `render_gallery.gen_items` | empty | Items used by `/ss gallery items` |
 
-Disabled types keep existing blocks and extraction. Item/mod/tag changes never eject contents. Enable flags sync on login and policy changes; cycling skips disabled types.
+Disabled types keep existing blocks and extraction. Item/mod/tag changes never eject contents. Client settings sync on login and when changed; cycling skips disabled types.
 
 ## Commands
 
@@ -158,28 +156,28 @@ Disabled types keep existing blocks and extraction. Item/mod/tag changes never e
 | `/ss ingotgallery <modid\|all\|list>` | Configured gallery permission, player; off by default | Build Bar render galleries |
 | `/ss gen ...` | Level 2 | Edit gallery namespace/item lists |
 | `/ss deny ...` | Level 2 | Edit disabled namespace/exact-item lists |
-| `/ss reload` | Level 2 | Reload world policy; resync players |
+| `/ss reload` | Level 2 | Reload policy; sync changed client settings |
 
-Galleries build east over sandstone across server ticks, in id order without disabled items, replacing floor and stack positions without placement protection.
+Galleries build east over sandstone across ticks, in id order without disabled items, replacing floor and stacks without placement protection.
 
-Policy command edits save immediately.
+Command edits save immediately. Mod lists normalize case/spacing and duplicates; mods need not be installed. Each allows 256 namespaces of at most 256 characters. Malformed config names are logged and omitted. Over-limit configs retain the previous policy (defaults at startup); rejected additions/reloads report failure.
 
 ## Item appearance
 
 Storage/Singles modes: `2d` projects item art onto cube faces; `3d` uses the FIXED renderer; `gui` fits the inventory renderer; `block` draws a BlockItem state, falling back to `3d` when unsafe. Profiles also set scale and a three-component offset.
 
-Resolution order is local override, resource-pack data (including a server resource pack), then automatic model measurement. Unconfigured items are measured and fitted to a cell; results cache at `config/somestacks/measured_cache.json`. Pack selection changes between sessions, owning-mod version changes, and resource reload invalidate relevant measurements.
+Resolution order: local override, resource-pack data (including server packs), then automatic measurement. Unconfigured items are measured and fitted to a cell; results cache at `config/somestacks/measured_cache.json`. Pack selection changes between sessions, owning-mod version changes, and resource reload invalidate relevant measurements.
 
 `/ss item` edits the local in-memory layer. `/ss write changed` saves explicit edits to `config/somestacks/item_overrides.json`. Namespace forms write complete files to output-only `config/somestacks/generated_overrides/`, never loaded automatically.
 
-An item whose model throws in `2d` shows a red "ERR" cube until resource reload, logged once.
+A failing `2d` model shows a red "ERR" cube until resource reload, logged once.
 
 Bar appearance is separate: resource packs map item ids to textures and optional tints under `assets/<namespace>/textures/bars/*.json`. Missing tints derive from the sprite and tint of the first quad the item draws in inventory. Bar mappings are client-only, so players with different packs can see different bars.
 
 ## Extension points
 
 - Data packs: Bar admission through `somestacks:ingots`.
-- Resource packs: Storage/Singles profiles at `assets/<namespace>/item_render_overrides/*.json`; Bar mappings described above; action sounds through `assets/somestacks/sounds.json`. Servers share these through a server resource pack.
+- Resource packs: profiles at `assets/<namespace>/item_render_overrides/*.json`, Bar mappings as above, and sounds at `assets/somestacks/sounds.json`.
 
 ## Protection and validation
 

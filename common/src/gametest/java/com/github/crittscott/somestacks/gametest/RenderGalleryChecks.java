@@ -1,11 +1,11 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
-import com.github.crittscott.somestacks.util.ItemOps;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
@@ -58,8 +58,8 @@ public final class RenderGalleryChecks {
         try (InteractionChecks.PlayerScope playerScope = new InteractionChecks.PlayerScope(player);
              CommandScope scope = new CommandScope()) {
             check(scope.jobs.isEmpty(), "Command batch started with unrelated gallery work");
-            ServerConfig.start(() -> commandSettings(false, List.of()), scope.saved::add);
-            check(BarStackBE.isValidBarItem(new ItemStack(Items.IRON_INGOT)), "Iron ingot is not Bar-valid");
+            ServerConfig.start(() -> commandSettings(false, List.of()), scope.saved::add, () -> {});
+            check(BlockType.BAR_STACK.admits(new ItemStack(Items.IRON_INGOT), null), "Iron ingot is not Bar-valid");
             BlockPos playerPos = helper.absolutePos(ORIGIN);
             player.setPos(playerPos.getX() + 0.5, playerPos.getY(), playerPos.getZ() + 0.5);
             CommandSourceStack ordinary = player.createCommandSourceStack().withPermission(0).withSuppressedOutput();
@@ -91,8 +91,8 @@ public final class RenderGalleryChecks {
             checkEquals(1, execute(dispatcher, admin, "ss deny item add minecraft:stone", scope), "Authorized add");
             checkEquals(commandSettings(true, List.of("minecraft:stone")), ServerConfig.settings(),
                     "Deny command changed the wrong policy fields");
-            check(ItemOps.checkDisabledItemAndNotify(new ItemStack(Items.STONE), player), "Player admission ignored deny");
-            check(StorageStackBE.isValidStorageItem(new ItemStack(Items.STONE)), "Player-only deny reached automation");
+            check(!BlockType.permitsPlayerItemAndNotify(new ItemStack(Items.STONE), player), "Player admission ignored deny");
+            check(BlockType.STORAGE_STACK.admits(new ItemStack(Items.STONE), null), "Player-only deny reached automation");
             checkEquals(1, scope.saved.size(), "Authorized add did not save once");
             checkEquals(ServerConfig.settings(), scope.saved.get(0), "Saved policy differs from publication");
 
@@ -105,7 +105,7 @@ public final class RenderGalleryChecks {
                     "Unknown item reached admission state");
             checkEquals(1, execute(dispatcher, admin, "ss deny item remove minecraft:stone", scope), "Authorized remove");
             checkEquals(clean, ServerConfig.settings(), "Add/remove did not restore the intended policy");
-            check(!ItemOps.checkDisabledItemAndNotify(new ItemStack(Items.STONE), player), "Removal retained denial");
+            check(BlockType.permitsPlayerItemAndNotify(new ItemStack(Items.STONE), player), "Removal retained denial");
             checkEquals(2, scope.saved.size(), "Authorized remove did not save once");
             checkEquals(clean, scope.saved.get(1), "Removal saved the wrong policy");
 
@@ -202,6 +202,8 @@ public final class RenderGalleryChecks {
         private final Object reader;
         private final Field saverField;
         private final Object saver;
+        private final Field syncClientsField;
+        private final Object syncClients;
         private final Deque<Object> jobs;
         private final Set<Object> ownedJobs = new HashSet<>();
         private final List<ServerConfig.Settings> saved = new ArrayList<>();
@@ -214,6 +216,9 @@ public final class RenderGalleryChecks {
             saverField = ServerConfig.class.getDeclaredField("saver");
             saverField.setAccessible(true);
             saver = saverField.get(null);
+            syncClientsField = ServerConfig.class.getDeclaredField("syncClients");
+            syncClientsField.setAccessible(true);
+            syncClients = syncClientsField.get(null);
             Field jobsField = RenderGalleryGenerator.class.getDeclaredField("jobs");
             jobsField.setAccessible(true);
             jobs = (Deque<Object>) jobsField.get(null);
@@ -227,6 +232,7 @@ public final class RenderGalleryChecks {
             } finally {
                 readerField.set(null, reader);
                 saverField.set(null, saver);
+                syncClientsField.set(null, syncClients);
             }
         }
     }

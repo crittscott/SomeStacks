@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
@@ -137,7 +138,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
-        if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)) {
+        if (stack.isEmpty() || !BlockType.BAR_STACK.admits(stack, null)) {
             return 0;
         }
         if (flatSlot < 0 || flatSlot >= advertisedSlots() || !positionAccepts(flatSlot, null)) {
@@ -159,7 +160,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
     public InsertionTest insertionTest() {
         BooleanSupplier growth = oncePerSweep(this::canGrowSpace);
         return (slot, stack) -> {
-            if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)
+            if (stack.isEmpty() || !BlockType.BAR_STACK.admits(stack, null)
                     || slot < 0 || slot >= advertisedSlots()) return 0;
             return positionAccepts(slot, growth) ? 1 : 0;
         };

@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
@@ -181,7 +182,7 @@ public final class BarColumnGameTests {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
         BlockPos pos = bars.getBlockPos();
-        check(!BarStackBE.isValidBarItem(new ItemStack(Items.STICK)),
+        check(!BlockType.BAR_STACK.admits(new ItemStack(Items.STICK), null),
                 "Test needs an item a Bar Stack refuses");
         bars.getItems().insertItem(0, new ItemStack(barItem), false);
         seedSlot(bars.getItems(), 1, new ItemStack(Items.STICK));

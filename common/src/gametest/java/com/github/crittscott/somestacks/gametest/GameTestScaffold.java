@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
@@ -68,7 +69,7 @@ public final class GameTestScaffold {
 
     public static Item firstBarItem() {
         for (Item item : BuiltInRegistries.ITEM) {
-            if (BarStackBE.isValidBarItem(new ItemStack(item))) {
+            if (BlockType.BAR_STACK.admits(new ItemStack(item), null)) {
                 return item;
             }
         }

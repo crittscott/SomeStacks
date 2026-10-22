@@ -1,10 +1,12 @@
 package com.github.crittscott.somestacks;
 
+import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import net.minecraft.commands.Commands;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -45,12 +47,16 @@ public final class ServerConfig {
     public static final int DEFAULT_GALLERY_PERMISSION_LEVEL = Commands.LEVEL_ADMINS;
     public static final int MAX_PILE_HEIGHT_LIMIT = 64;
     public static final int GALLERY_PERMISSION_LEVEL_MAX = Commands.LEVEL_OWNERS;
+    /** Bounds for each namespace list, shared by policy publication and the wire decoder. */
+    public static final int MAX_NAMESPACE_ENTRIES = 256;
+    public static final int MAX_NAMESPACE_LENGTH = 256;
     /** Items whose models are known to crash clients when drawn. */
     public static final List<String> DEFAULT_DISABLE_ITEMS = List.of("evilcraft:broom_part");
 
     private static volatile Settings settings = Settings.defaults();
     private static Supplier<Settings> reader;
     private static Consumer<Settings> saver;
+    private static Runnable syncClients;
     private static volatile Set<String> disabledMods = Set.of();
     private static volatile Set<ResourceLocation> disabledItems = Set.of();
 
@@ -122,10 +128,6 @@ public final class ServerConfig {
                 case GEN_ITEMS -> current.genItems();
             };
         }
-
-        private void set(List<String> value) {
-            settings = settings.withList(this, value);
-        }
     }
 
     public static Settings settings() {
@@ -164,29 +166,72 @@ public final class ServerConfig {
      * Starts a world with its loader's policy reader and command-save boundary, and publishes the
      * policy read now.
      */
-    public static void start(Supplier<Settings> readPolicy, Consumer<Settings> savePolicy) {
+    public static void start(Supplier<Settings> readPolicy, Consumer<Settings> savePolicy,
+                             Runnable synchronizeClients) {
         reader = Objects.requireNonNull(readPolicy, "Policy reader");
         saver = Objects.requireNonNull(savePolicy, "Policy saver");
+        syncClients = Objects.requireNonNull(synchronizeClients, "Policy synchronization");
         publish(reader.get());
     }
 
     /**
      * Rereads the world's policy through its loader and publishes it.
      *
-     * @return false when no world is running
+     * @return false when no world is running or the replacement policy exceeds namespace limits
      */
     public static boolean reload() {
         if (reader == null) {
             return false;
         }
-        publish(reader.get());
+        return publish(reader.get());
+    }
+
+    /** Publishes prepared policy; an over-limit replacement leaves the current policy intact. */
+    public static boolean publish(Settings replacement) {
+        Objects.requireNonNull(replacement, "Server policy");
+        try {
+            replacement = replacement.withList(ListSetting.DISABLE_MODS,
+                    prepareNamespaces(replacement.disableMods(), Keys.DISABLE_MODS));
+            replacement = replacement.withList(ListSetting.GEN_MODS,
+                    prepareNamespaces(replacement.genMods(), Keys.GEN_MODS));
+        } catch (IllegalArgumentException rejected) {
+            SomeStacksCommon.LOGGER.warn("Keeping previous server policy: {}", rejected.getMessage());
+            return false;
+        }
+        boolean syncedFieldsChanged = !ConfigSyncPkt.snapshot(settings).equals(ConfigSyncPkt.snapshot(replacement));
+        settings = replacement;
+        bakeServerLists();
+        if (syncedFieldsChanged && syncClients != null) {
+            syncClients.run();
+        }
         return true;
     }
 
-    /** Publishes one complete loader policy and rebuilds its admission sets. */
-    public static void publish(Settings replacement) {
-        settings = Objects.requireNonNull(replacement, "Server policy");
-        bakeServerLists();
+    private static List<String> prepareNamespaces(List<String> entries, String label) {
+        Set<String> result = new LinkedHashSet<>();
+        for (String entry : entries) {
+            String namespace = entry.trim().toLowerCase(Locale.ROOT);
+            if (namespace.isEmpty()) continue;
+            if (!isValidNamespace(namespace)) {
+                SomeStacksCommon.LOGGER.warn("Ignoring malformed namespace '{}' in {}", entry, label);
+                continue;
+            }
+            if (namespace.length() > MAX_NAMESPACE_LENGTH) {
+                throw new IllegalArgumentException(label + " contains a namespace longer than "
+                        + MAX_NAMESPACE_LENGTH + " characters");
+            }
+            result.add(namespace);
+            if (result.size() > MAX_NAMESPACE_ENTRIES) {
+                throw new IllegalArgumentException(label + " exceeds " + MAX_NAMESPACE_ENTRIES
+                        + " namespaces");
+            }
+        }
+        return List.copyOf(result);
+    }
+
+    /** Validates namespace syntax through the public identifier parser with a fixed valid path. */
+    public static boolean isValidNamespace(String namespace) {
+        return !namespace.isEmpty() && ResourceLocation.tryParse(namespace + ":_") != null;
     }
 
     /** Writes command edits through the current world's loader. */
@@ -200,6 +245,7 @@ public final class ServerConfig {
     public static void clear() {
         reader = null;
         saver = null;
+        syncClients = null;
         settings = Settings.defaults();
         disabledMods = Set.of();
         disabledItems = Set.of();
@@ -208,20 +254,10 @@ public final class ServerConfig {
     // --- Baking ---
 
     /**
-     * Resolves the server's free-form text lists into lookup sets: the disabled-mod and
-     * disabled-item compatibility lists. Mod ids are lowercased and item ids
-     * are parsed once here; a malformed item id is reported and dropped rather than being re-parsed
-     * and swallowed on every deposit.
+     * Builds admission sets from prepared namespaces and free-form item ids. Malformed item ids
+     * are reported here rather than reparsed on every deposit.
      */
     public static void bakeServerLists() {
-        Set<String> mods = new HashSet<>();
-        for (String entry : ListSetting.DISABLE_MODS.get()) {
-            String modId = entry.trim().toLowerCase(Locale.ROOT);
-            if (!modId.isEmpty()) {
-                mods.add(modId);
-            }
-        }
-
         Set<ResourceLocation> items = new HashSet<>();
         for (String entry : ListSetting.DISABLE_ITEMS.get()) {
             ResourceLocation itemId = ResourceLocation.tryParse(entry.trim().toLowerCase(Locale.ROOT));
@@ -232,7 +268,7 @@ public final class ServerConfig {
             items.add(itemId);
         }
 
-        disabledMods = Set.copyOf(mods);
+        disabledMods = Set.copyOf(settings.disableMods());
         disabledItems = Set.copyOf(items);
 
         SomeStacksCommon.LOGGER.info("Baked server lists: {} disabled mod(s), {} disabled item(s)",
@@ -243,8 +279,15 @@ public final class ServerConfig {
      * Adds an entry to one of the server's text lists, re-bakes the lookup sets, and saves.
      *
      * @return whether the entry was added; false when the list already contains it
+     * @throws IllegalArgumentException if a namespace is malformed or exceeds policy limits
      */
     public static boolean addListEntry(ListSetting list, String entry) {
+        if (list == ListSetting.DISABLE_MODS || list == ListSetting.GEN_MODS) {
+            entry = entry.trim().toLowerCase(Locale.ROOT);
+            if (entry.length() > MAX_NAMESPACE_LENGTH || !isValidNamespace(entry)) {
+                throw new IllegalArgumentException("Invalid namespace");
+            }
+        }
         List<String> updated = new ArrayList<>(list.get());
         for (String existing : updated) {
             if (existing.equalsIgnoreCase(entry)) {
@@ -253,8 +296,9 @@ public final class ServerConfig {
         }
 
         updated.add(entry);
-        list.set(updated);
-        bakeServerLists();
+        if (!publish(settings.withList(list, updated))) {
+            throw new IllegalArgumentException("Namespace list exceeds policy limits");
+        }
         save();
         return true;
     }
@@ -270,8 +314,7 @@ public final class ServerConfig {
             return false;
         }
 
-        list.set(updated);
-        bakeServerLists();
+        publish(settings.withList(list, updated));
         save();
         return true;
     }

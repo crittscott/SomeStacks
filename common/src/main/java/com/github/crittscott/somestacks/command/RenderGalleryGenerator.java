@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.command;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
@@ -142,7 +143,7 @@ public final class RenderGalleryGenerator {
         Map<String, List<Item>> map = new TreeMap<>();
         BuiltInRegistries.ITEM.getTagOrEmpty(BarStackBE.INGOTS).forEach(holder -> {
             Item item = holder.value();
-            if (BarStackBE.isValidBarItem(new ItemStack(item))) {
+            if (BlockType.BAR_STACK.admits(new ItemStack(item), null)) {
                 map.computeIfAbsent(BuiltInRegistries.ITEM.getKey(item).getNamespace(), ns -> new ArrayList<>())
                         .add(item);
             }

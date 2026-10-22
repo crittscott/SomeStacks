@@ -20,6 +20,7 @@ public record GestureStatePkt(StackMode mode, boolean modifierDown) {
     }
 
     public static void handleServer(GestureStatePkt packet, ServerPlayer player) {
+        if (player.hasDisconnected()) return;
         ServerGestureState.set(player, packet.mode, packet.modifierDown);
     }
 }

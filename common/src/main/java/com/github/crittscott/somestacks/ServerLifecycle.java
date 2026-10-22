@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
-import com.github.crittscott.somestacks.server.RotationSoundThrottle;
+import com.github.crittscott.somestacks.server.StackSounds;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,10 +29,7 @@ public final class ServerLifecycle {
      * log in.
      */
     public static void starting() {
-        RenderGalleryGenerator.clear();
-        RotationSoundThrottle.clearAll();
-        ServerGestureState.clearAll();
-        reportedSavedItems.clear();
+        resetSession();
     }
 
     /**
@@ -42,11 +38,15 @@ public final class ServerLifecycle {
      * responsibility.
      */
     public static void stopped() {
+        resetSession();
+        ServerConfig.clear();
+    }
+
+    private static void resetSession() {
         RenderGalleryGenerator.clear();
-        RotationSoundThrottle.clearAll();
+        StackSounds.clearAll();
         ServerGestureState.clearAll();
         reportedSavedItems.clear();
-        ServerConfig.clear();
     }
 
     /**
@@ -69,29 +69,23 @@ public final class ServerLifecycle {
 
     /** Sends the current policy snapshot to this player. World policy must already be initialized. */
     public static void login(ServerPlayer player) {
-        sendConfig(player, ConfigSyncPkt.snapshot(ServerConfig.settings()));
+        PlatformServices.sendConfig(player, ConfigSyncPkt.snapshot(ServerConfig.settings()));
     }
 
     /**
      * Removes this player's rotation-sound pacing and synchronized mode/modifier state.
      */
     public static void logout(UUID playerId) {
-        RotationSoundThrottle.clear(playerId);
+        StackSounds.clear(playerId);
         ServerGestureState.clear(playerId);
     }
 
     /** Sends one snapshot of the current policy to every player; policy files are not reread. */
     public static int syncAllPlayers(MinecraftServer server) {
-        List<ConfigSyncPkt> packets = ConfigSyncPkt.snapshot(ServerConfig.settings());
+        ConfigSyncPkt packet = ConfigSyncPkt.snapshot(ServerConfig.settings());
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            sendConfig(player, packets);
-        }
-        return server.getPlayerList().getPlayerCount();
-    }
-
-    private static void sendConfig(ServerPlayer player, List<ConfigSyncPkt> packets) {
-        for (ConfigSyncPkt packet : packets) {
             PlatformServices.sendConfig(player, packet);
         }
+        return server.getPlayerList().getPlayerCount();
     }
 }

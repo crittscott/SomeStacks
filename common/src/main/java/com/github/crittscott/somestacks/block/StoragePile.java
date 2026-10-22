@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
@@ -162,7 +163,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * @return how many items were taken from {@code fromHand}, which is shrunk by that amount
      */
     public int deposit(ItemStack fromHand, @Nullable ServerPlayer placer) {
-        if (fromHand.isEmpty() || !StorageStackBE.isValidStorageItem(fromHand)) {
+        if (fromHand.isEmpty() || !BlockType.STORAGE_STACK.admits(fromHand, placer)) {
             return 0;
         }
 
@@ -199,7 +200,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
-        if (stack.isEmpty() || !StorageStackBE.isValidStorageItem(stack)) {
+        if (stack.isEmpty() || !BlockType.STORAGE_STACK.admits(stack, null)) {
             return 0;
         }
         if (flatSlot < 0 || flatSlot >= advertisedSlots()) {
@@ -238,7 +239,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     public InsertionTest insertionTest() {
         BooleanSupplier growth = oncePerSweep(() -> canGrow(null));
         return (slot, stack) -> {
-            if (stack.isEmpty() || !StorageStackBE.isValidStorageItem(stack)
+            if (stack.isEmpty() || !BlockType.STORAGE_STACK.admits(stack, null)
                     || slot < 0 || slot >= advertisedSlots()) return 0;
             return Math.min(stack.getCount(), roomAt(slot, stack, growth));
         };

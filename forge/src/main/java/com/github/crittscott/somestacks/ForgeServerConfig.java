@@ -108,7 +108,8 @@ public final class ForgeServerConfig {
      */
     public static void start(MinecraftServer startingServer) {
         server = startingServer;
-        ServerConfig.start(ForgeServerConfig::read, ForgeServerConfig::save);
+        ServerConfig.start(ForgeServerConfig::read, ForgeServerConfig::save,
+                () -> ServerLifecycle.syncAllPlayers(startingServer));
     }
 
     public static void stop() {
@@ -123,18 +124,14 @@ public final class ForgeServerConfig {
         queuePublication(event.getConfig());
     }
 
-    /** Publishes a changed policy on the server thread and resyncs every player. */
+    /** Publishes policy on the server thread; shared publication handles client synchronization. */
     private static void queuePublication(ModConfig config) {
         if (config.getType() != ModConfig.Type.SERVER || config.getSpec() != SPEC) return;
         MinecraftServer expected = server;
         if (expected == null) return;
         expected.execute(() -> {
             if (server != expected || !SPEC.isLoaded()) return;
-            Settings before = ServerConfig.settings();
             ServerConfig.reload();
-            if (!before.equals(ServerConfig.settings())) {
-                ServerLifecycle.syncAllPlayers(expected);
-            }
         });
     }
 

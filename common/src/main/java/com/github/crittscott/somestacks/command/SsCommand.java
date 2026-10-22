@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.ServerLifecycle;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -299,14 +298,9 @@ public final class SsCommand {
         List<String> modIds = new ArrayList<>();
         List<String> disabledMods = new ArrayList<>();
         List<String> unusableMods = new ArrayList<>();
-        Set<String> seen = new HashSet<>();
+        List<String> configured = ServerConfig.ListSetting.GEN_MODS.get();
 
-        for (String entry : ServerConfig.ListSetting.GEN_MODS.get()) {
-            String modId = entry.trim().toLowerCase(Locale.ROOT);
-            if (modId.isEmpty() || !seen.add(modId)) {
-                continue;
-            }
-
+        for (String modId : configured) {
             if (ServerConfig.isModDisabled(modId)) {
                 disabledMods.add(modId);
             } else if (kind.itemsIn(modId).isEmpty()) {
@@ -317,7 +311,7 @@ public final class SsCommand {
         }
 
         if (modIds.isEmpty()) {
-            ctx.getSource().sendFailure(seen.isEmpty()
+            ctx.getSource().sendFailure(configured.isEmpty()
                     ? Component.translatable("somestacks.command.gen_mods_empty",
                             Component.translatable(GEN_MODS_LABEL))
                     : Component.translatable("somestacks.command.gen_mods_unusable",
@@ -473,13 +467,16 @@ public final class SsCommand {
         return 1;
     }
 
-    /** Rereads world policy, then resyncs every player. */
+    /** Rereads world policy; publication synchronizes changed client fields. */
     private static int reload(CommandContext<CommandSourceStack> ctx) {
-        ServerConfig.reload();
-        int synced = ServerLifecycle.syncAllPlayers(ctx.getSource().getServer());
+        if (!ServerConfig.reload()) {
+            ctx.getSource().sendFailure(Component.translatable("somestacks.command.policy_rejected"));
+            return 0;
+        }
+        int online = ctx.getSource().getServer().getPlayerList().getPlayerCount();
         ctx.getSource().sendSuccess(() -> Component.translatable(
-                "somestacks.command.reloaded", synced), true);
-        return synced;
+                "somestacks.command.reloaded", online), true);
+        return online;
     }
 
     /**
@@ -501,7 +498,15 @@ public final class SsCommand {
     private static int addEntry(CommandContext<CommandSourceStack> ctx,
                                 ServerConfig.ListSetting list,
                                 String label, String entry) {
-        if (!ServerConfig.addListEntry(list, entry)) {
+        boolean added;
+        try {
+            added = ServerConfig.addListEntry(list, entry);
+        } catch (IllegalArgumentException rejected) {
+            ctx.getSource().sendFailure(Component.translatable("somestacks.command.namespace_rejected",
+                    entry, ServerConfig.MAX_NAMESPACE_LENGTH, ServerConfig.MAX_NAMESPACE_ENTRIES));
+            return 0;
+        }
+        if (!added) {
             ctx.getSource().sendFailure(Component.translatable(
                     "somestacks.command.list_contains", Component.translatable(label), entry));
             return 0;
@@ -509,7 +514,6 @@ public final class SsCommand {
 
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.list_added", entry, Component.translatable(label)), true);
-        syncClientToolState(ctx, list);
         return 1;
     }
 
@@ -524,16 +528,7 @@ public final class SsCommand {
 
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.list_removed", entry, Component.translatable(label)), true);
-        syncClientToolState(ctx, list);
         return 1;
-    }
-
-    /** Keeps client-local {@code ss write list} inputs current after their server lists change. */
-    private static void syncClientToolState(CommandContext<CommandSourceStack> ctx,
-                                            ServerConfig.ListSetting list) {
-        if (list == ServerConfig.ListSetting.GEN_MODS || list == ServerConfig.ListSetting.DISABLE_MODS) {
-            ServerLifecycle.syncAllPlayers(ctx.getSource().getServer());
-        }
     }
 
     /**

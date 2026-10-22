@@ -1,10 +1,10 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
-import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -53,21 +53,6 @@ public class BarStackBE extends StackBlockEntity {
     /** The item tag defining what a Bar Stack holds; data packs add to it. */
     public static final TagKey<Item> INGOTS =
             TagKey.create(Registries.ITEM, new ResourceLocation(SomeStacksCommon.MODID, "ingots"));
-
-    /**
-     * Whether a Bar Stack accepts this item, the single decision point every deposit, column
-     * insertion and capability path consults. Ingot-ness is membership in {@link #INGOTS}; because
-     * the Singles rule is this rule's complement, widening the tag narrows Singles by as much.
-     */
-    public static boolean isValidBarItem(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        }
-        if (ItemOps.isItemFromDisabledMod(stack)) {
-            return false;
-        }
-        return stack.is(INGOTS);
-    }
 
     /**
      * Returns the server column containing this block, or null on the client or when removed.
@@ -124,7 +109,7 @@ public class BarStackBE extends StackBlockEntity {
             return false;
         }
 
-        if (!isValidBarItem(fromHand)) {
+        if (!BlockType.BAR_STACK.admits(fromHand, null)) {
             return false;
         }
 
@@ -309,11 +294,11 @@ public class BarStackBE extends StackBlockEntity {
 
     @Override
     protected boolean isStoredItemValid(ItemStack stack) {
-        return isValidBarItem(stack);
+        return BlockType.BAR_STACK.admits(stack, null);
     }
 
     @Override
-    protected StackRunItemAccess resolveRun(ServerLevel serverLevel) {
+    protected StackRun<?> resolveRun(ServerLevel serverLevel) {
         return BarColumn.resolve(serverLevel, getBlockPos());
     }
 

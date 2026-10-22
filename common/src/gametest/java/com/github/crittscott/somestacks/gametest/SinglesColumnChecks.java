@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.ViewRay;
@@ -107,7 +108,7 @@ public final class SinglesColumnChecks {
      */
     public static void standaloneBottomIsGroundedAndFloatingCellIsRejected(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        check(SinglesStackBE.isValidSinglesItem(new ItemStack(Items.STICK)),
+        check(BlockType.SINGLES_STACK.admits(new ItemStack(Items.STICK), null),
                 "Stick is not valid for Singles tests");
 
         ItemStack grounded = new ItemStack(Items.STICK, 2);
@@ -218,7 +219,7 @@ public final class SinglesColumnChecks {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BlockPos pos = singles.getBlockPos();
         Item legacy = firstBarItem();
-        check(!SinglesStackBE.isValidSinglesItem(new ItemStack(legacy)),
+        check(!BlockType.SINGLES_STACK.admits(new ItemStack(legacy), null),
                 "Test needs an item a Singles Stack refuses");
         int bottom = SinglesCubeIdx.indexFromColumn(0, 0);
         int second = SinglesCubeIdx.indexFromColumn(0, 1);
@@ -250,7 +251,7 @@ public final class SinglesColumnChecks {
         BlockPos lowerPos = lower.getBlockPos();
         BlockPos upperPos = upper.getBlockPos();
         Item legacy = firstBarItem();
-        check(!SinglesStackBE.isValidSinglesItem(new ItemStack(legacy)),
+        check(!BlockType.SINGLES_STACK.admits(new ItemStack(legacy), null),
                 "Test needs an item a Singles Stack refuses");
         int bottom = SinglesCubeIdx.indexFromColumn(0, 0);
         lower.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);

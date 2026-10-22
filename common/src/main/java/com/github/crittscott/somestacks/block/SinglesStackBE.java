@@ -1,9 +1,9 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.CubeGrid;
-import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -51,20 +51,6 @@ public class SinglesStackBE extends StackBlockEntity {
     @Nullable
     public SinglesColumn column() {
         return (SinglesColumn) itemRun();
-    }
-
-    /**
-     * Whether Singles accepts this item. Bar-valid items are excluded, so widening the ingot tags
-     * narrows what Singles takes by the same set.
-     */
-    public static boolean isValidSinglesItem(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        }
-        if (ItemOps.isItemFromDisabledMod(stack)) {
-            return false;
-        }
-        return !BarStackBE.isValidBarItem(stack);
     }
 
     /** The rendered rotation of one item, in quarter turns. Out-of-range indexes read as unrotated. */
@@ -363,11 +349,11 @@ public class SinglesStackBE extends StackBlockEntity {
 
     @Override
     protected boolean isStoredItemValid(ItemStack stack) {
-        return isValidSinglesItem(stack);
+        return BlockType.SINGLES_STACK.admits(stack, null);
     }
 
     @Override
-    protected StackRunItemAccess resolveRun(ServerLevel serverLevel) {
+    protected StackRun<?> resolveRun(ServerLevel serverLevel) {
         return SinglesColumn.resolve(serverLevel, getBlockPos());
     }
 

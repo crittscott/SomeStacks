@@ -20,7 +20,24 @@ import java.util.function.BooleanSupplier;
  * Mechanics shared by every maximal vertical run of one stack type. Concrete runs retain their
  * distinct insertion, extraction, growth, settlement, and collapse rules.
  */
-public abstract class StackRun<BE extends StackBlockEntity> implements StackRunItemAccess {
+public abstract class StackRun<BE extends StackBlockEntity> {
+    /** Inserts into a named position, or reports the accepted amount without mutation when simulated. */
+    public abstract int insertAt(int slot, ItemStack stack, boolean simulate);
+
+    /**
+     * One read-only insertion sweep. Discard before world, inventory, policy, or permission changes;
+     * committed insertions always perform fresh validation.
+     */
+    public abstract InsertionTest insertionTest();
+
+    @FunctionalInterface
+    public interface InsertionTest {
+        int test(int slot, ItemStack stack);
+    }
+
+    /** Extracts from a position, applying structural gravity/backfill only when not simulated. */
+    public abstract ItemStack extract(int slot, int amount, boolean simulate);
+
     protected final ServerLevel level;
     protected final List<BE> blocks;
 
@@ -96,7 +113,7 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
     }
 
     /** Resolves and schedules a run's deferred pass; a null resolution, including client use, does nothing. */
-    protected static <R extends StackRunItemAccess> void markDirtyAt(
+    protected static <R extends StackRun<?>> void markDirtyAt(
             Level level, BlockPos pos, BiFunction<Level, BlockPos, R> resolver) {
         R run = resolver.apply(level, pos);
         if (run != null) {
@@ -159,13 +176,13 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         return blocks.size() * slotsPerBlock;
     }
 
-    @Override
+    /** Positions visible to automation, including one block of headroom below the height limit. */
     public final int advertisedSlots() {
         int levels = blocks.size() < ServerConfig.maxPileHeight() ? blocks.size() + 1 : blocks.size();
         return slotsPerBlock * levels;
     }
 
-    @Override
+    /** Current contents, or empty for headroom and invalid positions. */
     public final ItemStack getSlot(int flatSlot) {
         if (flatSlot < 0 || flatSlot >= totalSlots()) {
             return ItemStack.EMPTY;
@@ -218,7 +235,6 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
     }
 
     /** Coalesces server changes into one next-tick pass on the base; no immediate publication occurs. */
-    @Override
     public final void markDirty() {
         if (blocks.isEmpty()) {
             return;

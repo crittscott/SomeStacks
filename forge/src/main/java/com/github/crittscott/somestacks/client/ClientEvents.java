@@ -112,7 +112,6 @@ public final class ClientEvents {
     @SubscribeEvent
     public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
         ClientGestures.resetSync();
-        ClientRenderPacketSink.clear();
         AutoRenderProfiles.saveCache();
     }
 

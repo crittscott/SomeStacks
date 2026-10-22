@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
+import com.github.crittscott.somestacks.client.ClientServerSettings;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,7 +19,7 @@ final class ForgePacketHandlers {
     static void handleConfigSync(ConfigSyncPkt msg, Supplier<NetworkEvent.Context> context) {
         NetworkEvent.Context ctx = context.get();
         ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-                () -> () -> ClientRenderPacketSink.apply(msg)));
+                () -> () -> ClientServerSettings.apply(msg)));
         ctx.setPacketHandled(true);
     }
 

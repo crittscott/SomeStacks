@@ -31,6 +31,7 @@ loadScripts(document, 'script');</script>
 <div class="top-nav" id="navbar-top">
 <div class="skip-nav"><a href="#skip-navbar-top" title="Skip navigation links">Skip navigation links</a></div>
 <ul id="navbar-top-firstrow" class="nav-list" title="Navigation">
+<li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="nav-bar-cell1-rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
@@ -163,7 +164,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reloadCommandPublishesStoredPolicy</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce in-game: while the server runs, add a mod id to render_gallery.gen_mods in the
  world's somestacks-server.toml (Forge) or somestacks-server.json (Fabric), then run
- /ss reload. The reply counts every online player as synced, and /ss gen mod list shows the
+ /ss reload. The reply counts online players, and /ss gen mod list shows the
  new entry. The fixture writes the stored policy through the loader's saver without
  publishing it, and restores both the file and the published policy afterward.</div>
 </section>

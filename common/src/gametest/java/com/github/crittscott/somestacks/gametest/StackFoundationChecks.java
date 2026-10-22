@@ -6,7 +6,6 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StackRun;
-import com.github.crittscott.somestacks.block.StackRunItemAccess;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
@@ -127,7 +126,7 @@ public final class StackFoundationChecks {
                 placeStorage(helper, ORIGIN), placeSingles(helper, ORIGIN.east(3)),
                 placeBar(helper, ORIGIN.east(6))
         };
-        StackRunItemAccess[] runs = new StackRunItemAccess[blocks.length];
+        StackRun<?>[] runs = new StackRun<?>[blocks.length];
         for (int i = 0; i < blocks.length; i++) {
             checkBounds(helper, blocks[i], ORIGIN.east(i * 3));
             runs[i] = blocks[i].itemRun();
@@ -188,7 +187,7 @@ public final class StackFoundationChecks {
     public static void runContractPreservesTypeSpecificMutations(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         ItemStack offered = new ItemStack(Items.STONE, 8);
-        StackRunItemAccess run = storage.itemRun();
+        StackRun<?> run = storage.itemRun();
         checkEquals(8, run.insertAt(20, offered, true), "Storage simulated insertion");
         check(storage.isEmpty(), "Storage simulation stored contents");
         checkEquals(8, run.insertAt(20, offered, false), "Storage insertion");
@@ -244,7 +243,7 @@ public final class StackFoundationChecks {
         StackRun<?> initial = (StackRun<?>) bottom.itemRun();
         BlockPos above = bottom.getBlockPos().above();
         helper.getLevel().setBlock(above, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
-        StackRunItemAccess.InsertionTest blocked = initial.insertionTest();
+        StackRun.InsertionTest blocked = initial.insertionTest();
         checkEquals(0, blocked.test(slots, item), "Blocked insertion sweep");
         checkEquals(0, blocked.test(slots + 1, item), "Second blocked headroom position");
         helper.getLevel().setBlock(above, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);

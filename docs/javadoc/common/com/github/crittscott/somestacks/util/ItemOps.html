@@ -122,18 +122,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Whether an extraction may land in this hand: it must be empty, or hold the same item and tags
  with room left.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#checkDisabledItemAndNotify(net.minecraft.world.item.ItemStack,net.minecraft.world.entity.player.Player)" class="member-name-link">checkDisabledItemAndNotify</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
- net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block"><a href="#isItemDisabled(net.minecraft.world.item.ItemStack)"><code>isItemDisabled(net.minecraft.world.item.ItemStack)</code></a> for a deposit path, telling the player when it refuses.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#checkDisabledModAndNotify(net.minecraft.world.item.ItemStack,net.minecraft.world.entity.player.Player)" class="member-name-link">checkDisabledModAndNotify</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
- net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block"><a href="#isItemFromDisabledMod(net.minecraft.world.item.ItemStack)"><code>isItemFromDisabledMod(net.minecraft.world.item.ItemStack)</code></a> for a deposit path, telling the player when it refuses.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#dropAllItems(com.github.crittscott.somestacks.util.StackItemStorage,net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">dropAllItems</a><wbr>(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler,
  net.minecraft.world.level.Level&nbsp;level,
@@ -153,16 +141,6 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isHandlerEmpty(com.github.crittscott.somestacks.util.StackItemStorage)" class="member-name-link">isHandlerEmpty</a><wbr>(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether every slot in the handler is empty.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isItemDisabled(net.minecraft.world.item.ItemStack)" class="member-name-link">isItemDisabled</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Whether the server config bars this item by id.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isItemFromDisabledMod(net.minecraft.world.item.ItemStack)" class="member-name-link">isItemFromDisabledMod</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Whether the server config bars this item's namespace.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mergeIntoStack(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemStack)" class="member-name-link">mergeIntoStack</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;hand,
@@ -264,36 +242,6 @@ loadScripts(document, 'script');</script>
 <h3>calculateLightLevelFromItems</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">calculateLightLevelFromItems</span><wbr><span class="parameters">(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</span></div>
 <div class="block">Adds each stored BlockItem's fractional emission, capped at the vanilla maximum of 15.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="isItemFromDisabledMod(net.minecraft.world.item.ItemStack)">
-<h3>isItemFromDisabledMod</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isItemFromDisabledMod</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
-<div class="block">Whether the server config bars this item's namespace. Disabled contents may still be removed.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="checkDisabledModAndNotify(net.minecraft.world.item.ItemStack,net.minecraft.world.entity.player.Player)">
-<h3>checkDisabledModAndNotify</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">checkDisabledModAndNotify</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack,
- net.minecraft.world.entity.player.Player&nbsp;player)</span></div>
-<div class="block"><a href="#isItemFromDisabledMod(net.minecraft.world.item.ItemStack)"><code>isItemFromDisabledMod(net.minecraft.world.item.ItemStack)</code></a> for a deposit path, telling the player when it refuses.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="isItemDisabled(net.minecraft.world.item.ItemStack)">
-<h3>isItemDisabled</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isItemDisabled</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
-<div class="block">Whether the server config bars this item by id. Disabled contents may still be removed.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="checkDisabledItemAndNotify(net.minecraft.world.item.ItemStack,net.minecraft.world.entity.player.Player)">
-<h3>checkDisabledItemAndNotify</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">checkDisabledItemAndNotify</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack,
- net.minecraft.world.entity.player.Player&nbsp;player)</span></div>
-<div class="block"><a href="#isItemDisabled(net.minecraft.world.item.ItemStack)"><code>isItemDisabled(net.minecraft.world.item.ItemStack)</code></a> for a deposit path, telling the player when it refuses.</div>
 </section>
 </li>
 </ul>
