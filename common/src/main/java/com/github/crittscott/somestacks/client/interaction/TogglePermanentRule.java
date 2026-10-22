@@ -3,8 +3,8 @@ package com.github.crittscott.somestacks.client.interaction;
 import com.github.crittscott.somestacks.util.StackMode;
 
 /**
- * Modifier plus an empty-handed right-click on a Storage Stack, in Toggle Permanent mode, switches
- * automatic removal for the whole pile. The empty hand is what separates this from a deposit.
+ * Consumes an empty-main-hand modifier click on Storage while Toggle Permanent mode is selected.
+ * The server applies the permanence change.
  */
 public final class TogglePermanentRule implements InteractionRule {
     @Override

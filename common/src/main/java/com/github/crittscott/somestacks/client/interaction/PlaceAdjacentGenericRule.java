@@ -2,9 +2,8 @@ package com.github.crittscott.somestacks.client.interaction;
 
 
 /**
- * Modifier plus an item, on a click no deposit rule claimed, places the selected stack type in the
- * position against the clicked face and makes the first deposit into it. Last of the modified-click
- * rules, so it names no target of its own and takes whatever the narrower rules left.
+ * Consumes a modifier-plus-item click not claimed by an earlier rule when placement/deposit
+ * mode is selected. This suppresses local block/item use; the server performs the edit.
  */
 public final class PlaceAdjacentGenericRule implements InteractionRule {
     @Override

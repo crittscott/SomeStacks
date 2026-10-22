@@ -268,7 +268,6 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         ItemStack current = currentStack(slot, run);
         if (current.isEmpty() || !resource.matches(current)) return 0;
         int amount = (int) Math.min(maxAmount, current.getCount());
-        if (amount <= 0) return 0;
         ItemStack result = current.copy();
         result.shrink(amount);
         stage(slot, result, transaction, run);

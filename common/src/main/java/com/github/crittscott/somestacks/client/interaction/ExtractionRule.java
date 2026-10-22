@@ -2,9 +2,8 @@ package com.github.crittscott.somestacks.client.interaction;
 
 
 /**
- * An unmodified right-click on any stack takes from the nearest occupied cell along the player's
- * reach ray. The click is consumed even when the ray finds nothing, so a held item is never used
- * against the block.
+ * Consumes an unmodified, nonsneaking click on a stack, suppressing local item use.
+ * The server selects and extracts the targeted contents.
  */
 public final class ExtractionRule implements InteractionRule {
     @Override

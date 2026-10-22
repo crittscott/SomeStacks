@@ -290,7 +290,7 @@ public final class StackFoundationChecks {
                 singles.setRotation(rotation);
                 VoxelShape expectedSingles = Shapes.empty();
                 for (int slot = 0; slot < SinglesStackBE.SLOTS; slot += stride) {
-                    expectedSingles = Shapes.or(expectedSingles, SinglesCubeIdx.shapeFor(slot, rotation));
+                    expectedSingles = Shapes.or(expectedSingles, SinglesCubeIdx.GRID.localShape(slot, rotation));
                 }
                 check(!Shapes.joinIsNotEmpty(expectedSingles, singles.getCachedShape(), BooleanOp.NOT_SAME),
                         "Singles union changed occupied regions at rotation " + rotation);

@@ -89,7 +89,7 @@ public final class WorldEditChecks {
         });
 
         StorageStackBE permanent = placeStorage(helper, ORIGIN);
-        permanent.pile().setPermanent(true);
+        permanent.pile().setPermanent(true, null);
         permanent.pile().settle();
         helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
         expectRemovalBy(level, permanent.getBlockPos(), player, () -> {
@@ -158,7 +158,7 @@ public final class WorldEditChecks {
             upperEvents.expectOne(GameEvent.BLOCK_PLACE, WorldEdits.automationActor(level), grownState);
             baseEvents.expectNone();
             StorageStackBE grown = (StorageStackBE) level.getBlockEntity(above);
-            checkEquals(1, grown.extractAt(0, 1, ItemStack.EMPTY).getCount(), "Upper extraction");
+            checkEquals(1, grown.extractAt(0, 1, ItemStack.EMPTY, null).getCount(), "Upper extraction");
             storage.pile().settle();
             check(!level.getBlockState(above).is(CommonRegistry.STORAGE_STACK_BLOCK.get()), "Empty top survived");
             upperEvents.expectOne(GameEvent.BLOCK_DESTROY, WorldEdits.automationActor(level), grownState);

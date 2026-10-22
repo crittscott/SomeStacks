@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
-import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -46,7 +46,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
 
     @Override
     public void render(BarStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
-        SlotAccess handler = be.getItems();
+        StackItemStorage handler = be.getItems();
 
         if (be.getLevel() == null) return;
 

@@ -210,17 +210,12 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
      * <p>Every item a layer does not configure is measured here rather than at first sight of it,
      * so a dump of a large pack is the measurement pass for all of it. The results reach the
      * measured cache, which is saved once the dump is done rather than waiting for logout.
+     *
+     * @param namespaces installed item namespaces already selected by the client commands
      */
     public static void handleDumpRequest(List<String> namespaces) {
         Map<String, Map<ResourceLocation, ItemRenderConfig>> byNamespace = new LinkedHashMap<>();
-        List<String> rejected = new ArrayList<>();
         for (String namespace : namespaces) {
-            // A valid namespace contains no path separator, so it cannot escape the dump directory.
-            if (ResourceLocation.tryBuild(namespace, "validation") == null) {
-                SomeStacksCommon.LOGGER.warn("Ignoring dump request for invalid namespace '{}'", namespace);
-                rejected.add(namespace);
-                continue;
-            }
             byNamespace.put(namespace, new HashMap<>());
         }
 
@@ -252,12 +247,6 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
         for (Map.Entry<String, Map<ResourceLocation, ItemRenderConfig>> entry : byNamespace.entrySet()) {
             Path file = GENERATED_DIR.resolve(entry.getKey() + ".json").normalize();
-            // Retain a path-containment check at the filesystem boundary as a final invariant.
-            if (!file.startsWith(GENERATED_DIR)) {
-                SomeStacksCommon.LOGGER.error("Refusing to write dump outside {}: {}", GENERATED_DIR, file);
-                failed.add(entry.getKey());
-                continue;
-            }
             try {
                 Files.writeString(file, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(entry.getValue())));
                 itemCount += entry.getValue().size();
@@ -272,9 +261,6 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         if (!failed.isEmpty()) {
             message.append(Component.translatable("somestacks.command.dump.failed",
                     failed.size(), String.join(", ", failed)));
-        }
-        if (!rejected.isEmpty()) {
-            message.append(Component.translatable("somestacks.command.dump.rejected", rejected.size()));
         }
         report(message);
     }

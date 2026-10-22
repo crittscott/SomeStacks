@@ -82,9 +82,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">PlaceAdjacentGenericRule</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></span></div>
-<div class="block">Modifier plus an item, on a click no deposit rule claimed, places the selected stack type in the
- position against the clicked face and makes the first deposit into it. Last of the modified-click
- rules, so it names no target of its own and takes whatever the narrower rules left.</div>
+<div class="block">Consumes a modifier-plus-item click not claimed by an earlier rule when placement/deposit
+ mode is selected. This suppresses local block/item use; the server performs the edit.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

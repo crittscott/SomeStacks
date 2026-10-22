@@ -12,25 +12,23 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
- * A fixed-size, NBT-persisted {@link SlotAccess} implementation. Loader-neutral replacement for
- * Forge's {@code ItemStackHandler}, matching its insert/extract semantics, with the NBT shape
- * {@code {Items:[{Slot, ...stack}], SetAside:[...]}}.
+ * Fixed-size block-local storage with simulated insertion/extraction and NBT persistence.
+ * Automation addresses complete runs through the loader adapters, rather than exposing this inventory.
  *
- * <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
- * aside rather than dropped: it is kept verbatim under {@code SetAside}, saved back with the
- * block, and retried on every load, so contents from a temporarily missing mod return when it does.
+ * <p>Unreadable, out-of-range, or duplicate-slot item tags are retained verbatim under
+ * {@code SetAside}, saved with the block, and retried on each load. Loading and direct assignment
+ * bypass admission so stored items remain recoverable after policy changes.
  *
- * <p>Subclasses override {@link #onContentsChanged(int)}, {@link #isItemValid(int, ItemStack)}, and
- * {@link #getSlotLimit(int)} the way a Forge {@code ItemStackHandler} anonymous subclass would.
+ * <p>Subclasses supply slot limits, admission, and content-change notifications.
  */
-public class StackItemStorage implements SlotAccess {
+public class StackItemStorage {
     public static final String TAG_SLOT = "Slot";
     public static final String TAG_ITEMS = "Items";
     public static final String TAG_SET_ASIDE = "SetAside";
     private static final String TAG_ID = "id";
 
-    /** Per-slot max-stack-size cap, mirroring Forge {@code ItemStackHandler}'s default. */
-    private static final int DEFAULT_SLOT_LIMIT = 64;
+    /** Default per-slot capacity before the item's own maximum applies. */
+    public static final int DEFAULT_SLOT_LIMIT = 64;
 
     private final ItemStack[] stacks;
     private final ListTag setAside = new ListTag();
@@ -48,7 +46,7 @@ public class StackItemStorage implements SlotAccess {
         Arrays.fill(stacks, ItemStack.EMPTY);
     }
 
-    @Override
+    /** Number of local slots, indexed from zero. */
     public int getSlots() {
         return stacks.length;
     }
@@ -58,7 +56,6 @@ public class StackItemStorage implements SlotAccess {
      * to bypass notifications; use storage mutations or {@link #setStackInSlot(int, ItemStack)}.
      */
     @Nonnull
-    @Override
     public ItemStack getStackInSlot(int slot) {
         return stacks[slot];
     }
@@ -74,14 +71,14 @@ public class StackItemStorage implements SlotAccess {
     }
 
     /**
-     * {@inheritDoc}
+     * Inserts into one slot and returns the unaccepted remainder without mutating the offer.
+     * Simulation computes the remainder without changing contents.
      *
      * <p>A full insertion into an empty slot can retain the supplied stack reference. Callers
      * must relinquish an accepted offer or supply a copy before further mutation. Successful
      * committed insertions notify {@link #onContentsChanged(int)}; simulations do not.
      */
     @Nonnull
-    @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         if (stack.isEmpty()) {
             return ItemStack.EMPTY;
@@ -118,8 +115,8 @@ public class StackItemStorage implements SlotAccess {
         return reachedLimit ? copyWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
     }
 
+    /** Removes up to the requested amount from one slot; simulation leaves contents unchanged. */
     @Nonnull
-    @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         if (amount == 0) {
             return ItemStack.EMPTY;
@@ -148,12 +145,12 @@ public class StackItemStorage implements SlotAccess {
         return copyWithSize(existing, toExtract);
     }
 
-    @Override
+    /** Capacity of one local slot before the item's own maximum applies. */
     public int getSlotLimit(int slot) {
         return DEFAULT_SLOT_LIMIT;
     }
 
-    @Override
+    /** New-item admission for one local slot, independent of capacity. */
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         return true;
     }

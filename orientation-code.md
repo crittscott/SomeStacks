@@ -27,7 +27,7 @@ Three block/entity types; no block items, menus, recipes, or portable containers
 | `common/.../block/*StackBlock` | Shapes, waterlogging, removal, comparators, publication, gesture `use` |
 | `StackBlockEntity`, `block/*StackBE` | Local inventory, NBT, sync, light, nested batching, rotations, run caches |
 | `StackRun`, `StackRunItemAccess`, `StoragePile`, `SinglesColumn`, `BarColumn` | Run bounds, flat slots, headroom, comparators, publication, concrete movement |
-| `StackItemStorage`, `SlotAccess` | Loader-neutral fixed-slot storage and automation contract |
+| `StackItemStorage` | Block-local slots, admission, simulation, and NBT persistence |
 | `CubeGrid`, `util/*CubeIdx`, `ViewRay(s)` | Cached cell geometry/rotation, support, seams, targeting |
 | `ServerConfig` | Immutable `Settings`, session reader/saver, deny sets; loader-owned persistence |
 | `PlatformServices`, `ServerLifecycle` | Loader paths/version/transport/authority; shared session and sync |
@@ -60,7 +60,7 @@ Three block/entity types; no block items, menus, recipes, or portable containers
 
 Entities do not tick. Mutations schedule base publication and Storage settlement. Blocks share a run comparator signal, with local light and waterlogging.
 
-- `StoragePile` fills bottom-up and grows. Settlement groups read-only inputs in one identity map, copies legal output pieces, sorts cached keys/counts through `StackSort.comparePieces`, packs, and trims empty tops unless permanent/protected. Extraction schedules settlement; breaking drops local contents and splits runs.
+- `StoragePile` fills bottom-up and grows. Settlement groups read-only inputs in one identity map, copies legal output pieces, sorts cached keys/counts through `StackSort.comparePieces`, packs, and trims empty tops unless permanent/protected. Extraction schedules settlement; breaking drops local contents and splits runs. A resolved pile can be empty after trimming its last block; publication then does nothing.
 - `SinglesColumn` inserts into one empty supported cell. Extraction shifts one visual column down across rotated seams, carrying item rotation. Cleanup trims empty tops; breaking leaves the column above.
 - `BarColumn` uses positional overlap support and alternating axes. Player extraction/removal cascades unsupported bars; automation backfills from the topmost bar. Insertion names an empty supported position.
 
@@ -78,7 +78,7 @@ Unreadable, out-of-range, or duplicate-slot entries stay verbatim in `Items.SetA
 
 Settlement propagates Storage permanence from the base. Storage/Singles use `horizontal_facing` for structure transforms; Storage growth copies it. Singles gravity preserves item rotation.
 
-Client `load` calls `loadClientUpdate`, which applies an update only if wholly valid: current `DataVersion`, no server-only fields, well-formed slots/items/rotations. Update tags strip `Permanent` and `SetAside`.
+Client `load` calls `loadClientUpdate`, which requires current `DataVersion`, well-formed slots/items/rotations, and no nested recovery data or Storage permanence. Unrelated metadata is ignored; Storage owns its permanence validation. Update tags strip `Permanent` and `SetAside`.
 
 ## Admission, automation, and edits
 
@@ -86,7 +86,7 @@ Storage accepts ordinary nonempty items. Bar accepts members of the `somestacks:
 
 Forge `RunItemHandler` uses `LazyOptional` invalidation. Fabric caches adapters per entity through `FabricStorageOwner`; all sides/blocks share the base ledger. Singles/Bar permit one extraction position per transaction. Views include headroom below maximum height. Fabric sweeps resolve one run/ledger; retained views resolve on access. Growth checks last one insertion sweep: Storage reuses obstruction; Singles/Bar check each candidate shape. Commit re-resolves and validates each mutation. `RunEdit` refuses reentrant automation.
 
-`WorldEdits` checks height, replaceability, final-shape obstruction, border, and spawn for growth/cleanup; `canGrow` asks `EditAuthority.mayPlace`. Automation uses `AutomationActor.PROFILE` through loader fake players. Forge uses place/break events, snapshot rollback, and `onPlace`/`markAndNotifyBlock` publication, refusing reentrancy and foreign capture.
+`WorldEdits` checks height, replaceability, final-shape obstruction, border, and spawn for growth/cleanup; `canGrow` asks `EditAuthority.mayPlace`. Null edit actors resolve in `WorldEdits` to `AutomationActor.PROFILE` through loader fake players. Forge uses place/break events, snapshot rollback, and `onPlace`/`markAndNotifyBlock` publication, refusing reentrancy and foreign capture.
 
 Fabric removal asks Common Protection API, then `PlayerBlockBreakEvents`. Fabric `mayPlace` ANDs the mod-gated `CommonProtectionQueries`, `FtbChunksProtection`, and `OpacProtection` before `setBlock`; adjacent deposits also ask `canInteractBlock`.
 

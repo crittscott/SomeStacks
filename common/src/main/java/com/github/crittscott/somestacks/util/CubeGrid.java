@@ -11,7 +11,6 @@ public final class CubeGrid {
     private final int layerSize;
     private final int cells;
     private final int maxCoord;
-    private final int[] starts;
     private final AABB[] localBoxes;
     private final VoxelShape[] localShapes;
     private final int[][] rotatedIndices;
@@ -24,7 +23,6 @@ public final class CubeGrid {
         this.layerSize = edge * edge;
         this.cells = layerSize * edge;
         this.maxCoord = edge - 1;
-        this.starts = starts.clone();
         this.localBoxes = new AABB[cells];
         this.localShapes = new VoxelShape[cells];
         this.rotatedIndices = new int[4][cells];
@@ -72,10 +70,6 @@ public final class CubeGrid {
     public AABB worldBox(int storageIndex, int rotation, BlockPos blockPos) {
         return localBox(storageIndex, rotation).move(
                 blockPos.getX(), blockPos.getY(), blockPos.getZ());
-    }
-
-    public int startPixel(int coordinate) {
-        return starts[coordinate];
     }
 
     /** Maps a stored cell to its visual index without allocating coordinates. */

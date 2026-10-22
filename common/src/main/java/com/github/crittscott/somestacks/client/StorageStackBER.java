@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -26,7 +26,7 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
 
     @Override
     public void render(StorageStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
-        SlotAccess handler = be.getItems();
+        StackItemStorage handler = be.getItems();
 
         if (be.getLevel() == null) return;
 
@@ -36,7 +36,7 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
             ItemStack stack = handler.getStackInSlot(idx);
             if (stack.isEmpty()) continue;
 
-            var box = StorageCubeIdx.localBox(idx, rotation);
+            var box = StorageCubeIdx.GRID.localBox(idx, rotation);
             float sx = (float) box.minX;
             float sy = (float) box.minY;
             float sz = (float) box.minZ;

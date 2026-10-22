@@ -4,7 +4,6 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -76,7 +75,7 @@ public final class GameTestScaffold {
         throw new GameTestAssertException("No item is currently valid for Bar Stack tests");
     }
 
-    public static int count(SlotAccess handler, Item item) {
+    public static int count(StackItemStorage handler, Item item) {
         int total = 0;
         for (int slot = 0; slot < handler.getSlots(); slot++) {
             ItemStack stack = handler.getStackInSlot(slot);
@@ -87,7 +86,7 @@ public final class GameTestScaffold {
         return total;
     }
 
-    public static int occupied(SlotAccess handler) {
+    public static int occupied(StackItemStorage handler) {
         int total = 0;
         for (int slot = 0; slot < handler.getSlots(); slot++) {
             if (!handler.getStackInSlot(slot).isEmpty()) {

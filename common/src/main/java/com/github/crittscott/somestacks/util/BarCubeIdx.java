@@ -142,7 +142,7 @@ public final class BarCubeIdx {
      * block. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the Bar Stack
      * underneath. A null seam means there is no Bar Stack below, so the bottom layer is grounded.
      */
-    public static boolean isGrounded(int index, SlotAccess handler, @Nullable boolean[] seamBelow) {
+    public static boolean isGrounded(int index, StackItemStorage handler, @Nullable boolean[] seamBelow) {
         if (index < LAYER_SIZE) {
             return seamBelow == null || seamSupports(index, seamBelow);
         }
@@ -150,7 +150,7 @@ public final class BarCubeIdx {
     }
 
     /** Reads overlapping positions in the preceding layer, using a lower block for bottom cells. */
-    public static boolean supportedBy(int index, SlotAccess supportingBlock) {
+    public static boolean supportedBy(int index, StackItemStorage supportingBlock) {
         for (int belowIndex : SUPPORTING_SLOTS[index]) {
             if (!supportingBlock.getStackInSlot(belowIndex).isEmpty()) {
                 return true;
@@ -214,7 +214,7 @@ public final class BarCubeIdx {
      * describes a prospective, entirely empty block.
      */
     public static int traceAllPositions(ViewRay ray, BlockPos blockPos,
-                                        @Nullable SlotAccess handler) {
+                                        @Nullable StackItemStorage handler) {
         List<Hit> hits = new ArrayList<>();
 
         for (int i = 0; i < BarStackBE.SLOTS; i++) {
@@ -244,7 +244,7 @@ public final class BarCubeIdx {
 
     /** Returns the nearest occupied bar intersected by the view ray, or {@code -1} on a miss. */
     public static int traceCubes(ViewRay ray, BlockPos blockPos, BarStackBE be) {
-        SlotAccess handler = be.getItems();
+        StackItemStorage handler = be.getItems();
 
         double closestDist = Double.MAX_VALUE;
         int closestIndex = -1;
@@ -310,7 +310,7 @@ public final class BarCubeIdx {
     }
 
     /** Returns a snapshot of which slots in a block contain bars. */
-    public static boolean[] occupancyOf(SlotAccess handler) {
+    public static boolean[] occupancyOf(StackItemStorage handler) {
         boolean[] occupancy = new boolean[BarStackBE.SLOTS];
         for (int i = 0; i < BarStackBE.SLOTS; i++) {
             occupancy[i] = !handler.getStackInSlot(i).isEmpty();
@@ -338,7 +338,7 @@ public final class BarCubeIdx {
      * snapshot lets a support cascade retain the seam after its source block has been emptied and
      * removed from the world.
      */
-    public static boolean[] topLayerOccupancy(SlotAccess handler) {
+    public static boolean[] topLayerOccupancy(StackItemStorage handler) {
         boolean[] occupancy = new boolean[LAYER_SIZE];
         for (int i = 0; i < LAYER_SIZE; i++) {
             occupancy[i] = !handler.getStackInSlot(TOP_LAYER_START + i).isEmpty();

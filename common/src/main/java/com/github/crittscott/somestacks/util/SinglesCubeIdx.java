@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -43,7 +42,8 @@ public final class SinglesCubeIdx {
     /** Edge of one cell, in pixels. */
     private static final double CELL_PIXELS = 4.0;
 
-    private static final CubeGrid GRID = new CubeGrid(GRID_EDGE, CELL_PIXELS, 0, 4, 8, 12);
+    /** Cached coordinate transforms, bounds, and shapes for the Singles layout. */
+    public static final CubeGrid GRID = new CubeGrid(GRID_EDGE, CELL_PIXELS, 0, 4, 8, 12);
 
     /**
      * Whether a prospective Singles Stack could support an item at {@code index}. Since all of its
@@ -61,8 +61,8 @@ public final class SinglesCubeIdx {
      * Singles Stack underneath. A null seam means there is no Singles Stack below, so the bottom
      * layer is grounded.
      */
-    public static boolean isGrounded(int index, SlotAccess handler, int blockRotation, boolean[] seamBelow) {
-        int[] xyz = xyzFromIndex(index);
+    public static boolean isGrounded(int index, StackItemStorage handler, int blockRotation, boolean[] seamBelow) {
+        int[] xyz = GRID.xyzFromIndex(index);
         int y = xyz[1];
 
         if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
@@ -77,7 +77,7 @@ public final class SinglesCubeIdx {
      * uses this to validate a proposed placement without mutating inventory.
      */
     public static boolean isGroundedIn(boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
-        int y = xyzFromIndex(index)[1];
+        int y = GRID.xyzFromIndex(index)[1];
 
         if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
 
@@ -92,11 +92,6 @@ public final class SinglesCubeIdx {
         return seamBelow[visualColumnFromStorage(columnFromIndex(index), blockRotation)];
     }
 
-    /** Returns the block-local collision shape of one stored cell. */
-    public static VoxelShape shapeFor(int storageIndex, int blockRotation) {
-        return GRID.localShape(storageIndex, blockRotation);
-    }
-
     /**
      * The storage column a visual column occupies under a block rotation, the inverse of
      * {@link #visualColumnFromStorage}. The four rotations form a cycle, so the inverse of
@@ -107,7 +102,7 @@ public final class SinglesCubeIdx {
     }
 
     /** Reads the top cell beneath a bottom-layer cell in the same visual column. */
-    public static boolean supportedBy(int index, int blockRotation, SlotAccess below, int belowRotation) {
+    public static boolean supportedBy(int index, int blockRotation, StackItemStorage below, int belowRotation) {
         int visualColumn = visualColumnFromStorage(columnFromIndex(index), blockRotation);
         int belowColumn = storageColumnFromVisual(visualColumn, belowRotation);
         return !below.getStackInSlot(indexFromColumn(belowColumn, TOP_LAYER_Y)).isEmpty();
@@ -117,7 +112,7 @@ public final class SinglesCubeIdx {
      * Returns top-layer occupancy in visual columns, the coordinate system shared across a block
      * boundary even when adjacent blocks have different rotations.
      */
-    public static boolean[] topLayerOccupancy(SlotAccess handler, int blockRotation) {
+    public static boolean[] topLayerOccupancy(StackItemStorage handler, int blockRotation) {
         boolean[] occupancy = new boolean[LAYER_SIZE];
         for (int column = 0; column < LAYER_SIZE; column++) {
             if (!handler.getStackInSlot(indexFromColumn(column, TOP_LAYER_Y)).isEmpty()) {
@@ -142,7 +137,7 @@ public final class SinglesCubeIdx {
      * handler describes a prospective, entirely empty block.
      */
     public static int traceAllPositions(ViewRay ray, BlockPos blockPos,
-                                        @Nullable SlotAccess handler, int blockRotation) {
+                                        @Nullable StackItemStorage handler, int blockRotation) {
         List<Hit> hits = new ArrayList<>();
 
         for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
@@ -174,7 +169,7 @@ public final class SinglesCubeIdx {
 
     /** Returns the nearest occupied cell intersected by the view ray, or {@code -1} on a miss. */
     public static int traceCubes(ViewRay ray, BlockPos blockPos, SinglesStackBE be) {
-        SlotAccess handler = be.getItems();
+        StackItemStorage handler = be.getItems();
 
         int blockRotation = be.getRotation();
         double closestDist = Double.MAX_VALUE;
@@ -215,29 +210,6 @@ public final class SinglesCubeIdx {
     /** The slot holding the cell at {@code y} in a storage column. */
     public static int indexFromColumn(int storageColumn, int y) {
         return y * LAYER_SIZE + storageColumn;
-    }
-
-    /**
-     * The visual position of a stored cell under a block rotation. A rotation is that many quarter
-     * turns counterclockwise seen from above, matching the direction of per-item rotation.
-     */
-    public static int[] rotateXYZ(int x, int y, int z, int rotation) {
-        return GRID.rotateXYZ(x, y, z, rotation);
-    }
-
-    /** Cached block-local bounds shared by rendering and targeting. */
-    public static AABB localBox(int storageIndex, int rotation) {
-        return GRID.localBox(storageIndex, rotation);
-    }
-
-    /** Returns a cell's origin on one axis in model pixels. */
-    public static int startPixel(int i) {
-        return GRID.startPixel(i);
-    }
-
-    /** Converts a slot index to its cell coordinates, indexed from the bottom layer upward. */
-    public static int[] xyzFromIndex(int idx) {
-        return GRID.xyzFromIndex(idx);
     }
 
     private record Hit(int index, double distance) {

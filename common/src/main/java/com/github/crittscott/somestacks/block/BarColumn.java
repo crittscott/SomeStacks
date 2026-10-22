@@ -8,7 +8,6 @@ import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,8 +53,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * Stack. Client-side levels never resolve a column: its bounds come from the server config.
      */
     @Nullable
-    public static BarColumn at(@Nullable Level level, BlockPos pos) {
-        if (level == null || level.isClientSide) {
+    public static BarColumn at(Level level, BlockPos pos) {
+        if (level.isClientSide) {
             return null;
         }
         if (!(level.getBlockEntity(pos) instanceof BarStackBE be)) {
@@ -97,10 +96,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
     }
 
     /** Schedules the publication pass for the column at {@code pos}, if one is there. */
-    static void markDirtyAt(@Nullable Level level, BlockPos pos) {
-        if (level != null) {
-            markDirtyAt(level, pos, BarColumn::at);
-        }
+    static void markDirtyAt(Level level, BlockPos pos) {
+        markDirtyAt(level, pos, BarColumn::at);
     }
 
     /** The configured ceiling on column height, shared with Storage piles. */
@@ -228,7 +225,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return WorldEdits.mayPlace(level, above);
+        return WorldEdits.mayPlace(null, level, above);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */
@@ -239,11 +236,10 @@ public final class BarColumn extends StackRun<BarStackBE> {
         }
 
         BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(level);
         BlockState newStack = StackPlacement.stateFor(
                 CommonRegistry.BAR_STACK_BLOCK.get(), level, above);
         if (!WorldEdits.placeChecked(
-                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
+                null, level, above, newStack, Direction.DOWN, finalCollision)) {
             return false;
         }
         BarStackBE grown = (BarStackBE) level.getBlockEntity(above);
@@ -315,7 +311,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
 
         int removedDownTo = blocks.size();
         for (int i = blocks.size() - 1; i >= keep; i--) {
-            if (!WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())) {
+            if (!WorldEdits.removeChecked(null, level, blocks.get(i).getBlockPos())) {
                 break;
             }
             removedDownTo = i;

@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import net.minecraft.world.phys.shapes.CollisionContext;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.WorldEdits;
@@ -176,8 +177,7 @@ public final class ProtectionApiGameTests implements FabricGameTest {
         Probe probe = new Probe();
         DENIED.put(key, probe);
         try {
-            check(!WorldEdits.placeChecked(player, level, key.pos(),
-                    Blocks.STONE.defaultBlockState(), Direction.DOWN), "Denied placement was accepted");
+            check(!WorldEdits.placeChecked(player, level, key.pos(), Blocks.STONE.defaultBlockState(), Direction.DOWN, (Blocks.STONE.defaultBlockState()).getCollisionShape(level, key.pos(), CollisionContext.empty())), "Denied placement was accepted");
         } finally {
             DENIED.remove(key);
         }

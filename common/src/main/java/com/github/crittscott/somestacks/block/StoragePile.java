@@ -44,8 +44,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * reading its bounds would consult the server config.
      */
     @Nullable
-    public static StoragePile at(@Nullable Level level, BlockPos pos) {
-        if (level == null || level.isClientSide) {
+    public static StoragePile at(Level level, BlockPos pos) {
+        if (level.isClientSide) {
             return null;
         }
         if (!(level.getBlockEntity(pos) instanceof StorageStackBE sbe)) {
@@ -79,10 +79,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /** Marks the pile at {@code pos} for settling, if one is there. */
-    public static void markDirtyAt(@Nullable Level level, BlockPos pos) {
-        if (level != null) {
-            markDirtyAt(level, pos, StoragePile::at);
-        }
+    public static void markDirtyAt(Level level, BlockPos pos) {
+        markDirtyAt(level, pos, StoragePile::at);
     }
 
     /** The configured ceiling on pile height. Server-side only. */
@@ -121,11 +119,6 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     /** Whether this pile's blocks survive being emptied. The base block's flag is authoritative. */
     public boolean isPermanent() {
         return blocks.get(0).isPermanent();
-    }
-
-    /** Changes permanence and attributes any resulting cleanup to automation. */
-    public void setPermanent(boolean permanent) {
-        setPermanent(permanent, null);
     }
 
     /** Changes permanence and attributes any resulting deferred cleanup to {@code actor}. */
@@ -324,13 +317,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return WorldEdits.mayPlace(editor(level, placer), above)
+        return WorldEdits.mayPlace(placer, level, above)
                 && WorldEdits.isUnobstructed(level, above, Shapes.block());
-    }
-
-    /** The player a growth is attributed to: the depositing player, or the automation actor. */
-    private static ServerPlayer editor(ServerLevel level, @Nullable ServerPlayer placer) {
-        return placer != null ? placer : WorldEdits.automationActor(level);
     }
 
     /** Adds one block on top. The placement hook inherits its mode; growth uses the base rotation. */
@@ -340,11 +328,10 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         }
 
         BlockPos above = topPos().above();
-        ServerPlayer editor = editor(level, placer);
         BlockState newStack = StackPlacement.stateFor(
                 CommonRegistry.STORAGE_STACK_BLOCK.get(), level, above);
         if (!WorldEdits.placeChecked(
-                editor, level, above, newStack, Direction.DOWN, Shapes.block())) {
+                placer, level, above, newStack, Direction.DOWN, Shapes.block())) {
             return false;
         }
         StorageStackBE grown = (StorageStackBE) level.getBlockEntity(above);
@@ -425,9 +412,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
 
         int removedDownTo = blocks.size();
         for (int i = blocks.size() - 1; i >= keep; i--) {
-            boolean removed = actor == null
-                    ? WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())
-                    : WorldEdits.removeChecked(actor, level, blocks.get(i).getBlockPos());
+            boolean removed = WorldEdits.removeChecked(actor, level, blocks.get(i).getBlockPos());
             if (!removed) {
                 break;
             }

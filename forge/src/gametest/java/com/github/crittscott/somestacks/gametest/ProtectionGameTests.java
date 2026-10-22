@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -102,12 +103,14 @@ public final class ProtectionGameTests {
                 valid.getX(), level.getMinBuildHeight() - 1, valid.getZ());
 
         check(WorldEdits.placeChecked(
-                        player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+                player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN,
+                Blocks.STONE.defaultBlockState().getCollisionShape(level, valid, CollisionContext.empty())),
                 "Valid checked placement was rejected");
         check(level.getBlockState(valid).is(Blocks.STONE),
                 "Valid checked placement did not change the world");
         check(!WorldEdits.placeChecked(
-                        player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+                player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN,
+                Blocks.STONE.defaultBlockState().getCollisionShape(level, invalid, CollisionContext.empty())),
                 "Out-of-height checked placement was accepted");
         helper.succeed();
     }
@@ -128,7 +131,8 @@ public final class ProtectionGameTests {
 
         try (var events = new WorldEditChecks.EventProbe(level, target)) {
             check(!WorldEdits.placeChecked(
-                            player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+                    player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN,
+                    Blocks.STONE.defaultBlockState().getCollisionShape(level, target, CollisionContext.empty())),
                     "Entity-obstructed checked placement was accepted");
             events.expectNone();
         }
@@ -490,10 +494,10 @@ public final class ProtectionGameTests {
         try {
             check(!WorldEdits.isUnobstructed(level, target, Shapes.block()), "Full block missed obstruction");
             check(WorldEdits.isUnobstructed(level, target, Shapes.empty()), "Empty shape was obstructed");
-            check(WorldEdits.isUnobstructed(level, target, SinglesCubeIdx.shapeFor(0, 0)),
+            check(WorldEdits.isUnobstructed(level, target, SinglesCubeIdx.GRID.localShape(0, 0)),
                     "Free Singles cell was obstructed by another cell's occupant");
             check(!WorldEdits.isUnobstructed(level, target,
-                            SinglesCubeIdx.shapeFor(SinglesCubeIdx.LAYER_SIZE - 1, 0)),
+                            SinglesCubeIdx.GRID.localShape(SinglesCubeIdx.LAYER_SIZE - 1, 0)),
                     "Occupied Singles shape missed obstruction");
             check(WorldEdits.isUnobstructed(level, target, BarCubeIdx.shapeFor(0)),
                     "Free Bar position was obstructed by another position's occupant");
@@ -666,7 +670,9 @@ public final class ProtectionGameTests {
         MinecraftForge.EVENT_BUS.addListener(placement);
         try (var events = new WorldEditChecks.EventProbe(level, target)) {
             var player = FakePlayerFactory.getMinecraft(level);
-            check(!WorldEdits.placeChecked(player, level, target, placedState, Direction.DOWN), "Denied placement accepted");
+            check(!WorldEdits.placeChecked(
+                    player, level, target, placedState, Direction.DOWN,
+                    placedState.getCollisionShape(level, target, CollisionContext.empty())), "Denied placement accepted");
             events.expectNone();
             checkEquals(originalState, level.getBlockState(target), "Denied state not restored");
             var restored = level.getBlockEntity(target);
@@ -674,7 +680,9 @@ public final class ProtectionGameTests {
             checkEquals(0, neighbors[0], "Denied placement notified neighbors");
             check(!level.captureBlockSnapshots && !level.restoringBlockSnapshots && level.capturedBlockSnapshots.isEmpty(), "Snapshot state leaked");
             deny[0] = false;
-            check(WorldEdits.placeChecked(player, level, target, placedState, Direction.DOWN), "Accepted placement rejected");
+            check(WorldEdits.placeChecked(
+                    player, level, target, placedState, Direction.DOWN,
+                    placedState.getCollisionShape(level, target, CollisionContext.empty())), "Accepted placement rejected");
             check(neighbors[0] > 0, "Accepted placement never notified neighbors");
             checkEquals(placedState, level.getBlockState(target), "Accepted placement state");
             events.expectOne(net.minecraft.world.level.gameevent.GameEvent.BLOCK_PLACE, player, placedState);
@@ -693,14 +701,20 @@ public final class ProtectionGameTests {
         var player = FakePlayerFactory.getMinecraft(level);
         Consumer<BlockEvent.EntityPlaceEvent> listener = event -> {
             if (event.getLevel() == level && event.getPos().equals(target)) {
-                check(!WorldEdits.placeChecked(player, level, target.east(), Blocks.STONE.defaultBlockState(), Direction.DOWN), "Reentrant placement accepted");
+                check(!WorldEdits.placeChecked(
+                        player, level, target.east(), Blocks.STONE.defaultBlockState(), Direction.DOWN,
+                        Blocks.STONE.defaultBlockState().getCollisionShape(level, target.east(), CollisionContext.empty())), "Reentrant placement accepted");
             }
         };
         MinecraftForge.EVENT_BUS.addListener(listener);
         try {
-            check(WorldEdits.placeChecked(player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN), "Outer placement failed");
+            check(WorldEdits.placeChecked(
+                    player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN,
+                    Blocks.STONE.defaultBlockState().getCollisionShape(level, target, CollisionContext.empty())), "Outer placement failed");
             level.captureBlockSnapshots = true;
-            check(!WorldEdits.placeChecked(player, level, target.east(), Blocks.STONE.defaultBlockState(), Direction.DOWN), "Foreign capture accepted");
+            check(!WorldEdits.placeChecked(
+                    player, level, target.east(), Blocks.STONE.defaultBlockState(), Direction.DOWN,
+                    Blocks.STONE.defaultBlockState().getCollisionShape(level, target.east(), CollisionContext.empty())), "Foreign capture accepted");
             check(level.captureBlockSnapshots, "Foreign capture changed");
         } finally {
             level.captureBlockSnapshots = false;

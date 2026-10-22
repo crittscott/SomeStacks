@@ -30,11 +30,12 @@ public final class StorageCubeIdx {
     /** Edge of one cell, in pixels. */
     private static final double CELL_PIXELS = 4.5;
 
-    private static final CubeGrid GRID = new CubeGrid(GRID_EDGE, CELL_PIXELS, 1, 6, 11);
+    /** Cached coordinate transforms, bounds, and shapes for the Storage layout. */
+    public static final CubeGrid GRID = new CubeGrid(GRID_EDGE, CELL_PIXELS, 1, 6, 11);
 
     /** Returns the nearest occupied cell intersected by the view ray, or {@code -1} on a miss. */
     public static int traceCubes(ViewRay ray, BlockPos blockPos, StorageStackBE be, int rotation) {
-        SlotAccess handler = be.getItems();
+        StackItemStorage handler = be.getItems();
 
         double closestDist = Double.MAX_VALUE;
         int closestIndex = -1;
@@ -58,26 +59,4 @@ public final class StorageCubeIdx {
         return closestIndex;
     }
 
-    /**
-     * The visual position of a stored cell under a block rotation. A rotation is that many quarter
-     * turns counterclockwise seen from above, matching the direction of per-item rotation.
-     */
-    public static int[] rotateXYZ(int x, int y, int z, int rotation) {
-        return GRID.rotateXYZ(x, y, z, rotation);
-    }
-
-    /** Cached block-local bounds shared by rendering and targeting. */
-    public static AABB localBox(int storageIndex, int rotation) {
-        return GRID.localBox(storageIndex, rotation);
-    }
-
-    /** Returns a cell's origin on one axis in model pixels. */
-    public static int startPixel(int i) {
-        return GRID.startPixel(i);
-    }
-
-    /** Converts a slot index to its cell coordinates, indexed from the bottom layer upward. */
-    public static int[] xyzFromIndex(int idx) {
-        return GRID.xyzFromIndex(idx);
-    }
 }

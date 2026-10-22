@@ -111,7 +111,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#calculateLightLevelFromItems(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">calculateLightLevelFromItems</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#calculateLightLevelFromItems(com.github.crittscott.somestacks.util.StackItemStorage)" class="member-name-link">calculateLightLevelFromItems</a><wbr>(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Adds each stored BlockItem's fractional emission, capped at the vanilla maximum of 15.</div>
 </div>
@@ -135,7 +135,7 @@ loadScripts(document, 'script');</script>
 <div class="block"><a href="#isItemFromDisabledMod(net.minecraft.world.item.ItemStack)"><code>isItemFromDisabledMod(net.minecraft.world.item.ItemStack)</code></a> for a deposit path, telling the player when it refuses.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#dropAllItems(com.github.crittscott.somestacks.util.SlotAccess,net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">dropAllItems</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#dropAllItems(com.github.crittscott.somestacks.util.StackItemStorage,net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">dropAllItems</a><wbr>(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler,
  net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -150,7 +150,7 @@ loadScripts(document, 'script');</script>
  whatever will not fit at their feet.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isHandlerEmpty(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">isHandlerEmpty</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isHandlerEmpty(com.github.crittscott.somestacks.util.StackItemStorage)" class="member-name-link">isHandlerEmpty</a><wbr>(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether every slot in the handler is empty.</div>
 </div>
@@ -234,9 +234,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="dropAllItems(com.github.crittscott.somestacks.util.SlotAccess,net.minecraft.world.level.Level,net.minecraft.core.BlockPos)">
+<section class="detail" id="dropAllItems(com.github.crittscott.somestacks.util.StackItemStorage,net.minecraft.world.level.Level,net.minecraft.core.BlockPos)">
 <h3>dropAllItems</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dropAllItems</span><wbr><span class="parameters">(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dropAllItems</span><wbr><span class="parameters">(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler,
  net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 <div class="block">Drops every nonempty handler slot at the block position without mutating the handler.</div>
@@ -253,16 +253,16 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="isHandlerEmpty(com.github.crittscott.somestacks.util.SlotAccess)">
+<section class="detail" id="isHandlerEmpty(com.github.crittscott.somestacks.util.StackItemStorage)">
 <h3>isHandlerEmpty</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isHandlerEmpty</span><wbr><span class="parameters">(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isHandlerEmpty</span><wbr><span class="parameters">(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</span></div>
 <div class="block">Whether every slot in the handler is empty.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="calculateLightLevelFromItems(com.github.crittscott.somestacks.util.SlotAccess)">
+<section class="detail" id="calculateLightLevelFromItems(com.github.crittscott.somestacks.util.StackItemStorage)">
 <h3>calculateLightLevelFromItems</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">calculateLightLevelFromItems</span><wbr><span class="parameters">(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">calculateLightLevelFromItems</span><wbr><span class="parameters">(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</span></div>
 <div class="block">Adds each stored BlockItem's fractional emission, capped at the vanilla maximum of 15.</div>
 </section>
 </li>

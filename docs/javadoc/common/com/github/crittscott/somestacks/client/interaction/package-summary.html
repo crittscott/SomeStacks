@@ -87,18 +87,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="DepositIntoAdjacentStackRule.html" title="class in com.github.crittscott.somestacks.client.interaction">DepositIntoAdjacentStackRule</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Modifier plus an item, clicking a face of some other block that has a Singles or Bar Stack
- against it, deposits into that stack.</div>
+<div class="block">Consumes a modifier-plus-item click whose neighboring destination is Singles or Bar.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DepositIntoClickedStackRule.html" title="class in com.github.crittscott.somestacks.client.interaction">DepositIntoClickedStackRule</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Modifier plus an item deposits into the stack that was clicked, whatever placement mode is
- selected.</div>
+<div class="block">Consumes a modifier-plus-item click classified as a deposit into the clicked stack.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="ExtractionRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ExtractionRule</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">An unmodified right-click on any stack takes from the nearest occupied cell along the player's
- reach ray.</div>
+<div class="block">Consumes an unmodified, nonsneaking click on a stack, suppressing local item use.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -119,22 +116,20 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PlaceAdjacentGenericRule.html" title="class in com.github.crittscott.somestacks.client.interaction">PlaceAdjacentGenericRule</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Modifier plus an item, on a click no deposit rule claimed, places the selected stack type in the
- position against the clicked face and makes the first deposit into it.</div>
+<div class="block">Consumes a modifier-plus-item click not claimed by an earlier rule when placement/deposit
+ mode is selected.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="RotateBlockWithRedstoneTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateBlockWithRedstoneTorchRule</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Shift plus a redstone torch rotates a Storage or Singles Stack's layout 90 degrees.</div>
+<div class="block">Consumes a sneaking redstone-torch click on Storage or Singles so local item use does not run.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="RotateItemWithSoulTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateItemWithSoulTorchRule</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Shift plus a soul torch rotates one rendered item within a Singles Stack, leaving the block's own
- layout alone.</div>
+<div class="block">Consumes a sneaking soul-torch click on Singles so local item use does not run.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="TogglePermanentRule.html" title="class in com.github.crittscott.somestacks.client.interaction">TogglePermanentRule</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Modifier plus an empty-handed right-click on a Storage Stack, in Toggle Permanent mode, switches
- automatic removal for the whole pile.</div>
+<div class="block">Consumes an empty-main-hand modifier click on Storage while Toggle Permanent mode is selected.</div>
 </div>
 </div>
 </div>

@@ -10,7 +10,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -26,8 +25,8 @@ import javax.annotation.Nullable;
  * which is what automation addresses; this class owns one block's cells, its shape, its layout
  * rotation, and a rotation for each rendered item.
  *
- * <p>Capability exposure is loader-specific and lives outside this class; {@link #getItems()} is
- * what a loader-specific capability view adapts.
+ * <p>Local slots are available through {@link #getItems()}; loader automation adapters expose
+ * the whole run through {@link #itemRun()}.
  */
 public class SinglesStackBE extends StackBlockEntity {
     /** Cells in one block. The column's flat range is this times its height. */
@@ -67,17 +66,6 @@ public class SinglesStackBE extends StackBlockEntity {
         return !BarStackBE.isValidBarItem(stack);
     }
 
-    /** The block's layout rotation, held in its facing. */
-    public int getRotation() {
-        return blockRotation();
-    }
-
-    /** Sets the block's layout rotation modulo four; the block-state change publishes it. */
-    public void setRotation(int rotation) {
-        cachedShape = null;
-        setBlockRotation(rotation);
-    }
-
     /** The rendered rotation of one item, in quarter turns. Out-of-range indexes read as unrotated. */
     public int getCubeRotation(int index) {
         if (index < 0 || index >= SLOTS) {
@@ -105,7 +93,7 @@ public class SinglesStackBE extends StackBlockEntity {
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                shape = Shapes.joinUnoptimized(shape, SinglesCubeIdx.shapeFor(i, blockRotation), BooleanOp.OR);
+                shape = Shapes.joinUnoptimized(shape, SinglesCubeIdx.GRID.localShape(i, blockRotation), BooleanOp.OR);
             }
         }
 
@@ -183,7 +171,7 @@ public class SinglesStackBE extends StackBlockEntity {
         }
 
         int column = SinglesCubeIdx.columnFromIndex(index);
-        int y = SinglesCubeIdx.xyzFromIndex(index)[1];
+        int y = SinglesCubeIdx.GRID.xyzFromIndex(index)[1];
 
         ItemStack extracted;
         beginBatch();
@@ -197,14 +185,14 @@ public class SinglesStackBE extends StackBlockEntity {
             endBatch();
         }
 
-        if (level == null || level.isClientSide) {
+        if (!(level instanceof ServerLevel columnLevel)) {
             clearEmptyCubeRotations();
             setChanged();
             schedulePublish();
             return extracted;
         }
 
-        drawDownColumn(column, actor);
+        drawDownColumn(columnLevel, column, actor);
         return extracted;
     }
 
@@ -245,12 +233,7 @@ public class SinglesStackBE extends StackBlockEntity {
      * block rotations and carrying item rotations. Requires a vacant top cell in the receiving
      * column; stops when the next block cannot hand an item down. Does not recheck admission.
      */
-    private void drawDownColumn(int column, @Nullable ServerPlayer actor) {
-        Level columnLevel = level;
-        if (columnLevel == null) {
-            return;
-        }
-
+    private void drawDownColumn(ServerLevel columnLevel, int column, @Nullable ServerPlayer actor) {
         SinglesStackBE be = this;
         int col = column;
 
@@ -305,14 +288,13 @@ public class SinglesStackBE extends StackBlockEntity {
      *
      * <p>A block protection refuses to remove stays, and publishes as the empty block it now is.
      */
-    private void publishColumnEdit(Level columnLevel, @Nullable ServerPlayer actor) {
+    private void publishColumnEdit(ServerLevel columnLevel, @Nullable ServerPlayer actor) {
         clearEmptyCubeRotations();
 
         if (isEmpty()
                 && !(columnLevel.getBlockEntity(getBlockPos().above()) instanceof SinglesStackBE)
-                && columnLevel instanceof ServerLevel serverLevel
-                && removeChecked(actor, serverLevel, getBlockPos())) {
-            removeEmptyBelow(serverLevel, getBlockPos().below(), actor);
+                && WorldEdits.removeChecked(actor, columnLevel, getBlockPos())) {
+            removeEmptyBelow(columnLevel, getBlockPos().below(), actor);
             return;
         }
 
@@ -326,18 +308,11 @@ public class SinglesStackBE extends StackBlockEntity {
         BlockPos current = pos;
 
         while (columnLevel.getBlockEntity(current) instanceof SinglesStackBE be && be.isEmpty()) {
-            if (!removeChecked(actor, columnLevel, current)) {
+            if (!WorldEdits.removeChecked(actor, columnLevel, current)) {
                 return;
             }
             current = current.below();
         }
-    }
-
-    private static boolean removeChecked(@Nullable ServerPlayer actor, ServerLevel level,
-                                         BlockPos pos) {
-        return actor == null
-                ? WorldEdits.removeChecked(level, pos)
-                : WorldEdits.removeChecked(actor, level, pos);
     }
 
     /**

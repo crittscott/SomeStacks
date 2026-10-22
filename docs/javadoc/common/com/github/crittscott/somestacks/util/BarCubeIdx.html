@@ -151,8 +151,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Whether a prospective Bar Stack could support a bar at <code>index</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,boolean%5B%5D)" class="member-name-link">isGrounded</a><wbr>(int&nbsp;index,
- <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isGrounded(int,com.github.crittscott.somestacks.util.StackItemStorage,boolean%5B%5D)" class="member-name-link">isGrounded</a><wbr>(int&nbsp;index,
+ <a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler,
  boolean[]&nbsp;seamBelow)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether a bar has support.</div>
@@ -162,7 +162,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;index,
  boolean[]&nbsp;seamBelow)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Applies <a href="#isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,boolean%5B%5D)"><code>isGrounded(int, com.github.crittscott.somestacks.util.SlotAccess, boolean[])</code></a> to an occupancy snapshot rather than live slots.</div>
+<div class="block">Applies <a href="#isGrounded(int,com.github.crittscott.somestacks.util.StackItemStorage,boolean%5B%5D)"><code>isGrounded(int, com.github.crittscott.somestacks.util.StackItemStorage, boolean[])</code></a> to an occupancy snapshot rather than live slots.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.AABB</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#localBox(int)" class="member-name-link">localBox</a><wbr>(int&nbsp;index)</code></div>
@@ -170,7 +170,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Cached block-local bounds shared by rendering, targeting, and collision.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupancyOf(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">occupancyOf</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupancyOf(com.github.crittscott.somestacks.util.StackItemStorage)" class="member-name-link">occupancyOf</a><wbr>(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a snapshot of which slots in a block contain bars.</div>
 </div>
@@ -203,13 +203,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns a bar's Z origin in model pixels from its within-layer Z index and layer.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedBy(int,com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">supportedBy</a><wbr>(int&nbsp;index,
- <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;supportingBlock)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedBy(int,com.github.crittscott.somestacks.util.StackItemStorage)" class="member-name-link">supportedBy</a><wbr>(int&nbsp;index,
+ <a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;supportingBlock)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Reads overlapping positions in the preceding layer, using a lower block for bottom cells.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topLayerOccupancy(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">topLayerOccupancy</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topLayerOccupancy(com.github.crittscott.somestacks.util.StackItemStorage)" class="member-name-link">topLayerOccupancy</a><wbr>(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the top layer's occupancy, which is the supporting seam for the Bar Stack above.</div>
 </div>
@@ -221,9 +221,9 @@ loadScripts(document, 'script');</script>
  slots.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos,
- <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
+ <a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Finds the slot a deposit targets: the last empty slot along the view ray before the first
  occupied one, or the farthest intersected slot if the ray meets no occupied bar.</div>
@@ -298,10 +298,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,boolean[])">
+<section class="detail" id="isGrounded(int,com.github.crittscott.somestacks.util.StackItemStorage,boolean[])">
 <h3>isGrounded</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isGrounded</span><wbr><span class="parameters">(int&nbsp;index,
- <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler,
+ <a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler,
  @Nullable
  boolean[]&nbsp;seamBelow)</span></div>
 <div class="block">Whether a bar has support. Layers above the bottom consult the layer beneath them in the same
@@ -310,10 +310,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="supportedBy(int,com.github.crittscott.somestacks.util.SlotAccess)">
+<section class="detail" id="supportedBy(int,com.github.crittscott.somestacks.util.StackItemStorage)">
 <h3>supportedBy</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">supportedBy</span><wbr><span class="parameters">(int&nbsp;index,
- <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;supportingBlock)</span></div>
+ <a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;supportingBlock)</span></div>
 <div class="block">Reads overlapping positions in the preceding layer, using a lower block for bottom cells.</div>
 </section>
 </li>
@@ -324,7 +324,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;index,
  @Nullable
  boolean[]&nbsp;seamBelow)</span></div>
-<div class="block">Applies <a href="#isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,boolean%5B%5D)"><code>isGrounded(int, com.github.crittscott.somestacks.util.SlotAccess, boolean[])</code></a> to an occupancy snapshot rather than live slots. Settling and
+<div class="block">Applies <a href="#isGrounded(int,com.github.crittscott.somestacks.util.StackItemStorage,boolean%5B%5D)"><code>isGrounded(int, com.github.crittscott.somestacks.util.StackItemStorage, boolean[])</code></a> to an occupancy snapshot rather than live slots. Settling and
  placement simulation use snapshots to evaluate a proposed state without mutating inventory.</div>
 </section>
 </li>
@@ -356,12 +356,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.SlotAccess)">
+<section class="detail" id="traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage)">
 <h3>traceAllPositions</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">traceAllPositions</span><wbr><span class="parameters">(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos,
  @Nullable
- <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</span></div>
+ <a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</span></div>
 <div class="block">Finds the slot a deposit targets: the last empty slot along the view ray before the first
  occupied one, or the farthest intersected slot if the ray meets no occupied bar. A null handler
  describes a prospective, entirely empty block.</div>
@@ -412,9 +412,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="occupancyOf(com.github.crittscott.somestacks.util.SlotAccess)">
+<section class="detail" id="occupancyOf(com.github.crittscott.somestacks.util.StackItemStorage)">
 <h3>occupancyOf</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">occupancyOf</span><wbr><span class="parameters">(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">occupancyOf</span><wbr><span class="parameters">(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</span></div>
 <div class="block">Returns a snapshot of which slots in a block contain bars.</div>
 </section>
 </li>
@@ -442,9 +442,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="topLayerOccupancy(com.github.crittscott.somestacks.util.SlotAccess)">
+<section class="detail" id="topLayerOccupancy(com.github.crittscott.somestacks.util.StackItemStorage)">
 <h3>topLayerOccupancy</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">topLayerOccupancy</span><wbr><span class="parameters">(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">topLayerOccupancy</span><wbr><span class="parameters">(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</span></div>
 <div class="block">Returns the top layer's occupancy, which is the supporting seam for the Bar Stack above. The
  snapshot lets a support cascade retain the seam after its source block has been emptied and
  removed from the world.</div>

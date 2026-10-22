@@ -8,7 +8,6 @@ import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,8 +44,8 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * config.
      */
     @Nullable
-    public static SinglesColumn at(@Nullable Level level, BlockPos pos) {
-        if (level == null || level.isClientSide) {
+    public static SinglesColumn at(Level level, BlockPos pos) {
+        if (level.isClientSide) {
             return null;
         }
         if (!(level.getBlockEntity(pos) instanceof SinglesStackBE be)) {
@@ -87,10 +86,8 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
     }
 
     /** Schedules the publication pass for the column at {@code pos}, if one is there. */
-    static void markDirtyAt(@Nullable Level level, BlockPos pos) {
-        if (level != null) {
-            markDirtyAt(level, pos, SinglesColumn::at);
-        }
+    static void markDirtyAt(Level level, BlockPos pos) {
+        markDirtyAt(level, pos, SinglesColumn::at);
     }
 
     /** The configured ceiling on column height, shared with Storage piles and Bar columns. */
@@ -175,7 +172,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
 
         return slot < SinglesCubeIdx.LAYER_SIZE && seamSupports(blockIndex, slot, 0)
                 && (growth == null ? canGrowSpace() : growth.getAsBoolean())
-                && WorldEdits.isUnobstructed(level, topPos().above(), SinglesCubeIdx.shapeFor(slot, 0));
+                && WorldEdits.isUnobstructed(level, topPos().above(), SinglesCubeIdx.GRID.localShape(slot, 0));
     }
 
     /**
@@ -210,22 +207,21 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return WorldEdits.mayPlace(level, above);
+        return WorldEdits.mayPlace(null, level, above);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */
     private boolean grow(int slot) {
-        VoxelShape finalCollision = SinglesCubeIdx.shapeFor(slot, 0);
+        VoxelShape finalCollision = SinglesCubeIdx.GRID.localShape(slot, 0);
         if (!canGrow(finalCollision)) {
             return false;
         }
 
         BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(level);
         BlockState newStack = StackPlacement.stateFor(
                 CommonRegistry.SINGLES_STACK_BLOCK.get(), level, above);
         if (!WorldEdits.placeChecked(
-                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
+                null, level, above, newStack, Direction.DOWN, finalCollision)) {
             return false;
         }
         SinglesStackBE grown = (SinglesStackBE) level.getBlockEntity(above);

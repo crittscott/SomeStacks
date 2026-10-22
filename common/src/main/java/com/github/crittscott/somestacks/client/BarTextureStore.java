@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -188,7 +189,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
                     : BarTextureData.WHITE;
             return multiplyColors(averageSpriteColor(first.getSprite(), resourceManager), layerTint);
         } catch (Exception e) {
-            SomeStacksCommon.LOGGER.warn("Could not auto-calculate tint for {}: {}", itemLoc, e.getMessage(), e);
+            SomeStacksCommon.LOGGER.warn("Could not auto-calculate tint for {}", itemLoc, e);
             return BarTextureData.WHITE;
         }
     }
@@ -220,7 +221,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     }
 
     /** The average color of {@code sprite}'s source texture, or white when there is none to read. */
-    private static int averageSpriteColor(TextureAtlasSprite sprite, ResourceManager resourceManager) {
+    private static int averageSpriteColor(TextureAtlasSprite sprite, ResourceManager resourceManager) throws IOException {
         ResourceLocation spriteName = sprite.contents().name();
         if (spriteName.equals(MissingTextureAtlasSprite.getLocation())) {
             return BarTextureData.WHITE;
@@ -253,62 +254,54 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         return new ResourceLocation(namespace, "textures/" + path + ".png");
     }
 
-    private static NativeImage loadTextureImage(ResourceLocation texturePath, ResourceManager resourceManager) {
-        try {
-            var resource = resourceManager.getResource(texturePath);
-            if (resource.isEmpty()) {
-                return null;
-            }
-
-            try (var inputStream = resource.get().open()) {
-                return NativeImage.read(inputStream);
-            }
-        } catch (Exception e) {
+    @Nullable
+    private static NativeImage loadTextureImage(ResourceLocation texturePath, ResourceManager resourceManager) throws IOException {
+        var resource = resourceManager.getResource(texturePath);
+        if (resource.isEmpty()) {
             return null;
+        }
+
+        try (var inputStream = resource.get().open()) {
+            return NativeImage.read(inputStream);
         }
     }
 
     private static int analyzePixelsForTint(NativeImage image) {
-        try {
-            long sumR = 0, sumG = 0, sumB = 0;
-            int count = 0;
+        long sumR = 0, sumG = 0, sumB = 0;
+        int count = 0;
 
-            for (int y = 0; y < image.getHeight(); y++) {
-                for (int x = 0; x < image.getWidth(); x++) {
-                    int abgr = image.getPixelRGBA(x, y);
-                    int a = (abgr >> 24) & 0xFF;
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                int abgr = image.getPixelRGBA(x, y);
+                int a = (abgr >> 24) & 0xFF;
 
-                    if (a > 127) {
-                        int r = abgr & 0xFF;
-                        int g = (abgr >> 8) & 0xFF;
-                        int b = (abgr >> 16) & 0xFF;
+                if (a > 127) {
+                    int r = abgr & 0xFF;
+                    int g = (abgr >> 8) & 0xFF;
+                    int b = (abgr >> 16) & 0xFF;
 
-                        sumR += r;
-                        sumG += g;
-                        sumB += b;
-                        count++;
-                    }
+                    sumR += r;
+                    sumG += g;
+                    sumB += b;
+                    count++;
                 }
             }
+        }
 
-            if (count == 0) {
-                return BarTextureData.WHITE;
-            }
-
-            int avgR = (int) (sumR / count);
-            int avgG = (int) (sumG / count);
-            int avgB = (int) (sumB / count);
-
-            // Brighten to compensate for dark outlines in ingot textures.
-            int brightR = (int) Math.min(255, avgR + (255 - avgR) * BRIGHTEN_FACTOR);
-            int brightG = (int) Math.min(255, avgG + (255 - avgG) * BRIGHTEN_FACTOR);
-            int brightB = (int) Math.min(255, avgB + (255 - avgB) * BRIGHTEN_FACTOR);
-
-            return 0xFF000000 | (brightR << 16) | (brightG << 8) | brightB;
-        } catch (Exception e) {
-            SomeStacksCommon.LOGGER.warn("    Failed to analyze pixels: {}", e.getMessage(), e);
+        if (count == 0) {
             return BarTextureData.WHITE;
         }
+
+        int avgR = (int) (sumR / count);
+        int avgG = (int) (sumG / count);
+        int avgB = (int) (sumB / count);
+
+        // Brighten to compensate for dark outlines in ingot textures.
+        int brightR = (int) Math.min(255, avgR + (255 - avgR) * BRIGHTEN_FACTOR);
+        int brightG = (int) Math.min(255, avgG + (255 - avgG) * BRIGHTEN_FACTOR);
+        int brightB = (int) Math.min(255, avgB + (255 - avgB) * BRIGHTEN_FACTOR);
+
+        return 0xFF000000 | (brightR << 16) | (brightG << 8) | brightB;
     }
 
     private static int parseColor(String colorStr) {

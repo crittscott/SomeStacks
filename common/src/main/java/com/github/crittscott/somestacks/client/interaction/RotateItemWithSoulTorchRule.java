@@ -3,8 +3,8 @@ package com.github.crittscott.somestacks.client.interaction;
 import net.minecraft.world.item.Items;
 
 /**
- * Shift plus a soul torch rotates one rendered item within a Singles Stack, leaving the block's own
- * layout alone. Only Singles carries per-item rotation.
+ * Consumes a sneaking soul-torch click on Singles so local item use does not run.
+ * The server selects and rotates the targeted item.
  */
 public final class RotateItemWithSoulTorchRule implements InteractionRule {
     @Override

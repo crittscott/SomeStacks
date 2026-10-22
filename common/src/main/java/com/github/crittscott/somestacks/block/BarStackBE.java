@@ -31,8 +31,8 @@ import java.util.Arrays;
  * is what automation addresses; this class owns one block's slots, its shape, and the player-facing
  * cascade that drops whatever an extracted bar was holding up.
  *
- * <p>Capability exposure is loader-specific and lives outside this class; {@link #getItems()} is
- * what a loader-specific capability view adapts.
+ * <p>Local slots are available through {@link #getItems()}; loader automation adapters expose
+ * the whole run through {@link #itemRun()}.
  */
 public class BarStackBE extends StackBlockEntity {
     /** Positions in one block. The column's flat range is this times its height. */
@@ -164,8 +164,8 @@ public class BarStackBE extends StackBlockEntity {
         try {
             extracted = items.extractItem(index, 1, false);
 
-            if (!extracted.isEmpty() && level != null && !level.isClientSide) {
-                cascadeFrom(level, this, seamBeneath(), topBefore, drops, actor);
+            if (!extracted.isEmpty() && level instanceof ServerLevel serverLevel) {
+                cascadeFrom(serverLevel, this, seamBeneath(), topBefore, drops, actor);
             }
         } finally {
             endBatch();
@@ -208,9 +208,9 @@ public class BarStackBE extends StackBlockEntity {
      * @param topBefore start's top-layer occupancy before the triggering edit
      * @param actor the player removals are attributed to, or null for automation
      */
-    static void cascadeFrom(Level columnLevel, BarStackBE start,
-                            @Nullable boolean[] seamBelow, boolean[] topBefore,
-                            BarDropBatch drops, @Nullable ServerPlayer actor) {
+    private static void cascadeFrom(ServerLevel columnLevel, BarStackBE start,
+                                    @Nullable boolean[] seamBelow, boolean[] topBefore,
+                                    BarDropBatch drops, @Nullable ServerPlayer actor) {
         BarStackBE be = start;
         boolean[] seam = seamBelow;
         boolean[] before = topBefore;
@@ -232,11 +232,9 @@ public class BarStackBE extends StackBlockEntity {
             //
             // The flag is raised first because the removal runs onRemove, which reads it to know
             // the cascade is already walking its own way up, and lowered again if nothing went.
-            if (be.isEmpty() && columnLevel instanceof ServerLevel serverLevel) {
+            if (be.isEmpty()) {
                 be.removedByCascade = true;
-                boolean removed = actor == null
-                        ? WorldEdits.removeChecked(serverLevel, be.getBlockPos())
-                        : WorldEdits.removeChecked(actor, serverLevel, be.getBlockPos());
+                boolean removed = WorldEdits.removeChecked(actor, columnLevel, be.getBlockPos());
                 if (!removed) {
                     be.removedByCascade = false;
                 }
@@ -273,7 +271,7 @@ public class BarStackBE extends StackBlockEntity {
             return;
         }
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {
-            cascadeFrom(level, above, BarCubeIdx.emptySeam(),
+            cascadeFrom((ServerLevel) level, above, BarCubeIdx.emptySeam(),
                     BarCubeIdx.topLayerOccupancy(above.items), drops, null);
         }
     }

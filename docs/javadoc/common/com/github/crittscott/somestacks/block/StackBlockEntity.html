@@ -147,16 +147,16 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Per-position automation capacity before the item's own stack limit.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#blockRotation()" class="member-name-link">blockRotation</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="../util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getItems()" class="member-name-link">getItems</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Mutable block-local storage; indices exclude all other blocks in the run.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRotation()" class="member-name-link">getRotation</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The block's layout rotation in the grid's counterclockwise quarter turns, read from its
  horizontal facing so structure rotation and mirroring turn the layout with the block.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="../util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getItems()" class="member-name-link">getItems</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Mutable block-local storage; indices exclude all other blocks in the run.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUpdatePacket()" class="member-name-link">getUpdatePacket</a>()</code></div>
@@ -197,8 +197,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadClientUpdate(net.minecraft.nbt.CompoundTag)" class="member-name-link">loadClientUpdate</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Applies a server update only if it is wholly valid: the current data version, no server-only
- fields, a well-formed inventory, and valid subtype data.</div>
+<div class="block">Applies a server update only with the current data version, a well-formed inventory without
+ recovery data, and valid subtype metadata.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">loadStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
@@ -234,14 +234,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Marks local publication pending and coalesces a server tick on the run's base.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBlockRotation(int)" class="member-name-link">setBlockRotation</a><wbr>(int&nbsp;rotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLevel(net.minecraft.world.level.Level)" class="member-name-link">setLevel</a><wbr>(net.minecraft.world.level.Level&nbsp;level)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRotation(int)" class="member-name-link">setRotation</a><wbr>(int&nbsp;rotation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Changes the block's facing; the block-state update performs client synchronization.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLevel(net.minecraft.world.level.Level)" class="member-name-link">setLevel</a><wbr>(net.minecraft.world.level.Level&nbsp;level)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stripServerOnlyUpdateData(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripServerOnlyUpdateData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -386,17 +386,17 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="blockRotation()">
-<h3>blockRotation</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">blockRotation</span>()</div>
+<section class="detail" id="getRotation()">
+<h3>getRotation</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRotation</span>()</div>
 <div class="block">The block's layout rotation in the grid's counterclockwise quarter turns, read from its
  horizontal facing so structure rotation and mirroring turn the layout with the block.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="setBlockRotation(int)">
-<h3>setBlockRotation</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setBlockRotation</span><wbr><span class="parameters">(int&nbsp;rotation)</span></div>
+<section class="detail" id="setRotation(int)">
+<h3>setRotation</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRotation</span><wbr><span class="parameters">(int&nbsp;rotation)</span></div>
 <div class="block">Changes the block's facing; the block-state update performs client synchronization. A request
  made before the entity belongs to a server level applies once it does.</div>
 </section>
@@ -462,8 +462,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="loadClientUpdate(net.minecraft.nbt.CompoundTag)">
 <h3>loadClientUpdate</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">loadClientUpdate</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;tag)</span></div>
-<div class="block">Applies a server update only if it is wholly valid: the current data version, no server-only
- fields, a well-formed inventory, and valid subtype data. A rejected tag changes nothing.</div>
+<div class="block">Applies a server update only with the current data version, a well-formed inventory without
+ recovery data, and valid subtype metadata. Unrelated keys are ignored; a rejected tag changes nothing.</div>
 </section>
 </li>
 <li>

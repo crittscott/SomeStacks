@@ -25,9 +25,7 @@ import javax.annotation.Nullable;
 
 /** Local inventory, persistence, synchronization, lighting, batching, and run caching for stacks. */
 public abstract class StackBlockEntity extends BlockEntity {
-    private static final String TAG_ITEMS = "Items";
     private static final String TAG_DATA_VERSION = "DataVersion";
-    private static final int DEFAULT_SLOT_LIMIT = 64;
 
     protected final StackItemStorage items;
     private final IntegerProperty lightProperty;
@@ -112,7 +110,7 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     /** Capacity before the item's own stack limit. */
     protected int localSlotLimit() {
-        return DEFAULT_SLOT_LIMIT;
+        return StackItemStorage.DEFAULT_SLOT_LIMIT;
     }
 
     /** Local numerator of the run's fill fraction, refreshed on mutation and load. */
@@ -193,7 +191,7 @@ public abstract class StackBlockEntity extends BlockEntity {
      * The block's layout rotation in the grid's counterclockwise quarter turns, read from its
      * horizontal facing so structure rotation and mirroring turn the layout with the block.
      */
-    protected final int blockRotation() {
+    public final int getRotation() {
         applyPendingBlockRotation();
         BlockState state = getBlockState();
         return state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)
@@ -205,7 +203,7 @@ public abstract class StackBlockEntity extends BlockEntity {
      * Changes the block's facing; the block-state update performs client synchronization. A request
      * made before the entity belongs to a server level applies once it does.
      */
-    protected final void setBlockRotation(int rotation) {
+    public final void setRotation(int rotation) {
         pendingBlockRotation = Math.floorMod(rotation, 4);
         applyPendingBlockRotation();
     }
@@ -366,8 +364,8 @@ public abstract class StackBlockEntity extends BlockEntity {
         }
         super.load(tag);
         pendingLoadResult = null;
-        if (tag.contains(TAG_ITEMS)) {
-            pendingLoadResult = items.deserializeNBT(tag.getCompound(TAG_ITEMS));
+        if (tag.contains(StackItemStorage.TAG_ITEMS)) {
+            pendingLoadResult = items.deserializeNBT(tag.getCompound(StackItemStorage.TAG_ITEMS));
             reportSavedItems();
         }
         loadStackData(tag);
@@ -376,17 +374,15 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     /**
-     * Applies a server update only if it is wholly valid: the current data version, no server-only
-     * fields, a well-formed inventory, and valid subtype data. A rejected tag changes nothing.
+     * Applies a server update only with the current data version, a well-formed inventory without
+     * recovery data, and valid subtype metadata. Unrelated keys are ignored; a rejected tag changes nothing.
      */
     public final boolean loadClientUpdate(CompoundTag tag) {
         if (!tag.contains(TAG_DATA_VERSION, Tag.TAG_INT)
                 || tag.getInt(TAG_DATA_VERSION) != SharedConstants.getCurrentVersion().getDataVersion().getVersion()
-                || !tag.contains(TAG_ITEMS, Tag.TAG_COMPOUND)
-                || tag.contains(StackItemStorage.TAG_SET_ASIDE)
-                || tag.contains("Permanent") || tag.contains("Rotation")
+                || !tag.contains(StackItemStorage.TAG_ITEMS, Tag.TAG_COMPOUND)
                 || !isValidClientStackData(tag)
-                || !items.deserializeClientUpdate(tag.getCompound(TAG_ITEMS))) {
+                || !items.deserializeClientUpdate(tag.getCompound(StackItemStorage.TAG_ITEMS))) {
             return false;
         }
         pendingBlockRotation = null;
@@ -399,7 +395,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     protected final void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         NbtUtils.addCurrentDataVersion(tag);
-        tag.put(TAG_ITEMS, items.serializeNBT());
+        tag.put(StackItemStorage.TAG_ITEMS, items.serializeNBT());
         saveStackData(tag);
     }
 
@@ -412,7 +408,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     public final CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
         saveAdditional(tag);
-        StackItemStorage.stripSetAside(tag.getCompound(TAG_ITEMS));
+        StackItemStorage.stripSetAside(tag.getCompound(StackItemStorage.TAG_ITEMS));
         stripServerOnlyUpdateData(tag);
         return tag;
     }

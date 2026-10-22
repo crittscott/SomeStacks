@@ -77,7 +77,11 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">StackInteractions</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Applies stack gestures carried by the vanilla right-click interaction.</div>
+<div class="block">Applies server-authoritative stack gestures carried by vanilla right-click interactions.
+ Only the main hand acts. Existing-stack use handles permanence, deposit/top placement, then
+ extraction; loader callbacks supply sneaking torch rotations and adjacent placement/deposit.
+ Gestures use synchronized mode/modifier state and target along the ray through the clicked point.
+ Creative deposits retain held items, and edits retain the player for protection and game events.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

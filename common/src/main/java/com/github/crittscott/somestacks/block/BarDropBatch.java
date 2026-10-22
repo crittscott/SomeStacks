@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +27,7 @@ final class BarDropBatch {
         group.count += stack.getCount();
     }
 
-    void addAll(BlockPos pos, SlotAccess handler) {
+    void addAll(BlockPos pos, StackItemStorage handler) {
         for (int slot = 0; slot < handler.getSlots(); slot++) {
             add(pos, handler.getStackInSlot(slot));
         }

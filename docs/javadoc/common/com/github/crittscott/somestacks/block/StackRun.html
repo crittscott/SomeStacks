@@ -191,7 +191,7 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The current stack in a run position, or empty for headroom or an invalid position.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final <a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final <a href="../util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handlerOf(int)" class="member-name-link">handlerOf</a><wbr>(int&nbsp;flatSlot)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Mutable local storage for a validated stored flat slot.</div>
@@ -311,7 +311,8 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="StackRun.html" title="type parameter in StackRun">BE</a>&gt;&nbsp;blocks,
  int&nbsp;slotsPerBlock,
  net.minecraft.world.level.block.Block&nbsp;block)</span></div>
-<div class="block">Creates a server-only run over a nonempty bottom-to-top list of same-type block entities.</div>
+<div class="block">Creates a server-only run over a nonempty bottom-to-top list of same-type block entities.
+ Storage settlement can trim this list to empty; publication and scheduling then do nothing.</div>
 </section>
 </li>
 </ul>
@@ -448,7 +449,7 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <li>
 <section class="detail" id="handlerOf(int)">
 <h3>handlerOf</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></span>&nbsp;<span class="element-name">handlerOf</span><wbr><span class="parameters">(int&nbsp;flatSlot)</span></div>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></span>&nbsp;<span class="element-name">handlerOf</span><wbr><span class="parameters">(int&nbsp;flatSlot)</span></div>
 <div class="block">Mutable local storage for a validated stored flat slot.</div>
 </section>
 </li>

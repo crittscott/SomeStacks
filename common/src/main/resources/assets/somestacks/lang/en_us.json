@@ -72,7 +72,6 @@
   "somestacks.command.dump.create_failure": "Failed to create %s: %s",
   "somestacks.command.dump.success": "Dumped %s render profile(s) for %s namespace(s) to %s",
   "somestacks.command.dump.failed": ". Failed to write %s: %s",
-  "somestacks.command.dump.rejected": ". Ignored %s invalid namespace(s)",
 
   "somestacks.command.help.title": "Some Stacks commands",
   "somestacks.command.help.index_command": "  /ss %s",

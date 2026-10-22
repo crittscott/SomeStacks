@@ -61,8 +61,8 @@ public record ConfigSyncPkt(
         }
     }
 
-    /** Builds a new generation describing the given policy, in send order. */
-    public static synchronized List<ConfigSyncPkt> snapshot(ServerConfig.Settings settings) {
+    /** Builds a new generation on the server thread describing the given policy, in send order. */
+    public static List<ConfigSyncPkt> snapshot(ServerConfig.Settings settings) {
         nextGeneration = nextGeneration == Integer.MAX_VALUE ? 1 : nextGeneration + 1;
         return buildPackets(
                 nextGeneration,

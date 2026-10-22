@@ -11,8 +11,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.annotation.Nullable;
 
 /**
  * Vanilla world-edit mechanics for automated growth and removal: world border and spawn
@@ -41,22 +42,13 @@ public final class WorldEdits {
         return !sp.serverLevel().mayInteract(sp, pos);
     }
 
-    /** {@link #isProtected(ServerPlayer, BlockPos)} for automation, using the loader's actor. */
-    public static boolean isProtected(ServerLevel level, BlockPos pos) {
-        return isProtected(automationActor(level), pos);
-    }
-
     /**
-     * Whether {@code player} may place a block at {@code pos}: vanilla's gate plus the loader's
-     * side-effect-free protection queries. Growth checks this before it promises space.
+     * Whether the actor may place a block: vanilla's gate plus loader protection queries.
+     * A null actor uses the level's automation identity. Growth checks this before promising space.
      */
-    public static boolean mayPlace(ServerPlayer player, BlockPos pos) {
-        return !isProtected(player, pos) && authority().mayPlace(player, player.serverLevel(), pos);
-    }
-
-    /** {@link #mayPlace(ServerPlayer, BlockPos)} for automation, using the loader's actor. */
-    public static boolean mayPlace(ServerLevel level, BlockPos pos) {
-        return mayPlace(automationActor(level), pos);
+    public static boolean mayPlace(@Nullable ServerPlayer actor, ServerLevel level, BlockPos pos) {
+        ServerPlayer editor = actor != null ? actor : automationActor(level);
+        return !isProtected(editor, pos) && authority().mayPlace(editor, level, pos);
     }
 
     /** The actor automation-driven growth and removal are attributed to. */
@@ -96,65 +88,46 @@ public final class WorldEdits {
     }
 
     /**
-     * {@link #placeChecked(Player, ServerLevel, BlockPos, BlockState, Direction, VoxelShape)} using
-     * {@code state}'s own collision shape. Block-entity stacks can start empty and acquire their
-     * real shape only with their first deposit, so callers that place one use the full overload
-     * with the completed shape instead.
-     */
-    public static boolean placeChecked(Player placer, ServerLevel level, BlockPos pos,
-                                       BlockState state, Direction placedAgainst) {
-        VoxelShape collision = state.getCollisionShape(level, pos, CollisionContext.empty());
-        return placeChecked(placer, level, pos, state, placedAgainst, collision);
-    }
-
-    /**
      * Places {@code state} through the loader transaction, restoring captured state and block-entity
      * data when protection denies it. {@code finalCollision} is the completed placement's collision shape, since a
      * block-entity stack can start empty and acquire its real shape only with its first deposit.
+     * A null placer uses the level's automation identity for both placement and its game event.
      */
-    public static boolean placeChecked(Player placer, ServerLevel level, BlockPos pos,
+    public static boolean placeChecked(@Nullable Player placer, ServerLevel level, BlockPos pos,
                                        BlockState state, Direction placedAgainst,
                                        VoxelShape finalCollision) {
         if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
-        if (!authority().place(placer, level, pos, state, placedAgainst)) {
+        Player editor = placer != null ? placer : automationActor(level);
+        if (!authority().place(editor, level, pos, state, placedAgainst)) {
             return false;
         }
         level.gameEvent(GameEvent.BLOCK_PLACE, pos,
-                GameEvent.Context.of(placer, level.getBlockState(pos)));
+                GameEvent.Context.of(editor, level.getBlockState(pos)));
         return true;
-    }
-
-    /**
-     * Removes a stack block the mod itself decided to take down, answering to the same protection
-     * growth does and reporting the removal to claim/logging mods.
-     *
-     * @return whether the block was removed
-     */
-    public static boolean removeChecked(ServerLevel level, BlockPos pos) {
-        return removeChecked(automationActor(level), level, pos);
     }
 
     /**
      * Removes a stack block on behalf of {@code actor}, preserving that identity through vanilla
      * protection, loader-native removal events, and the emitted game event. A waterlogged block
-     * leaves its water behind.
+     * leaves its water behind. A null actor uses the level's automation identity.
      */
-    public static boolean removeChecked(ServerPlayer actor, ServerLevel level, BlockPos pos) {
-        if (isProtected(actor, pos)) {
+    public static boolean removeChecked(@Nullable ServerPlayer actor, ServerLevel level, BlockPos pos) {
+        ServerPlayer editor = actor != null ? actor : automationActor(level);
+        if (isProtected(editor, pos)) {
             return false;
         }
         BlockState state = level.getBlockState(pos);
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (authority().vetoesRemoval(level, actor, pos, state, blockEntity)) {
+        if (authority().vetoesRemoval(level, editor, pos, state, blockEntity)) {
             return false;
         }
         if (!level.removeBlock(pos, false)) {
             return false;
         }
-        authority().afterRemoval(level, actor, pos, state, blockEntity);
-        level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(actor, state));
+        authority().afterRemoval(level, editor, pos, state, blockEntity);
+        level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(editor, state));
         return true;
     }
 }

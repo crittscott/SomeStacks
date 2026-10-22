@@ -50,7 +50,7 @@ public final class ItemOps {
     }
 
     /** Drops every nonempty handler slot at the block position without mutating the handler. */
-    public static void dropAllItems(SlotAccess handler, Level level, BlockPos pos) {
+    public static void dropAllItems(StackItemStorage handler, Level level, BlockPos pos) {
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.getStackInSlot(i);
             if (!stack.isEmpty()) {
@@ -81,7 +81,7 @@ public final class ItemOps {
     }
 
     /** Whether every slot in the handler is empty. */
-    public static boolean isHandlerEmpty(SlotAccess handler) {
+    public static boolean isHandlerEmpty(StackItemStorage handler) {
         for (int i = 0; i < handler.getSlots(); i++) {
             if (!handler.getStackInSlot(i).isEmpty()) {
                 return false;
@@ -91,7 +91,7 @@ public final class ItemOps {
     }
 
     /** Adds each stored BlockItem's fractional emission, capped at the vanilla maximum of 15. */
-    public static int calculateLightLevelFromItems(SlotAccess handler) {
+    public static int calculateLightLevelFromItems(StackItemStorage handler) {
         int totalLight = 0;
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.getStackInSlot(i);

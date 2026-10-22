@@ -82,8 +82,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">RotateBlockWithRedstoneTorchRule</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></span></div>
-<div class="block">Shift plus a redstone torch rotates a Storage or Singles Stack's layout 90 degrees. A Bar Stack
- is excluded: its bars are fixed to the orientation of their layer.</div>
+<div class="block">Consumes a sneaking redstone-torch click on Storage or Singles so local item use does not run.
+ The server handles the layout rotation; Bar has no layout-rotation gesture.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

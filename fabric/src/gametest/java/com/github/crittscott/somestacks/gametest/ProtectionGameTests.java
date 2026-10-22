@@ -38,6 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,12 +95,14 @@ public final class ProtectionGameTests implements FabricGameTest {
                 valid.getX(), level.getMinBuildHeight() - 1, valid.getZ());
 
         check(WorldEdits.placeChecked(
-                        player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+                player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN,
+                Blocks.STONE.defaultBlockState().getCollisionShape(level, valid, CollisionContext.empty())),
                 "Valid checked placement was rejected");
         check(level.getBlockState(valid).is(Blocks.STONE),
                 "Valid checked placement did not change the world");
         check(!WorldEdits.placeChecked(
-                        player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+                player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN,
+                Blocks.STONE.defaultBlockState().getCollisionShape(level, invalid, CollisionContext.empty())),
                 "Out-of-height checked placement was accepted");
         helper.succeed();
     }
@@ -120,7 +123,8 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         try (var events = new WorldEditChecks.EventProbe(level, target)) {
             check(!WorldEdits.placeChecked(
-                            player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+                    player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN,
+                    Blocks.STONE.defaultBlockState().getCollisionShape(level, target, CollisionContext.empty())),
                     "Entity-obstructed checked placement was accepted");
             events.expectNone();
         }
@@ -467,20 +471,20 @@ public final class ProtectionGameTests implements FabricGameTest {
             check(WorldEdits.automationActor(helper.getLevel()) == actor,
                     "Automation does not use Fabric's native actor with the shared profile");
             outsideTheBorder(helper, () -> {
-                check(!WorldEdits.removeChecked(helper.getLevel(), target), "Protected removal was accepted");
+                check(!WorldEdits.removeChecked(null, helper.getLevel(), target), "Protected removal was accepted");
                 checkEquals(0, removalNotices.size(), "Protected removal invoked break callbacks");
                 events.expectNone();
             });
-            check(!WorldEdits.removeChecked(helper.getLevel(), target), "Vetoed removal was accepted");
+            check(!WorldEdits.removeChecked(null, helper.getLevel(), target), "Vetoed removal was accepted");
             expectRemovalNotices(actor, state, stack, "before", "canceled");
             events.expectNone();
             helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
             denyRemoval = false;
-            check(WorldEdits.removeChecked(helper.getLevel(), target), "Allowed removal was rejected");
+            check(WorldEdits.removeChecked(null, helper.getLevel(), target), "Allowed removal was rejected");
             expectRemovalNotices(actor, state, stack, "before", "after");
             events.expectOne(GameEvent.BLOCK_DESTROY, actor, state);
             helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-            check(!WorldEdits.removeChecked(helper.getLevel(), target), "Unchanged air reported successful removal");
+            check(!WorldEdits.removeChecked(null, helper.getLevel(), target), "Unchanged air reported successful removal");
             expectRemovalNotices(actor, Blocks.AIR.defaultBlockState(), null, "before");
             events.expectNone();
         } finally {
@@ -597,10 +601,10 @@ public final class ProtectionGameTests implements FabricGameTest {
         try {
             check(!WorldEdits.isUnobstructed(level, target, Shapes.block()), "Full block missed obstruction");
             check(WorldEdits.isUnobstructed(level, target, Shapes.empty()), "Empty shape was obstructed");
-            check(WorldEdits.isUnobstructed(level, target, SinglesCubeIdx.shapeFor(0, 0)),
+            check(WorldEdits.isUnobstructed(level, target, SinglesCubeIdx.GRID.localShape(0, 0)),
                     "Free Singles cell was obstructed by another cell's occupant");
             check(!WorldEdits.isUnobstructed(level, target,
-                            SinglesCubeIdx.shapeFor(SinglesCubeIdx.LAYER_SIZE - 1, 0)),
+                            SinglesCubeIdx.GRID.localShape(SinglesCubeIdx.LAYER_SIZE - 1, 0)),
                     "Occupied Singles shape missed obstruction");
             check(WorldEdits.isUnobstructed(level, target, BarCubeIdx.shapeFor(0)),
                     "Free Bar position was obstructed by another position's occupant");

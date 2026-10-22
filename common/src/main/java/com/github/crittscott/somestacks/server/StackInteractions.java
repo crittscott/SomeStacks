@@ -33,7 +33,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-/** Applies stack gestures carried by the vanilla right-click interaction. */
+/**
+ * Applies server-authoritative stack gestures carried by vanilla right-click interactions.
+ * Only the main hand acts. Existing-stack use handles permanence, deposit/top placement, then
+ * extraction; loader callbacks supply sneaking torch rotations and adjacent placement/deposit.
+ * Gestures use synchronized mode/modifier state and target along the ray through the clicked point.
+ * Creative deposits retain held items, and edits retain the player for protection and game events.
+ */
 public final class StackInteractions {
     private static final int DEGREES_PER_ROTATION = 90;
 
@@ -131,7 +137,11 @@ public final class StackInteractions {
         return true;
     }
 
-    /** A recognized gesture consumes the use even when validation or admission fails. */
+    /**
+     * Gives empty-hand Toggle Permanent on Storage precedence over other modified clicks.
+     * Otherwise a nonsneaking modifier-plus-item click deposits or places against the face;
+     * unmodified nonsneaking use extracts. Recognized gestures consume use even on refusal.
+     */
     private static boolean applyExistingStack(
             ServerPlayer player, BlockPos pos, BlockType type, Direction face, ViewRay ray,
             ItemStack held, ServerGestureState.State gesture) {
@@ -167,6 +177,7 @@ public final class StackInteractions {
         return false;
     }
 
+    /** Uses a redstone torch for Storage/Singles layout rotation, or a soul torch for one Singles item. */
     private static boolean applySneakingRotation(
             ServerPlayer player, BlockPos pos, BlockType type, ViewRay ray, ItemStack held) {
         if (held.is(Items.REDSTONE_TORCH)
@@ -181,6 +192,7 @@ public final class StackInteractions {
         return false;
     }
 
+    /** Chooses deposit versus top-face placement: Storage always deposits; Singles/Bar require an empty supported target. */
     private static boolean depositsIntoClickedBlock(Level level, BlockPos pos, BlockType type,
                                                      Direction face, ViewRay ray) {
         if (face != Direction.UP || type == BlockType.STORAGE_STACK) {
@@ -258,6 +270,7 @@ public final class StackInteractions {
         }
     }
 
+    /** Validates admission, support, height, protection, and final collision before placement and the first deposit. */
     private static void placeAndDeposit(ServerPlayer player, BlockType type,
                                         BlockPos pos, Direction face,
                                         ViewRay ray) {
@@ -301,7 +314,7 @@ public final class StackInteractions {
         BlockState state = StackPlacement.stateFor(type.getBlock(), level, pos);
         VoxelShape finalCollision = switch (type) {
             case STORAGE_STACK -> state.getCollisionShape(level, pos, CollisionContext.empty());
-            case SINGLES_STACK -> SinglesCubeIdx.shapeFor(depositIndex, 0);
+            case SINGLES_STACK -> SinglesCubeIdx.GRID.localShape(depositIndex, 0);
             case BAR_STACK -> BarCubeIdx.shapeFor(depositIndex);
         };
         if (!WorldEdits.placeChecked(
@@ -347,6 +360,7 @@ public final class StackInteractions {
         };
     }
 
+    /** Takes the nearest occupied target only when the main hand can accept it; Singles/Bar settle their dependent contents. */
     private static void extract(ServerPlayer player, BlockPos pos, ViewRay ray) {
         Level level = player.level();
         var originalStack = level.getBlockEntity(pos);

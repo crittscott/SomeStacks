@@ -47,7 +47,7 @@ public final class StoragePileChecks {
         StorageStackBE upper = placeStorage(helper, ORIGIN.above(2));
         StoragePile original = lower.pile();
         check(original != null, "Initial pile missing");
-        original.setPermanent(true);
+        original.setPermanent(true, null);
         BlockPos lowerComparator = GameTestScaffold.placeComparator(helper, ORIGIN);
         BlockPos upperComparator = GameTestScaffold.placeComparator(helper, ORIGIN.above(2));
         helper.runAfterDelay(6, () -> {
@@ -246,7 +246,7 @@ public final class StoragePileChecks {
         storage.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
         storage.getItems().insertItem(1, new ItemStack(Items.DIRT, 1), false);
 
-        ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY);
+        ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY, null);
         checkEquals(64, extracted.getCount(), "Extracted count");
 
         helper.runAfterDelay(2, () -> {
@@ -264,7 +264,8 @@ public final class StoragePileChecks {
      * To reproduce: place two Storage piles with one item each. Select Toggle Permanent, hold V,
      * and empty-hand right-click one pile. Release V and extract the last item from each. After
      * settlement, the temporary pile disappears while the permanent pile remains empty. The
-     * automated fixture starts with empty blocks and invokes settlement directly.
+     * automated fixture starts with empty blocks, invokes settlement directly, and checks that
+     * the removed pile reports zero fill and signal and accepts a cleanup request without a base.
      */
     public static void emptyTemporaryPileDisappearsButPermanentPileRemains(GameTestHelper helper) {
         StorageStackBE temporary = placeStorage(helper, ORIGIN);
@@ -273,12 +274,16 @@ public final class StoragePileChecks {
         temporaryPile.settle();
         check(helper.getLevel().isEmptyBlock(helper.absolutePos(ORIGIN)),
                 "Empty temporary pile remained");
+        checkEquals(0, temporaryPile.height(), "Trimmed temporary pile height");
+        checkEquals(0.0, temporaryPile.fillLevel(), "Trimmed temporary pile fill");
+        checkEquals(0, temporaryPile.comparatorSignal(), "Trimmed temporary pile comparator");
+        temporaryPile.setPermanent(false, null);
 
         BlockPos permanentPos = ORIGIN.east(3);
         StorageStackBE permanent = placeStorage(helper, permanentPos);
         StoragePile permanentPile = permanent.pile();
         check(permanentPile != null, "Permanent pile did not resolve");
-        permanentPile.setPermanent(true);
+        permanentPile.setPermanent(true, null);
         permanentPile.settle();
         check(helper.getLevel().getBlockEntity(helper.absolutePos(permanentPos))
                         instanceof StorageStackBE,
@@ -336,7 +341,7 @@ public final class StoragePileChecks {
         }
         StoragePile originalPile = upper.pile();
         check(originalPile != null, "Original pile did not resolve");
-        originalPile.setPermanent(true);
+        originalPile.setPermanent(true, null);
 
         check(level.setBlock(
                         comparatorPos.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL),

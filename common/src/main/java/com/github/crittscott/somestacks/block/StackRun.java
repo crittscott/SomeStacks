@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +27,10 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
     private final int slotsPerBlock;
     private final Block block;
 
-    /** Creates a server-only run over a nonempty bottom-to-top list of same-type block entities. */
+    /**
+     * Creates a server-only run over a nonempty bottom-to-top list of same-type block entities.
+     * Storage settlement can trim this list to empty; publication and scheduling then do nothing.
+     */
     protected StackRun(ServerLevel level, List<BE> blocks, int slotsPerBlock, Block block) {
         this.level = level;
         this.blocks = blocks;
@@ -176,7 +179,7 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
     }
 
     /** Mutable local storage for a validated stored flat slot. */
-    protected final SlotAccess handlerOf(int flatSlot) {
+    protected final StackItemStorage handlerOf(int flatSlot) {
         return blockOf(flatSlot).getItems();
     }
 

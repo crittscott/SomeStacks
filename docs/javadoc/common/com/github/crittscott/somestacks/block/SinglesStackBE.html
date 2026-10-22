@@ -88,8 +88,8 @@ loadScripts(document, 'script');</script>
  which is what automation addresses; this class owns one block's cells, its shape, its layout
  rotation, and a rotation for each rendered item.
 
- <p>Capability exposure is loader-specific and lives outside this class; <a href="StackBlockEntity.html#getItems()"><code>StackBlockEntity.getItems()</code></a> is
- what a loader-specific capability view adapts.</div>
+ <p>Local slots are available through <a href="StackBlockEntity.html#getItems()"><code>StackBlockEntity.getItems()</code></a>; loader automation adapters expose
+ the whole run through <a href="StackBlockEntity.html#itemRun()"><code>StackBlockEntity.itemRun()</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -180,67 +180,57 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The rendered rotation of one item, in quarter turns.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRotation()" class="member-name-link">getRotation</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isStoredItemValid(net.minecraft.world.item.ItemStack)" class="member-name-link">isStoredItemValid</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">The block's layout rotation, held in its facing.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isStoredItemValid(net.minecraft.world.item.ItemStack)" class="member-name-link">isStoredItemValid</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Admission for new items; saved contents and internal moves bypass this check.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isValidClientStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">isValidClientStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isValidClientStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">isValidClientStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks type-specific update data before inventory or metadata is changed.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isValidSinglesItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidSinglesItem</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isValidSinglesItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidSinglesItem</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether Singles accepts this item.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">loadStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">loadStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Loads subtype metadata and derived state after inventory replacement, without publication.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlotLimit()" class="member-name-link">localSlotLimit</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlotLimit()" class="member-name-link">localSlotLimit</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Capacity before the item's own stack limit.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLocalContentsChanged(int)" class="member-name-link">onLocalContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLocalContentsChanged(int)" class="member-name-link">onLocalContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Refreshes subtype-derived state after a local slot changes, including inside a batch.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;serverLevel)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;serverLevel)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Resolves the server run without consulting this entity's per-tick cache.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Adds subtype metadata to both disk saves and client update tags; private fields are removed
  in <a href="StackBlockEntity.html#stripServerOnlyUpdateData(net.minecraft.nbt.CompoundTag)"><code>StackBlockEntity.stripServerOnlyUpdateData(CompoundTag)</code></a> before transmission.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCubeRotation(int,int)" class="member-name-link">setCubeRotation</a><wbr>(int&nbsp;index,
- int&nbsp;cubeRot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRotation(int)" class="member-name-link">setRotation</a><wbr>(int&nbsp;rotation)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the block's layout rotation modulo four; the block-state change publishes it.</div>
-</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCubeRotation(int,int)" class="member-name-link">setCubeRotation</a><wbr>(int&nbsp;index,
+ int&nbsp;cubeRot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.StackBlockEntity">Methods inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></h3>
-<code><a href="StackBlockEntity.html#acceptsAutomation(net.minecraft.world.item.ItemStack)">acceptsAutomation</a>, <a href="StackBlockEntity.html#automationSlotLimit()">automationSlotLimit</a>, <a href="StackBlockEntity.html#blockRotation()">blockRotation</a>, <a href="StackBlockEntity.html#getItems()">getItems</a>, <a href="StackBlockEntity.html#getUpdatePacket()">getUpdatePacket</a>, <a href="StackBlockEntity.html#getUpdateTag()">getUpdateTag</a>, <a href="StackBlockEntity.html#isBatching()">isBatching</a>, <a href="StackBlockEntity.html#isEmpty()">isEmpty</a>, <a href="StackBlockEntity.html#itemRun()">itemRun</a>, <a href="StackBlockEntity.html#load(net.minecraft.nbt.CompoundTag)">load</a>, <a href="StackBlockEntity.html#loadClientUpdate(net.minecraft.nbt.CompoundTag)">loadClientUpdate</a>, <a href="StackBlockEntity.html#saveAdditional(net.minecraft.nbt.CompoundTag)">saveAdditional</a>, <a href="StackBlockEntity.html#schedulePublish()">schedulePublish</a>, <a href="StackBlockEntity.html#setBlockRotation(int)">setBlockRotation</a>, <a href="StackBlockEntity.html#setLevel(net.minecraft.world.level.Level)">setLevel</a>, <a href="StackBlockEntity.html#stripServerOnlyUpdateData(net.minecraft.nbt.CompoundTag)">stripServerOnlyUpdateData</a>, <a href="StackBlockEntity.html#syncToClients()">syncToClients</a></code></div>
+<code><a href="StackBlockEntity.html#acceptsAutomation(net.minecraft.world.item.ItemStack)">acceptsAutomation</a>, <a href="StackBlockEntity.html#automationSlotLimit()">automationSlotLimit</a>, <a href="StackBlockEntity.html#getItems()">getItems</a>, <a href="StackBlockEntity.html#getRotation()">getRotation</a>, <a href="StackBlockEntity.html#getUpdatePacket()">getUpdatePacket</a>, <a href="StackBlockEntity.html#getUpdateTag()">getUpdateTag</a>, <a href="StackBlockEntity.html#isBatching()">isBatching</a>, <a href="StackBlockEntity.html#isEmpty()">isEmpty</a>, <a href="StackBlockEntity.html#itemRun()">itemRun</a>, <a href="StackBlockEntity.html#load(net.minecraft.nbt.CompoundTag)">load</a>, <a href="StackBlockEntity.html#loadClientUpdate(net.minecraft.nbt.CompoundTag)">loadClientUpdate</a>, <a href="StackBlockEntity.html#saveAdditional(net.minecraft.nbt.CompoundTag)">saveAdditional</a>, <a href="StackBlockEntity.html#schedulePublish()">schedulePublish</a>, <a href="StackBlockEntity.html#setLevel(net.minecraft.world.level.Level)">setLevel</a>, <a href="StackBlockEntity.html#setRotation(int)">setRotation</a>, <a href="StackBlockEntity.html#stripServerOnlyUpdateData(net.minecraft.nbt.CompoundTag)">stripServerOnlyUpdateData</a>, <a href="StackBlockEntity.html#syncToClients()">syncToClients</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.world.level.block.entity.BlockEntity">Methods inherited from class&nbsp;net.minecraft.world.level.block.entity.BlockEntity</h3>
 <code>addEntityType, clearRemoved, fillCrashReportCategory, getBlockPos, getBlockState, getLevel, getPosFromTag, getType, hasLevel, isRemoved, loadStatic, onlyOpCanSetNbt, saveToItem, saveWithFullMetadata, saveWithId, saveWithoutMetadata, setBlockState, setChanged, setChanged, setRemoved, triggerEvent</code></div>
@@ -312,20 +302,6 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isValidSinglesItem</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
 <div class="block">Whether Singles accepts this item. Bar-valid items are excluded, so widening the ingot tags
  narrows what Singles takes by the same set.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getRotation()">
-<h3>getRotation</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRotation</span>()</div>
-<div class="block">The block's layout rotation, held in its facing.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setRotation(int)">
-<h3>setRotation</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRotation</span><wbr><span class="parameters">(int&nbsp;rotation)</span></div>
-<div class="block">Sets the block's layout rotation modulo four; the block-state change publishes it.</div>
 </section>
 </li>
 <li>

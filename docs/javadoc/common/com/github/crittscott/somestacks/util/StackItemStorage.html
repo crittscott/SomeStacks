@@ -74,24 +74,17 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.crittscott.somestacks.util.StackItemStorage</div>
 </div>
 <section class="class-description" id="class-description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">StackItemStorage</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></span></div>
-<div class="block">A fixed-size, NBT-persisted <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util"><code>SlotAccess</code></a> implementation. Loader-neutral replacement for
- Forge's <code>ItemStackHandler</code>, matching its insert/extract semantics, with the NBT shape
- <code>{Items:[{Slot, ...stack}], SetAside:[...]}</code>.
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Fixed-size block-local storage with simulated insertion/extraction and NBT persistence.
+ Automation addresses complete runs through the loader adapters, rather than exposing this inventory.
 
- <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
- aside rather than dropped: it is kept verbatim under <code>SetAside</code>, saved back with the
- block, and retried on every load, so contents from a temporarily missing mod return when it does.
+ <p>Unreadable, out-of-range, or duplicate-slot item tags are retained verbatim under
+ <code>SetAside</code>, saved with the block, and retried on each load. Loading and direct assignment
+ bypass admission so stored items remain recoverable after policy changes.
 
- <p>Subclasses override <a href="#onContentsChanged(int)"><code>onContentsChanged(int)</code></a>, <a href="#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>isItemValid(int, ItemStack)</code></a>, and
- <a href="#getSlotLimit(int)"><code>getSlotLimit(int)</code></a> the way a Forge <code>ItemStackHandler</code> anonymous subclass would.</div>
+ <p>Subclasses supply slot limits, admission, and content-change notifications.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -121,15 +114,20 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#TAG_ITEMS" class="member-name-link">TAG_ITEMS</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#DEFAULT_SLOT_LIMIT" class="member-name-link">DEFAULT_SLOT_LIMIT</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Default per-slot capacity before the item's own maximum applies.</div>
+</div>
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#TAG_SET_ASIDE" class="member-name-link">TAG_SET_ASIDE</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#TAG_ITEMS" class="member-name-link">TAG_ITEMS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#TAG_SLOT" class="member-name-link">TAG_SLOT</a></code></div>
+<div class="col-second even-row-color"><code><a href="#TAG_SET_ASIDE" class="member-name-link">TAG_SET_ASIDE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#TAG_SLOT" class="member-name-link">TAG_SLOT</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -174,18 +172,17 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
  int&nbsp;amount,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was
- removed â€” <code>ItemStack.EMPTY</code> if the slot was empty.</div>
+<div class="block">Removes up to the requested amount from one slot; simulation leaves contents unchanged.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlotLimit(int)" class="member-name-link">getSlotLimit</a><wbr>(int&nbsp;slot)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">The maximum stack size <code>slot</code> accepts, independent of the item's own max stack size.</div>
+<div class="block">Capacity of one local slot before the item's own maximum applies.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlots()" class="member-name-link">getSlots</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">The number of slots, indexed <code>[0, getSlots())</code>.</div>
+<div class="block">Number of local slots, indexed from zero.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStackInSlot(int)" class="member-name-link">getStackInSlot</a><wbr>(int&nbsp;slot)</code></div>
@@ -197,14 +194,13 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>SlotAccess.isItemValid(int, net.minecraft.world.item.ItemStack)</code></a> and
- <a href="SlotAccess.html#getSlotLimit(int)"><code>SlotAccess.getSlotLimit(int)</code></a> allow.</div>
+<div class="block">Inserts into one slot and returns the unaccepted remainder without mutating the offer.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Whether <code>stack</code> is allowed in <code>slot</code> at all, before any capacity check.</div>
+<div class="block">New-item admission for one local slot, independent of capacity.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onContentsChanged(int)" class="member-name-link">onContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
@@ -288,6 +284,21 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 </dl>
 </section>
 </li>
+<li>
+<section class="detail" id="DEFAULT_SLOT_LIMIT">
+<h3>DEFAULT_SLOT_LIMIT</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DEFAULT_SLOT_LIMIT</span></div>
+<div class="block">Default per-slot capacity before the item's own maximum applies.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.util.StackItemStorage.DEFAULT_SLOT_LIMIT">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -319,12 +330,7 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 <section class="detail" id="getSlots()">
 <h3>getSlots</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getSlots</span>()</div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="SlotAccess.html#getSlots()">SlotAccess</a></code></span></div>
-<div class="block">The number of slots, indexed <code>[0, getSlots())</code>.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="SlotAccess.html#getSlots()">getSlots</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
-</dl>
+<div class="block">Number of local slots, indexed from zero.</div>
 </section>
 </li>
 <li>
@@ -334,10 +340,6 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getStackInSlot</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
 <div class="block">Returns the stored stack itself, without copying it. Callers must not mutate this reference
  to bypass notifications; use storage mutations or <a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)"><code>setStackInSlot(int, ItemStack)</code></a>.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="SlotAccess.html#getStackInSlot(int)">getStackInSlot</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
-</dl>
 </section>
 </li>
 <li>
@@ -359,19 +361,12 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
  @Nonnull
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</span></div>
-<div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>SlotAccess.isItemValid(int, net.minecraft.world.item.ItemStack)</code></a> and
- <a href="SlotAccess.html#getSlotLimit(int)"><code>SlotAccess.getSlotLimit(int)</code></a> allow. Returns the remainder that was not accepted â€”
- <code>ItemStack.EMPTY</code> if all of it was â€” and never mutates <code>stack</code> itself. When
- <code>simulate</code> is <code>true</code>, the slot is left unchanged and only the would-be
- remainder is computed.
+<div class="block">Inserts into one slot and returns the unaccepted remainder without mutating the offer.
+ Simulation computes the remainder without changing contents.
 
  <p>A full insertion into an empty slot can retain the supplied stack reference. Callers
  must relinquish an accepted offer or supply a copy before further mutation. Successful
  committed insertions notify <a href="#onContentsChanged(int)"><code>onContentsChanged(int)</code></a>; simulations do not.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="SlotAccess.html#insertItem(int,net.minecraft.world.item.ItemStack,boolean)">insertItem</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
-</dl>
 </section>
 </li>
 <li>
@@ -381,26 +376,14 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extractItem</span><wbr><span class="parameters">(int&nbsp;slot,
  int&nbsp;amount,
  boolean&nbsp;simulate)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="SlotAccess.html#extractItem(int,int,boolean)">SlotAccess</a></code></span></div>
-<div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was
- removed â€” <code>ItemStack.EMPTY</code> if the slot was empty. When <code>simulate</code> is
- <code>true</code>, the slot is left unchanged and only the would-be result is computed.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="SlotAccess.html#extractItem(int,int,boolean)">extractItem</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
-</dl>
+<div class="block">Removes up to the requested amount from one slot; simulation leaves contents unchanged.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getSlotLimit(int)">
 <h3>getSlotLimit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getSlotLimit</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="SlotAccess.html#getSlotLimit(int)">SlotAccess</a></code></span></div>
-<div class="block">The maximum stack size <code>slot</code> accepts, independent of the item's own max stack size.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="SlotAccess.html#getSlotLimit(int)">getSlotLimit</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
-</dl>
+<div class="block">Capacity of one local slot before the item's own maximum applies.</div>
 </section>
 </li>
 <li>
@@ -409,12 +392,7 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isItemValid</span><wbr><span class="parameters">(int&nbsp;slot,
  @Nonnull
  net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)">SlotAccess</a></code></span></div>
-<div class="block">Whether <code>stack</code> is allowed in <code>slot</code> at all, before any capacity check.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)">isItemValid</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
-</dl>
+<div class="block">New-item admission for one local slot, independent of capacity.</div>
 </section>
 </li>
 <li>

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-/** Shared server-session policy, login synchronization, and cleanup. */
+/** Shared server-session policy, login synchronization, and cleanup, accessed on the server thread. */
 public final class ServerLifecycle {
     private static final Set<SavedItemLocation> reportedSavedItems = new HashSet<>();
 
@@ -29,7 +29,7 @@ public final class ServerLifecycle {
      * a new server session. The loader must separately initialize its world policy before players
      * log in.
      */
-    public static synchronized void starting() {
+    public static void starting() {
         RenderGalleryGenerator.clear();
         RotationSoundThrottle.clearAll();
         ServerGestureState.clearAll();
@@ -41,7 +41,7 @@ public final class ServerLifecycle {
      * and derived admission sets after server shutdown. Loader-owned cleanup remains the loader's
      * responsibility.
      */
-    public static synchronized void stopped() {
+    public static void stopped() {
         RenderGalleryGenerator.clear();
         RotationSoundThrottle.clearAll();
         ServerGestureState.clearAll();
@@ -53,7 +53,7 @@ public final class ServerLifecycle {
      * Logs saved item stacks a block kept aside because they could not be read. A location is
      * reported the first time in a session, and again whenever a load sets new entries aside.
      */
-    public static synchronized void reportSavedItems(
+    public static void reportSavedItems(
             ServerLevel level, BlockPos pos, StackItemStorage.LoadResult result) {
         if (result.newlySetAside() == 0 && result.failedRetries() == 0) {
             return;

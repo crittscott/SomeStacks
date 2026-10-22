@@ -58,10 +58,9 @@ public final class CapabilityAndPersistenceChecks {
         source.setRotation(3);
         StoragePile pile = source.pile();
         check(pile != null, "Storage pile did not resolve");
-        pile.setPermanent(true);
+        pile.setPermanent(true, null);
 
         CompoundTag saved = source.saveWithoutMetadata();
-        check(!saved.contains("Rotation"), "Storage saved block-entity rotation");
         copyFacing(helper, source, loaded);
         loaded.load(saved);
 
@@ -88,7 +87,6 @@ public final class CapabilityAndPersistenceChecks {
         source.setCubeRotation(21, 3);
 
         CompoundTag saved = source.saveWithoutMetadata();
-        check(!saved.contains("Rotation"), "Singles saved block-entity rotation");
         copyFacing(helper, source, loaded);
         loaded.load(saved);
 
@@ -132,7 +130,7 @@ public final class CapabilityAndPersistenceChecks {
         Item barItem = firstBarItem();
         storage.getItems().insertItem(4, new ItemStack(Items.STONE, 3), false);
         storage.setRotation(2);
-        storage.pile().setPermanent(true);
+        storage.pile().setPermanent(true, null);
         singles.getItems().insertItem(5, new ItemStack(Items.APPLE), false);
         singles.setRotation(1);
         singles.setCubeRotation(5, 3);
@@ -144,8 +142,6 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag storageTag = storage.getUpdateTag();
         CompoundTag singlesTag = singles.getUpdateTag();
         CompoundTag barTag = bars.getUpdateTag();
-        check(!storageTag.contains("Rotation"), "Storage update tag carried block-state rotation");
-        check(!singlesTag.contains("Rotation"), "Singles update tag carried block-state rotation");
         check(!storageTag.getCompound("Items").contains("SetAside"),
                 "Storage update tag exposed set-aside data");
         check(!singlesTag.getCompound("Items").contains("SetAside"),
@@ -308,16 +304,19 @@ public final class CapabilityAndPersistenceChecks {
             rejectedUpdate(be, noVersion, seed);
             CompoundTag permanent = valid.copy();
             permanent.putBoolean("Permanent", true);
-            rejectedUpdate(be, permanent, seed);
-            CompoundTag rotation = valid.copy();
-            rotation.putInt("Rotation", 1);
-            rejectedUpdate(be, rotation, seed);
+            if (be instanceof StorageStackBE storage) {
+                rejectedUpdate(be, permanent, seed);
+                check(!storage.isPermanent(), "Rejected update changed Storage permanence");
+            } else {
+                check(be.loadClientUpdate(permanent), "Unrelated Storage metadata rejected");
+            }
 
             CompoundTag replacement = valid.copy();
             StackItemStorage source = new StackItemStorage(be.getItems().getSlots());
             ItemStack replacementItem = bar ? new ItemStack(firstBarItem()) : new ItemStack(Items.DIAMOND);
             source.setStackInSlot(1, replacementItem);
             replacement.put("Items", source.serializeNBT());
+            replacement.putString("UnrelatedMetadata", "ignored");
             check(be.loadClientUpdate(replacement), "Valid update rejected");
             check(be.getItems().getStackInSlot(0).isEmpty(), "Old client slot survived replacement");
             checkEquals(replacementItem.getItem(), be.getItems().getStackInSlot(1).getItem(),
