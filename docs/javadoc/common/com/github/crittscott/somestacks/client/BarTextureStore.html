@@ -71,8 +71,10 @@ loadScripts(document, 'script');</script>
 <h1 title="Class BarTextureStore" class="title">Class BarTextureStore</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a>&gt;&gt;
+<div class="inheritance">net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr>com.google.gson.JsonElement&gt;&gt;
+<div class="inheritance">net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
 <div class="inheritance">com.github.crittscott.somestacks.client.BarTextureStore</div>
+</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
@@ -82,7 +84,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">BarTextureStore</span>
-<span class="extends-implements">extends net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a>&gt;&gt;</span></div>
+<span class="extends-implements">extends net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener</span></div>
 <div class="block">What each item's bar looks like, loaded from <code>assets/&lt;namespace&gt;/textures/bars/*.json</code> and
  reloaded with the resource packs. A mapping names a texture and an optional tint; an item no
  mapping covers falls back to the base ingot texture with a tint derived from the sprite and tint
@@ -138,20 +140,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a>&gt;&nbsp;prepared,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr>com.google.gson.JsonElement&gt;&nbsp;prepared,
  net.minecraft.server.packs.resources.ResourceManager&nbsp;resourceManager,
  net.minecraft.util.profiling.ProfilerFiller&nbsp;profiler)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTexture(net.minecraft.world.item.ItemStack)" class="member-name-link">getTexture</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#prepare(net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">prepare</a><wbr>(net.minecraft.server.packs.resources.ResourceManager&nbsp;resourceManager,
- net.minecraft.util.profiling.ProfilerFiller&nbsp;profiler)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener">Methods inherited from class&nbsp;net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener</h3>
+<code>prepare, scanDirectory</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.server.packs.resources.SimplePreparableReloadListener">Methods inherited from class&nbsp;net.minecraft.server.packs.resources.SimplePreparableReloadListener</h3>
 <code>reload</code></div>
@@ -187,25 +188,14 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="prepare(net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)">
-<h3>prepare</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a>&gt;</span>&nbsp;<span class="element-name">prepare</span><wbr><span class="parameters">(net.minecraft.server.packs.resources.ResourceManager&nbsp;resourceManager,
- net.minecraft.util.profiling.ProfilerFiller&nbsp;profiler)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>prepare</code>&nbsp;in class&nbsp;<code>net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a>&gt;&gt;</code></dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)">
 <h3>apply</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a>&gt;&nbsp;prepared,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr>com.google.gson.JsonElement&gt;&nbsp;prepared,
  net.minecraft.server.packs.resources.ResourceManager&nbsp;resourceManager,
  net.minecraft.util.profiling.ProfilerFiller&nbsp;profiler)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>apply</code>&nbsp;in class&nbsp;<code>net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a>&gt;&gt;</code></dd>
+<dd><code>apply</code>&nbsp;in class&nbsp;<code>net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr>com.google.gson.JsonElement&gt;&gt;</code></dd>
 </dl>
 </section>
 </li>

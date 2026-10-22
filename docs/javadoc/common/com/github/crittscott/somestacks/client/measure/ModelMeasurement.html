@@ -117,6 +117,18 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#measureGui(net.minecraft.world.item.ItemStack)" class="member-name-link">measureGui</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onResourceReload()" class="member-name-link">onResourceReload</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">New models may fail differently after a resource reload.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reportFailure(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemDisplayContext,java.lang.Exception)" class="member-name-link">reportFailure</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
+ net.minecraft.world.item.ItemDisplayContext&nbsp;context,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&nbsp;exception)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Reports exceptional model failures once per item until resources are reloaded.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setBackend(com.github.crittscott.somestacks.client.measure.ModelMeasurement.Backend)" class="member-name-link">setBackend</a><wbr>(<a href="ModelMeasurement.Backend.html" title="interface in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Backend</a>&nbsp;backend)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -136,6 +148,22 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="reportFailure(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemDisplayContext,java.lang.Exception)">
+<h3>reportFailure</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reportFailure</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack,
+ net.minecraft.world.item.ItemDisplayContext&nbsp;context,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&nbsp;exception)</span></div>
+<div class="block">Reports exceptional model failures once per item until resources are reloaded.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onResourceReload()">
+<h3>onResourceReload</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onResourceReload</span>()</div>
+<div class="block">New models may fail differently after a resource reload.</div>
+</section>
+</li>
 <li>
 <section class="detail" id="setBackend(com.github.crittscott.somestacks.client.measure.ModelMeasurement.Backend)">
 <h3>setBackend</h3>

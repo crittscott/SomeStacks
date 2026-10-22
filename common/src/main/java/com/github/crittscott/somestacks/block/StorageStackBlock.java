@@ -173,7 +173,7 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
             StoragePile.invalidateAround(level, pos);
             if (!level.isClientSide
                     && level.getBlockEntity(pos) instanceof StorageStackBE placed) {
-                StoragePile.adoptNeighbourState(level, pos, placed);
+                StoragePile.inheritNeighbourPermanence(level, pos, placed);
                 StoragePile.markDirtyAt(level, pos);
             }
         }

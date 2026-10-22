@@ -743,6 +743,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#grownBlockTakesTheBaseFacing(net.minecraft.gametest.framework.GameTestHelper)"><code>StoragePileChecks.grownBlockTakesTheBaseFacing(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html#growthRequiresBuildPermission(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">growthRequiresBuildPermission(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#growthRequiresBuildPermission(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)"><code>StoragePileChecks.growthRequiresBuildPermission(net.minecraft.gametest.framework.GameTestHelper, net.minecraft.server.level.ServerPlayer)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#growthRequiresBuildPermission(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">growthRequiresBuildPermission(GameTestHelper, ServerPlayer)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileChecks</a></dt>
+<dd>
+<div class="block">To reproduce: fill a Storage block in Survival, switch to Adventure, and V-deposit again.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:H">H</h2>
 <dl class="index">
@@ -784,6 +792,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#hasMarker(net.minecraft.world.item.ItemStack,java.lang.String)" class="member-name-link">hasMarker(ItemStack, String)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
+<dd>
+<div class="block">Whether this stack belongs to the marked fixture, including after movement or dropping.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#heldAt(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos,net.minecraft.world.item.Item)" class="member-name-link">heldAt(GameTestHelper, BlockPos, Item)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
 <dd>
@@ -905,6 +917,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
+<dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#markedStack(net.minecraft.world.item.Item,int,java.lang.String)" class="member-name-link">markedStack(Item, int, String)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
+<dd>
+<div class="block">Marks fixture contents so nearby drops from other tests or runs cannot affect assertions.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html#mergeRejectsDifferentItemsAndTags(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">mergeRejectsDifferentItemsAndTags(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsChecks</a></dt>
 <dd>
 <div class="block">Internal merge check: different item types and different NBT variants return zero moved items.</div>
@@ -1049,6 +1065,15 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce in-game without Common Protection API, FTB Chunks, or Open Parties and Claims:
  place a stack against an ordinary block, then modifier-click a neighboring block toward a
  Singles Stack.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#placementChoosesFacingBeforeJoining(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementChoosesFacingBeforeJoining(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileChecks</a></dt>
+<dd>
+<div class="block">To reproduce: rotate the top of a Storage pile, then V-place Storage above it or beneath an
+ overhanging pile.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html#placementChoosesFacingBeforeJoining(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementChoosesFacingBeforeJoining(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#placementChoosesFacingBeforeJoining(net.minecraft.gametest.framework.GameTestHelper)"><code>StoragePileChecks.placementChoosesFacingBeforeJoining(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html#placementConsultsProtectionApiBeforePlacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementConsultsProtectionApiBeforePlacing(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionApiGameTests</a></dt>
 <dd>

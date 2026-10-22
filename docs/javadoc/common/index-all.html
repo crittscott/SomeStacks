@@ -68,11 +68,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Silent admission for simulation/commit; null denotes automation, which ignores exact-item denial.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/StoragePile.html#adoptNeighbourState(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.StorageStackBE)" class="member-name-link">adoptNeighbourState(Level, BlockPos, StorageStackBE)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></dt>
-<dd>
-<div class="block">Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it
- from the block below when there is one and otherwise from the block above.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#advertisedItemSlots()" class="member-name-link">advertisedItemSlots()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
 <dd>
 <div class="block">Run positions including headroom, or local slots when no server run is available.</div>
@@ -89,9 +84,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientServerSettings.html#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">apply(ConfigSyncPkt)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientServerSettings.html" title="class in com.github.crittscott.somestacks.client">ClientServerSettings</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.html#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply(Map&lt;ResourceLocation, BarTextureStore.BarTextureData&gt;, ResourceManager, ProfilerFiller)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply(Map&lt;ResourceLocation, ItemRenderConfig&gt;, ResourceManager, ProfilerFiller)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.html#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply(Map&lt;ResourceLocation, JsonElement&gt;, ResourceManager, ProfilerFiller)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarColumn.html#at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">at(Level, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarColumn.html" title="class in com.github.crittscott.somestacks.block">BarColumn</a></dt>
 <dd>
@@ -776,10 +771,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the value of the <code>failedRetries</code> record component.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html#failure()" class="member-name-link">failure()</a> - Method in record class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>failure</code> record component.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientRenderCommands.Feedback.html#failure(S,net.minecraft.network.chat.Component)" class="member-name-link">failure(S, Component)</a> - Method in interface com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientRenderCommands.Feedback.html" title="interface in com.github.crittscott.somestacks.client">ClientRenderCommands.Feedback</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackRun.html#fillLevel()" class="member-name-link">fillLevel()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
@@ -1128,6 +1119,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The item tag defining what a Bar Stack holds; data packs add to it.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/block/StoragePile.html#inheritNeighbourPermanence(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.StorageStackBE)" class="member-name-link">inheritNeighbourPermanence(Level, BlockPos, StorageStackBE)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></dt>
+<dd>
+<div class="block">Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it
+ from the block below when there is one and otherwise from the block above.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#inRange(float,float,float)" class="member-name-link">inRange(float, float, float)</a> - Static method in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Whether a value is finite and within the inclusive bounds.</div>
@@ -1451,6 +1447,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Capacity before the item's own stack limit.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#logActivePolicy()" class="member-name-link">logActivePolicy()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
+<dd>
+<div class="block">Reports active policy at startup, explicit reload, or a changed loader file reload.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/SomeStacksCommon.html#LOGGER" class="member-name-link">LOGGER</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksCommon.html" title="class in com.github.crittscott.somestacks">SomeStacksCommon</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerLifecycle.html#login(net.minecraft.server.level.ServerPlayer)" class="member-name-link">login(ServerPlayer)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerLifecycle.html" title="class in com.github.crittscott.somestacks">ServerLifecycle</a></dt>
@@ -1536,7 +1536,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/WorldEdits.html#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace(ServerPlayer, ServerLevel, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></dt>
 <dd>
-<div class="block">Whether the actor may place a block: vanilla's gate plus loader protection queries.</div>
+<div class="block">Whether the actor may place a block: build ability, vanilla protection, and loader queries.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/EditAuthority.html#mayPlace(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace(Player, ServerLevel, BlockPos)</a> - Method in interface com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a></dt>
 <dd>
@@ -1723,6 +1723,10 @@ loadScripts(document, 'script');</script>
  any later invocation is a genuine reload that may have changed models, so both
  the in-memory cache and the file are discarded.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.html#onResourceReload()" class="member-name-link">onResourceReload()</a> - Static method in class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement</a></dt>
+<dd>
+<div class="block">New models may fail differently after a resource reload.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.html#onServerTick()" class="member-name-link">onServerTick()</a> - Static method in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator</a></dt>
 <dd>
 <div class="block">Drains the queued galleries, bounded by <code>render_gallery.placements_per_tick</code>.</div>
@@ -1739,7 +1743,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Parses every valid item entry, logging and skipping malformed entries or fields.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#parseEntry(java.lang.String,com.google.gson.JsonObject)" class="member-name-link">parseEntry(String, JsonObject)</a> - Static method in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html#parseEntry(java.lang.String,com.google.gson.JsonObject,java.lang.String)" class="member-name-link">parseEntry(String, JsonObject, String)</a> - Static method in class com.github.crittscott.somestacks.client.renderconfig.<a href="com/github/crittscott/somestacks/client/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.client.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Returns the parsed entry, or null if none of its fields are valid.</div>
 </dd>
@@ -1793,8 +1797,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Broadcasts a slightly pitch-varied rotation sound if the player's sound throttle permits it.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.html#prepare(net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">prepare(ResourceManager, ProfilerFiller)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#prepare(net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">prepare(ResourceManager, ProfilerFiller)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/InteractionRuleRegistry.html#processBlockRules(com.github.crittscott.somestacks.client.interaction.InteractionContext)" class="member-name-link">processBlockRules(InteractionContext)</a> - Static method in class com.github.crittscott.somestacks.client.interaction.<a href="com/github/crittscott/somestacks/client/interaction/InteractionRuleRegistry.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionRuleRegistry</a></dt>
@@ -1942,6 +1944,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates an instance of a <code>RenderProfile</code> record class.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.html#reportFailure(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemDisplayContext,java.lang.Exception)" class="member-name-link">reportFailure(ItemStack, ItemDisplayContext, Exception)</a> - Static method in class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement</a></dt>
+<dd>
+<div class="block">Reports exceptional model failures once per item until resources are reloaded.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerLifecycle.html#reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage.LoadResult)" class="member-name-link">reportSavedItems(ServerLevel, BlockPos, StackItemStorage.LoadResult)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerLifecycle.html" title="class in com.github.crittscott.somestacks">ServerLifecycle</a></dt>
 <dd>
 <div class="block">Logs saved item stacks a block kept aside because they could not be read.</div>
@@ -1970,7 +1976,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun(ServerLevel)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html#%3Cinit%3E(boolean,boolean,net.minecraft.world.phys.AABB,java.lang.String)" class="member-name-link">Result(boolean, boolean, AABB, String)</a> - Constructor for record class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html#%3Cinit%3E(boolean,boolean,net.minecraft.world.phys.AABB)" class="member-name-link">Result(boolean, boolean, AABB)</a> - Constructor for record class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>Result</code> record class.</div>
 </dd>
@@ -2103,7 +2109,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#setRotation(int)" class="member-name-link">setRotation(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
 <dd>
-<div class="block">Changes the block's facing; the block-state update performs client synchronization.</div>
+<div class="block">Changes an in-world block's facing; the block-state update performs client synchronization.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientGestures.html#setSender(java.util.function.Consumer)" class="member-name-link">setSender(Consumer&lt;GestureStatePkt&gt;)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientGestures.html" title="class in com.github.crittscott.somestacks.client">ClientGestures</a></dt>
 <dd>
@@ -2313,7 +2319,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackPlacement.html#stateFor(net.minecraft.world.level.block.Block,net.minecraft.world.level.LevelReader,net.minecraft.core.BlockPos)" class="member-name-link">stateFor(Block, LevelReader, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackPlacement.html" title="class in com.github.crittscott.somestacks.util">StackPlacement</a></dt>
 <dd>
-<div class="block">A stack block's default state, waterlogged when it is going into water.</div>
+<div class="block">A stack block's placement state, waterlogged when it is going into water.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/util/StackPlacement.html#stateFor(net.minecraft.world.level.block.Block,net.minecraft.world.level.LevelReader,net.minecraft.core.BlockPos,net.minecraft.core.Direction)" class="member-name-link">stateFor(Block, LevelReader, BlockPos, Direction)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackPlacement.html" title="class in com.github.crittscott.somestacks.util">StackPlacement</a></dt>
+<dd>
+<div class="block">Builds the final placement state with an explicit layout facing, including Storage growth.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerLifecycle.html#stopped()" class="member-name-link">stopped()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerLifecycle.html" title="class in com.github.crittscott.somestacks">ServerLifecycle</a></dt>
 <dd>

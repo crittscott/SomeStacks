@@ -98,6 +98,7 @@ public final class AutoRenderProfiles {
      * the in-memory cache and the file are discarded.
      */
     public static void onResourceReload() {
+        ModelMeasurement.onResourceReload();
         ItemRenderOverrides.clearResolvedProfiles();
         if (!initialResourceLoadSeen) {
             initialResourceLoadSeen = true;

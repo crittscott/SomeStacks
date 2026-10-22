@@ -121,41 +121,41 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">at</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Resolves the pile containing <code>pos</code>, or <code>null</code> when that position holds no
+ Storage Stack.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether a Storage Stack may be created at <code>pos</code>: the contiguous column it would form,
+ counting the runs both below and above it, must fit the configured maximum.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deposit(net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">deposit</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;fromHand,
+ net.minecraft.server.level.ServerPlayer&nbsp;placer)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Fills the pile from the base upward, ignoring where the deposit was aimed, and grows the
+ column while items remain and the configured height allows it.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extract(int,int,boolean)" class="member-name-link">extract</a><wbr>(int&nbsp;flatSlot,
+ int&nbsp;amount,
+ boolean&nbsp;simulate)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Extracts from one pile slot and schedules the settle that packs the rest down over it.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#adoptNeighbourState(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.StorageStackBE)" class="member-name-link">adoptNeighbourState</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#inheritNeighbourPermanence(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.StorageStackBE)" class="member-name-link">inheritNeighbourPermanence</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&nbsp;placed)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it
  from the block below when there is one and otherwise from the block above.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">at</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Resolves the pile containing <code>pos</code>, or <code>null</code> when that position holds no
- Storage Stack.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Whether a Storage Stack may be created at <code>pos</code>: the contiguous column it would form,
- counting the runs both below and above it, must fit the configured maximum.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deposit(net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">deposit</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;fromHand,
- net.minecraft.server.level.ServerPlayer&nbsp;placer)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Fills the pile from the base upward, ignoring where the deposit was aimed, and grows the
- column while items remain and the configured height allows it.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extract(int,int,boolean)" class="member-name-link">extract</a><wbr>(int&nbsp;flatSlot,
- int&nbsp;amount,
- boolean&nbsp;simulate)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Extracts from one pile slot and schedules the settle that packs the rest down over it.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;flatSlot,
@@ -256,9 +256,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="adoptNeighbourState(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.StorageStackBE)">
-<h3>adoptNeighbourState</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">adoptNeighbourState</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
+<section class="detail" id="inheritNeighbourPermanence(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.StorageStackBE)">
+<h3>inheritNeighbourPermanence</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">inheritNeighbourPermanence</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&nbsp;placed)</span></div>
 <div class="block">Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it

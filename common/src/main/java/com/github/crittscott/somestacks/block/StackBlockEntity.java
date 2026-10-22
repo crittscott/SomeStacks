@@ -31,8 +31,6 @@ public abstract class StackBlockEntity extends BlockEntity {
     protected final StackItemStorage items;
     private final IntegerProperty lightProperty;
     @Nullable
-    private Integer pendingBlockRotation;
-    @Nullable
     private StackItemStorage.LoadResult pendingLoadResult;
     private int batchDepth;
     private boolean batchTouched;
@@ -199,7 +197,6 @@ public abstract class StackBlockEntity extends BlockEntity {
      * horizontal facing so structure rotation and mirroring turn the layout with the block.
      */
     public final int getRotation() {
-        applyPendingBlockRotation();
         BlockState state = getBlockState();
         return state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)
                 ? rotationOf(state.getValue(BlockStateProperties.HORIZONTAL_FACING))
@@ -207,35 +204,22 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     /**
-     * Changes the block's facing; the block-state update performs client synchronization. A request
-     * made before the entity belongs to a server level applies once it does.
+     * Changes an in-world block's facing; the block-state update performs client synchronization.
      */
     public final void setRotation(int rotation) {
-        pendingBlockRotation = Math.floorMod(rotation, CubeGrid.ROTATIONS);
-        applyPendingBlockRotation();
-    }
-
-    private void applyPendingBlockRotation() {
-        if (pendingBlockRotation == null || level == null || level.isClientSide) {
+        if (level == null || level.isClientSide) {
             return;
         }
         BlockState state = getBlockState();
         if (!state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
-            pendingBlockRotation = null;
             return;
         }
-        // Cleared before setBlock: the loader may query this block's shape while the old state is
-        // still current, and that query must not start the same change again.
-        int rotation = pendingBlockRotation;
-        pendingBlockRotation = null;
         BlockState rotated = state.setValue(BlockStateProperties.HORIZONTAL_FACING, facingOf(rotation));
         if (state == rotated) {
             return;
         }
         if (level.setBlock(getBlockPos(), rotated, Block.UPDATE_ALL)) {
             setChanged();
-        } else {
-            pendingBlockRotation = rotation;
         }
     }
 
@@ -344,7 +328,6 @@ public abstract class StackBlockEntity extends BlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        applyPendingBlockRotation();
         reportSavedItems();
     }
 
@@ -392,7 +375,6 @@ public abstract class StackBlockEntity extends BlockEntity {
                 || !items.deserializeClientUpdate(tag.getCompound(StackItemStorage.TAG_ITEMS))) {
             return false;
         }
-        pendingBlockRotation = null;
         loadStackData(tag);
         refreshComparatorContribution();
         return true;

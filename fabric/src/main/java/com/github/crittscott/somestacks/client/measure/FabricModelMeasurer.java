@@ -41,7 +41,7 @@ public final class FabricModelMeasurer implements ModelMeasurement.Backend {
 
             if (model.isCustomRenderer()) {
                 return new ModelMeasurement.Result(
-                        gui3d, false, SAFE_FALLBACK_BOUNDS, "custom renderer is not measured");
+                        gui3d, false, SAFE_FALLBACK_BOUNDS);
             }
 
             PoseStack pose = new PoseStack();
@@ -53,8 +53,9 @@ public final class FabricModelMeasurer implements ModelMeasurement.Backend {
             pose.translate(-0.5f, -0.5f, -0.5f);
             return measureQuads(model, gui3d, pose);
         } catch (Exception e) {
+            ModelMeasurement.reportFailure(stack, context, e);
             return new ModelMeasurement.Result(
-                    gui3d, false, null, "measurement threw: " + e);
+                    gui3d, false, null);
         }
     }
 
@@ -75,9 +76,9 @@ public final class FabricModelMeasurer implements ModelMeasurement.Backend {
             // A model with no directly exposed geometry may draw only through Fabric's enhanced
             // item-quad path. ItemRenderer remains safe; the shared 2-D projection would be blank.
             return new ModelMeasurement.Result(
-                    gui3d, false, SAFE_FALLBACK_BOUNDS, "model exposes no ordinary quads");
+                    gui3d, false, SAFE_FALLBACK_BOUNDS);
         }
-        return new ModelMeasurement.Result(gui3d, true, collector.toAABB(), null);
+        return new ModelMeasurement.Result(gui3d, true, collector.toAABB());
     }
 
     private static void collectQuads(

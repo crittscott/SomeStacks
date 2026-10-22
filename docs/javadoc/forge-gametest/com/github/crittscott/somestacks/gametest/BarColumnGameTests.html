@@ -318,7 +318,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">backfillKeepsABarItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Synthetic admission fixture: directly seed a refused stick at Bar slot 1 beside an accepted
  ingot at slot 0, then automate extraction from slot 0. The ingot is extracted and the stick
- is conserved in storage plus nearby drops. The test does not change policy.
+ moves into slot 0 without dropping. A per-run tag isolates its drops from other fixtures.
+ The test does not change policy.
 
  <p>To check manually, enable a data pack adding minecraft:oak_planks to the
  somestacks:ingots item tag and run /reload. Store an ordinary ingot at bottom position 0 and

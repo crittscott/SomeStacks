@@ -473,6 +473,7 @@ public final class SsCommand {
             ctx.getSource().sendFailure(Component.translatable("somestacks.command.policy_rejected"));
             return 0;
         }
+        ServerConfig.logActivePolicy();
         int online = ctx.getSource().getServer().getPlayerList().getPlayerCount();
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.reloaded", online), true);

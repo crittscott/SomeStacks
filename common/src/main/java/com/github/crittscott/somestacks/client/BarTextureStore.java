@@ -14,7 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -22,10 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -41,8 +38,7 @@ import javax.annotation.Nullable;
  * <p>This is client resource data and is never synchronized, so two players may see the same bar
  * differently if their resource packs differ.
  */
-public class BarTextureStore extends SimplePreparableReloadListener<Map<ResourceLocation, BarTextureStore.BarTextureData>> {
-    private static final Gson GSON = new Gson();
+public class BarTextureStore extends SimpleJsonResourceReloadListener {
     private static final Map<ResourceLocation, BarTextureData> textureMap = new HashMap<>();
     /** Resolved mappings and automatic tints, held per item until resource reload. */
     private static final Map<Item, BarTextureData> resolvedTextures = new IdentityHashMap<>();
@@ -86,39 +82,36 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         }
     }
 
-    @Override
-    protected Map<ResourceLocation, BarTextureData> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
+    public BarTextureStore() {
+        super(new Gson(), "textures/bars");
+    }
+
+    /** Parses files in id order so duplicate item mappings resolve consistently. */
+    private static Map<ResourceLocation, BarTextureData> parseMappings(Map<ResourceLocation, JsonElement> prepared) {
         Map<ResourceLocation, BarTextureData> configMap = new HashMap<>();
-
-        var resources = resourceManager.listResources("textures/bars", loc -> loc.getPath().endsWith(".json"));
-
-        // Read in file order so that two files mapping one item resolve the same way every reload.
-        resources.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(fileEntry -> {
-            ResourceLocation fileLocation = fileEntry.getKey();
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(fileEntry.getValue().open(), StandardCharsets.UTF_8))) {
-                JsonObject root = GSON.fromJson(reader, JsonObject.class);
-
+        prepared.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(fileEntry -> {
+            ResourceLocation source = new ResourceLocation(fileEntry.getKey().getNamespace(),
+                    "textures/bars/" + fileEntry.getKey().getPath() + ".json");
+            try {
+                JsonObject root = fileEntry.getValue().getAsJsonObject();
                 for (String key : root.keySet()) {
                     if (key.startsWith("_comment")) continue;
-
                     try {
                         ResourceLocation itemLoc = new ResourceLocation(key);
                         BarTextureData data = parseEntry(root.get(key));
                         if (data == null) {
-                            SomeStacksCommon.LOGGER.warn("Invalid format for '{}': expected string or object", key);
+                            SomeStacksCommon.LOGGER.warn("Invalid Bar texture mapping for '{}' in {}: expected string or object", key, source);
                             continue;
                         }
                         configMap.put(itemLoc, data);
                     } catch (Exception e) {
-                        SomeStacksCommon.LOGGER.warn("Invalid mapping for '{}': {}", key, e.getMessage());
+                        SomeStacksCommon.LOGGER.warn("Invalid Bar texture mapping for '{}' in {}: {}", key, source, e.getMessage());
                     }
                 }
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to process file {}: {}", fileLocation, e.getMessage());
+                SomeStacksCommon.LOGGER.warn("Failed to process file {}: {}", source, e.getMessage());
             }
         });
-
         return configMap;
     }
 
@@ -149,13 +142,13 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         BarStackBER.onResourceReload();
         textureMap.clear();
         resolvedTextures.clear();
         int autoTinted = 0;
 
-        for (Map.Entry<ResourceLocation, BarTextureData> entry : prepared.entrySet()) {
+        for (Map.Entry<ResourceLocation, BarTextureData> entry : parseMappings(prepared).entrySet()) {
             ResourceLocation itemLoc = entry.getKey();
             BarTextureData data = entry.getValue();
 

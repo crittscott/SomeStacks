@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks.command;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
@@ -218,12 +217,6 @@ public final class RenderGalleryGenerator {
 
             if (job.isDone()) {
                 jobs.poll();
-                int skipped = job.expectedStacks - job.placedStacks;
-                if (skipped > 0) {
-                    SomeStacksCommon.LOGGER.warn(
-                            "Gallery for {} skipped {} of {} stack placement(s)",
-                            job.player.getGameProfile().getName(), skipped, job.expectedStacks);
-                }
                 job.onComplete.accept(new Result(job.placedStacks, job.expectedStacks, job.totalItems));
             }
         }

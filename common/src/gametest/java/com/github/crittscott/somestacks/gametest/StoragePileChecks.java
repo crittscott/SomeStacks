@@ -4,16 +4,21 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.ComparatorBlockEntity;
+import java.util.UUID;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -39,9 +44,11 @@ public final class StoragePileChecks {
      * The fixture first drains placement ticks, then seeds sparse local slots and makes a pending
      * upper edit in the removal tick, so it specifically checks rescheduling at the new upper base.
      * That same-tick pending-publication assertion is internal; ordinary deposits pack from the
-     * base and cannot create this sparse starting layout.
+     * base and cannot create this sparse starting layout. Fixture contents carry a per-run tag
+     * so drops from other tests or earlier runs are excluded.
      */
     public static void middleRemovalSettlesAndPublishesBothSurvivingPiles(GameTestHelper helper) {
+        String marker = UUID.randomUUID().toString();
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE middle = placeStorage(helper, ORIGIN.above());
         StorageStackBE upper = placeStorage(helper, ORIGIN.above(2));
@@ -56,20 +63,24 @@ public final class StoragePileChecks {
             StoragePile cached = lower.pile();
             check(cached != null && cached == upper.pile(), "Ends did not share the initial cache");
             checkEquals(3, cached.height(), "Initial height");
-            lower.getItems().setStackInSlot(17, new ItemStack(Items.GLOWSTONE, 64));
-            lower.getItems().setStackInSlot(25, new ItemStack(Items.GLOWSTONE, 64));
-            middle.getItems().setStackInSlot(7, new ItemStack(Items.DIAMOND, 7));
-            upper.getItems().setStackInSlot(12, new ItemStack(Items.GLOWSTONE));
-            upper.getItems().setStackInSlot(24, new ItemStack(Items.GLOWSTONE));
+            lower.getItems().setStackInSlot(17, GameTestScaffold.markedStack(Items.GLOWSTONE, 64, marker));
+            lower.getItems().setStackInSlot(25, GameTestScaffold.markedStack(Items.GLOWSTONE, 64, marker));
+            middle.getItems().setStackInSlot(7, GameTestScaffold.markedStack(Items.DIAMOND, 7, marker));
+            upper.getItems().setStackInSlot(12, GameTestScaffold.markedStack(Items.GLOWSTONE, 1, marker));
+            upper.getItems().setStackInSlot(24, GameTestScaffold.markedStack(Items.GLOWSTONE, 1, marker));
             checkEquals(0, upper.getBlockState().getValue(
                     StorageStackBlock.LIGHT_LEVEL),
                     "Upper edit published before the split");
             check(helper.getLevel().setBlock(middle.getBlockPos(), Blocks.AIR.defaultBlockState(),
                     Block.UPDATE_ALL), "Middle removal failed");
-            checkEquals(7, GameTestScaffold.droppedNear(helper, middle.getBlockPos(), Items.DIAMOND),
+            checkEquals(7, GameTestScaffold.droppedInColumn(helper, lower.getBlockPos(), upper.getBlockPos())
+                    .stream().map(entity -> entity.getItem())
+                    .filter(stack -> GameTestScaffold.hasMarker(stack, marker) && stack.is(Items.DIAMOND))
+                    .mapToInt(ItemStack::getCount).sum(),
                     "Removed block drops");
             checkEquals(0L, GameTestScaffold.droppedInColumn(helper, lower.getBlockPos(), upper.getBlockPos())
-                    .stream().filter(entity -> !entity.getItem().is(Items.DIAMOND)).count(),
+                    .stream().filter(entity -> GameTestScaffold.hasMarker(entity.getItem(), marker)
+                            && !entity.getItem().is(Items.DIAMOND)).count(),
                     "A surviving block dropped contents");
             helper.runAfterDelay(6, () -> {
                 StoragePile below = lower.pile();
@@ -86,7 +97,10 @@ public final class StoragePileChecks {
                 checkEquals(1, GameTestScaffold.occupied(upper.getItems()), "Upper occupied slots");
                 checkEquals(128, GameTestScaffold.count(lower.getItems(), Items.GLOWSTONE), "Lower conservation");
                 checkEquals(2, GameTestScaffold.count(upper.getItems(), Items.GLOWSTONE), "Upper conservation");
-                checkEquals(7, GameTestScaffold.droppedNear(helper, middle.getBlockPos(), Items.DIAMOND),
+                checkEquals(7, GameTestScaffold.droppedInColumn(helper, lower.getBlockPos(), upper.getBlockPos())
+                    .stream().map(entity -> entity.getItem())
+                    .filter(stack -> GameTestScaffold.hasMarker(stack, marker) && stack.is(Items.DIAMOND))
+                    .mapToInt(ItemStack::getCount).sum(),
                         "Dropped contents after settlement");
                 checkEquals(6, lower.getBlockState().getValue(
                         StorageStackBlock.LIGHT_LEVEL), "Lower light");
@@ -170,6 +184,97 @@ public final class StoragePileChecks {
         check(grown != null, "Pile did not grow");
         checkEquals(1, grown.getRotation(), "Grown block rotation");
         checkEquals(3, upper.getRotation(), "Old top rotation changed");
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce: fill a Storage block in Survival, switch to Adventure, and V-deposit again.
+     * Existing room accepts items, but a full pile cannot grow and rejected items stay in hand.
+     * Switch back to Survival or Creative to permit growth. Automation can still grow the pile.
+     */
+    public static void growthRequiresBuildPermission(GameTestHelper helper, ServerPlayer player) {
+        boolean mayBuild = player.getAbilities().mayBuild;
+        boolean creative = player.getAbilities().instabuild;
+        try {
+            StorageStackBE storage = placeStorage(helper, ORIGIN);
+            player.getAbilities().mayBuild = false;
+            ItemStack existing = new ItemStack(Items.DIRT);
+            checkEquals(1, storage.deposit(existing, player), "Existing room refused Adventure deposit");
+            for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+                storage.getItems().setStackInSlot(slot, new ItemStack(Items.DIRT, 64));
+            }
+            ItemStack offered = new ItemStack(Items.STONE);
+            BlockPos above = storage.getBlockPos().above();
+            try (var events = new WorldEditChecks.EventProbe(helper.getLevel(), above)) {
+                checkEquals(0, storage.deposit(offered, player), "Adventure growth accepted");
+                checkEquals(1, offered.getCount(), "Rejected item consumed");
+                check(helper.getLevel().getBlockState(above).isAir(), "Denied growth placed a block");
+                events.expectNone();
+            }
+            player.getAbilities().mayBuild = true;
+            player.getAbilities().instabuild = false;
+            checkEquals(1, storage.deposit(offered, player), "Survival growth refused");
+            for (boolean automation : new boolean[]{false, true}) {
+                StorageStackBE other = placeStorage(helper, ORIGIN.east(automation ? 4 : 2));
+                for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+                    other.getItems().setStackInSlot(slot, new ItemStack(Items.DIRT, 64));
+                }
+                player.getAbilities().instabuild = true;
+                checkEquals(1, other.deposit(new ItemStack(Items.STONE), automation ? null : player),
+                        automation ? "Automation growth refused" : "Creative actor growth refused");
+            }
+        } finally {
+            player.getAbilities().mayBuild = mayBuild;
+            player.getAbilities().instabuild = creative;
+        }
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce: rotate the top of a Storage pile, then V-place Storage above it or beneath an
+     * overhanging pile. New joins inherit the adjacent facing and permanence. Water placement keeps
+     * waterlogging. A /setblock with an explicit facing keeps that facing even beside another pile.
+     * The fixture also checks that a gap between different facings prefers the block below.
+     */
+    public static void placementChoosesFacingBeforeJoining(GameTestHelper helper) {
+        var level = helper.getLevel();
+        var block = CommonRegistry.STORAGE_STACK_BLOCK.get();
+        StorageStackBE below = placeStorage(helper, ORIGIN);
+        below.setRotation(1);
+        below.pile().setPermanent(true, null);
+        BlockPos target = below.getBlockPos().above();
+        level.setBlock(target, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
+        var joinedState = StackPlacement.stateFor(block, level, target);
+        checkEquals(Direction.WEST, joinedState.getValue(StorageStackBlock.HORIZONTAL_FACING), "Join facing");
+        check(joinedState.getValue(StorageStackBlock.WATERLOGGED), "Join lost waterlogging");
+        check(WorldEdits.placeChecked(null, level, target, joinedState, Direction.DOWN, Shapes.block()),
+                "Join placement refused");
+        StorageStackBE joined = (StorageStackBE) level.getBlockEntity(target);
+        checkEquals(joinedState, joined.getBlockState(), "Placement hook changed final state");
+        check(joined.isPermanent(), "Join lost permanence");
+
+        BlockPos gap = helper.absolutePos(ORIGIN.east(3).above());
+        StorageStackBE upper = placeStorage(helper, ORIGIN.east(3).above(2));
+        upper.setRotation(3);
+        upper.pile().setPermanent(true, null);
+        var beneathState = StackPlacement.stateFor(block, level, gap);
+        checkEquals(Direction.EAST, beneathState.getValue(StorageStackBlock.HORIZONTAL_FACING), "Below-pile facing");
+        check(WorldEdits.placeChecked(null, level, gap, beneathState, Direction.UP, Shapes.block()),
+                "Below-pile placement refused");
+        StorageStackBE beneath = (StorageStackBE) level.getBlockEntity(gap);
+        check(beneath.isPermanent(), "New base lost upper pile permanence");
+        checkEquals(beneathState, beneath.getBlockState(), "Below-pile placement changed facing");
+        check(level.removeBlock(gap, false), "Could not reopen gap");
+        StorageStackBE lower = placeStorage(helper, ORIGIN.east(3));
+        lower.setRotation(1);
+        checkEquals(Direction.WEST, StackPlacement.stateFor(block, level, gap)
+                .getValue(StorageStackBlock.HORIZONTAL_FACING), "Gap did not prefer lower facing");
+        var explicitState = block.defaultBlockState()
+                .setValue(StorageStackBlock.HORIZONTAL_FACING, Direction.SOUTH);
+        check(level.setBlock(gap, explicitState, Block.UPDATE_ALL), "Explicit placement failed");
+        StorageStackBE explicit = (StorageStackBE) level.getBlockEntity(gap);
+        checkEquals(2, explicit.getRotation(), "Placement hook overrode explicit facing");
+        checkEquals(explicitState, level.getBlockState(gap), "Rotation read changed explicit state");
         helper.succeed();
     }
 

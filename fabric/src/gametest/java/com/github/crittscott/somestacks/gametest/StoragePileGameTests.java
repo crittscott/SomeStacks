@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.minecraft.core.BlockPos;
@@ -42,6 +43,18 @@ public final class StoragePileGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void fullPileGrowsByOneBlock(GameTestHelper helper) {
         StoragePileChecks.fullPileGrowsByOneBlock(helper);
+    }
+
+    /** See {@link StoragePileChecks#growthRequiresBuildPermission}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void growthRequiresBuildPermission(GameTestHelper helper) {
+        StoragePileChecks.growthRequiresBuildPermission(helper, FakePlayer.get(helper.getLevel()));
+    }
+
+    /** See {@link StoragePileChecks#placementChoosesFacingBeforeJoining}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void placementChoosesFacingBeforeJoining(GameTestHelper helper) {
+        StoragePileChecks.placementChoosesFacingBeforeJoining(helper);
     }
 
     /** See {@link StoragePileChecks#grownBlockTakesTheBaseFacing}. */

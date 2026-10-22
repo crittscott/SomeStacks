@@ -172,6 +172,7 @@ public final class ServerConfig {
         saver = Objects.requireNonNull(savePolicy, "Policy saver");
         syncClients = Objects.requireNonNull(synchronizeClients, "Policy synchronization");
         publish(reader.get());
+        logActivePolicy();
     }
 
     /**
@@ -270,9 +271,16 @@ public final class ServerConfig {
 
         disabledMods = Set.copyOf(settings.disableMods());
         disabledItems = Set.copyOf(items);
+    }
 
-        SomeStacksCommon.LOGGER.info("Baked server lists: {} disabled mod(s), {} disabled item(s)",
-                disabledMods.size(), disabledItems.size());
+    /** Reports active policy at startup, explicit reload, or a changed loader file reload. */
+    public static void logActivePolicy() {
+        Settings current = settings;
+        SomeStacksCommon.LOGGER.info(
+                "Server policy active: Storage={}, Singles={}, Bar={}; maximum pile height={}; disabled mods={}, disabled items={}, gallery mods={}, gallery items={}",
+                current.enableStorageStackBlock(), current.enableSinglesStackBlock(), current.enableBarStackBlock(),
+                current.maxPileHeight(), disabledMods.size(), disabledItems.size(),
+                current.genMods().size(), current.genItems().size());
     }
 
     /**

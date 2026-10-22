@@ -105,7 +105,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * beneath a permanent pile makes it the new base, so without this the pile would silently
      * become temporary.
      */
-    public static void adoptNeighbourState(Level level, BlockPos pos, StorageStackBE placed) {
+    public static void inheritNeighbourPermanence(Level level, BlockPos pos, StorageStackBE placed) {
         StorageStackBE neighbour = null;
         if (level.getBlockEntity(pos.below()) instanceof StorageStackBE below) {
             neighbour = below;
@@ -113,7 +113,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             neighbour = above;
         }
         if (neighbour != null) {
-            placed.adoptPileState(neighbour.isPermanent(), neighbour.getRotation());
+            placed.inheritPermanent(neighbour.isPermanent());
         }
     }
 
@@ -330,14 +330,14 @@ public final class StoragePile extends StackRun<StorageStackBE> {
 
         BlockPos above = topPos().above();
         BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.STORAGE_STACK_BLOCK.get(), level, above);
+                CommonRegistry.STORAGE_STACK_BLOCK.get(), level, above,
+                blocks.get(0).getBlockState().getValue(StorageStackBlock.HORIZONTAL_FACING));
         if (!WorldEdits.placeChecked(
                 placer, level, above, newStack, Direction.DOWN, Shapes.block())) {
             return false;
         }
         StorageStackBE grown = (StorageStackBE) level.getBlockEntity(above);
 
-        grown.setRotation(blocks.get(0).getRotation());
         grown.beginBatch();
         blocks.add(grown);
         return true;

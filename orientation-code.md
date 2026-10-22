@@ -54,11 +54,11 @@ Three block/entity types; no items, menus, or recipes:
 
 ## Runtime and movement
 
-`StackBlockEntity` owns slots, advertised capacity, NBT, batches, and one-tick run caches. `StackRun` owns bounds, headroom, fill, comparators, and publication; concrete runs own movement. Structural edits invalidate bounds immediately.
+`StackBlockEntity` owns slots, capacity, NBT, batches, and one-tick run caches. `StackRun` owns bounds, headroom, fill, comparators, and publication; concrete runs own movement. Structural edits invalidate bounds.
 
-Entities do not tick. Mutations schedule base publication and Storage settlement. Blocks share a run comparator signal, with local light and waterlogging.
+Entities do not tick. Mutations schedule publication and Storage settlement. Comparators read the run; light and waterlogging are local.
 
-- `StoragePile` fills bottom-up and grows. Settlement groups read-only inputs in one identity map, copies legal output pieces, sorts cached keys/counts through `StackSort.comparePieces`, packs, and trims empty tops unless permanent/protected. Extraction schedules settlement; breaking drops local contents and splits runs. A resolved pile can be empty after trimming its last block; publication then does nothing.
+- `StoragePile` fills bottom-up and grows. Settlement groups read-only inputs in one identity map, copies legal output pieces, sorts cached keys/counts through `StackSort.comparePieces`, packs, and trims empty tops unless permanent/protected. Extraction schedules settlement; breaking drops local contents and splits runs. Publication skips piles emptied by trimming.
 - `SinglesColumn` inserts into one empty supported cell. Extraction shifts one visual column down across rotated seams, carrying item rotation. Cleanup trims empty tops; breaking leaves the column above.
 - `BarColumn` uses positional overlap support and alternating axes. Player extraction/removal cascades unsupported bars; automation backfills from the topmost bar. Insertion names an empty supported position.
 
@@ -74,17 +74,17 @@ Entities do not tick. Mutations schedule base publication and Storage settlement
 
 Unreadable, out-of-range, or duplicate-slot entries stay verbatim in `Items.SetAside`, retried each load and logged per location (`ServerLifecycle.reportSavedItems`).
 
-Settlement propagates Storage permanence from the base. Storage/Singles use `horizontal_facing` for structure transforms; Storage growth copies it. Singles gravity preserves item rotation.
+Storage permanence follows the base. Storage/Singles use `horizontal_facing`; getters are pure. Storage growth places the base facing; gesture joins prefer below, then above. Native placement keeps supplied facing; `onPlace` inherits permanence only. Singles gravity preserves item rotation.
 
 Client `load` calls `loadClientUpdate`, which requires current `DataVersion`, well-formed slots/items/rotations, and no nested recovery data or Storage permanence. Unrelated metadata is ignored; Storage owns its permanence validation. Update tags strip `Permanent` and `SetAside`.
 
 ## Admission, automation, and edits
 
-`BlockType` owns silent item admission and player policy messages. Storage takes nonempty items; Bar requires `BarStackBE.INGOTS`; Singles excludes that tag. Mod denial applies to players/automation, exact-item denial only to players. Internal moves and saved contents bypass admission.
+`BlockType` owns admission and policy messages: Storage takes nonempty items; Bar requires `BarStackBE.INGOTS`; Singles excludes it. Mod denial applies to players/automation; exact-item denial applies to players. Internal moves and saves bypass admission.
 
 Forge `RunItemHandler` uses `LazyOptional` invalidation. Fabric caches adapters per entity through `FabricStorageOwner`; all sides/blocks share the base ledger. Singles/Bar permit one extraction position per transaction. Views include headroom below maximum height. Fabric sweeps resolve one run/ledger; retained views resolve on access. Growth checks last one insertion sweep: Storage reuses obstruction; Singles/Bar check each candidate shape. Commit re-resolves and validates each mutation. `RunEdit` refuses reentrant automation.
 
-`WorldEdits` uses `PlatformServices.editAuthority()` and checks height, replaceability, obstruction, border, and spawn; `canGrow` asks `EditAuthority.mayPlace`. Null edit actors resolve in `WorldEdits` to `AutomationActor.PROFILE` through loader fake players. Forge uses place/break events, snapshot rollback, and `onPlace`/`markAndNotifyBlock` publication, refusing reentrancy and foreign capture.
+`WorldEdits` uses `PlatformServices.editAuthority()` and checks height, replaceability, obstruction, border, and spawn; `canGrow` requires the actor's build ability and asks `EditAuthority.mayPlace`. Null edit actors resolve in `WorldEdits` to `AutomationActor.PROFILE` through loader fake players. Forge uses place/break events, snapshot rollback, and `onPlace`/`markAndNotifyBlock` publication, refusing reentrancy and foreign capture.
 
 Fabric removal asks Common Protection API, then `PlayerBlockBreakEvents`. Fabric `mayPlace` ANDs the mod-gated `CommonProtectionQueries`, `FtbChunksProtection`, and `OpacProtection` before `setBlock`; adjacent deposits also ask `canInteractBlock`.
 
@@ -102,9 +102,9 @@ Client SUCCESS sends packets. Stacks consume server use; sneaking/off-hand use d
 
 ## Configuration and presentation
 
-`Settings` bounds numbers; loaders install readers, savers, and sync callbacks through `ServerConfig.start`, sharing `Keys`. Forge publishes TOML reloads on the server thread; Fabric rereads JSON on `/ss reload`. Publication normalizes namespaces, logging/omitting malformed names. Each list allows 256 names of at most 256 characters; exceeding either retains prior policy (defaults at startup). Commands report rejection and save edits through the loader. Publication compares `ConfigSyncPkt` snapshots and syncs only changed client fields; login always sends policy.
+`Settings` bounds numbers; `ServerConfig.start` installs loader persistence/sync using `Keys`. Forge publishes TOML on the server thread; Fabric rereads JSON on `/ss reload`. Fabric logs read failures with file/key and defaults in use, successful default-file creation, and numeric corrections. Decode exceptions select all defaults; commands save active settings over the file. Publication normalizes namespaces and omits malformed names; excess over 256 names of 256 characters retains prior policy (startup defaults). Only changed client policy syncs; login always sends it. Policy summaries log at startup, explicit reload, and changed Forge file reloads, not list edits or unchanged watcher publications.
 
-Galleries default off/permission 3, build by id across ticks, skip denied items, bypass protection, and clear on stop.
+Galleries default off/permission 3; build by id across ticks, skip denied items, bypass protection, clear on stop.
 
 Resources (`common/src/main/resources`):
 
@@ -113,15 +113,15 @@ Resources (`common/src/main/resources`):
 - `assets/<namespace>/item_render_overrides/*.json` defines Storage/Singles profiles.
 - `assets/<namespace>/textures/bars/*.json` defines Bar textures/tints.
 
-`CubeGrid` caches geometry/quarter turns; setters normalize rotations, updates reject invalid ones. `BarCubeIdx` shares boxes/shapes for rendering/targeting. Singles/Bar unions optimize once per rebuild. Renderers use the dispatcher's packed light. Storage/Singles use `CubeRenderHelper`. Bar caches sprites/UVs, transforms scalar vertices/normals, and resolves textures/tints per item; `RenderCacheReloadListener` clears model-dependent client caches on resource reload. Profile precedence: user -> pack -> measurement; offsets use `RenderOffset`. A `2d` model that throws while its art is gathered (before drawing) joins `FLAT_CAPTURE_FAILURES` and draws `stack_cube_error` until reload, logged once. Derived Bar tints multiply the first GUI quad's sprite by its tint. `ItemRenderOverrides` caches profiles until edits or corpus/model reload.
+`CubeGrid` caches geometry/quarter turns; setters normalize rotations, updates reject invalid ones. `BarCubeIdx` shares rendering/targeting shapes; Singles/Bar unions optimize per rebuild. Profile precedence: user -> pack -> measurement; offsets use `RenderOffset`. Failed flat capture logs once and draws `stack_cube_error` until reload. Measurement exceptions log once per item per resource-load cycle with context/throwable; empty geometry stays quiet. Bar caches sprites/UVs; derived tints multiply the first GUI quad's sprite and tint. Bar mappings use `SimpleJsonResourceReloadListener` with sorted parsing in `apply`; render overrides skip absent namespaces before parsing. Warnings identify files; reload/edits invalidate caches.
 
-Flat models use 2-D, others 3-D. Forge measures passes/vertices; Fabric measures quads with a 3-D ItemRenderer fallback.
+Flat models use 2-D, others 3-D. Forge measures vertices; Fabric measures quads or ItemRenderer output.
 
-`measured_cache.json` keys by format/packs/mod versions; mismatch/reload invalidates it. `/ss item` edits memory; `/ss write changed` saves; namespace forms write output-only profiles.
+`measured_cache.json` keys by format/packs/mod versions; changes invalidate it. `/ss item` edits memory; `/ss write changed` saves; namespace forms write output-only profiles.
 
 ## Tests
 
 `somestacks_gametest`: shared/loader scenarios.
 
-Shared checks cover batching, geometry, persistence, movement, rotation, gestures, admission, policy ranges/lists/packets/resync, and Bar drops with block drops disabled. Forge adds TOML saves/reloads; Fabric adds Transfer transactions/capacity, insertion, retained views, and login payload validation. Protection covers adjacent denial, partial shapes, rollback/reentrancy, and break context; `-PwithCommonProtectionApi=true` selects provider-backed checks.
+Shared checks cover persistence, movement, rotations, gestures, policy/network validation, growth permissions, placement facing, and Bar drops without tile drops. Forge adds TOML persistence; Fabric adds Transfer transactions and login validation. Protection checks cover denial, shapes, rollback/reentrancy, and break context; `-PwithCommonProtectionApi=true` selects provider-backed checks.
 

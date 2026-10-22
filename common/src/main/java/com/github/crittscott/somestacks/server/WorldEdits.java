@@ -38,12 +38,12 @@ public final class WorldEdits {
     }
 
     /**
-     * Whether the actor may place a block: vanilla's gate plus loader protection queries.
+     * Whether the actor may place a block: build ability, vanilla protection, and loader queries.
      * A null actor uses the level's automation identity. Growth checks this before promising space.
      */
     public static boolean mayPlace(@Nullable ServerPlayer actor, ServerLevel level, BlockPos pos) {
         ServerPlayer editor = actor != null ? actor : automationActor(level);
-        return !isProtected(editor, pos) && authority().mayPlace(editor, level, pos);
+        return editor.mayBuild() && !isProtected(editor, pos) && authority().mayPlace(editor, level, pos);
     }
 
     /** The actor automation-driven growth and removal are attributed to. */

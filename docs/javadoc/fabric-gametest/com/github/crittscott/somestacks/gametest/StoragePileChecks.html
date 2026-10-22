@@ -136,16 +136,28 @@ loadScripts(document, 'script');</script>
  top block three, fill both blocks with full dirt stacks, then V-deposit one stone.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#middleRemovalSettlesAndPublishesBothSurvivingPiles(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">middleRemovalSettlesAndPublishesBothSurvivingPiles</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#growthRequiresBuildPermission(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">growthRequiresBuildPermission</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: fill a Storage block in Survival, switch to Adventure, and V-deposit again.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#middleRemovalSettlesAndPublishesBothSurvivingPiles(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">middleRemovalSettlesAndPublishesBothSurvivingPiles</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: create a permanent three-block Storage pile and use /data merge block to seed
  sparse glowstone contents in its end blocks and diamonds in its middle block.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ordinaryPlacementBelowPermanentPileRepairsDerivedState(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">ordinaryPlacementBelowPermanentPileRepairsDerivedState</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ordinaryPlacementBelowPermanentPileRepairsDerivedState(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">ordinaryPlacementBelowPermanentPileRepairsDerivedState</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Internal native-placement check: create a full, permanent Storage block above an empty
  position with an outward-facing comparator.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementChoosesFacingBeforeJoining(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementChoosesFacingBeforeJoining</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: rotate the top of a Storage pile, then V-place Storage above it or beneath an
+ overhanging pile.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -184,7 +196,8 @@ loadScripts(document, 'script');</script>
  The fixture first drains placement ticks, then seeds sparse local slots and makes a pending
  upper edit in the removal tick, so it specifically checks rescheduling at the new upper base.
  That same-tick pending-publication assertion is internal; ordinary deposits pack from the
- base and cannot create this sparse starting layout.</div>
+ base and cannot create this sparse starting layout. Fixture contents carry a per-run tag
+ so drops from other tests or earlier runs are excluded.</div>
 </section>
 </li>
 <li>
@@ -215,6 +228,26 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce: build a two-block Storage pile, give its base one redstone-torch turn and its
  top block three, fill both blocks with full dirt stacks, then V-deposit one stone. The new
  third block shows the base's layout, not the top block's.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="growthRequiresBuildPermission(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)">
+<h3>growthRequiresBuildPermission</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">growthRequiresBuildPermission</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">To reproduce: fill a Storage block in Survival, switch to Adventure, and V-deposit again.
+ Existing room accepts items, but a full pile cannot grow and rejected items stay in hand.
+ Switch back to Survival or Creative to permit growth. Automation can still grow the pile.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="placementChoosesFacingBeforeJoining(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>placementChoosesFacingBeforeJoining</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementChoosesFacingBeforeJoining</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce: rotate the top of a Storage pile, then V-place Storage above it or beneath an
+ overhanging pile. New joins inherit the adjacent facing and permanence. Water placement keeps
+ waterlogging. A /setblock with an explicit facing keeps that facing even beside another pile.
+ The fixture also checks that a gap between different facings prefers the block below.</div>
 </section>
 </li>
 <li>

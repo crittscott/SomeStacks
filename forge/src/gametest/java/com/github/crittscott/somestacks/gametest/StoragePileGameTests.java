@@ -3,7 +3,9 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.block.StorageStackBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
@@ -13,6 +15,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.level.BlockEvent;
+import java.util.function.Consumer;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -49,10 +55,51 @@ public final class StoragePileGameTests {
         StoragePileChecks.fullPileGrowsByOneBlock(helper);
     }
 
+    /** See {@link StoragePileChecks#growthRequiresBuildPermission}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void growthRequiresBuildPermission(GameTestHelper helper) {
+        StoragePileChecks.growthRequiresBuildPermission(helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
+    }
+
+    /** See {@link StoragePileChecks#placementChoosesFacingBeforeJoining}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void placementChoosesFacingBeforeJoining(GameTestHelper helper) {
+        StoragePileChecks.placementChoosesFacingBeforeJoining(helper);
+    }
+
     /** See {@link StoragePileChecks#grownBlockTakesTheBaseFacing}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void grownBlockTakesTheBaseFacing(GameTestHelper helper) {
-        StoragePileChecks.grownBlockTakesTheBaseFacing(helper);
+        int[] placements = {0};
+        BlockPos target = helper.absolutePos(ORIGIN.above(2));
+        Consumer<BlockEvent.EntityPlaceEvent> observe = event -> {
+            if (event.getLevel() == helper.getLevel() && event.getPos().equals(target)) {
+                placements[0]++;
+                checkEquals(Direction.WEST, helper.getLevel().getBlockState(target)
+                        .getValue(StorageStackBlock.HORIZONTAL_FACING),
+                        "Placement listener saw intermediate facing");
+            }
+        };
+        MinecraftForge.EVENT_BUS.addListener(observe);
+        try {
+            StorageStackBE lower = placeStorage(helper, ORIGIN);
+            StorageStackBE upper = placeStorage(helper, ORIGIN.above());
+            lower.setRotation(1);
+            upper.setRotation(3);
+            for (StorageStackBE member : new StorageStackBE[]{lower, upper}) {
+                for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+                    member.getItems().setStackInSlot(slot, new ItemStack(Items.DIRT, 64));
+                }
+            }
+            checkEquals(1, lower.deposit(new ItemStack(Items.STONE)), "Growth deposit refused");
+            checkEquals(1, placements[0], "Growth placement event count");
+            checkEquals(Direction.WEST, helper.getLevel().getBlockState(target)
+                    .getValue(StorageStackBlock.HORIZONTAL_FACING), "Final growth facing");
+            checkEquals(3, upper.getRotation(), "Old top rotation changed");
+        } finally {
+            MinecraftForge.EVENT_BUS.unregister(observe);
+        }
+        helper.succeed();
     }
 
     /**

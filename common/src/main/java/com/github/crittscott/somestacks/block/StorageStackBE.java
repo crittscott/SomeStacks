@@ -62,13 +62,6 @@ public class StorageStackBE extends StackBlockEntity {
         }
     }
 
-    /** Gives a block that has just joined a pile the pile's presentation and mode. */
-    void adoptPileState(boolean permanent, int rotation) {
-        this.permanent = permanent;
-        setChanged();
-        setRotation(rotation);
-    }
-
     /**
      * Remembers who caused the next deferred settle. Multiple edits by one player retain that
      * player; automation, an unknown cause, or mixed actors conservatively use the automation

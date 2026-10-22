@@ -130,6 +130,18 @@ public final class GameTestScaffold {
         return 0;
     }
 
+    /** Marks fixture contents so nearby drops from other tests or runs cannot affect assertions. */
+    public static ItemStack markedStack(Item item, int count, String marker) {
+        ItemStack stack = new ItemStack(item, count);
+        stack.getOrCreateTag().putString("somestacks_test_run", marker);
+        return stack;
+    }
+
+    /** Whether this stack belongs to the marked fixture, including after movement or dropping. */
+    public static boolean hasMarker(ItemStack stack, String marker) {
+        return stack.hasTag() && marker.equals(stack.getTag().getString("somestacks_test_run"));
+    }
+
     /** Items of {@code item} lying on the ground around {@code center}. */
     public static int droppedNear(GameTestHelper helper, BlockPos center, Item item) {
         return helper.getLevel()

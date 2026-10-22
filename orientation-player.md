@@ -6,7 +6,7 @@
 
 Some Stacks makes items visible storage: deposit to create a stack; empty it to remove it. No block items, recipes, creative entries, or screens.
 
-Requires Minecraft 1.20.1 and matching client/server loader builds: Forge 47.4.10 or later within 47.x, or Fabric Loader 0.19.3 with Fabric API 0.92.7+1.20.1.
+Requires Minecraft 1.20.1 and matching client/server loaders: Forge 47.4.10 or later within 47.x, or Fabric Loader 0.19.3 with Fabric API 0.92.7+1.20.1.
 
 ## The three stack types
 
@@ -16,13 +16,13 @@ Requires Minecraft 1.20.1 and matching client/server loader builds: Forge 47.4.1
 | **Singles Stack** | 64 items | Allowed non-ingots | A 4 x 4 x 4 display grid, one supported item per cell |
 | **Bar Stack** | 64 items | `somestacks:ingots` items | Eight alternating layers of supported bars |
 
-Contiguous vertical blocks of one type form a run, limited by default to eight blocks (216 Storage slots or 512 Singles/Bar positions).
+Contiguous same-type vertical blocks form a run, default limit eight blocks (216 Storage slots or 512 Singles/Bar positions).
 
 ## Controls
 
 Hold `V` for the Stack Modifier; rebind under **Options -> Controls -> Some Stacks -> Stack Modifier (Hold)**.
 
-Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Toggle Permanent. The selected mode shows above the hotbar; server-disabled types are skipped, and Toggle Permanent is always included. Mode selects new blocks; existing stacks keep their type.
+Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Toggle Permanent. Mode shows above the hotbar; disabled types are skipped; Toggle Permanent stays available. Mode selects new blocks; existing stacks keep their type.
 
 | Gesture | Result |
 | --- | --- |
@@ -38,7 +38,7 @@ Only the main hand acts; torches are not spent. Holding `V` prevents main-hand i
 
 ## Depositing and placing
 
-Placement and first deposit are atomic, requiring a valid item, supported cell, unobstructed shape, replaceable space, permitted height, and edit permission. Failure leaves no empty stack.
+Placement and first deposit are atomic: valid item, supported cell, unobstructed shape, replaceable space, permitted height, and edit permission. Failure leaves no empty stack.
 
 Water placement waterlogs the stack and preserves water. A top-face deposit onto an occupied or unsupported cell can add the selected type above the run. Different types can sit beside or atop each other; only contiguous same-type blocks share a run.
 
@@ -54,7 +54,7 @@ Plain right-click targets the nearest rendered item along the eye ray through th
 - Singles: one item.
 - Bar: one bar, possibly collapsing unsupported bars above it.
 
-The main hand must be empty or hold matching item/damage/NBT with room. Stack clicks are consumed even if extraction fails.
+The main hand needs room and matching item/damage/NBT, or must be empty. Stack clicks are consumed on failure too.
 
 Breaking or replacing any stack block drops that block's local contents; no stack block item drops. Storage runs above and below the gap settle independently in place. Singles leaves separated runs standing. Removing a Bar Stack removes the support seam beneath the Bars above it, so unsupported bars collapse and drop.
 
@@ -66,7 +66,7 @@ Contents drop even with `doTileDrops` false.
 
 27 ordinary stacks shown as a 3 x 3 x 3 grid; a slot holding one item and a full slot show the same item model. A contiguous pile is one inventory: deposits merge compatible partial stacks first, fill from the base up, and grow upward when full and allowed. Settlement merges exact item/damage/NBT identities, sorts, packs down, and removes empty top blocks. Extraction removes from the aimed cell first; the following scheduled block tick settles the pile.
 
-Only Storage has permanence: permanent piles retain empty blocks; temporary piles trim empty tops and disappear when emptied. This pile-wide setting shows above the hotbar when toggled. A redstone torch rotates one block's layout.
+Only Storage has permanence: permanent piles retain empty blocks; temporary piles trim empty tops and disappear when emptied. This pile-wide setting shows above the hotbar when toggled. A redstone torch rotates one block's layout. Growth takes the base facing; new joins prefer the facing below, then above. Commands and structures keep explicit facing.
 
 ### Singles
 
@@ -74,11 +74,11 @@ Only Storage has permanence: permanent piles retain empty blocks; temporary pile
 
 A deposit goes only into the cell selected by the view; it does not search the column when that cell is occupied or unsupported. Removing an item shifts every occupied cell above it in that visible column down one layer, across seams, preserving each item's own rotation. It does not compact other columns or erase preexisting gaps. Empty top blocks remove themselves.
 
-A redstone torch rotates a whole block; a soul torch rotates only the aimed item. Both are quarter-turns. Per-item rotation stays with the item when gravity moves it.
+Redstone torches turn the block; soul torches turn the aimed item. Both use quarter-turns. Gravity preserves item rotation.
 
 ### Bar
 
-64 ingots rendered as fixed bar cuboids in eight layers of eight, each layer across the one below. The tag covers the loader's common ingot/brick tags, vanilla ingots and bricks, and listed modded ones. Resource packs supply or derive bar textures and tints; item models are not drawn.
+64 ingots rendered as fixed bar cuboids in eight layers of eight, each layer across the one below. The tag covers the loader's common ingot/brick tags, vanilla ingots and bricks, and listed modded ones. Packs supply textures/tints.
 
 The bottom layer rests on the world. Every bar above it must overlap a bar directly below, and support crosses seams between adjacent Bar blocks. Removing a bar, or breaking a Bar block, drops every bar that loses support, possibly cascading through layers and blocks. Supported bars stay in place. Bars have no rotation gesture.
 
@@ -104,7 +104,7 @@ Every block exposes the whole contiguous run on all six sides: `IItemHandler` on
 | Singles | One display cell | 1 |
 | Bar | One bar position | 1 |
 
-Advertised storage includes every current position plus one block of headroom while below maximum height. Inserting into headroom can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity obstructs the final shape, build height or run height is reached, or the loader's edit authority refuses the automation actor.
+Advertised storage includes every current position plus one block of headroom while below maximum height. Inserting into headroom can grow the run. Growth requires the actor's build permission and is refused when the type is disabled, the space cannot be replaced, an entity obstructs the final shape, build height or run height is reached, or the loader's edit authority refuses the automation actor.
 
 Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named; machines walking positions bottom to top build layer by layer.
 
@@ -140,7 +140,7 @@ World policy: Forge uses `<world>/serverconfig/somestacks-server.toml`, reloaded
 | `render_gallery.gen_mods` | empty | Namespaces used by `list` gallery/write forms |
 | `render_gallery.gen_items` | empty | Items used by `/ss gallery items` |
 
-Disabled types keep existing blocks and extraction. Item/mod/tag changes never eject contents. Client settings sync on login and when changed; cycling skips disabled types.
+Disabled types keep existing blocks and extraction. Policy/tag changes never eject contents. Client settings sync on login and when changed; cycling skips disabled types.
 
 ## Commands
 
@@ -172,7 +172,7 @@ Resolution order: local override, resource-pack data (including server packs), t
 
 A failing `2d` model shows a red "ERR" cube until resource reload, logged once.
 
-Bar appearance is separate: resource packs map item ids to textures and optional tints under `assets/<namespace>/textures/bars/*.json`. Missing tints derive from the sprite and tint of the first quad the item draws in inventory. Bar mappings are client-only, so players with different packs can see different bars.
+Bar appearance is separate: resource packs map item ids to textures and optional tints under `assets/<namespace>/textures/bars/*.json`. Missing tints derive from the sprite and tint of the first quad the item draws in inventory. Different client packs can show different bars.
 
 ## Extension points
 

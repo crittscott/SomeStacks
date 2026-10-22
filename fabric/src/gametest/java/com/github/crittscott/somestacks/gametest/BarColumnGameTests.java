@@ -159,7 +159,8 @@ public final class BarColumnGameTests implements FabricGameTest {
     /**
      * Synthetic admission fixture: directly seed a refused stick at Bar slot 1 beside an accepted
      * ingot at slot 0, then automate extraction from slot 0. The ingot is extracted and the stick
-     * is conserved in storage plus nearby drops. The test does not change policy.
+     * moves into slot 0 without dropping. A per-run tag isolates its drops from other fixtures.
+     * The test does not change policy.
      *
      * <p>To check manually, enable a data pack adding minecraft:oak_planks to the
      * somestacks:ingots item tag and run /reload. Store an ordinary ingot at bottom position 0 and
@@ -174,15 +175,23 @@ public final class BarColumnGameTests implements FabricGameTest {
         check(!BlockType.BAR_STACK.admits(new ItemStack(Items.STICK), null),
                 "Test needs an item a Bar Stack refuses");
         bars.getItems().insertItem(0, new ItemStack(barItem), false);
-        seedSlot(bars.getItems(), 1, new ItemStack(Items.STICK));
+        String marker = java.util.UUID.randomUUID().toString();
+        ItemStack refused = GameTestScaffold.markedStack(Items.STICK, 1, marker);
+        seedSlot(bars.getItems(), 1, refused.copy());
         SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(bars);
 
         ItemStack extracted = FabricGameTestSupport.extractAt(capability, 0, 64, false);
 
         checkEquals(barItem, extracted.getItem(), "Automated extracted item");
         checkEquals(1, extracted.getCount(), "Automated extraction took more than one bar");
-        int accounted = heldAt(helper, pos, Items.STICK) + droppedNear(helper, pos, Items.STICK);
-        checkEquals(1, accounted, "Refused bar after being backfilled into the hole");
+        check(ItemStack.isSameItemSameTags(refused, bars.getItems().getStackInSlot(0)),
+                "Backfill did not preserve the refused bar and its tags in the hole");
+        checkEquals(1, bars.getItems().getStackInSlot(0).getCount(), "Backfilled bar count");
+        check(bars.getItems().getStackInSlot(1).isEmpty(), "Backfill left its source occupied");
+        checkEquals(1, heldAt(helper, pos, Items.STICK), "Stored refused bar count");
+        checkEquals(0L, GameTestScaffold.droppedInColumn(helper, pos, pos).stream()
+                .filter(entity -> GameTestScaffold.hasMarker(entity.getItem(), marker)).count(),
+                "Automation dropped the backfilled bar");
         helper.succeed();
     }
 

@@ -45,7 +45,7 @@ public final class OverrideJsonCodec {
         for (Map.Entry<String, JsonElement> entry : root.entrySet()) {
             try {
                 ResourceLocation itemId = new ResourceLocation(entry.getKey());
-                ItemRenderConfig config = parseEntry(entry.getKey(), entry.getValue().getAsJsonObject());
+                ItemRenderConfig config = parseEntry(entry.getKey(), entry.getValue().getAsJsonObject(), sourceName);
                 if (config != null) {
                     map.put(itemId, config);
                 }
@@ -60,7 +60,7 @@ public final class OverrideJsonCodec {
 
     /** Returns the parsed entry, or null if none of its fields are valid. */
     @Nullable
-    public static ItemRenderConfig parseEntry(String itemKey, JsonObject json) {
+    public static ItemRenderConfig parseEntry(String itemKey, JsonObject json, String sourceName) {
         RenderMode mode = null;
         Float scale = null;
         RenderOffset offset = null;
@@ -70,10 +70,10 @@ public final class OverrideJsonCodec {
                 String modeString = json.get(FIELD_MODE).getAsString();
                 mode = RenderMode.fromString(modeString);
                 if (mode == null) {
-                    SomeStacksCommon.LOGGER.warn("Invalid render mode '{}' for item '{}'", modeString, itemKey);
+                    SomeStacksCommon.LOGGER.warn("Invalid render mode '{}' for item '{}' in {}", modeString, itemKey, sourceName);
                 }
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to parse mode for item '{}': {}", itemKey, e.getMessage());
+                SomeStacksCommon.LOGGER.warn("Failed to parse mode for item '{}' in {}: {}", itemKey, sourceName, e.getMessage());
             }
         }
 
@@ -81,12 +81,12 @@ public final class OverrideJsonCodec {
             try {
                 scale = json.get(FIELD_SCALE).getAsFloat();
                 if (!inRange(scale, MIN_SCALE, MAX_SCALE)) {
-                    SomeStacksCommon.LOGGER.warn("Invalid scale {} for item '{}', must be between {} and {}",
-                            scale, itemKey, MIN_SCALE, MAX_SCALE);
+                    SomeStacksCommon.LOGGER.warn("Invalid scale {} for item '{}' in {}, must be between {} and {}",
+                            scale, itemKey, sourceName, MIN_SCALE, MAX_SCALE);
                     scale = null;
                 }
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to parse scale for item '{}': {}", itemKey, e.getMessage());
+                SomeStacksCommon.LOGGER.warn("Failed to parse scale for item '{}' in {}: {}", itemKey, sourceName, e.getMessage());
             }
         }
 
@@ -94,7 +94,7 @@ public final class OverrideJsonCodec {
             try {
                 JsonArray offsetArray = json.getAsJsonArray(FIELD_OFFSET);
                 if (offsetArray.size() != 3) {
-                    SomeStacksCommon.LOGGER.warn("Invalid offset array size for item '{}', expected 3 elements", itemKey);
+                    SomeStacksCommon.LOGGER.warn("Invalid offset array size for item '{}' in {}, expected 3 elements", itemKey, sourceName);
                 } else {
                     RenderOffset parsed = new RenderOffset(
                             offsetArray.get(0).getAsFloat(),
@@ -106,12 +106,12 @@ public final class OverrideJsonCodec {
                             && inRange(parsed.z(), MIN_OFFSET, MAX_OFFSET)) {
                         offset = parsed;
                     } else {
-                        SomeStacksCommon.LOGGER.warn("Out of range offset for item '{}', each component must be between {} and {}; ignoring it",
-                                itemKey, MIN_OFFSET, MAX_OFFSET);
+                        SomeStacksCommon.LOGGER.warn("Out of range offset for item '{}' in {}, each component must be between {} and {}; ignoring it",
+                                itemKey, sourceName, MIN_OFFSET, MAX_OFFSET);
                     }
                 }
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to parse offset for item '{}': {}", itemKey, e.getMessage());
+                SomeStacksCommon.LOGGER.warn("Failed to parse offset for item '{}' in {}: {}", itemKey, sourceName, e.getMessage());
             }
         }
 
