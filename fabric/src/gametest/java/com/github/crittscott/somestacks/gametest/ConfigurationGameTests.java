@@ -1,10 +1,8 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.JsonServerConfig;
+import com.github.crittscott.somestacks.TomlServerConfig;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -21,7 +19,7 @@ import java.util.List;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
-/** Fabric JSON server-config checks plus delegates for loader-neutral configuration checks. */
+/** Fabric TOML server-config checks plus delegates for loader-neutral configuration checks. */
 public final class ConfigurationGameTests {
     private static final String TEMPLATE = FabricGameTestSupport.TEMPLATE;
 
@@ -39,25 +37,26 @@ public final class ConfigurationGameTests {
 
     /**
      * Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
-     * validates JSON fields independently. To reproduce in-game: edit the world's
-     * {@code somestacks-server.json}, run {@code /ss reload}, and verify the height limits, enabled
+     * validates TOML fields independently. To reproduce in-game: edit the world's
+     * {@code somestacks-server.toml}, run {@code /ss reload}, and verify the height limits, enabled
      * stack modes, denied deposits, gallery pacing, and Bar/Singles admission follow each valid
      * field while malformed fields revert independently to defaults.
      */
     @GameTest(structure = TEMPLATE, maxTicks = 100)
     public void serverConfigLoadsBoundsAndLists(GameTestHelper helper) {
+        TomlPolicyChecks.verify(helper.getLevel().getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig"), ServerConfig.defaults());
         Path serverConfigDir = helper.getLevel().getServer()
                 .getWorldPath(LevelResource.ROOT)
                 .resolve("serverconfig");
         ServerConfig.Backend original = ServerConfig.backend();
-        Path fixture = serverConfigDir.resolve(SomeStacksCommon.MODID + "-gametest.json");
+        Path fixture = serverConfigDir.resolve(SomeStacksCommon.MODID + "-gametest.toml");
 
         try {
             Files.createDirectories(serverConfigDir);
             Files.deleteIfExists(fixture);
             loadFixture(fixture);
 
-            Files.writeString(fixture, configJson(999, -3, 0));
+            Files.writeString(fixture, configToml(999, -3, 0));
             loadFixture(fixture);
 
             checkEquals(64, ServerConfig.maxPileHeight(), "Maximum pile-height clamp");
@@ -77,7 +76,7 @@ public final class ConfigurationGameTests {
             check(ServerConfig.isModDisabled("examplemod"), "Disabled mod was not baked");
             check(ServerConfig.isItemDisabled(ResourceLocation.parse("minecraft:stone")),
                     "Disabled item was not baked");
-            Files.writeString(fixture, configJson(-9, 99, 7));
+            Files.writeString(fixture, configToml(-9, 99, 7));
             loadFixture(fixture);
             checkEquals(1, ServerConfig.maxPileHeight(), "Minimum pile-height clamp");
             checkEquals(4, ServerConfig.settings().galleryPermissionLevel(),
@@ -85,12 +84,15 @@ public final class ConfigurationGameTests {
             checkEquals(7, ServerConfig.renderGalleryPlacementsPerTick(),
                     "Positive gallery placement budget");
             Files.writeString(fixture, """
-                    {
-                      "piles": {"max_pile_height": "not-a-number"},
-                      "stacks": {"enable_storage_stack_block": false},
-                      "compatibility": {"disable_mods": ["minecraft", 7]}
-                    }
-                    """);
+                [piles]
+                max_pile_height = "not-a-number"
+
+                [stacks]
+                enable_storage_stack_block = false
+
+                [compatibility]
+                disable_mods = ["minecraft", 7]
+                """);
             ServerConfig.reload();
             checkEquals(8, ServerConfig.maxPileHeight(),
                     "Malformed height did not fall back independently");
@@ -118,24 +120,22 @@ public final class ConfigurationGameTests {
 
     /**
      * To reproduce in-game: use /ss deny item add minecraft:diamond as an operator and inspect the
-     * world's {@code serverconfig/somestacks-server.json}. The denial is already saved there.
+     * active {@code somestacks-server.toml}. The denial is already saved there.
      */
     @GameTest(structure = TEMPLATE, maxTicks = 100)
-    public void jsonServerPolicyPersistsCommandLists(GameTestHelper helper) {
+    public void tomlServerPolicyPersistsCommandLists(GameTestHelper helper) {
         MinecraftServer server = helper.getLevel().getServer();
-        Path file = server.getWorldPath(LevelResource.ROOT)
-                .resolve("serverconfig")
-                .resolve(SomeStacksCommon.MODID + "-server.json");
+        Path file = ((TomlServerConfig) ServerConfig.backend()).path();
         ServerConfig.Settings original = ServerConfig.settings();
         try {
             check(server.getCommands().getDispatcher().execute(
                             "ss deny item add minecraft:diamond",
                             server.createCommandSourceStack().withPermission(4)) > 0,
                     "Operator deny command failed");
-            JsonObject written = JsonParser.parseString(Files.readString(file)).getAsJsonObject();
-            check(written.getAsJsonObject("compatibility").getAsJsonArray("disable_items")
-                            .contains(JsonParser.parseString("\"minecraft:diamond\"")),
-                    "Deny command was not saved to the world JSON");
+            var written = new com.electronwill.nightconfig.toml.TomlParser().parse(Files.readString(file));
+            check(written.<List<String>>get("compatibility.disable_items")
+                            .contains("minecraft:diamond"),
+                    "Deny command was not saved to the active TOML");
         } catch (IOException | CommandSyntaxException e) {
             throw helper.assertionException(Component.literal("Could not run or read the deny command: " + e));
         } finally {
@@ -173,37 +173,36 @@ public final class ConfigurationGameTests {
     }
 
     private static void loadFixture(Path fixture) {
-        JsonServerConfig backend = new JsonServerConfig();
+        TomlServerConfig backend = new TomlServerConfig();
         ServerConfig.Backend previousBackend = ServerConfig.backend();
         ServerConfig.Settings previousSettings = ServerConfig.settings();
         ServerConfig.Settings loaded = backend.load(fixture);
-        check(ServerConfig.backend() == previousBackend, "JSON load installed itself");
-        check(ServerConfig.settings() == previousSettings, "JSON load published policy");
+        check(ServerConfig.backend() == previousBackend, "TOML load installed itself");
+        check(ServerConfig.settings() == previousSettings, "TOML load published policy");
         ServerConfig.install(backend);
         ServerConfig.apply(loaded);
     }
 
-    private static String configJson(int height, int permission, int placements) {
+    private static String configToml(int height, int permission, int placements) {
         return """
-                {
-                  "piles": {"max_pile_height": %d},
-                  "stacks": {
-                    "enable_storage_stack_block": false,
-                    "enable_singles_stack_block": true,
-                    "enable_bar_stack_block": false
-                  },
-                  "compatibility": {
-                    "disable_mods": [" MineCraft ", "ExampleMod"],
-                    "disable_items": ["minecraft:stone", "not an item id"]
-                  },
-                  "render_gallery": {
-                    "placements_per_tick": %d,
-                    "enabled": true,
-                    "required_permission_level": %d,
-                    "gen_mods": ["minecraft"],
-                    "gen_items": ["minecraft:stone"]
-                  }
-                }
+                [piles]
+                max_pile_height = %d
+
+                [stacks]
+                enable_storage_stack_block = false
+                enable_singles_stack_block = true
+                enable_bar_stack_block = false
+
+                [compatibility]
+                disable_mods = [" MineCraft ", "ExampleMod"]
+                disable_items = ["minecraft:stone", "not an item id"]
+
+                [render_gallery]
+                placements_per_tick = %d
+                enabled = true
+                required_permission_level = %d
+                gen_mods = ["minecraft"]
+                gen_items = ["minecraft:stone"]
                 """.formatted(height, placements, permission);
     }
 }

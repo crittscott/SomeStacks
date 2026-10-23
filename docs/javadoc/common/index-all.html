@@ -125,6 +125,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Applies the counter-rotation shared by GUI rendering and automatic GUI measurement.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/ServerConfigMigration.html#archive(java.nio.file.Path)" class="member-name-link">archive(Path)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfigMigration.html" title="class in com.github.crittscott.somestacks">ServerConfigMigration</a></dt>
+<dd>
+<div class="block">Called only after TOML persistence has succeeded.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.html#ARG_ITEM" class="member-name-link">ARG_ITEM</a> - Static variable in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.html" title="class in com.github.crittscott.somestacks.command">ClientRenderCommandSyntax</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.html#ARG_MODE" class="member-name-link">ARG_MODE</a> - Static variable in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.html" title="class in com.github.crittscott.somestacks.command">ClientRenderCommandSyntax</a></dt>
@@ -539,6 +543,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/util/StackGesture.html#consumesLocalUse(net.minecraft.world.item.ItemStack)" class="member-name-link">consumesLocalUse(ItemStack)</a> - Method in enum class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackGesture.html" title="enum class in com.github.crittscott.somestacks.util">StackGesture</a></dt>
 <dd>
 <div class="block">Empty-hand air cycling has no local item use to suppress.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/ServerConfigMigration.html#convertJson(java.nio.file.Path,java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">convertJson(Path, Path, ServerConfig.Settings)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfigMigration.html" title="class in com.github.crittscott.somestacks">ServerConfigMigration</a></dt>
+<dd>
+<div class="block">Keeps the JSON as an archive; an existing TOML file is authoritative.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/QuarterTurns.html#COUNT" class="member-name-link">COUNT</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/QuarterTurns.html" title="class in com.github.crittscott.somestacks.util">QuarterTurns</a></dt>
 <dd>&nbsp;</dd>
@@ -1464,6 +1472,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackDataMigration.SavedItems.html#load(com.mojang.serialization.DynamicOps,net.minecraft.nbt.CompoundTag,net.minecraft.world.item.ItemStack%5B%5D)" class="member-name-link">load(DynamicOps&lt;T&gt;, CompoundTag, ItemStack[])</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackDataMigration.SavedItems.html" title="class in com.github.crittscott.somestacks.block">StackDataMigration.SavedItems</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/TomlServerConfig.html#load(java.nio.file.Path)" class="member-name-link">load(Path)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/TomlServerConfig.html" title="class in com.github.crittscott.somestacks">TomlServerConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#load(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" class="member-name-link">load(HolderLookup.Provider, CompoundTag)</a> - Method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
 <dd>
 <div class="block">Loads slot contents from NBT, setting aside every item tag that cannot be placed.</div>
@@ -1482,6 +1492,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Loads and applies this world's policy using the installed backend before world activity.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/TomlServerConfig.html#loadFor(net.minecraft.server.MinecraftServer)" class="member-name-link">loadFor(MinecraftServer)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/TomlServerConfig.html" title="class in com.github.crittscott.somestacks">TomlServerConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackDataMigration.LoadResult.html#%3Cinit%3E(int,int)" class="member-name-link">LoadResult(int, int)</a> - Constructor for record class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackDataMigration.LoadResult.html" title="class in com.github.crittscott.somestacks.block">StackDataMigration.LoadResult</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>LoadResult</code> record class.</div>
@@ -1778,6 +1790,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the parsed entry, or null if none of its fields are valid.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/TomlServerConfig.html#path()" class="member-name-link">path()</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/TomlServerConfig.html" title="class in com.github.crittscott.somestacks">TomlServerConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#pile()" class="member-name-link">pile()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
 <dd>
 <div class="block">The pile this block belongs to, or null on the client and for a block being removed.</div>
@@ -1870,6 +1884,14 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
+<dt><a href="com/github/crittscott/somestacks/TomlPolicyFile.html#read(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">read(ServerConfig.Settings)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/TomlPolicyFile.html" title="class in com.github.crittscott.somestacks">TomlPolicyFile</a></dt>
+<dd>
+<div class="block">A malformed field uses its default; a syntax error uses the complete default policy.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/ServerConfigMigration.html#readJson(java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">readJson(Path, ServerConfig.Settings)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfigMigration.html" title="class in com.github.crittscott.somestacks">ServerConfigMigration</a></dt>
+<dd>
+<div class="block">Reads the shipped JSON schema, reporting fields that now belong in an item tag.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html#red()" class="member-name-link">red()</a> - Method in record class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/command/SsCommand.html#register(com.mojang.brigadier.CommandDispatcher,net.minecraft.commands.CommandBuildContext)" class="member-name-link">register(CommandDispatcher&lt;CommandSourceStack&gt;, CommandBuildContext)</a> - Static method in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/SsCommand.html" title="class in com.github.crittscott.somestacks.command">SsCommand</a></dt>
@@ -1890,6 +1912,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Refreshes policy through the installed backend without saving or synchronizing clients.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/TomlServerConfig.html#reload()" class="member-name-link">reload()</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/TomlServerConfig.html" title="class in com.github.crittscott.somestacks">TomlServerConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.html#RELOAD_LISTENER_ID" class="member-name-link">RELOAD_LISTENER_ID</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#RELOAD_LISTENER_ID" class="member-name-link">RELOAD_LISTENER_ID</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
@@ -1979,7 +2003,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfigMigration.html#reportLegacyIngots(net.minecraft.server.MinecraftServer)" class="member-name-link">reportLegacyIngots(MinecraftServer)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfigMigration.html" title="class in com.github.crittscott.somestacks">ServerConfigMigration</a></dt>
 <dd>
-<div class="block">Logs ingot entries from a 1.21.1 world config.</div>
+<div class="block">Reports a retained JSON ingot list on native loaders that already use TOML.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackDataMigration.html#reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.StackDataMigration.LoadResult)" class="member-name-link">reportSavedItems(ServerLevel, BlockPos, StackDataMigration.LoadResult)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackDataMigration.html" title="class in com.github.crittscott.somestacks.block">StackDataMigration</a></dt>
 <dd>&nbsp;</dd>
@@ -2066,6 +2090,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Persists the supplied policy; returns whether saving succeeded, without applying it here.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/TomlServerConfig.html#save(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">save(ServerConfig.Settings)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/TomlServerConfig.html" title="class in com.github.crittscott.somestacks">TomlServerConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#save(net.minecraft.core.HolderLookup.Provider)" class="member-name-link">save(HolderLookup.Provider)</a> - Method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#saveAdditional(net.minecraft.world.level.storage.ValueOutput)" class="member-name-link">saveAdditional(ValueOutput)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
@@ -2141,7 +2167,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfigMigration.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfigMigration</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
 <dd>
-<div class="block">Reports server config the 1.21.1 release saved that the current mod no longer reads.</div>
+<div class="block">One-time migration of the preceding release's world JSON policy into documented TOML.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/ServerGestureState.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">ServerGestureState</a> - Class in <a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a></dt>
 <dd>
@@ -2583,6 +2609,22 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Serializes entries sorted by item id for stable files.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/TomlPolicyFile.html" class="type-name-link" title="class in com.github.crittscott.somestacks">TomlPolicyFile</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
+<dd>
+<div class="block">Documented TOML persistence and field validation, independent of loader lifecycle.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/TomlPolicyFile.html#%3Cinit%3E(java.nio.file.Path)" class="member-name-link">TomlPolicyFile(Path)</a> - Constructor for class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/TomlPolicyFile.html" title="class in com.github.crittscott.somestacks">TomlPolicyFile</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/TomlServerConfig.html" class="type-name-link" title="class in com.github.crittscott.somestacks">TomlServerConfig</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
+<dd>
+<div class="block">Fabric's TOML backend: instance defaults with an optional world policy override.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/TomlServerConfig.html#%3Cinit%3E()" class="member-name-link">TomlServerConfig()</a> - Constructor for class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/TomlServerConfig.html" title="class in com.github.crittscott.somestacks">TomlServerConfig</a></dt>
+<dd>
+<div class="block">Explicit-file constructor for loader-neutral configuration fixtures.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/TomlServerConfig.html#%3Cinit%3E(java.nio.file.Path)" class="member-name-link">TomlServerConfig(Path)</a> - Constructor for class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/TomlServerConfig.html" title="class in com.github.crittscott.somestacks">TomlServerConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/BarCubeIdx.html#TOP_LAYER_START" class="member-name-link">TOP_LAYER_START</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/BarCubeIdx.html" title="class in com.github.crittscott.somestacks.util">BarCubeIdx</a></dt>
 <dd>
 <div class="block">First local slot in the top layer, shared by live and staged seam occupancy.</div>
@@ -2847,6 +2889,10 @@ the order they are declared.</div>
 <dd>
 <div class="block">Vanilla world-edit mechanics for stack growth and removal: world border and spawn protection,
  entity obstruction, actor propagation, and the actual block edit.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/TomlPolicyFile.html#write(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">write(ServerConfig.Settings)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/TomlPolicyFile.html" title="class in com.github.crittscott.somestacks">TomlPolicyFile</a></dt>
+<dd>
+<div class="block">Writes all current fields with the same explanations as the loader-managed TOML.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.html#WRITE" class="member-name-link">WRITE</a> - Static variable in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.html" title="class in com.github.crittscott.somestacks.command">ClientRenderCommandSyntax</a></dt>
 <dd>&nbsp;</dd>

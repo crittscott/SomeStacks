@@ -31,7 +31,7 @@ Three blocks; no block items, menus, or recipes:
 | `StackRun`, `StackRunItemAccess`, `StoragePile`, `SinglesColumn`, `BarColumn` | Runs, slots, publication, comparators, growth, cleanup |
 | `StackItemStorage`, `SlotAccess` | Mutable local storage and read-only slot view |
 | `CubeGrid`, `util/*CubeIdx`, `ViewRay` | Grid coordinates, ray selection, geometry, support and seams |
-| `ServerConfig`, loader config adapters | Per-world policy and native TOML/Fabric JSON persistence |
+| `ServerConfig`, loader config adapters | Per-world policy and native TOML/Fabric TOML persistence |
 | `WorldEdits`, `EditAuthority` | World edits, actor authority, neighbor protection |
 | `StackInteractions`, `ServerGestureState`, `StackGesture` | Block-use interpretation, gesture intent and state |
 | `network/*` | Gesture-state and policy payloads |
@@ -89,7 +89,7 @@ Neighbor deposits consult Forge/NeoForge right-click events or Fabric Common Pro
 
 ## Configuration and presentation
 
-`ServerConfig` publishes immutable policy. Forge/NeoForge use native SERVER configs (`ForgeConfigSpec`/`ModConfigSpec`); TOML overrides live in `<world>/serverconfig/`; Fabric reads `<world>/serverconfig/somestacks-server.json` with per-field defaults. `/ss deny` and `/ss gen` save through the backend. Backends share common keys/defaults and return settings; the facade applies them. `/ss reload` and native config events share one server-thread refresh that resyncs only changed client settings and resends command trees on gallery access changes. Bar/Singles classification uses the `somestacks:ingots` tag.
+`ServerConfig` publishes immutable policy. Forge/NeoForge use native SERVER configs (`ForgeConfigSpec`/`ModConfigSpec`); TOML overrides live in `<world>/serverconfig/`; `TomlPolicyFile` reads Fabric TOML with per-field defaults. `/ss deny` and `/ss gen` save through the backend. Backends share common keys/defaults and return settings; the facade applies them. `/ss reload` and native config events share one server-thread refresh that resyncs only changed client settings and resends command trees on gallery access changes. Bar/Singles classification uses the `somestacks:ingots` tag.
 
 Extensions are listed in `orientation-player.md`.
 
@@ -102,4 +102,5 @@ Extensions are listed in `orientation-player.md`.
 `somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`, applying policy in memory; JSON config tests are Fabric-only. Loader wrappers use Fabric entrypoints or Forge/NeoForge deferred functions/test-instance JSON, with `AutomationAndPersistence` names. Test data format: 80. The gallery-budget check runs alone in its own test environment; a regular player checks the placed-block criterion fixture. `/ssclienttest` (aim at a stack; release Shift/V) also checks profile layers and commands, Bar presentation caching, and native client update ingress.
 
 Fabric GameTests install a Common Protection API provider and reject gameplay callbacks during destination queries.
+
 
