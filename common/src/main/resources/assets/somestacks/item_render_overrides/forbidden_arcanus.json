@@ -1,0 +1,20 @@
+{
+  "forbidden_arcanus:deorum_lantern": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "forbidden_arcanus:deorum_soul_lantern": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}
