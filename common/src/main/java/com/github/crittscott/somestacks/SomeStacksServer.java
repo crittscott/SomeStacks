@@ -29,6 +29,7 @@ public final class SomeStacksServer {
     public static synchronized void onServerStarting(MinecraftServer server) {
         runningServer = server;
         StackDataMigration.beginSession();
+        if (!(ServerConfig.backend() instanceof TomlServerConfig)) ServerConfigMigration.reportLegacyIngots(server);
         ServerConfig.loadFor(server);
         publishedPolicy = ServerConfig.settings();
         clientSnapshot = ConfigSyncPkt.fromSettings(publishedPolicy);

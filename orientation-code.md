@@ -31,7 +31,7 @@ Three blocks; no block items, menus, or recipes:
 | `StackRun`, `StackRunItemAccess`, `StoragePile`, `SinglesColumn`, `BarColumn` | Runs, slots, publication, comparators, mutation, growth and cleanup |
 | `StackItemStorage`, `SlotAccess` | Mutable local storage and a read-only slot view |
 | `CubeGrid`, `util/*CubeIdx`, `ViewRay` | Grid coordinates, ray selection, geometry, support and seams |
-| `ServerConfig`, loader config adapters | Per-world policy and native TOML/Fabric JSON persistence |
+| `ServerConfig`, loader config adapters | Per-world policy and native TOML/Fabric TOML persistence |
 | `WorldEdits`, `EditAuthority` | World edits, automation authority, adjacent-target protection |
 | `StackInteractions`, `ServerGestureState` | Vanilla block-use interpretation and gesture state |
 | `network/*` | Gesture-state and server-to-client synchronization payloads |
@@ -87,7 +87,7 @@ Neighbor deposits consult NeoForge right-click events or Fabric Common Protectio
 
 ## Configuration and presentation
 
-`ServerConfig` owns setting keys/defaults and publishes immutable policy. Backends return settings; the facade applies them. NeoForge config events share one handler. NeoForge uses a native synced SERVER `ModConfigSpec`; client load/reload events publish policy. Commented TOML supports `<world>/serverconfig/somestacks-server.toml` overrides. Fabric returns per-field validated settings from `<world>/serverconfig/somestacks-server.json`. `/ss deny` and `/ss gen` save through the backend. Reloads and list edits share server-thread `publishPolicy`, which resends command trees on gallery access changes and Fabric snapshots only when changed. 
+`ServerConfig` owns setting keys/defaults and publishes immutable policy. Backends return settings; the facade applies them. NeoForge config events share one handler. NeoForge uses a native synced SERVER `ModConfigSpec`; client load/reload events publish policy. Commented TOML supports `<world>/serverconfig/somestacks-server.toml` overrides. `TomlPolicyFile` reads Fabric TOML from `config/somestacks-server.toml`. `/ss deny` and `/ss gen` save through the backend. Reloads and list edits share server-thread `publishPolicy`, which resends command trees on gallery access changes and Fabric snapshots only when changed. 
 
 BERs extract presentation before queued submission using inherited frame light. Storage/Singles share `GridStackBER`, `CubeGrid`, and `CubeRenderHelper`; models cache until content, rotation or profile changes, freezing time-dependent models. Bar caches cuboids, UVs and tints until content or resource generation changes. Profiles resolve user, pack, then measurement. `ItemCapture` owns quads/tints/render types; special features disqualify automatic flat projection. 2-D art caches 2,048 recent stacks and submits once per render type/block. Failed captures draw `stack_cube_error` until reload. Block mode submits native features, falling back to FIXED for non-model blocks. Bar UVs cache per sprite; auto-tint reads the first quad. Listeners use `FileToIdConverter`; Bar entries use codecs. Measured caches key format, packs and mod versions. The combined mod pack declares data format 101.1; galleries bypass protection.
 
@@ -97,6 +97,7 @@ Automatic Bar tints resolve on first render; authored colors stay; reload clears
 
 ## GameTests
 
-`somestacks_gametest` is excluded from `build`. Fabric entrypoints and NeoForge deferred functions/JSON wrap `common/src/gametest` checks. Test data format: 101.1. Loader transfer tests cover staged support, slot replacement, rollback, growth, and movement; NeoForge also covers vetoes. JSON config and protection-provider tests are Fabric-only; shared tests cover drop-rule-off Bars, Adventure cleanup, and grass/snow replacement. `AutomationAndPersistenceChecks` cover persistence. `/ssclienttest` (aim at a stack, release Shift/V) checks native client updates and inherited-component rejection, capture/GUI/profile/grid behavior, and Bar reuse/invalidation. The gallery-budget check runs in its own environment.
+`somestacks_gametest` is excluded from `build`. Fabric entrypoints and NeoForge deferred functions/JSON wrap `common/src/gametest` checks. Test data format: 101.1. Loader transfer tests cover staged support, slot replacement, rollback, growth, and movement; NeoForge also covers vetoes. TOML config and protection-provider tests are Fabric-only; shared tests cover drop-rule-off Bars, Adventure cleanup, and grass/snow replacement. `AutomationAndPersistenceChecks` cover persistence. `/ssclienttest` (aim at a stack, release Shift/V) checks native client updates and inherited-component rejection, capture/GUI/profile/grid behavior, and Bar reuse/invalidation. The gallery-budget check runs in its own environment.
+
 
 

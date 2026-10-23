@@ -128,3 +128,16 @@ sourcesJar {
 tasks.named('assemble') {
     dependsOn shadowJar
 }
+
+// Bundle and relocate the TOML library: users install only Some Stacks.
+dependencies {
+    implementation "com.electronwill.night-config:core:$rootProject.night_config_version"
+    implementation "com.electronwill.night-config:toml:$rootProject.night_config_version"
+    shadowBundle "com.electronwill.night-config:core:$rootProject.night_config_version"
+    shadowBundle "com.electronwill.night-config:toml:$rootProject.night_config_version"
+}
+shadowJar {
+    relocate 'com.electronwill.nightconfig', 'com.github.crittscott.somestacks.internal.nightconfig'
+}
+
+repositories { mavenCentral() }
