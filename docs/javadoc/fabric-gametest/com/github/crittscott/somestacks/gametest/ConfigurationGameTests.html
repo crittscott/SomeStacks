@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ConfigurationGameTests</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Fabric delegates for loader-neutral checks, plus checks of Fabric's JSON server config.</div>
+<div class="block">Fabric delegates for loader-neutral checks, plus checks of Fabric's TOML server config.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -134,31 +134,31 @@ loadScripts(document, 'script');</script>
 <div class="block">See <a href="ConfigurationChecks.html#ingotTagControlsBarAndSinglesAdmission(net.minecraft.gametest.framework.GameTestHelper)"><code>ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#jsonServerPolicyPersistsCommandLists(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">jsonServerPolicyPersistsCommandLists</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">To reproduce in-game: use /ss deny item add minecraft:diamond as an operator and open the
- world's <code>serverconfig/somestacks-server.json</code>.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">See <a href="ConfigurationChecks.html#overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(net.minecraft.gametest.framework.GameTestHelper)"><code>ConfigurationChecks.overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#overrideJsonUsesInclusiveBounds(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">overrideJsonUsesInclusiveBounds</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#overrideJsonUsesInclusiveBounds(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">overrideJsonUsesInclusiveBounds</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">See <a href="ConfigurationChecks.html#overrideJsonUsesInclusiveBounds(net.minecraft.gametest.framework.GameTestHelper)"><code>ConfigurationChecks.overrideJsonUsesInclusiveBounds(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serverCommandsEnforcePermissionsAndPersistEdits(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">serverCommandsEnforcePermissionsAndPersistEdits</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serverCommandsEnforcePermissionsAndPersistEdits(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">serverCommandsEnforcePermissionsAndPersistEdits</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">See <a href="ConfigurationChecks.html#serverCommandsEnforcePermissionsAndPersistEdits(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ConfigurationChecks.serverCommandsEnforcePermissionsAndPersistEdits(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">serverConfigLoadsBoundsAndLists</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">serverConfigLoadsBoundsAndLists</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
- validates JSON fields independently.</div>
+ validates TOML fields independently.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tomlServerPolicyPersistsCommandLists(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">tomlServerPolicyPersistsCommandLists</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">To reproduce in-game: use /ss deny item add minecraft:diamond as an operator and open the
+ active <code>somestacks-server.toml</code>.</div>
 </div>
 </div>
 </div>
@@ -216,20 +216,20 @@ loadScripts(document, 'script');</script>
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">serverConfigLoadsBoundsAndLists</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
- validates JSON fields independently. To reproduce in-game: edit the world's
- <code>somestacks-server.json</code>, run <code>/ss reload</code>, and verify the height limits, enabled
+ validates TOML fields independently. To reproduce in-game: edit the world's
+ <code>somestacks-server.toml</code>, run <code>/ss reload</code>, and verify the height limits, enabled
  stack modes, denied deposits, gallery pacing, and Bar/Singles admission follow each valid
  field while malformed fields revert independently to defaults.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="jsonServerPolicyPersistsCommandLists(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>jsonServerPolicyPersistsCommandLists</h3>
+<section class="detail" id="tomlServerPolicyPersistsCommandLists(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>tomlServerPolicyPersistsCommandLists</h3>
 <div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
           maxTicks=100)
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">jsonServerPolicyPersistsCommandLists</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">tomlServerPolicyPersistsCommandLists</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce in-game: use /ss deny item add minecraft:diamond as an operator and open the
- world's <code>serverconfig/somestacks-server.json</code>. The denial is already in the file.</div>
+ active <code>somestacks-server.toml</code>. The denial is already in the file.</div>
 </section>
 </li>
 <li>

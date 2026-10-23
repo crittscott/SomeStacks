@@ -121,7 +121,7 @@ Storage counts each slot as a fraction of its legal stack size; Singles and Bar 
 
 ## Server configuration
 
-Forge and NeoForge use loader-managed `somestacks-server.toml`, with per-world overrides under `<world>/serverconfig/`; file edits are picked up by the native config lifecycle. Fabric uses per-world JSON at `<world>/serverconfig/somestacks-server.json`, reread by `/ss reload`.
+Forge and NeoForge use loader-managed `somestacks-server.toml`, with per-world overrides under `<world>/serverconfig/`; file edits are picked up by the native config lifecycle. Fabric uses documented TOML defaults at `config/somestacks-server.toml`, reread by `/ss reload`.
 
 | Setting | Default | Effect |
 | --- | --- | --- |
@@ -147,9 +147,9 @@ Disabling types, items, mods, or ingot categories preserves existing contents. C
 | `/ss write changed\|<modid>\|all\|list` | anyone; client-local | Save changed item profiles, or generate complete profile files |
 | `/ss gallery ...` / `/ss ingotgallery ...` | `render_gallery.required_permission_level`; off by default | Build Storage or Bar render galleries |
 | `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
-| `/ss reload` | level 2 | Refresh policy and synchronize changed client settings; Fabric rereads JSON |
+| `/ss reload` | level 2 | Refresh policy and synchronize changed client settings; Fabric rereads TOML |
 
-Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed JSON fields; Forge/NeoForge validate TOML. Edit `somestacks:ingots` and use `/reload` for ingot classification.
+Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed TOML fields; Forge/NeoForge validate TOML. Edit `somestacks:ingots` and use `/reload` for ingot classification.
 
 ## Item appearance
 

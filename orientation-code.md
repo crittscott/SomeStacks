@@ -29,7 +29,7 @@ Java 21; Minecraft 1.21.11 on Forge (pinned 61.1.5), NeoForge, and Fabric; packa
 | `StackRun`, `StackRunItemAccess`, `StoragePile`, `SinglesColumn`, `BarColumn` | Runs, slots, publication, comparators, mutation, growth and cleanup |
 | `StackItemStorage`, `SlotAccess` | Mutable local storage and read-only slot view |
 | `CubeGrid`, `util/*CubeIdx`, `ViewRay` | Grid coordinates, ray selection, geometry, support and seams |
-| `ServerConfig`, loader config adapters | Per-world policy and native TOML/Fabric JSON persistence |
+| `ServerConfig`, loader config adapters | Per-world policy and native TOML/Fabric TOML persistence |
 | `WorldEdits`, `EditAuthority` | World edits, automation authority, adjacent-target protection |
 | `StackInteractions`, `StackGesture`, `ServerGestureState` | Vanilla block-use interpretation and gesture state |
 | `network/*` | Gesture-state and server-to-client synchronization payloads |
@@ -87,7 +87,7 @@ Neighbor deposits consult Forge/NeoForge right-click events or Fabric Common Pro
 
 ## Configuration and presentation
 
-`ServerConfig` publishes immutable policy. Forge/NeoForge use native SERVER configs (`ForgeConfigSpec`/`ModConfigSpec`) with `<world>/serverconfig/somestacks-server.toml`; Fabric reads `<world>/serverconfig/somestacks-server.json` with per-field defaults. Backends share common setting keys/defaults and return settings; the facade applies them. `/ss deny` and `/ss gen` persist edits. Reloads and list edits share server-thread publication/logging: changed client snapshots resync players; gallery enablement/permission changes resend command trees. Policy logs include gallery access and deny-list counts.
+`ServerConfig` publishes immutable policy. Forge/NeoForge use native SERVER configs (`ForgeConfigSpec`/`ModConfigSpec`) with `<world>/serverconfig/somestacks-server.toml`; `TomlPolicyFile` reads Fabric TOML with per-field defaults. Backends share common setting keys/defaults and return settings; the facade applies them. `/ss deny` and `/ss gen` persist edits. Reloads and list edits share server-thread publication/logging: changed client snapshots resync players; gallery enablement/permission changes resend command trees. Policy logs include gallery access and deny-list counts.
 
 BERs prepare presentation before queued submission using frame light. Storage/Singles share `GridStackBER`, `CubeGrid`, and `CubeRenderHelper`, caching until content, rotation, or profile changes; time-dependent models freeze. Bar caches geometry/UVs/tints until content or resource-generation changes. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns quads, tints, and render types; measurement uses vanilla extents. Special features disqualify automatic 2-D projection. Item-atlas art caches 2,048 recent stacks and submits once per render type/block; failures draw stack_cube_error until reload. Block mode submits native features, falling back to FIXED for non-model blocks. Bar entry codecs and native file discovery retain pack paths. Measured caches key format, packs, and mod versions. Data format: 94.1.
 
@@ -96,3 +96,4 @@ BERs prepare presentation before queued submission using frame light. Storage/Si
 ## GameTests
 
 `somestacks_gametest` is excluded from build. Fabric entrypoints and Forge/NeoForge deferred functions/JSON wrap common scenarios. Tests cover placement/protection, block-drop-disabled Bar conservation, Adventure cleanup, vegetation/snow replacement, persistence/migration, capacity, transactions, support/movement, vetoes, and policy sync. Fabric installs a test Common Protection API provider. `/ssclienttest` checks callbacks, capture/geometry, GUI extents, cache invalidation, queued rendering, and atomic update rejection including inherited components. Gallery-budget tests use a separate environment.
+
