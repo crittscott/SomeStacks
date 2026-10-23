@@ -10,6 +10,10 @@
       "required": false
     },
     {
+      "id": "ad_astra:etrium_ingot",
+      "required": false
+    },
+    {
       "id": "advancednetherite:netherite_diamond_ingot",
       "required": false
     },
@@ -71,6 +75,26 @@
     },
     {
       "id": "gtceu:firebrick",
+      "required": false
+    },
+    {
+      "id": "iceandfire:dragonsteel_fire_ingot",
+      "required": false
+    },
+    {
+      "id": "iceandfire:dragonsteel_ice_ingot",
+      "required": false
+    },
+    {
+      "id": "iceandfire:dragonsteel_lightning_ingot",
+      "required": false
+    },
+    {
+      "id": "iceandfire:ghost_ingot",
+      "required": false
+    },
+    {
+      "id": "immersiveengineering:ingot_hop_graphite",
       "required": false
     },
     {
