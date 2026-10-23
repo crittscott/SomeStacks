@@ -121,7 +121,7 @@ Storage counts each slot as a fraction of its legal stack size; Singles and Bar 
 
 ## Server configuration
 
-Forge and NeoForge use loader-managed `somestacks-server.toml`, with per-world overrides under `<world>/serverconfig/`; file edits are picked up by the native config lifecycle. Fabric uses per-world JSON at `<world>/serverconfig/somestacks-server.json`, reread by `/ss reload`.
+Forge and NeoForge use loader-managed `somestacks-server.toml`, with per-world overrides under `<world>/serverconfig/`; file edits are picked up by the native config lifecycle. Fabric uses documented TOML defaults at `config/somestacks-server.toml`, reread by `/ss reload`.
 
 | Setting | Default | Effect |
 | --- | --- | --- |
@@ -147,9 +147,9 @@ Disabling a type, item, mod, or ingot category never removes or ejects existing 
 | `/ss write changed\|<modid>\|all\|list` | anyone; client-local | Save changed item profiles, or generate complete profile files |
 | `/ss gallery ...` / `/ss ingotgallery ...` | `render_gallery.required_permission_level`; off by default | Build Storage or Bar render galleries |
 | `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
-| `/ss reload` | level 2 | Refresh server policy, then resync players; Fabric rereads JSON |
+| `/ss reload` | level 2 | Refresh server policy, then resync players; Fabric rereads TOML |
 
-Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods and items. Fabric `/ss reload` rereads JSON, using defaults for malformed fields; Forge/NeoForge validate TOML through their config lifecycle. Edit ingot classification through `somestacks:ingots`, applied on `/reload`.
+Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods and items. Fabric `/ss reload` rereads TOML, using defaults for malformed fields; Forge/NeoForge validate TOML through their config lifecycle. Edit ingot classification through `somestacks:ingots`, applied on `/reload`.
 
 ## Item appearance
 

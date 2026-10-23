@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.JsonServerConfig;
+import com.github.crittscott.somestacks.TomlServerConfig;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.block.BarStackBE;
@@ -15,7 +15,6 @@ import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.CommandDispatcher;
@@ -48,7 +47,7 @@ import java.util.function.Function;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
-/** Loader-neutral parsing and policy checks for the two JSON-backed configuration surfaces. */
+/** Loader-neutral parsing and policy checks for the render JSON and server TOML configuration surfaces. */
 public final class ConfigurationChecks {
     private ConfigurationChecks() {}
 
@@ -171,25 +170,26 @@ public final class ConfigurationChecks {
 
     /**
      * Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
-     * validates Fabric JSON fields independently. To reproduce in-game on Fabric: edit the world's
-     * {@code somestacks-server.json}, run {@code /ss reload}, and verify the height limits, enabled
+     * validates Fabric TOML fields independently. To reproduce in-game on Fabric: edit the world's
+     * {@code somestacks-server.toml}, run {@code /ss reload}, and verify the height limits, enabled
      * stack modes, denied deposits, gallery pacing, and Bar/Singles admission follow each valid
      * field while malformed fields revert independently to defaults.
      */
     public static void serverConfigLoadsBoundsAndLists(GameTestHelper helper) {
+        TomlPolicyChecks.verify(helper.getLevel().getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig"), ServerConfig.defaults());
         Path serverConfigDir = helper.getLevel().getServer()
                 .getWorldPath(LevelResource.ROOT)
                 .resolve("serverconfig");
         ServerConfig.Backend original = ServerConfig.backend();
-        Path fixture = serverConfigDir.resolve(SomeStacksCommon.MODID + "-gametest.json");
+        Path fixture = serverConfigDir.resolve(SomeStacksCommon.MODID + "-gametest.toml");
 
         try {
             Files.createDirectories(serverConfigDir);
             Files.deleteIfExists(fixture);
-            new JsonServerConfig().load(fixture);
+            loadFixture(fixture);
 
-            Files.writeString(fixture, configJson(999, -3, 0));
-            new JsonServerConfig().load(fixture);
+            Files.writeString(fixture, configToml(999, -3, 0));
+            loadFixture(fixture);
 
             checkEquals(64, ServerConfig.maxPileHeight(), "Maximum pile-height clamp");
             checkEquals(0, ServerConfig.galleryRequiredPermissionLevel(),
@@ -208,20 +208,23 @@ public final class ConfigurationChecks {
             check(ServerConfig.isModDisabled("examplemod"), "Disabled mod was not baked");
             check(ServerConfig.isItemDisabled(ResourceLocation.parse("minecraft:stone")),
                     "Disabled item was not baked");
-            Files.writeString(fixture, configJson(-9, 99, 7));
-            new JsonServerConfig().load(fixture);
+            Files.writeString(fixture, configToml(-9, 99, 7));
+            loadFixture(fixture);
             checkEquals(1, ServerConfig.maxPileHeight(), "Minimum pile-height clamp");
             checkEquals(4, ServerConfig.galleryRequiredPermissionLevel(),
                     "Maximum gallery-permission clamp");
             checkEquals(7, ServerConfig.renderGalleryPlacementsPerTick(),
                     "Positive gallery placement budget");
             Files.writeString(fixture, """
-                    {
-                      "piles": {"max_pile_height": "not-a-number"},
-                      "stacks": {"enable_storage_stack_block": false},
-                      "compatibility": {"disable_mods": ["minecraft", 7]}
-                    }
-                    """);
+                [piles]
+                max_pile_height = "not-a-number"
+
+                [stacks]
+                enable_storage_stack_block = false
+
+                [compatibility]
+                disable_mods = ["minecraft", 7]
+                """);
             check(ServerConfig.reload(), "Server config did not reload its current file");
             checkEquals(8, ServerConfig.maxPileHeight(),
                     "Malformed height did not fall back independently");
@@ -257,14 +260,14 @@ public final class ConfigurationChecks {
     public static void denyPoliciesRespectPlayerAutomationAndExistingContents(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerConfig.Backend original = ServerConfig.backend();
-        Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-policy-gametest.json");
+        Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-policy-gametest.toml");
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, GameTestScaffold.ORIGIN);
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.STONE, 4));
         try {
             Files.createDirectories(fixture.getParent());
-            Files.writeString(fixture, policyJson(8, true, true, true,
+            Files.writeString(fixture, policyToml(8, true, true, true,
                     List.of(), List.of("minecraft:stone")));
-            new JsonServerConfig().load(fixture);
+            loadFixture(fixture);
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             StackInteractions.handleExistingStack(
                     player, InteractionHand.MAIN_HAND, centerHit(storage.getBlockPos()),
@@ -277,9 +280,9 @@ public final class ConfigurationChecks {
             checkEquals(2, storage.itemRun().insertAt(
                     0, new ItemStack(Items.STONE, 2), false),
                     "Exact-item denial reached automation");
-            Files.writeString(fixture, policyJson(8, true, true, true,
+            Files.writeString(fixture, policyToml(8, true, true, true,
                     List.of("minecraft"), List.of()));
-            new JsonServerConfig().load(fixture);
+            loadFixture(fixture);
             checkEquals(0, storage.itemRun().insertAt(
                     1, new ItemStack(Items.STONE), false),
                     "Namespace denial did not reach automation");
@@ -303,11 +306,11 @@ public final class ConfigurationChecks {
     public static void disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerConfig.Backend original = ServerConfig.backend();
-        Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-limits-gametest.json");
+        Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-limits-gametest.toml");
         try {
             Files.createDirectories(fixture.getParent());
-            Files.writeString(fixture, policyJson(1, true, true, false, List.of(), List.of()));
-            new JsonServerConfig().load(fixture);
+            Files.writeString(fixture, policyToml(1, true, true, false, List.of(), List.of()));
+            loadFixture(fixture);
 
             StorageStackBE storage = GameTestScaffold.placeStorage(helper, GameTestScaffold.ORIGIN);
             for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
@@ -352,8 +355,8 @@ public final class ConfigurationChecks {
                 ServerGestureState.clear(player.getUUID());
             }
 
-            Files.writeString(fixture, policyJson(8, true, true, false, List.of(), List.of()));
-            new JsonServerConfig().load(fixture);
+            Files.writeString(fixture, policyToml(8, true, true, false, List.of(), List.of()));
+            loadFixture(fixture);
             BarStackBE bars = GameTestScaffold.placeBar(
                     helper, GameTestScaffold.ORIGIN.east(7));
             for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
@@ -363,8 +366,8 @@ public final class ConfigurationChecks {
                     BarStackBE.SLOTS, new ItemStack(barItem), false),
                     "Disabled Bar type allowed automation growth");
 
-            Files.writeString(fixture, policyJson(8, true, true, true, List.of(), List.of()));
-            new JsonServerConfig().load(fixture);
+            Files.writeString(fixture, policyToml(8, true, true, true, List.of(), List.of()));
+            loadFixture(fixture);
             ServerPlayer invalidPlayer = playerFactory.apply(new ItemStack(Items.STICK, 2));
             ServerGestureState.set(invalidPlayer, StackMode.BAR_STACK, true);
             try {
@@ -393,17 +396,17 @@ public final class ConfigurationChecks {
     /**
      * Server commands enforce permissions and save list edits immediately. To reproduce in-game:
      * try the administrative list commands without permission, then as an operator, and inspect
-     * {@code somestacks-server.json}. Only the operator edits succeed and they are already on disk.
+     * {@code somestacks-server.toml}. Only the operator edits succeed and they are already on disk.
      */
     public static void serverCommandsEnforcePermissionsAndPersistEdits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerConfig.Backend original = ServerConfig.backend();
-        Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-commands-gametest.json");
+        Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-commands-gametest.toml");
         MinecraftServer server = helper.getLevel().getServer();
         try {
             Files.createDirectories(fixture.getParent());
-            Files.writeString(fixture, policyJson(8, true, true, true, List.of(), List.of()));
-            new JsonServerConfig().load(fixture);
+            Files.writeString(fixture, policyToml(8, true, true, true, List.of(), List.of()));
+            loadFixture(fixture);
             var commands = server.getCommands();
             var lowPermission = server.createCommandSourceStack().withPermission(0);
             checkEquals(0, execute(commands.getDispatcher(), lowPermission,
@@ -419,15 +422,13 @@ public final class ConfigurationChecks {
             check(execute(commands.getDispatcher(), operator,
                     "ss gen mod add examplemod") > 0,
                     "Operator gallery-list command failed");
-            JsonObject written = JsonParser.parseString(Files.readString(fixture)).getAsJsonObject();
-            check(written.getAsJsonObject("compatibility")
-                            .getAsJsonArray("disable_items").contains(
-                                    JsonParser.parseString("\"minecraft:stone\"")),
+            var written = new com.electronwill.nightconfig.toml.TomlParser().parse(Files.readString(fixture));
+            check(written.<java.util.List<String>>get("compatibility.disable_items").contains("minecraft:stone"),
                     "Deny command was not saved immediately");
             check(ServerConfig.GEN_MODS.get().contains("examplemod"),
                     "Gen command did not update policy");
 
-            Files.writeString(fixture, policyJson(8, true, true, true,
+            Files.writeString(fixture, policyToml(8, true, true, true,
                     List.of(), List.of("minecraft:dirt")));
             execute(commands.getDispatcher(), operator, "ss reload");
             check(ServerConfig.isItemDisabled(ResourceLocation.parse("minecraft:dirt")),
@@ -491,33 +492,23 @@ public final class ConfigurationChecks {
                 .resolve(name);
     }
 
-    private static String policyJson(
-            int maxHeight,
-            boolean storage,
-            boolean singles,
-            boolean bars,
-            List<String> disabledMods,
-            List<String> disabledItems) {
-        JsonObject compatibility = new JsonObject();
-        compatibility.add("disable_mods", stringArray(disabledMods));
-        compatibility.add("disable_items", stringArray(disabledItems));
-        JsonObject stacks = new JsonObject();
-        stacks.addProperty("enable_storage_stack_block", storage);
-        stacks.addProperty("enable_singles_stack_block", singles);
-        stacks.addProperty("enable_bar_stack_block", bars);
-        JsonObject piles = new JsonObject();
-        piles.addProperty("max_pile_height", maxHeight);
-        JsonObject root = new JsonObject();
-        root.add("piles", piles);
-        root.add("stacks", stacks);
-        root.add("compatibility", compatibility);
-        return root.toString();
+    private static String policyToml(int height, boolean storage, boolean singles, boolean bars,
+                                     List<String> mods, List<String> items) {
+        var config = com.electronwill.nightconfig.core.CommentedConfig.of(com.electronwill.nightconfig.toml.TomlFormat.instance());
+        config.set("piles.max_pile_height", height);
+        config.set("stacks.enable_storage_stack_block", storage);
+        config.set("stacks.enable_singles_stack_block", singles);
+        config.set("stacks.enable_bar_stack_block", bars);
+        config.set("compatibility.disable_mods", mods);
+        config.set("compatibility.disable_items", items);
+        return new com.electronwill.nightconfig.toml.TomlWriter().writeToString(config);
     }
 
-    private static JsonArray stringArray(List<String> entries) {
-        JsonArray array = new JsonArray();
-        entries.forEach(array::add);
-        return array;
+    private static void loadFixture(Path fixture) {
+        TomlServerConfig backend = new TomlServerConfig();
+        ServerConfig.Settings loaded = backend.load(fixture);
+        ServerConfig.install(backend);
+        ServerConfig.apply(loaded);
     }
 
     private static void restoreConfig(ServerConfig.Backend original, Path fixture) {
@@ -541,27 +532,26 @@ public final class ConfigurationChecks {
         checkOffsetEquals(expected.offset(), actual.offset(), message + " offset");
     }
 
-    private static String configJson(int height, int permission, int placements) {
+    private static String configToml(int height, int permission, int placements) {
         return """
-                {
-                  "piles": {"max_pile_height": %d},
-                  "stacks": {
-                    "enable_storage_stack_block": false,
-                    "enable_singles_stack_block": true,
-                    "enable_bar_stack_block": false
-                  },
-                  "compatibility": {
-                    "disable_mods": [" MineCraft ", "ExampleMod"],
-                    "disable_items": ["minecraft:stone", "not an item id"]
-                  },
-                  "render_gallery": {
-                    "placements_per_tick": %d,
-                    "enabled": true,
-                    "required_permission_level": %d,
-                    "gen_mods": ["minecraft"],
-                    "gen_items": ["minecraft:stone"]
-                  }
-                }
+                [piles]
+                max_pile_height = %d
+
+                [stacks]
+                enable_storage_stack_block = false
+                enable_singles_stack_block = true
+                enable_bar_stack_block = false
+
+                [compatibility]
+                disable_mods = [" MineCraft ", "ExampleMod"]
+                disable_items = ["minecraft:stone", "not an item id"]
+
+                [render_gallery]
+                placements_per_tick = %d
+                enabled = true
+                required_permission_level = %d
+                gen_mods = ["minecraft"]
+                gen_items = ["minecraft:stone"]
                 """.formatted(height, placements, permission);
     }
 }

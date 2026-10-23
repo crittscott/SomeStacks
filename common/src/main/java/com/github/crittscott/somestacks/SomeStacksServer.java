@@ -39,7 +39,7 @@ public final class SomeStacksServer {
         runningServer = server;
         reportedSavedItems.clear();
         StackDataMigration.beginSession();
-        ServerConfigMigration.reportLegacyIngots(server);
+        if (!(ServerConfig.backend() instanceof TomlServerConfig)) ServerConfigMigration.reportLegacyIngots(server);
         ServerConfig.loadFor(server);
         ConfigSyncPkt.rebuildCurrent();
         SomeStacksCommon.LOGGER.info(

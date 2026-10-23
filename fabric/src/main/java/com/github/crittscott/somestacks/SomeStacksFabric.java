@@ -19,7 +19,7 @@ public final class SomeStacksFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         PlatformServices.install(new FabricPlatformServices());
-        ServerConfig.install(new JsonServerConfig());
+        ServerConfig.install(new TomlServerConfig(net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir()));
         FabricRegistry.init();
         FabricItemStorage.init();
         FabricStackInteractionEvents.init();
