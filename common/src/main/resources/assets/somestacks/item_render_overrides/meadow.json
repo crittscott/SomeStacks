@@ -1,0 +1,11 @@
+{
+  "meadow:oil_lantern": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}
