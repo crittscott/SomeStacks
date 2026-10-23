@@ -101,7 +101,7 @@
   "somestacks.command.help.write.detail.3": "That dump runs on your own client and holds it busy until it finishes, so name a namespace, or keep a review session's mods in the gen mod list and dump list, rather than reaching for all in a large pack.",
   "somestacks.command.help.write.detail.4": "Nothing reads generated_overrides back. A file there is ready to be corrected by hand and dropped into a resource pack, including a server resource pack.",
   "somestacks.command.help.reload.summary": "Re-read server policy and render overrides, then re-sync players",
-  "somestacks.command.help.reload.detail.1": "Refreshes the current server policy and pushes client-facing settings to every player. Fabric rereads the world JSON file; NeoForge loads TOML edits through its config lifecycle. Data-pack ingot tags use /reload; render resources use a resource reload.",
+  "somestacks.command.help.reload.detail.1": "Refreshes the current server policy and pushes client-facing settings to every player. Fabric rereads the active TOML file; NeoForge loads TOML edits through its config lifecycle. Data-pack ingot tags use /reload; render resources use a resource reload.",
   "somestacks.command.help.gen.summary": "Edit the mod and item lists the render galleries build from",
   "somestacks.command.help.gen.detail.1": "The mod list feeds /ss gallery list and /ss ingotgallery list, in the order it is stored, which is the order of the gallery's columns.",
   "somestacks.command.help.gen.detail.2": "The item list feeds /ss gallery items. The row is sorted by mod id and then item name when it is built, so the stored order carries no meaning.",

@@ -1408,6 +1408,10 @@ internal slot identities intact.</div>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#TARGET" class="member-name-link">TARGET</a> - Static variable in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/TomlPolicyChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">TomlPolicyChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
+<dd>
+<div class="block">File-boundary checks; they do not install a backend or change the running world's policy.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></dt>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
@@ -1472,6 +1476,11 @@ unsupported positions.</div>
 <dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#vanillaInteractionReachesDepositExtractAndPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">vanillaInteractionReachesDepositExtractAndPlacement(GameTestHelper, Function)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
 <dd>
 <div class="block">Vanilla block-use interactions reach deposit, extraction, and adjacent placement.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/TomlPolicyChecks.html#verify(java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">verify(Path, ServerConfig.Settings)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/TomlPolicyChecks.html" title="class in com.github.crittscott.somestacks.gametest">TomlPolicyChecks</a></dt>
+<dd>
+<div class="block">To reproduce: edit a Fabric TOML using comments, multiline lists and quoted item ids;
+run /ss reload, then /ss deny item add minecraft:diamond and inspect the saved file.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">vetoedPlacementRestoresBlockEntity(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
