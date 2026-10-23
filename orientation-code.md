@@ -1,8 +1,8 @@
 <!-- FIXED HEADER: not content. Do not edit, trim, or count toward the size limit. -->
-> **Orientation snapshot, not a specification.** Describes the code as it currently is; the code wins on any disagreement. See CLAUDE.md Â§ Orientation files.
+> **Orientation snapshot, not a specification.** Describes the code as it currently is; the code wins on any disagreement. See CLAUDE.md § Orientation files.
 <!-- END FIXED HEADER -->
 
-# Some Stacks â€” code orientation
+# Some Stacks — code orientation
 
 ## Project shape
 

@@ -1,8 +1,8 @@
 <!-- FIXED HEADER: not content. Do not edit, trim, or count toward the size limit. -->
-> **Orientation snapshot, not a specification.** Describes the code as it currently is; the code wins on any disagreement. See CLAUDE.md Â§ Orientation files.
+> **Orientation snapshot, not a specification.** Describes the code as it currently is; the code wins on any disagreement. See CLAUDE.md § Orientation files.
 <!-- END FIXED HEADER -->
 
-# Some Stacks â€” player-facing behavior
+# Some Stacks — player-facing behavior
 
 See `orientation-code.md` for structure.
 
@@ -149,7 +149,7 @@ Disabling admission preserves existing contents. Clients skip disabled types; Ne
 | `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
 | `/ss reload` | level 2 | Refresh policy and synchronize changed client settings; Fabric rereads JSON |
 
-Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed JSON fields; NeoForge validates TOML. Gallery enablement and permission reloads refresh connected playersâ€™ command suggestions. Edit `somestacks:ingots` and use `/reload` for ingot classification.
+Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed JSON fields; NeoForge validates TOML. Gallery enablement and permission reloads refresh connected players’ command suggestions. Edit `somestacks:ingots` and use `/reload` for ingot classification.
 
 ## Item appearance
 
