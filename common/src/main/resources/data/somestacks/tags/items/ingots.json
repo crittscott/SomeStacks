@@ -93,7 +93,7 @@
       "id": "iceandfire:dragonsteel_lightning_ingot",
       "required": false
     },
-        {
+    {
       "id": "iceandfire:ghost_ingot",
       "required": false
     },
@@ -123,6 +123,10 @@
     },
     {
       "id": "minecraft:netherite_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:resin_brick",
       "required": false
     },
     {
