@@ -5391,8 +5391,8 @@
     ]
   },
   "minecraft:lantern": {
-    "mode": "3d",
-    "scale": 0.655,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
