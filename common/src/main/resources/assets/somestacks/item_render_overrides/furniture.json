@@ -1,0 +1,20 @@
+{
+  "furniture:plated_street_lantern_item": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "furniture:street_lantern_item": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}
