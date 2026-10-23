@@ -4,10 +4,10 @@ This branch targets Minecraft 26.3 on Fabric and NeoForge. Use matching client/s
 
 ## The config file
 
-World policy is stored per world, so it travels with the world:
+Server policy is stored in documented TOML; loader-specific locations are:
 
-- **NeoForge:** `<world>/serverconfig/somestacks-server.toml`, a loader-managed SYNCED config with a comment on every setting. The loader picks up file edits on its own.
-- **Fabric:** `<world>/serverconfig/somestacks-server.json`, created with defaults on first start. After editing it, run `/ss reload`. A malformed field falls back to its default and is logged; the rest of the file still applies.
+- **NeoForge:** `config/somestacks-server.toml`, a loader-managed SYNCED config; optional `<world>/syncedconfig/somestacks-server.toml` overrides it. The loader watches edits.
+- **Fabric:** `config/somestacks-server.toml` supplies instance defaults; `<world>/serverconfig/somestacks-server.toml`, when present, overrides it for that world. Every setting has an explanation. After editing the active file, run `/ss reload`. Malformed fields use their defaults and are logged; a TOML syntax error uses the complete defaults.
 
 `/ss deny` and `/ss gen` edits update the running values and save the file immediately.
 
@@ -26,6 +26,8 @@ World policy is stored per world, so it travels with the world:
 | `gen_items` | `render_gallery` | empty | Items `/ss gallery items` builds a row from. |
 
 Disabling a type, mod, or item bars *new* contents. Anything already stored can still be taken out.
+
+Existing world JSON policy is migrated once to a world TOML override; the original is retained as `somestacks-server.json.migrated`. An existing TOML takes precedence. Invalid JSON that cannot be migrated is retained for repair. Custom `compatibility.ingots` entries are logged for transfer to a data-pack item tag.
 
 ## Ingots
 
@@ -84,7 +86,7 @@ An item id is checked against the registry when it is added to a list, because t
 
 ### `/ss reload`
 
-Refreshes server policy and pushes changed client-facing settings to every player. Gallery enablement or permission changes also refresh command suggestions without reconnecting. On Fabric it rereads `<world>/serverconfig/somestacks-server.json`; on NeoForge, TOML edits are loaded by the loader's config system. It does not reload data packs: use vanilla `/reload` for the ingot tag.
+Refreshes server policy and pushes changed client-facing settings to every player. Gallery enablement or permission changes also refresh command suggestions without reconnecting. On Fabric it rereads the active `somestacks-server.toml`; on NeoForge, TOML edits are loaded by the loader's config system. It does not reload data packs: use vanilla `/reload` for the ingot tag.
 
 ### Render galleries
 
