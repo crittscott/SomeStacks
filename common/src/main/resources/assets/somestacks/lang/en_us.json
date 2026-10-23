@@ -125,7 +125,7 @@
 
   "somestacks.command.help.reload.usage.1": "/ss reload",
   "somestacks.command.help.reload.summary": "Re-read server policy, then re-sync players",
-  "somestacks.command.help.reload.detail.1": "Refreshes server policy and sends changed client-facing settings to every player. Fabric rereads the world JSON file; Forge loads TOML edits through its config lifecycle. Data-pack ingot tags use /reload; render resources use a resource reload.",
+  "somestacks.command.help.reload.detail.1": "Refreshes server policy and sends changed client-facing settings to every player. Fabric rereads the active TOML file; Forge loads TOML edits through its config lifecycle. Data-pack ingot tags use /reload; render resources use a resource reload.",
 
   "somestacks.command.help.gen.usage.1": "/ss gen mod add <modid>",
   "somestacks.command.help.gen.usage.2": "/ss gen mod remove <modid>",

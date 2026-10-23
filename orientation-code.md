@@ -102,7 +102,7 @@ Client SUCCESS sends packets. Stacks consume server use; sneaking/off-hand use d
 
 ## Configuration and presentation
 
-`Settings` bounds numbers; `ServerConfig.start` installs loader persistence/sync using `Keys`. Forge publishes TOML on the server thread; Fabric rereads JSON on `/ss reload`. Fabric logs read failures with file/key and defaults in use, successful default-file creation, and numeric corrections. Decode exceptions select all defaults; commands save active settings over the file. Publication normalizes namespaces and omits malformed names; excess over 256 names of 256 characters retains prior policy (startup defaults). Only changed client policy syncs; login always sends it. Policy summaries log at startup, explicit reload, and changed Forge file reloads, not list edits or unchanged watcher publications.
+`Settings` bounds numbers; `ServerConfig.start` installs loader persistence/sync using `Keys`. Forge publishes TOML on the server thread; Fabric rereads TOML on `/ss reload`. Fabric logs read failures with file/key and defaults in use, successful default-file creation, and numeric corrections. Decode exceptions select all defaults; commands save active settings over the file. Publication normalizes namespaces and omits malformed names; excess over 256 names of 256 characters retains prior policy (startup defaults). Only changed client policy syncs; login always sends it. Policy summaries log at startup, explicit reload, and changed Forge file reloads, not list edits or unchanged watcher publications.
 
 Galleries default off/permission 3; build by id across ticks, skip denied items, bypass protection, clear on stop.
 
@@ -124,4 +124,5 @@ Flat models use 2-D, others 3-D. Forge measures vertices; Fabric measures quads 
 `somestacks_gametest`: shared/loader scenarios.
 
 Shared checks cover persistence, movement, rotations, gestures, policy/network validation, growth permissions, placement facing, and Bar drops without tile drops. Forge adds TOML persistence; Fabric adds Transfer transactions and login validation. Protection checks cover denial, shapes, rollback/reentrancy, and break context; `-PwithCommonProtectionApi=true` selects provider-backed checks.
+
 

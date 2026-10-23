@@ -2,7 +2,7 @@
 
 ## The config file
 
-Some Stacks stores world policy at `<world>/serverconfig/somestacks-server.toml` on Forge and `<world>/serverconfig/somestacks-server.json` on Fabric, so it travels with the world. `/ss` list edits update the running values and save immediately through the loader. Forge uses its native server-config system and reloads TOML edits while running; `/ss reload` rereads Fabric JSON edits.
+Some Stacks uses documented `somestacks-server.toml` on both loaders. Forge stores it at `<world>/serverconfig/somestacks-server.toml` and watches edits. Fabric uses `config/somestacks-server.toml`, optionally overridden by `<world>/serverconfig/somestacks-server.toml`; run `/ss reload` after editing the active Fabric file. `/ss` list edits update the running values and save immediately.
 
 | Setting | Section | Default | Effect |
 | --- | --- | --- | --- |
@@ -23,6 +23,8 @@ Disabling a mod or an item bars *new* contents. Anything already stored can stil
 ### Ingots
 
 The `somestacks:ingots` item tag decides what a Bar Stack holds — and, by complement, what a Singles Stack refuses. Widening one narrows the other by exactly as much. The shipped tag includes `#forge:ingots`, `#c:ingots`, and `#c:bricks` where those tags exist, the vanilla ingots and bricks, and a list of modded ingots and bricks. A data pack adds to it (see [Pack authors](pack-authors.md)), and `/reload` applies the change.
+
+Existing world JSON policy is migrated once to a world TOML override; the original is retained as `somestacks-server.json.migrated`. An existing TOML takes precedence. Invalid JSON that cannot be migrated is retained for repair. Custom `compatibility.ingots` entries are logged for transfer to a data-pack item tag.
 
 ## Item placement conflicts
 

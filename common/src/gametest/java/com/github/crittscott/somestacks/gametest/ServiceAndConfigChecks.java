@@ -47,6 +47,7 @@ public final class ServiceAndConfigChecks {
      * shared policy constructor and does not change the running world's policy.
      */
     public static void numericPolicyRangesAreShared(GameTestHelper helper) {
+        TomlPolicyChecks.verify(helper.getLevel().getServer().getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT).resolve("serverconfig"), ServerConfig.Settings.defaults());
         ServerConfig.Settings defaults = ServerConfig.Settings.defaults();
         // Input height/speed/permission, followed by their expected normalized values.
         int[][] cases = {
@@ -97,7 +98,7 @@ public final class ServiceAndConfigChecks {
 
     /**
      * To reproduce in-game: while the server runs, add a mod id to render_gallery.gen_mods in the
-     * world's somestacks-server.toml (Forge) or somestacks-server.json (Fabric), then run
+     * active somestacks-server.toml, then run
      * /ss reload. The reply counts online players, and /ss gen mod list shows the
      * new entry. The fixture writes the stored policy through the loader's saver without
      * publishing it, and restores both the file and the published policy afterward.

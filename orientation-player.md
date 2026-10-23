@@ -124,7 +124,7 @@ Storage counts each slot as a fraction of its legal stack size; Singles and Bar 
 
 ## Server configuration
 
-World policy: Forge uses `<world>/serverconfig/somestacks-server.toml`, reloaded while running; Fabric uses `<world>/serverconfig/somestacks-server.json`, reread by `/ss reload`. Settings:
+World policy: Forge uses `<world>/serverconfig/somestacks-server.toml`, reloaded while running; Fabric uses `config/somestacks-server.toml`, reread by `/ss reload`. Settings:
 
 | Setting | Default | Effect |
 | --- | --- | --- |
