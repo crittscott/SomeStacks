@@ -1,12 +1,15 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -95,13 +98,11 @@ public class BarStackBE extends BlockEntity {
         super(CommonRegistry.BAR_STACK_BE.get(), pos, state);
     }
 
-    /**
-     * Whether a Bar Stack accepts this item, the single decision point every deposit, column
-     * insertion and capability path consults. Ingot-ness is the server's {@code ingots} list
-     * resolved against the loaded item tags and named item ids, so an admin widens or narrows it
-     * without a data pack; because the Singles rule is this rule's complement, widening it narrows
-     * Singles by as much.
-     */
+    /** Reloadable data-pack classification of items that belong in Bar rather than Singles. */
+    public static final TagKey<Item> INGOTS = TagKey.create(Registries.ITEM,
+            ResourceLocation.fromNamespaceAndPath("somestacks", "ingots"));
+
+    /** Accepts nonempty tagged items whose namespaces are not disabled by server policy. */
     public static boolean isValidBarItem(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -109,7 +110,7 @@ public class BarStackBE extends BlockEntity {
         if (ItemOps.isItemFromDisabledMod(stack)) {
             return false;
         }
-        return ServerConfig.isIngotItem(stack.getItem());
+        return stack.is(INGOTS);
     }
 
     /**

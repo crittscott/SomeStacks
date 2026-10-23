@@ -1,18 +1,14 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.LevelResource;
 
 import java.io.IOException;
@@ -25,7 +21,7 @@ import java.util.Map;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
-/** Loader-neutral parsing and policy checks for the two JSON-backed configuration surfaces. */
+/** Loader-neutral render JSON parsing and server TOML policy checks. */
 public final class ConfigurationChecks {
     private ConfigurationChecks() {}
 
@@ -136,113 +132,50 @@ public final class ConfigurationChecks {
         helper.succeed();
     }
 
-    public static void serverConfigLoadsBoundsListsAndIngotGlobs(GameTestHelper helper) {
-        Path serverConfigDir = helper.getLevel().getServer()
-                .getWorldPath(LevelResource.ROOT)
-                .resolve("serverconfig");
-        Path original = serverConfigDir.resolve(SomeStacksCommon.MODID + "-server.json");
-        Path fixture = serverConfigDir.resolve(SomeStacksCommon.MODID + "-gametest.json");
-        Item knownIngot = GameTestScaffold.firstBarItem();
-        String matchingTag = tagContaining(knownIngot);
-        String glob = matchingTag.substring(0, matchingTag.length() - 1) + "*";
-
+    /**
+     * To reproduce: edit server TOML, run /ss reload, and verify bounds and deny lists.
+     * Bar admission follows the somestacks:ingots data-pack tag; the config has no ingot list.
+     */
+    public static void serverConfigLoadsBoundsAndLists(GameTestHelper helper) {
+        TomlPolicyChecks.verify(helper.getLevel().getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig"), ServerConfig.defaults());
+        ServerConfig.Backend original = ServerConfig.backend();
+        ServerConfig.Settings policy = ServerConfig.settings();
+        Path fixture = helper.getLevel().getServer().getWorldPath(LevelResource.ROOT)
+                .resolve("serverconfig/somestacks-gametest.toml");
         try {
-            Files.createDirectories(serverConfigDir);
-            Files.writeString(fixture, configJson(999, -3, 0, "#" + glob));
-            ServerConfig.load(fixture);
-
-            checkEquals(64, ServerConfig.maxPileHeight(), "Maximum pile-height clamp");
-            checkEquals(0, ServerConfig.galleryRequiredPermissionLevel(),
-                    "Minimum gallery-permission clamp");
-            checkEquals(1, ServerConfig.renderGalleryPlacementsPerTick(),
-                    "Minimum gallery placement budget");
-            check(!ServerConfig.enableStorageStackBlock(), "Storage enable flag");
-            check(ServerConfig.enableSinglesStackBlock(), "Singles enable flag");
-            check(!ServerConfig.enableBarStackBlock(), "Bar enable flag");
-            check(ServerConfig.galleryEnabled(), "Gallery enable flag");
-            checkEquals(List.of("minecraft"), ServerConfig.GEN_MODS.get(), "Gallery mod list");
-            checkEquals(List.of("minecraft:stone"), ServerConfig.GEN_ITEMS.get(),
-                    "Gallery item list");
-            check(ServerConfig.isModDisabled("MINECRAFT"),
-                    "Disabled mod lookup was not case-insensitive");
-            check(ServerConfig.isModDisabled("examplemod"), "Disabled mod was not baked");
-            check(ServerConfig.isItemDisabled(ResourceLocation.parse("minecraft:stone")),
-                    "Disabled item was not baked");
-            check(ServerConfig.isIngotItem(knownIngot), "Wildcard ingot tag did not admit its item");
-            boolean foundNonIngot = false;
-            for (Item item : BuiltInRegistries.ITEM) {
-                if (!ServerConfig.isIngotItem(item)) {
-                    foundNonIngot = true;
-                    break;
-                }
-            }
-            check(foundNonIngot, "Ingot glob unexpectedly admitted every registered item");
-
-            Files.writeString(fixture, configJson(-9, 99, 7, "#" + matchingTag));
-            ServerConfig.load(fixture);
-            checkEquals(1, ServerConfig.maxPileHeight(), "Minimum pile-height clamp");
-            checkEquals(4, ServerConfig.galleryRequiredPermissionLevel(),
-                    "Maximum gallery-permission clamp");
-            checkEquals(7, ServerConfig.renderGalleryPlacementsPerTick(),
-                    "Positive gallery placement budget");
-            check(ServerConfig.isIngotItem(knownIngot), "Exact ingot tag did not admit its item");
-
-            Files.writeString(fixture, configJson(8, 2, 8,
-                    String.valueOf(BuiltInRegistries.ITEM.getKey(knownIngot))));
-            ServerConfig.load(fixture);
-            check(ServerConfig.isIngotItem(knownIngot), "Bare item id did not admit its own item");
-            checkEquals(1, ServerConfig.ingotItemCount(), "Bare item id admitted more than itself");
+            Files.createDirectories(fixture.getParent());
+            Files.writeString(fixture, """
+                    [piles]
+                    max_pile_height = 999
+                    [compatibility]
+                    disable_mods = ["ExampleMod"]
+                    [render_gallery]
+                    placements_per_tick = 0
+                    required_permission_level = -3
+                    """);
+            com.github.crittscott.somestacks.TomlServerConfig backend = new com.github.crittscott.somestacks.TomlServerConfig();
+            ServerConfig.install(backend);
+            ServerConfig.apply(backend.load(fixture));
+            checkEquals(64, ServerConfig.maxPileHeight(), "Maximum height clamp");
+            checkEquals(1, ServerConfig.renderGalleryPlacementsPerTick(), "Minimum placement budget");
+            checkEquals(0, ServerConfig.galleryRequiredPermissionLevel(), "Minimum permission clamp");
+            check(ServerConfig.isModDisabled("EXAMPLEMOD"), "Case-insensitive namespace denial");
+            check(ServerConfig.DISABLE_ITEMS.get().contains("evilcraft:broom_part"), "Broom-part default missing");
+            net.minecraft.world.item.ItemStack ingot = new net.minecraft.world.item.ItemStack(GameTestScaffold.firstBarItem());
+            check(ingot.is(com.github.crittscott.somestacks.block.BarStackBE.INGOTS), "Bar fixture is not in the ingot tag");
+            check(com.github.crittscott.somestacks.block.BarStackBE.isValidBarItem(ingot), "Tagged item was refused");
+            ServerConfig.addListEntry(ServerConfig.DISABLE_ITEMS, "minecraft:diamond");
+            check(Files.readString(fixture).contains("minecraft:diamond"), "List edit was not saved");
+            check(!Files.readString(fixture).contains("compatibility.ingots"), "Retired ingot setting was written");
         } catch (IOException e) {
-            throw new GameTestAssertException("Could not prepare server-config fixture: " + e);
+            throw new GameTestAssertException("Could not prepare TOML fixture: " + e);
         } finally {
-            ServerConfig.load(original);
-            try {
-                Files.deleteIfExists(fixture);
-            } catch (IOException e) {
-                SomeStacksCommon.LOGGER.warn("Could not delete GameTest config fixture {}", fixture, e);
-            }
+            ServerConfig.install(original);
+            ServerConfig.apply(policy);
+            try { Files.deleteIfExists(fixture); }
+            catch (IOException e) { throw new IllegalStateException(e); }
         }
         helper.succeed();
-    }
-
-    private static String configJson(int height, int permission, int placements, String ingotEntry) {
-        return """
-                {
-                  "piles": {"max_pile_height": %d},
-                  "stacks": {
-                    "enable_storage_stack_block": false,
-                    "enable_singles_stack_block": true,
-                    "enable_bar_stack_block": false
-                  },
-                  "compatibility": {
-                    "disable_mods": [" MineCraft ", "ExampleMod"],
-                    "disable_items": ["minecraft:stone", "not an item id"],
-                    "ingots": ["%s"]
-                  },
-                  "render_gallery": {
-                    "placements_per_tick": %d,
-                    "enabled": true,
-                    "required_permission_level": %d,
-                    "gen_mods": ["minecraft"],
-                    "gen_items": ["minecraft:stone"]
-                  }
-                }
-                """.formatted(height, ingotEntry, placements, permission);
-    }
-
-    private static String tagContaining(Item item) {
-        for (TagKey<Item> tagKey : BuiltInRegistries.ITEM.getTagNames().toList()) {
-            var tag = BuiltInRegistries.ITEM.getTag(tagKey).orElse(null);
-            if (tag == null) {
-                continue;
-            }
-            for (var holder : tag) {
-                if (holder.value() == item) {
-                    return tagKey.location().toString();
-                }
-            }
-        }
-        throw new GameTestAssertException("Known Bar item belongs to no item tag");
     }
 
     private static void checkConfigEquals(

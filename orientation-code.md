@@ -29,7 +29,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | `StoragePile`, `SinglesColumn`, `BarColumn` | Run-wide growth, mutation, fill, cleanup, structure |
 | `StackItemStorage`, `SlotAccess` | Loader-neutral fixed-slot storage contract |
 | `util/*CubeIdx`, `ViewRay` | Geometry, rotation, support, seams, targeting |
-| `ServerConfig` | Per-world policy, deny sets, resolved ingot membership |
+| `ServerConfig` | Immutable policy, deny sets, and loader persistence |
 | `WorldEdits`, `EditAuthority` | World edits and loader protection seam |
 | `network/*` | Payloads and shared request validation |
 | `client/*` | Renderers, profiles, measurement, bar textures, gesture rules |
@@ -65,7 +65,7 @@ The three movement models must remain distinct:
 
 ## Admission, automation, and edits
 
-Storage accepts ordinary nonempty items; Bar accepts the configured ingot list; Singles accepts allowed non-Bar items. `disable_mods` applies to gestures and automation, while `disable_items` applies only to player deposits. Internal settlement, gravity, and backfill never reapply admission rules.
+Storage accepts ordinary nonempty items; Bar accepts the `somestacks:ingots` item tag; Singles accepts allowed non-Bar items. `disable_mods` applies to gestures and automation, while `disable_items` applies only to player deposits. Internal settlement, gravity, and backfill never reapply admission rules.
 
 Every loader-native view spans the whole run plus one headroom block while growth is allowed. Storage slots use item stack limits; Singles and Bar slots hold one item. Fabric stages mutations until outer transaction commit and permits one structural extraction position per transaction. `RunEdit` refuses reentrant automation mutations.
 
@@ -81,9 +81,9 @@ Forge and NeoForge protection events run before `RightClickBlockSuppressor` cons
 
 ## Configuration and presentation
 
-World policy is `<world>/serverconfig/somestacks-server.json`, owned by `ServerConfig` and loaded at server startup. `/ss deny`, `/ss ingot`, and `/ss gen` save immediately. `/ss reload` reloads server render overrides and resyncs players but does not reread policy JSON. Ingot-list entries are either a `#`-prefixed item-tag pattern (`*` allowed, matched against whole tag names) or a bare item id, and resolve again on configuration or tag reload.
+Server policy uses documented TOML: Forge stores it in `<world>/serverconfig/`; NeoForge and Fabric use `config/` with optional `<world>/serverconfig/` overrides. `ServerConfig` publishes immutable settings; native loader specs or `TomlServerConfig` own persistence. `/ss deny` and `/ss gen` save immediately. `/ss reload` refreshes policy and server render overrides. Ingot classification uses `somestacks:ingots` and changes on data-pack reload.
 
-Extension points are the configured ingot list; `data/<namespace>/somestacks_sounds/*.json`; `assets/<namespace>/item_render_overrides/*.json`; `assets/<namespace>/textures/bars/*.json`; and `config/somestacks/server_item_overrides/*.json`.
+Extension points are the `somestacks:ingots` item tag; `data/<namespace>/somestacks_sounds/*.json`; `assets/<namespace>/item_render_overrides/*.json`; `assets/<namespace>/textures/bars/*.json`; and `config/somestacks/server_item_overrides/*.json`.
 
 All types use block entity renderers. `CubeRenderHelper` renders Storage and Singles item models; Bar uses fixed cuboids with resource-defined textures and tints. Storage/Singles profile precedence is server, user, resource pack, then measurement. `AutoRenderProfiles` uses the 2-D projector only for flat geometry it can reproduce; Fabric models with no ordinary quads stay on the 3-D renderer path. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Bar appearance is client-only; automatic Bar tints are derived on first render. Galleries spread work across ticks but bypass normal placement protection.
 
@@ -101,3 +101,6 @@ All types use block entity renderers. `CubeRenderHelper` renders Storage and Sin
 ## GameTests
 
 There is no JUnit or production `test` source set. Each loader has a development-only `somestacks_gametest` mod under `<loader>/src/gametest` and runs it with `:<loader>:runGameTestServer`; no suite is part of `build`. Neutral assertions live in `common/src/gametest` and use `CommonRegistry`; native `IItemHandler` and Transfer API assertions stay loader-local. Forge and NeoForge use annotated holders; Fabric uses `fabric-gametest` entrypoints. NeoForge holders disable class-name template prefixes. Synthetic-player and protection tests remain loader-specific where their APIs differ. Distinct otherwise-identical test stacks use `CUSTOM_DATA`. The gallery-budget check drives the scheduler synchronously in its own `somestacks_gallery_budget` batch; the placement-advancement check uses a regular `ServerPlayer` and a `somestacks:gametest_place_storage` fixture.
+
+
+Native server lifecycle migration mixins create world TOML overrides before Forge and NeoForge select their policy files. The native specs then own loading, file watching, synchronization and saving.

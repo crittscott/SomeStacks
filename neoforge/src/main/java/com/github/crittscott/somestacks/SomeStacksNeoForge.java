@@ -17,7 +17,6 @@ import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.PlayerReach;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.storage.LevelResource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
@@ -42,11 +41,15 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public class SomeStacksNeoForge {
     public static final String MODID = SomeStacksCommon.MODID;
 
-    public SomeStacksNeoForge(IEventBus modBus) {
+    public SomeStacksNeoForge(IEventBus modBus, net.neoforged.fml.ModContainer container) {
         WorldEdits.setAuthority(new NeoForgeEditAuthority());
         PlayerEdits.setAuthority(new NeoForgePlayerEditAuthority());
         PlayerReach.setProvider(player -> player.blockInteractionRange());
-        ServerConfig.useCommonIngotDefaults();
+        NeoForgeServerConfig config = NeoForgeServerConfig.INSTANCE;
+        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, config.spec);
+        ServerConfig.install(config);
+        modBus.addListener(config::onLoading);
+        modBus.addListener(config::onReloading);
 
         ModRegistry.init(modBus);
         modBus.addListener(ModNetworking::onRegisterPayloadHandlers);
@@ -60,6 +63,7 @@ public class SomeStacksNeoForge {
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onServerTick);
         NeoForge.EVENT_BUS.addListener(this::onTagsUpdated);
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event) -> config.stop());
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             ClientSetup.init(modBus);
@@ -75,8 +79,8 @@ public class SomeStacksNeoForge {
     }
 
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
-        var configDir = event.getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig");
-        ServerConfig.load(configDir.resolve(MODID + "-server.json"));
+        ServerConfig.loadFor(event.getServer());
+        RenderGalleryGenerator.invalidateBarItems();
     }
 
     private void onAddReloadListeners(AddReloadListenerEvent event) {
@@ -84,7 +88,7 @@ public class SomeStacksNeoForge {
     }
 
     private void onTagsUpdated(TagsUpdatedEvent event) {
-        ServerConfig.rebakeIngots();
+        RenderGalleryGenerator.invalidateBarItems();
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {

@@ -22,7 +22,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.world.level.storage.LevelResource;
 
 /** Fabric's common entry point and server lifecycle wiring. */
 public final class SomeStacksFabric implements ModInitializer {
@@ -30,7 +29,7 @@ public final class SomeStacksFabric implements ModInitializer {
     public void onInitialize() {
         FabricRegistry.init();
         FabricItemStorage.init();
-        ServerConfig.useCommonIngotDefaults();
+        ServerConfig.install(new TomlServerConfig(FabricLoader.getInstance().getConfigDir()));
         WorldEdits.setAuthority(new FabricEditAuthority());
         PlayerEdits.setAuthority(new FabricPlayerEditAuthority());
         FabricNetworking.registerPayloads();
@@ -45,13 +44,13 @@ public final class SomeStacksFabric implements ModInitializer {
                 .registerReloadListener(new FabricStackSoundData());
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            var configDir = server.getWorldPath(LevelResource.ROOT).resolve("serverconfig");
-            ServerConfig.load(configDir.resolve(SomeStacksCommon.MODID + "-server.json"));
+            ServerConfig.loadFor(server);
+            RenderGalleryGenerator.invalidateBarItems();
         });
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
                 (server, resourceManager, success) -> {
                     if (success) {
-                        ServerConfig.rebakeIngots();
+                        RenderGalleryGenerator.invalidateBarItems();
                     }
                 });
 

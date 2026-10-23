@@ -70,7 +70,7 @@ These values do not select build tools, but they are versioned inputs consumed b
 
 | Subject | Declaration |
 | --- | --- |
-| Some Stacks artifact | `0.8.2` |
+| Some Stacks artifact | `0.8.3` |
 | Fabric, Forge, and NeoForge GameTest support mods | the Some Stacks artifact version |
 | Minecraft compatibility | exactly `1.21.1`; Forge and NeoForge syntax `[1.21.1]`, Fabric syntax `1.21.1` |
 | Forge compatibility | `[52.0.0,53)`; compilation uses `52.1.16` |
@@ -86,3 +86,5 @@ These values do not select build tools, but they are versioned inputs consumed b
 `gradle.properties` is the authority for the Minecraft, mapping, loader, API, compatibility, integration, and mod versions. The root `build.gradle` pins the three external Gradle plugins and JSR 305, and `gradle/wrapper/gradle-wrapper.properties` pins Gradle itself. The loader scripts consume the root properties rather than restating dependency versions.
 
 Plugin resolution uses Fabric Maven, Architectury Maven, Forge Maven, and the Gradle Plugin Portal. Every module declares Parchment Maven; the Fabric and NeoForge modules also declare FTB Maven (for FTB Chunks), and the NeoForge module also declares NeoForge Maven; Loom supplies its standard Minecraft repositories. There is no Gradle version catalog, dependency-lock state, dependency-verification metadata, exact JDK distribution, or wrapper-distribution checksum in the repository. Consequently, the table above records every exact version deliberately declared by the build, but it is not a lock of every transitive artifact selected by Gradle and Loom.
+
+Fabric bundles NightConfig core and TOML 3.6.7 in its Shadow artifact and relocates their packages under Some Stacks. Common code has compile-only TOML dependencies; Forge and NeoForge provide NightConfig. No additional config mod is required.

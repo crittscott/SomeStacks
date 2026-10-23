@@ -65,7 +65,6 @@ public final class SsCommand {
     static final String COMMAND_RELOAD = "reload";
     static final String COMMAND_GEN = "gen";
     static final String COMMAND_DENY = "deny";
-    static final String COMMAND_INGOT = "ingot";
     static final String COMMAND_HELP = "help";
 
     private static final String ARG_ITEM = "item";
@@ -75,13 +74,11 @@ public final class SsCommand {
     private static final String ARG_Y = "y";
     private static final String ARG_Z = "z";
     private static final String ARG_MODID = "modid";
-    private static final String ARG_ENTRY = "entry";
 
     private static final String DISABLED_MODS_LABEL = "somestacks.command.label.disabled_mods";
     private static final String DISABLED_ITEMS_LABEL = "somestacks.command.label.disabled_items";
     private static final String GEN_MODS_LABEL = "somestacks.command.label.gen_mods";
     private static final String GEN_ITEMS_LABEL = "somestacks.command.label.gen_items";
-    private static final String INGOTS_LABEL = "somestacks.command.label.ingots";
 
     /** Override dumps cover all items, matching the Storage gallery's item selection. */
     private static final RenderGalleryGenerator.Kind DUMP_KIND = RenderGalleryGenerator.Kind.STORAGE;
@@ -122,7 +119,6 @@ public final class SsCommand {
                                 .executes(SsCommand::reload))
                         .then(genTree())
                         .then(denyTree())
-                        .then(ingotTree())
                         .then(SsHelp.tree())
         );
     }
@@ -262,81 +258,6 @@ public final class SsCommand {
                                                 ResourceLocationArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
                                 .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
-    }
-
-    /**
-     * The {@code ss ingot} subtree, editing what a Bar Stack takes its contents from. A {@code #}
-     * entry names an item tag and may carry {@code *} wildcards; any other entry is an item id. It
-     * is read as a greedy string rather than a resource location because neither a wildcard nor an
-     * unquoted colon survives the word parser.
-     *
-     * <p>A {@code #} entry is taken as typed, as a denied mod id is, because it may legitimately
-     * name a tag no loaded data pack declares or match one by wildcard; the bake warns when it
-     * matches nothing. A bare item id is checked against the registry here, the way
-     * {@code ss deny item add} checks one, since a typo would otherwise sit in the list accepting
-     * nothing. Either way an edit reports how many items the list now accepts.
-     */
-    private static LiteralArgumentBuilder<CommandSourceStack> ingotTree() {
-        return Commands.literal(COMMAND_INGOT)
-                .requires(SsCommand::isAdmin)
-                .then(Commands.literal("add")
-                        .then(Commands.argument(ARG_ENTRY, StringArgumentType.greedyString())
-                                .suggests(SsCommand::suggestIngotEntries)
-                                .executes(ctx -> addIngotEntry(ctx,
-                                        StringArgumentType.getString(ctx, ARG_ENTRY).trim()))))
-                .then(Commands.literal("remove")
-                        .then(Commands.argument(ARG_ENTRY, StringArgumentType.greedyString())
-                                .suggests((ctx, builder) -> suggestEntries(ServerConfig.INGOTS, builder))
-                                .executes(ctx -> reportIngotEdit(ctx, removeEntry(ctx, ServerConfig.INGOTS,
-                                        INGOTS_LABEL,
-                                        StringArgumentType.getString(ctx, ARG_ENTRY).trim())))))
-                .then(Commands.literal("list")
-                        .executes(ctx -> listEntries(ctx, ServerConfig.INGOTS, INGOTS_LABEL, true)));
-    }
-
-    /**
-     * Adds one entry to the ingot list, rejecting a bare item id the registry does not know before
-     * it reaches the list. A {@code #} tag entry is passed through unchecked.
-     */
-    private static int addIngotEntry(CommandContext<CommandSourceStack> ctx, String entry) {
-        if (!entry.startsWith("#")) {
-            ResourceLocation itemId = ResourceLocation.tryParse(entry.toLowerCase(Locale.ROOT));
-            if (itemId == null || !BuiltInRegistries.ITEM.containsKey(itemId)) {
-                ctx.getSource().sendFailure(Component.translatable(
-                        "somestacks.command.unknown_item", entry));
-                return 0;
-            }
-        }
-        return reportIngotEdit(ctx, addEntry(ctx, ServerConfig.INGOTS, INGOTS_LABEL, entry));
-    }
-
-    /**
-     * Completions for an ingot entry: the known item-tag names, each with a leading {@code #}, once
-     * the input opens with {@code #}; otherwise item namespaces and their ids as {@code ss item}
-     * completes them, plus {@code #} itself.
-     */
-    private static CompletableFuture<Suggestions> suggestIngotEntries(
-            CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
-        if (builder.getRemaining().startsWith("#")) {
-            return SharedSuggestionProvider.suggest(
-                    ServerConfig.itemTagNames().stream().map(name -> "#" + name).toList(), builder);
-        }
-        if (builder.getRemaining().isEmpty()) {
-            builder.suggest("#");
-        }
-        return suggestItems(ctx, builder);
-    }
-
-    /**
-     * Reports how an ingot-list edit changed the accepted item set. The list names tags and items,
-     * while Bar Stack behavior depends on the items those resolve to.
-     */
-    private static int reportIngotEdit(CommandContext<CommandSourceStack> ctx, int result) {
-        if (result != 0) {
-            ctx.getSource().sendSuccess(() -> Component.translatable(
-                    "somestacks.command.ingot.accepted", ServerConfig.ingotItemCount()), false);
-        }
-        return result;
     }
 
     private static boolean isPlayer(CommandSourceStack source) {
@@ -703,6 +624,7 @@ public final class SsCommand {
     }
 
     private static int reload(CommandContext<CommandSourceStack> ctx) {
+        ServerConfig.reload();
         int synced = CommandNetwork.syncAllPlayers(ctx.getSource().getServer());
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.reloaded", synced), true);

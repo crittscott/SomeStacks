@@ -16,7 +16,6 @@ import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.PlayerReach;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -50,6 +49,12 @@ public class SomeStacks {
         PlayerEdits.setAuthority(new ForgePlayerEditAuthority());
         PlayerReach.setProvider(player -> player.blockInteractionRange());
 
+        ForgeServerConfig config = ForgeServerConfig.INSTANCE;
+        net.minecraftforge.fml.ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.SERVER, config.spec);
+        ServerConfig.install(config);
+        modBus.addListener(config::onLoading);
+        modBus.addListener(config::onReloading);
+        MinecraftForge.EVENT_BUS.addListener((net.minecraftforge.event.server.ServerStoppedEvent event) -> config.stop());
         ModRegistry.init(modBus);
         ModNetworking.init();
         CommandNetwork.setHandler(new ForgeCommandNetwork());
@@ -71,14 +76,9 @@ public class SomeStacks {
                 .orElse("unknown");
     }
 
-    /**
-     * Loads the world-specific server config. There is no automatic file-watch reload behind this
-     * hand-rolled reader/writer; command edits are saved immediately, while manual file edits take
-     * effect on the next server start.
-     */
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
-        var configDir = event.getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig");
-        ServerConfig.load(configDir.resolve(MODID + "-server.json"));
+        ServerConfig.loadFor(event.getServer());
+        RenderGalleryGenerator.invalidateBarItems();
     }
 
     private void onAddReloadListeners(AddReloadListenerEvent event) {
@@ -86,7 +86,7 @@ public class SomeStacks {
     }
 
     private void onTagsUpdated(TagsUpdatedEvent event) {
-        ServerConfig.rebakeIngots();
+        RenderGalleryGenerator.invalidateBarItems();
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {

@@ -46,7 +46,7 @@ Placement into water waterlogs the stack and keeps the water. A top-face deposit
 
 In creative mode, deposits do not reduce the held stack.
 
-Deposits are rejected when the server has disabled the item's mod or exact item id; existing contents stay extractable. Items the selected type does not accept simply do nothing: Bar takes only configured ingots, Singles takes everything allowed that Bar does not.
+Deposits are rejected when the server has disabled the item's mod or exact item id; existing contents stay extractable. Items the selected type does not accept simply do nothing: Bar takes only items in `somestacks:ingots`, Singles takes everything allowed that Bar does not.
 
 ## Extracting
 
@@ -119,15 +119,14 @@ Storage counts each slot as a fraction of its legal stack size; Singles and Bar 
 
 ## Server configuration
 
-Per-world JSON policy at `<world>/serverconfig/somestacks-server.json`.
+Documented TOML policy: Forge uses `<world>/serverconfig/somestacks-server.toml`; NeoForge and Fabric use `config/somestacks-server.toml` with optional world overrides in `serverconfig/`.
 
 | Setting | Default | Effect |
 | --- | --- | --- |
 | `piles.max_pile_height` | `8` | Maximum height of every same-type run, 1-64 |
 | `stacks.enable_*_stack_block` | `true` | When false, blocks new placement and growth of that type |
 | `compatibility.disable_mods` | empty | Refuses new items from listed namespaces in gestures and automation |
-| `compatibility.disable_items` | empty | Refuses exact items in player deposits only |
-| `compatibility.ingots` | `#forge:ingots*` / `#c:ingots*`, plus `#somestacks:ingots` | What Bar accepts and Singles refuses; `#name` is a tag pattern (`*` allowed), a bare id is one item |
+| `compatibility.disable_items` | `evilcraft:broom_part` | Refuses exact items in player deposits only |
 | `render_gallery.enabled` | `false` | Enables `/ss gallery` and `/ss ingotgallery` |
 | `render_gallery.required_permission_level` | `3` | Permission level those two commands need |
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
@@ -145,10 +144,10 @@ Disabling a type, item, mod, or ingot category never removes or ejects existing 
 | `/ss item ...` / `reset` | level 2 | Change how one item appears on that client |
 | `/ss write changed\|<modid>\|all\|list` | level 2 | Save changed item profiles, or generate complete profile files |
 | `/ss gallery ...` / `/ss ingotgallery ...` | `render_gallery.required_permission_level`; off by default | Build Storage or Bar render galleries |
-| `/ss gen ...` / `deny ...` / `ingot ...` | level 2 | Edit gallery lists, disabled lists, or ingot tag patterns |
+| `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
 | `/ss reload` | level 2 | Reload server item-render overrides and resync players |
 
-Gallery commands build east of the player over a replaced sandstone floor, skip the protection checks ordinary placement uses (hence off by default), and spread large jobs across ticks. `/ss reload` does not reread the world-policy JSON; direct edits to that file take effect on restart.
+Gallery commands build east of the player over a replaced sandstone floor, skip the protection checks ordinary placement uses (hence off by default), and spread large jobs across ticks. `/ss reload` refreshes policy and render overrides; Forge and NeoForge also watch native TOML edits. Ingot classification uses the data-pack tag `somestacks:ingots`.
 
 ## Item appearance
 
@@ -162,7 +161,7 @@ Bar appearance is separate and client-side: resource packs map item ids to bar t
 
 ## Extension points
 
-- Data pack: add items to the tags listed in `compatibility.ingots`, including `somestacks:ingots`; replace action sounds via `data/<namespace>/somestacks_sounds/*.json`.
+- Data pack: add items to `somestacks:ingots`; replace action sounds via `data/<namespace>/somestacks_sounds/*.json`.
 - Resource pack: add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
 - Server: impose Storage/Singles profiles via `config/somestacks/server_item_overrides/*.json`, synced on login and `/ss reload`.
 

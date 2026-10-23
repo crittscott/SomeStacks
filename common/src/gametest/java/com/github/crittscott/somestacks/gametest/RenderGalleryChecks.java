@@ -80,16 +80,19 @@ public final class RenderGalleryChecks {
         Path serverConfigDir = helper.getLevel().getServer()
                 .getWorldPath(LevelResource.ROOT)
                 .resolve("serverconfig");
-        Path original = serverConfigDir.resolve(SomeStacksCommon.MODID + "-server.json");
-        Path fixture = serverConfigDir.resolve(SomeStacksCommon.MODID + "-gallery-budget.json");
+        ServerConfig.Backend original = ServerConfig.backend();
+        ServerConfig.Settings originalPolicy = ServerConfig.settings();
+        Path fixture = serverConfigDir.resolve(SomeStacksCommon.MODID + "-gallery-budget.toml");
         BlockPos playerPos = helper.absolutePos(ORIGIN);
         BlockPos[] bases = {playerPos.east(), playerPos.east(8)};
         RenderGalleryGenerator.Result[] completed = new RenderGalleryGenerator.Result[2];
         try {
-            // Absent fields keep their loaded values, so the fixture changes only the budget.
+            // Absent fields use defaults; this fixture changes the placement budget.
             Files.createDirectories(serverConfigDir);
-            Files.writeString(fixture, "{\"render_gallery\": {\"placements_per_tick\": 4}}");
-            ServerConfig.load(fixture);
+            Files.writeString(fixture, "[render_gallery]\nplacements_per_tick = 4\n");
+            var backend = new com.github.crittscott.somestacks.TomlServerConfig();
+            ServerConfig.install(backend);
+            ServerConfig.apply(backend.load(fixture));
             checkEquals(4, ServerConfig.renderGalleryPlacementsPerTick(), "Test placement budget");
             for (int job = 0; job < bases.length; job++) {
                 BlockPos base = bases[job];
@@ -142,7 +145,8 @@ public final class RenderGalleryChecks {
                     RenderGalleryGenerator.onServerTick();
                 }
             } finally {
-                ServerConfig.load(original);
+                ServerConfig.install(original);
+                ServerConfig.apply(originalPolicy);
                 try {
                     Files.deleteIfExists(fixture);
                 } catch (IOException e) {

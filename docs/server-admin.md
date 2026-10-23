@@ -2,7 +2,11 @@
 
 ## The config file
 
-Some Stacks stores loader-neutral world policy at `<world>/serverconfig/somestacks-server.json`, so it travels with the world. `/ss` list edits update the running values and save the file immediately. A direct file edit takes effect after restarting the server; `/ss reload` does not reread this JSON.
+Every loader uses documented `somestacks-server.toml`. `/ss deny` and `/ss gen` update the running values and save immediately. `/ss reload` refreshes policy and server render overrides.
+
+- **Forge:** `<world>/serverconfig/somestacks-server.toml`, managed and watched by Forge.
+- **NeoForge:** `config/somestacks-server.toml`, with optional `<world>/serverconfig/somestacks-server.toml` overrides, managed and watched by NeoForge.
+- **Fabric:** `config/somestacks-server.toml` supplies instance defaults; `<world>/serverconfig/somestacks-server.toml`, when present, overrides it for that world. Every setting has an explanation. After editing the active file, run `/ss reload`. Malformed fields use their defaults and are logged; a TOML syntax error uses the complete defaults.
 
 | Setting | Section | Default | Effect |
 | --- | --- | --- | --- |
@@ -11,8 +15,7 @@ Some Stacks stores loader-neutral world policy at `<world>/serverconfig/somestac
 | `enable_singles_stack_block` | `stacks` | `true` | The same for Singles Stacks. |
 | `enable_bar_stack_block` | `stacks` | `true` | The same for Bar Stacks. |
 | `disable_mods` | `compatibility` | empty | Namespaces whose items no stack will accept. |
-| `disable_items` | `compatibility` | empty | Item ids refused on the player deposit gestures. |
-| `ingots` | `compatibility` | Forge: `#forge:ingots*`; Fabric and NeoForge: `#c:ingots*`; all: `#somestacks:ingots` | What a Bar Stack accepts: `#name` is an item-tag pattern, a bare id is one item. |
+| `disable_items` | `compatibility` | `evilcraft:broom_part` | Item ids refused on the player deposit gestures. |
 | `placements_per_tick` | `render_gallery` | `64` | Blocks the gallery commands place per tick, floor included. |
 | `enabled` | `render_gallery` | `false` | Whether `/ss gallery` and `/ss ingotgallery` can be run at all. |
 | `required_permission_level` | `render_gallery` | `3` | Permission level `/ss gallery` and `/ss ingotgallery` require. Range 0–4. |
@@ -23,13 +26,9 @@ Disabling a mod or an item bars *new* contents. Anything already stored can stil
 
 ### Ingots
 
-`ingots` decides what a Bar Stack holds — and, by complement, what a Singles Stack refuses. Widening one narrows the other by exactly as much.
+Bar Stacks accept items in the `somestacks:ingots` item tag; Singles Stacks refuse those items. The shipped tag includes optional common ingot and brick tags and explicit compatibility entries. Customize membership with `data/somestacks/tags/item/ingots.json` in a data pack, then run vanilla `/reload`. There is no ingot config setting or command.
 
-An entry beginning with `#` names an item tag and may contain `*`, matching a run of any characters. The Forge default `#forge:ingots*` covers `#forge:ingots` itself and every `forge:ingots/<metal>` beneath it. Fabric and NeoForge use the corresponding conventional `#c:ingots*` default.
-
-Any other entry is a single item id, for accepting one hand-picked item without a data pack tag. A bare id is checked against the registry when added; a `#` tag entry is taken as typed, since it may name a tag no loaded data pack declares. To hand-pick a larger set, declare an item tag in a data pack and add it here with `#` — the mod ships `#somestacks:ingots` for exactly this.
-
-The item set is re-resolved whenever the config changes *and* whenever tags are bound, so a data pack reload is picked up without touching the config.
+Existing world JSON policy is migrated once to a world TOML override; the original is retained as `somestacks-server.json.migrated`. An existing TOML takes precedence. Invalid JSON that cannot be migrated is retained for repair. Custom `compatibility.ingots` entries are logged for transfer to a data-pack item tag.
 
 ## Permissions
 
@@ -55,7 +54,6 @@ Some subcommands additionally require a **player** rather than the console, beca
 | `/ss gen item add\|remove\|list <item>` | Level 2 | Edit the gallery item list. |
 | `/ss deny mod add\|remove\|list <modid>` | Level 2 | Edit the disabled namespace list. |
 | `/ss deny item add\|remove\|list <item>` | Level 2 | Edit the disabled item list. |
-| `/ss ingot add\|remove\|list <#tag \| item>` | Level 2 | Edit the ingot list — `#` tag patterns and item ids. |
 | `/ss reload` | Level 2 | Re-read server render overrides and re-sync every player. |
 | `/ss help [<command>]` | Anyone | Command forms, gates, and detail. |
 
@@ -65,7 +63,7 @@ An item id is checked against the registry when it is added to a list, because t
 
 ### `/ss reload`
 
-Re-reads `config/somestacks/server_item_overrides/` and pushes the current synchronized config to every player. It does **not** re-read `<world>/serverconfig/somestacks-server.json`; restart the server after editing that file directly.
+Refreshes server policy, rereads `config/somestacks/server_item_overrides/`, and synchronizes players. Fabric rereads the active TOML; Forge and NeoForge also watch native config edits. Use vanilla `/reload` for data-pack ingot tags.
 
 ### Render galleries
 
@@ -75,7 +73,7 @@ Galleries **overwrite** their floor and stack positions directly and do not appl
 
 ## What the server tells the client
 
-On login and `/ss reload`, the server sends each player the three stack-type enable flags and the server render overrides. The disabled-mod and disabled-item lists, the ingot list, and the pile settings stay server-side and are never sent.
+On login and `/ss reload`, the server sends each player the three stack-type enable flags and the server render overrides. The disabled-mod and disabled-item lists, and the pile settings stay server-side and are never sent.
 
 ## Protection and claim mods
 

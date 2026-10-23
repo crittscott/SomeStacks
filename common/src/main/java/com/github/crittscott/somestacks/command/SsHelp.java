@@ -109,15 +109,6 @@ final class SsHelp {
                 List.of("somestacks.command.help.deny.detail.1",
                         "somestacks.command.help.deny.detail.2")),
 
-        INGOT(SsCommand.COMMAND_INGOT, "somestacks.command.help.ingot.summary", Gate.OPERATOR,
-                List.of(usage(SsCommand.COMMAND_INGOT + " add <#tag|item>"),
-                        usage(SsCommand.COMMAND_INGOT + " remove <#tag|item>"),
-                        usage(SsCommand.COMMAND_INGOT + " list")),
-                List.of("somestacks.command.help.ingot.detail.1",
-                        "somestacks.command.help.ingot.detail.2",
-                        "somestacks.command.help.ingot.detail.3",
-                        "somestacks.command.help.ingot.detail.4")),
-
         HELP(SsCommand.COMMAND_HELP, "somestacks.command.help.help.summary", Gate.ANYONE,
                 List.of(usage(SsCommand.COMMAND_HELP),
                         usage(SsCommand.COMMAND_HELP + " <command>")),
