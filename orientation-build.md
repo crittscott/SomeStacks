@@ -6,26 +6,22 @@
 
 This document is an orientation to the repository's build environment: its entry points, module layout, version authorities, dependency baselines, and packaging flow. It describes the setup as it exists. It is not build history, a troubleshooting log, release documentation, or a conversation.
 
-`build-env/` is a reference snapshot of every checked-in Gradle build input, including the wrapper. It preserves repository-relative paths so that files can be compared or restored without guessing where they belong. The active files at the repository root and under `common/`, `fabric/`, `neoforge/`, and `gradle/` remain authoritative; Gradle does not read the copies. Keep the snapshot and this description synchronized whenever an active build file changes.
+`build-env/` is a reference snapshot of the repository's build environment: every checked-in Gradle build input including the wrapper, plus the agent instructions, the build-runner script, the Git settings, and outlines of the three orientation files. It preserves repository-relative paths so that files can be compared or restored without guessing where they belong. The active files at the repository root and under `common/`, `fabric/`, `neoforge/`, and `gradle/` remain authoritative; Gradle does not read the copies. Keep the snapshot and this description synchronized whenever an active file it covers changes.
 
-The snapshot should contain only manually maintained files that define or launch this Gradle build: Gradle scripts, Gradle properties, wrapper launchers, and wrapper files. It should not contain caches, generated output, IDE state, run directories, resolved dependency JARs, mod source or resources, GameTest fixtures, loader manifests, release notes, or personal convenience scripts such as `gradlews.ps1`. The wrapper JAR is the sole binary because it is itself a checked-in build launcher.
+The snapshot holds verbatim copies of the manually maintained files that define or launch this Gradle build (Gradle scripts, Gradle properties, wrapper launchers, and wrapper files), the agent instructions (`CLAUDE.md`, `AGENTS.md`, `code-review.md`), `gradlews.ps1`, which runs the standard Gradle task sequence and reports each step's result, and the Git settings (`.gitignore`, `.gitattributes`). The orientation entries are outlines, not copies: each holds its file's fixed header followed by every heading in order, with no body text, so it records the files' format without duplicating content that changes with the code. It should not contain caches, generated output, IDE state, run directories, resolved dependency JARs, mod source or resources, GameTest fixtures, loader manifests, or release notes. The wrapper JAR is the sole binary because it is itself a checked-in build launcher.
 
 ## Snapshot contents
 
-| Active path | Reference copy |
+Each copy sits at `build-env/` followed by its active path.
+
+| Kind | Active paths |
 | --- | --- |
-| `settings.gradle` | `build-env/settings.gradle` |
-| `build.gradle` | `build-env/build.gradle` |
-| `gradle.properties` | `build-env/gradle.properties` |
-| `common/build.gradle` | `build-env/common/build.gradle` |
-| `fabric/build.gradle` | `build-env/fabric/build.gradle` |
-| `fabric/gradle.properties` | `build-env/fabric/gradle.properties` |
-| `neoforge/build.gradle` | `build-env/neoforge/build.gradle` |
-| `neoforge/gradle.properties` | `build-env/neoforge/gradle.properties` |
-| `gradlew` | `build-env/gradlew` |
-| `gradlew.bat` | `build-env/gradlew.bat` |
-| `gradle/wrapper/gradle-wrapper.properties` | `build-env/gradle/wrapper/gradle-wrapper.properties` |
-| `gradle/wrapper/gradle-wrapper.jar` | `build-env/gradle/wrapper/gradle-wrapper.jar` |
+| Gradle build | `settings.gradle`, `build.gradle`, `gradle.properties`, `common/build.gradle`, `fabric/build.gradle`, `fabric/gradle.properties`, `neoforge/build.gradle`, `neoforge/gradle.properties` |
+| Gradle wrapper | `gradlew`, `gradlew.bat`, `gradle/wrapper/gradle-wrapper.properties`, `gradle/wrapper/gradle-wrapper.jar` |
+| Agent instructions | `CLAUDE.md`, `AGENTS.md`, `code-review.md` |
+| Build runner | `gradlews.ps1` |
+| Git settings | `.gitignore`, `.gitattributes` |
+| Orientation outlines | `orientation-player.md`, `orientation-code.md`, `orientation-build.md` |
 
 ## Build shape
 
