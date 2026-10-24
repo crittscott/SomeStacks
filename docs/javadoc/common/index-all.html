@@ -115,7 +115,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#apply(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">apply(ServerConfig.Settings)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>
-<div class="block">Publishes already-validated policy and rebuilds admission sets; does not save or synchronize clients.</div>
+<div class="block">Validates namespace lists and rebuilds admission sets; does not save or synchronize clients.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.html#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply(Map&lt;Identifier, BarTextureStore.BarTextureData&gt;, ResourceManager, ProfilerFiller)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore</a></dt>
 <dd>&nbsp;</dd>
@@ -424,7 +424,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.html" class="type-name-link" title="class in com.github.crittscott.somestacks.command">ClientRenderCommandSyntax</a> - Class in <a href="com/github/crittscott/somestacks/command/package-summary.html">com.github.crittscott.somestacks.command</a></dt>
 <dd>
-<div class="block">Server-safe syntax shared by local render commands and server help.</div>
+<div class="block">Render command syntax without client implementation dependencies.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.Action.html" class="type-name-link" title="enum class in com.github.crittscott.somestacks.command">ClientRenderCommandSyntax.Action</a> - Enum Class in <a href="com/github/crittscott/somestacks/command/package-summary.html">com.github.crittscott.somestacks.command</a></dt>
 <dd>&nbsp;</dd>
@@ -1356,6 +1356,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Validates native ingress before inherited loading can change components or inventory.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#isValidNamespace(java.lang.String)" class="member-name-link">isValidNamespace(String)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
+<dd>
+<div class="block">Validates namespace syntax using the platform's public identifier parser.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#isValidSinglesItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidSinglesItem(ItemStack)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
 <div class="block">Whether Singles accepts this item.</div>
@@ -1567,7 +1571,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Schedules the owning run's deferred publication pass.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#MAX_NAMESPACE_ENTRIES" class="member-name-link">MAX_NAMESPACE_ENTRIES</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_NAMESPACE_LENGTH" class="member-name-link">MAX_NAMESPACE_LENGTH</a> - Static variable in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#MAX_NAMESPACE_LENGTH" class="member-name-link">MAX_NAMESPACE_LENGTH</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_NAMESPACES" class="member-name-link">MAX_NAMESPACES</a> - Static variable in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
 <dd>
@@ -1932,7 +1940,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#reload()" class="member-name-link">reload()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>
-<div class="block">Refreshes policy through the installed backend without saving or synchronizing clients.</div>
+<div class="block">Refreshes policy without saving or sending packets; rejected namespaces preserve active policy.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/TomlServerConfig.html#reload()" class="member-name-link">reload()</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/TomlServerConfig.html" title="class in com.github.crittscott.somestacks">TomlServerConfig</a></dt>
 <dd>&nbsp;</dd>
@@ -2832,10 +2840,6 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/block/StackBlock.html#updateShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.LevelReader,net.minecraft.world.level.ScheduledTickAccess,net.minecraft.core.BlockPos,net.minecraft.core.Direction,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.util.RandomSource)" class="member-name-link">updateShape(BlockState, LevelReader, ScheduledTickAccess, BlockPos, Direction, BlockPos, BlockState, RandomSource)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.html#usages(java.lang.String)" class="member-name-link">usages(String)</a> - Static method in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.html" title="class in com.github.crittscott.somestacks.command">ClientRenderCommandSyntax</a></dt>
-<dd>
-<div class="block">Derives help from the same tree without loading or invoking client operations.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlock.html#useItemOn(net.minecraft.world.item.ItemStack,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult)" class="member-name-link">useItemOn(ItemStack, BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html#userFile()" class="member-name-link">userFile()</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides.Sandbox</a></dt>

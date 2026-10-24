@@ -9,12 +9,12 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -24,7 +24,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,6 +32,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+
+import javax.annotation.Nullable;
 
 /**
  * The server-side {@code ss} command: render gallery generation, server list editing, and
@@ -466,8 +467,13 @@ public final class SsCommand {
     }
 
     private static int reload(CommandContext<CommandSourceStack> ctx) {
-        SomeStacksServer.reloadPolicy(ctx.getSource().getServer());
-        ctx.getSource().sendSuccess(() -> Component.translatable("somestacks.command.reloaded"), true);
+        if (SomeStacksServer.reloadPolicy(ctx.getSource().getServer()) < 0) {
+            ctx.getSource().sendFailure(Component.translatable("somestacks.command.policy_rejected"));
+            return 0;
+        }
+        int online = ctx.getSource().getServer().getPlayerList().getPlayerCount();
+        ctx.getSource().sendSuccess(() -> Component.translatable(
+                "somestacks.command.reloaded", online), true);
         return 1;
     }
 
@@ -491,7 +497,15 @@ public final class SsCommand {
     private static int addEntry(CommandContext<CommandSourceStack> ctx,
                                 ServerConfig.ListSetting list,
                                 String label, String entry) {
-        if (!ServerConfig.addListEntry(list, entry)) {
+        boolean added;
+        try {
+            added = ServerConfig.addListEntry(list, entry);
+        } catch (IllegalArgumentException rejected) {
+            ctx.getSource().sendFailure(Component.translatable("somestacks.command.namespace_rejected",
+                    entry, ServerConfig.MAX_NAMESPACE_LENGTH, ServerConfig.MAX_NAMESPACE_ENTRIES));
+            return 0;
+        }
+        if (!added) {
             ctx.getSource().sendFailure(Component.translatable(
                     "somestacks.command.list_contains", Component.translatable(label), entry));
             return 0;
