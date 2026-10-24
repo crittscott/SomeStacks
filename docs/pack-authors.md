@@ -10,7 +10,6 @@ Some Stacks is extensible from data packs, resource packs, and the server config
 | Sounds per stack type and action | `data/<ns>/somestacks_sounds/*.json` | server (data pack) |
 | Bar textures and tints | `assets/<ns>/textures/bars/*.json` | client (resource pack) |
 | How items are drawn in cells | `assets/<ns>/item_render_overrides/*.json` | client (resource pack) |
-| Server-imposed render overrides | `config/somestacks/server_item_overrides/*.json` | server, synced to clients |
 
 ## Bar-valid items (data pack)
 
@@ -105,10 +104,9 @@ Storage and Singles Stacks draw stored items inside their cells. Each item resol
 
 Profiles resolve by precedence, first match wins:
 
-1. Server overrides — `config/somestacks/server_item_overrides/*.json`
-2. User overrides — `config/somestacks/item_overrides.json`
-3. Resource pack overrides — `assets/<ns>/item_render_overrides/*.json`
-4. Automatic measurement
+1. User overrides — `config/somestacks/item_overrides.json`
+2. Resource pack overrides — `assets/<ns>/item_render_overrides/*.json`
+3. Automatic measurement
 
 ### Override file format
 
@@ -137,7 +135,7 @@ Items that no override layer configures are measured from their model. Results a
 
 ### Authoring workflow
 
-The `/ss` command exists mostly for this loop. In game, as an operator:
+Render authoring changes your own view and needs no operator permission. For the gallery steps, the server must enable galleries and you must meet the configured gallery permission:
 
 1. `/ss gallery <modid>` — build a wall of Storage Stacks holding that namespace's items, so you can see everything at once. `/ss ingotgallery <modid>` does the same for Bar Stacks.
 2. `/ss item <item> <mode> [<scale> [<x> <y> [<z>]]]` — correct one item. It applies to your view immediately, in memory.
@@ -145,12 +143,10 @@ The `/ss` command exists mostly for this loop. In game, as an operator:
 4. `/ss write changed` — save your entries to `config/somestacks/item_overrides.json`, which your client loads at startup. Only entries you set are ever written.
 5. `/ss write <modid>` — dump a *complete* resolved profile for every item of that namespace to `config/somestacks/generated_overrides/<namespace>.json`, measuring whatever no layer configures.
 
-Nothing reads `generated_overrides` back. A file there is a starting point: correct it by hand and drop it into a resource pack's `item_render_overrides`, or into a server's `server_item_overrides`.
+Nothing reads `generated_overrides` back. A file there is a starting point: correct it by hand and drop it into a resource pack's `item_render_overrides`, including a server resource pack.
 
 The dump runs on your own client and holds it busy until it finishes, so name a namespace — or keep a review session's mods in the gen mod list and use `/ss write list` — rather than reaching for `all` in a large pack.
 
-## Server-imposed overrides
+## Server resource packs
 
-`config/somestacks/server_item_overrides/*.json` uses the same format and takes precedence over everything a client has locally. The server sends these to each player on login; `/ss reload` re-reads the folder and pushes it to every connected player again.
-
-Use this when a pack needs every player to see the same thing regardless of what they have in their own config.
+Distribute shared render profiles through an ordinary server resource pack. Local user overrides retain priority over resource-pack profiles.
