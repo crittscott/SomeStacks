@@ -99,5 +99,3 @@ Automatic Bar tints resolve on first render; authored colors stay; reload clears
 
 `somestacks_gametest` is excluded from `build`. Fabric entrypoints and NeoForge deferred functions/JSON wrap `common/src/gametest` checks. Test data format: 107.1. Loader transfer tests cover staged support, slot replacement, rollback, growth, and movement; NeoForge also covers vetoes. TOML config and protection-provider tests are Fabric-only; shared tests cover drop-rule-off Bars, Adventure cleanup, and grass/snow replacement. `AutomationAndPersistenceChecks` cover persistence. `/ssclienttest` (aim at a stack, release Shift/V) checks native client updates and inherited-component rejection, Bar reuse/invalidation, capture ownership, special geometry, GUI extents, profile precedence/invalidation, and grid submission. The gallery-budget test has its own environment.
 
-
-
