@@ -16,11 +16,13 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_ITEM;
 import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_MODE;
@@ -75,7 +77,8 @@ public final class ClientRenderCommands {
         RenderMode mode = RenderMode.fromString(modeString);
         if (mode == null) {
             feedback.failure(ctx.getSource(), Component.translatable(
-                    "somestacks.command.unknown_render_mode", modeString));
+                    "somestacks.command.unknown_render_mode", modeString,
+                    Arrays.stream(RenderMode.values()).map(RenderMode::getId).collect(Collectors.joining(", "))));
             return 0;
         }
 

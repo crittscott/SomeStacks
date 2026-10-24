@@ -164,7 +164,7 @@ Resource packs map Bar item ids to textures and tints under `assets/<namespace>/
 ## Extension points
 
 - Data pack: edit `somestacks:ingots` to classify Bar items. The shipped tag includes optional `c:ingots`, `forge:ingots`, and `c:bricks` tags plus explicitly listed ingots and bricks; child tags are included only through normal tag composition.
-- Resource pack (format 69; data packs use 88): replace registered `somestacks:block.*` action sounds through `sounds.json`; add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
+- Resource pack (format 69; data packs use 88): action sounds (`sounds.json`), render profiles, and Bar mappings as above.
 - Server: distribute Storage/Singles profiles and Bar mappings through a server resource pack.
 
 ## Protection and validation
@@ -176,4 +176,6 @@ The payload carries mode/modifier state; actions use vanilla block-use hits. The
 ## Saved worlds
 
 A world saved by the preceding 1.21.8 release upgrades its stored items on load; no older release is supported. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session.
+
+Mod lists: 256 namespaces, 256 characters each; excess preserves policy. Reload reports online players and succeeds with none. Help uses translated usages.
 

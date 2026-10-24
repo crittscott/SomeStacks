@@ -393,6 +393,7 @@ public final class ConfigurationChecks {
      */
     public static void serverCommandsEnforcePermissionsAndPersistEdits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        PolicyParityChecks.verify(helper);
         ServerConfig.Backend original = ServerConfig.backend();
         Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-commands-gametest.json");
         MinecraftServer server = helper.getLevel().getServer();
@@ -425,7 +426,8 @@ public final class ConfigurationChecks {
 
             Files.writeString(fixture, policyJson(8, true, true, true,
                     List.of(), List.of("minecraft:dirt")));
-            execute(commands.getDispatcher(), operator, "ss reload");
+            checkEquals(1, execute(commands.getDispatcher(), operator, "ss reload"),
+                    "Successful reload did not return command success");
             check(ServerConfig.isItemDisabled(ResourceLocation.parse("minecraft:dirt")),
                     "Reload command did not apply the edited file");
 

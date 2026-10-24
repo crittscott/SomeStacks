@@ -17,15 +17,16 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.UUID;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /** Loader-neutral server lifecycle operations called by each loader's native event adapters. */
 public final class SomeStacksServer {
     private SomeStacksServer() {}
 
     private static volatile MinecraftServer runningServer;
+    private static ServerConfig.Settings publishedPolicy;
     private static final Set<SavedItemLocation> reportedSavedItems = new HashSet<>();
 
     private record SavedItemLocation(ResourceLocation dimension, BlockPos pos) {}
@@ -40,12 +41,14 @@ public final class SomeStacksServer {
         reportedSavedItems.clear();
         StackDataMigration.beginSession();
         ServerConfig.loadFor(server);
+        publishedPolicy = ServerConfig.settings();
         ConfigSyncPkt.rebuildCurrent();
     }
 
     /** Releases the stopped server and clears session diagnostics after world activity ends. */
     public static synchronized void onServerStopped() {
         runningServer = null;
+        publishedPolicy = null;
         reportedSavedItems.clear();
         StackDataMigration.endSession();
     }
@@ -72,15 +75,38 @@ public final class SomeStacksServer {
      */
     public static void onPolicyReloaded() {
         MinecraftServer server = runningServer;
-        if (server != null) {
-            server.execute(() -> {
-                ServerConfig.Settings previous = ServerConfig.settings();
-                ServerConfig.reload();
-                if (previous.equals(ServerConfig.settings())) return;
-                ConfigSyncPkt.rebuildCurrent();
-                ConfigSyncNetwork.syncAllPlayers(server);
-            });
+        if (server != null) server.execute(() -> reloadPolicy(server));
+    }
+
+    /** Returns the synchronized player count, or -1 when policy is rejected. */
+    public static int reloadPolicy(MinecraftServer server) {
+        if (!ServerConfig.reload()) return -1;
+        return publishPolicy(server);
+    }
+
+    /** Publishes changed policy and sends client settings only when their values change. */
+    public static int publishPolicy(MinecraftServer server) {
+        ServerConfig.Settings previous = publishedPolicy;
+        ServerConfig.Settings current = ServerConfig.settings();
+        if (current.equals(previous)) return 0;
+        publishedPolicy = current;
+        SomeStacksCommon.LOGGER.info("Applied server policy: Storage={}, Singles={}, Bar={}; maximum height={}",
+                current.enableStorageStackBlock(), current.enableSinglesStackBlock(),
+                current.enableBarStackBlock(), current.maxPileHeight());
+        if (previous == null || previous.galleryEnabled() != current.galleryEnabled()
+                || previous.galleryPermissionLevel() != current.galleryPermissionLevel()) {
+            for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                server.getCommands().sendCommands(player);
+            }
         }
+        if (previous != null
+                && previous.enableStorageStackBlock() == current.enableStorageStackBlock()
+                && previous.enableSinglesStackBlock() == current.enableSinglesStackBlock()
+                && previous.enableBarStackBlock() == current.enableBarStackBlock()
+                && previous.genMods().equals(current.genMods())
+                && previous.disableMods().equals(current.disableMods())) return 0;
+        ConfigSyncPkt.rebuildCurrent();
+        return ConfigSyncNetwork.syncAllPlayers(server);
     }
 
     /** Sends the startup/reload snapshot on the server thread after play networking is ready. */
