@@ -1,6 +1,6 @@
 # Server administration
 
-This branch targets Minecraft 1.21.6; compilation, GameTests, copied-world migration, and client/server verification remain pending. Use matching client/server loader builds. Back up worlds and test copies of the preceding released 1.21.1 world and any 1.21.5 development world before using this port. Custom data packs use format **80**; server resource packs use **63** (see [Pack authors](pack-authors.md)).
+These instructions apply to Minecraft 1.21.6. Use matching client/server Minecraft and loader builds. Back up worlds before upgrading. Custom data packs use format **80**; server resource packs use **63** (see [Pack authors](pack-authors.md)).
 
 ## The config file
 
@@ -53,7 +53,7 @@ Run `/reload` to apply the change. Items already in a stack stay where they are;
 
 ### Coming from 1.21.1
 
-1.21.1 kept an ingot list in `compatibility.ingots` of `<world>/serverconfig/somestacks-server.json`. That field is no longer read. On server start the mod logs a warning that names any entries in it other than the old defaults (`#forge:ingots*`, `#c:ingots*`, `#somestacks:ingots`, which the shipped tag already covers). Move those entries into a data pack as shown above, then delete the field to stop the warning. A `*` pattern such as `#forge:ingots*` cannot go into a tag; list the parent tag or the specific child tags instead.
+If an older world's `<world>/serverconfig/somestacks-server.json` contains `compatibility.ingots`, move those entries into a data-pack item tag. That field is not used for admission. On server start the mod logs a warning that names any entries in it other than the old defaults (`#forge:ingots*`, `#c:ingots*`, `#somestacks:ingots`, which the shipped tag already covers). Move those entries into a data pack as shown above, then delete the field to stop the warning. A `*` pattern such as `#forge:ingots*` cannot go into a tag; list the parent tag or the specific child tags instead.
 
 ## Permissions
 
