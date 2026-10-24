@@ -1,13 +1,18 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.util.StackMode;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.HitResult;
 
-/** Shared client gesture state and the loader-specific packet sender behind its rules. */
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.function.Consumer;
+
+/** Shared client gesture state and its loader-specific state-sync sender. */
 public final class ClientGestures {
     private ClientGestures() {}
 
@@ -16,25 +21,17 @@ public final class ClientGestures {
     public static final String KEY_CATEGORY_TRANSLATION_KEY =
             "key.categories." + SomeStacksCommon.MODID;
 
-    public interface Sender {
-        void sendTogglePermanent(BlockPos pos);
-
-        void sendPlaceAndDeposit(StackMode mode, BlockPos placePos, Direction face);
-
-        void sendDeposit(BlockPos pos, BlockPos clickedPos);
-
-        void sendExtract(BlockPos pos, int index);
-
-        void sendRotateBlock(BlockPos pos);
-
-        void sendRotateItem(BlockPos pos, int slotIndex);
-    }
-
     private static StackMode stackMode = StackMode.STORAGE_STACK;
-    private static Sender sender;
+    private static StackMode lastSentMode;
+    private static boolean lastSentModifier;
+    private static Consumer<CustomPacketPayload> sender;
 
-    public static void setSender(Sender sender) {
+    /** Replaces the loader sender and returns its predecessor; null detaches the sender. */
+    @Nullable
+    public static Consumer<CustomPacketPayload> setSender(@Nullable Consumer<CustomPacketPayload> sender) {
+        Consumer<CustomPacketPayload> previous = ClientGestures.sender;
         ClientGestures.sender = sender;
+        return previous;
     }
 
     public static StackMode currentMode() {
@@ -58,27 +55,31 @@ public final class ClientGestures {
                 Component.translatable("somestacks.message.storage_mode", modeComponent), true);
     }
 
-    public static void sendTogglePermanent(BlockPos pos) {
-        sender.sendTogglePermanent(pos);
+    /** Sends only state that changed since the last interaction on this connection. */
+    public static void syncState(boolean modifierDown) {
+        if (lastSentMode == stackMode && lastSentModifier == modifierDown) {
+            return;
+        }
+        Objects.requireNonNull(sender, "Client gesture sender is not installed")
+                .accept(new GestureStatePkt(stackMode, modifierDown));
+        lastSentMode = stackMode;
+        lastSentModifier = modifierDown;
     }
 
-    public static void sendPlaceAndDeposit(BlockPos placePos, Direction face) {
-        sender.sendPlaceAndDeposit(stackMode, placePos, face);
+    /** Forces the next interaction to establish state on a new connection. */
+    public static void resetSync() {
+        lastSentMode = null;
     }
 
-    public static void sendDeposit(BlockPos pos, BlockPos clickedPos) {
-        sender.sendDeposit(pos, clickedPos);
+    /** Whether an input is the main-hand air click used for empty-hand placement-mode cycling. */
+    public static boolean isEmptyMainHandAirClick(Player player, @Nullable HitResult hit) {
+        return player.getMainHandItem().isEmpty()
+                && hit != null
+                && hit.getType() == HitResult.Type.MISS;
     }
 
-    public static void sendExtract(BlockPos pos, int index) {
-        sender.sendExtract(pos, index);
-    }
-
-    public static void sendRotateBlock(BlockPos pos) {
-        sender.sendRotateBlock(pos);
-    }
-
-    public static void sendRotateItem(BlockPos pos, int slotIndex) {
-        sender.sendRotateItem(pos, slotIndex);
+    /** Classifies the loader's current crosshair hit without consulting the client singleton. */
+    public static boolean isHittingBlock(@Nullable HitResult hit) {
+        return hit != null && hit.getType() == HitResult.Type.BLOCK;
     }
 }

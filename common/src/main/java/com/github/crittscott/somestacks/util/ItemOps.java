@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.level.Level;
 
 /**
@@ -19,15 +20,12 @@ import net.minecraft.world.level.Level;
 public final class ItemOps {
     private ItemOps(){}
 
-    /** The brightest a block can be, and so the top of each stack block's light property. */
-    public static final int MAX_LIGHT_LEVEL = 15;
-
     /** Share of a stored block's own emission that a cell holding it contributes. */
     private static final int LIGHT_SHARE_DIVISOR = 4;
 
     /**
-     * Whether an extraction may land in this hand: it must be empty, or hold the same item and tags
-     * with room left. This is the rule that keeps a player's hand from being swapped out mid-gesture.
+     * Whether an extraction may land in this hand: it must be empty, or hold the same item and data
+     * components with room left. This keeps a player's hand from being swapped out mid-gesture.
      */
     public static boolean canTakeIntoHand(ItemStack hand, ItemStack offer) {
         if (offer.isEmpty()) return false;
@@ -100,7 +98,7 @@ public final class ItemOps {
                 totalLight += blockLight / LIGHT_SHARE_DIVISOR;
             }
         }
-        return Math.min(totalLight, MAX_LIGHT_LEVEL);
+        return Math.min(totalLight, LightEngine.MAX_LEVEL);
     }
 
     /** Whether the server config bars this item's namespace. Disabled contents may still be removed. */
@@ -141,7 +139,7 @@ public final class ItemOps {
         if (isItemDisabled(stack)) {
             ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
             player.displayClientMessage(
-                    Component.translatable("somestacks.message.disabled_item", itemId),
+                    Component.translatable("somestacks.message.disabled_item", itemId.toString()),
                     true
             );
             return true;

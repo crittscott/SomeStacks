@@ -1,80 +1,54 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.FabricItemStorage;
+import com.github.crittscott.somestacks.fabric.FabricPlatformServices;
 import com.github.crittscott.somestacks.network.FabricNetworking;
-import com.github.crittscott.somestacks.command.CommandNetwork;
-import com.github.crittscott.somestacks.command.FabricCommandNetwork;
-import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
-import com.github.crittscott.somestacks.command.SsCommand;
-import com.github.crittscott.somestacks.server.FabricEditAuthority;
-import com.github.crittscott.somestacks.server.FabricPlayerEditAuthority;
-import com.github.crittscott.somestacks.server.FabricStackSoundData;
-import com.github.crittscott.somestacks.server.GestureThrottle;
-import com.github.crittscott.somestacks.server.PlayerEdits;
-import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.network.ProtocolPkt;
+import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.PackType;
 
 /** Fabric's common entry point and server lifecycle wiring. */
 public final class SomeStacksFabric implements ModInitializer {
     @Override
     public void onInitialize() {
+        FabricPlatformServices platform = new FabricPlatformServices();
+        PlatformServices.install(platform);
+        ServerConfig.install(new TomlServerConfig(net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir()));
         FabricRegistry.init();
         FabricItemStorage.init();
-        ServerConfig.install(new TomlServerConfig(FabricLoader.getInstance().getConfigDir()));
-        WorldEdits.setAuthority(new FabricEditAuthority());
-        PlayerEdits.setAuthority(new FabricPlayerEditAuthority());
+        FabricStackInteractionEvents.init();
         FabricNetworking.registerPayloads();
         FabricNetworking.initServer();
-        CommandNetwork.setHandler(new FabricCommandNetwork());
 
         CommandRegistrationCallback.EVENT.register(
-                (dispatcher, registryAccess, environment) -> SsCommand.register(dispatcher));
-        ServerTickEvents.END_SERVER_TICK.register(server -> RenderGalleryGenerator.onServerTick());
+                (dispatcher, registryAccess, environment) ->
+                        SomeStacksServer.registerCommands(dispatcher, registryAccess));
+        ServerTickEvents.END_SERVER_TICK.register(server -> SomeStacksServer.onServerTickEnd());
 
-        ResourceManagerHelper.get(PackType.SERVER_DATA)
-                .registerReloadListener(new FabricStackSoundData());
-
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            ServerConfig.loadFor(server);
-            RenderGalleryGenerator.invalidateBarItems();
+        ServerLifecycleEvents.SERVER_STARTING.register(SomeStacksServer::onServerStarting);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            SomeStacksServer.onServerStopped();
+            platform.editAuthority().clear();
         });
-        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
-                (server, resourceManager, success) -> {
-                    if (success) {
-                        RenderGalleryGenerator.invalidateBarItems();
-                    }
-                });
-
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            ServerPlayer player = handler.player;
-            if (!FabricNetworking.supportsClient(player)) {
-                SomeStacksCommon.LOGGER.warn(
-                        "Disconnected {}: compatible Some Stacks client protocol was not advertised",
-                        player.getGameProfile().getName());
+        ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
+            if (!ServerConfigurationNetworking.canSend(handler, ProtocolPkt.TYPE)) {
                 handler.disconnect(Component.translatable("somestacks.disconnect.protocol"));
-                return;
             }
-            FabricNetworking.sendProtocol(player);
-            FabricNetworking.sendConfig(player);
         });
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
+                SomeStacksServer.onPlayerJoined(handler.player));
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
-                GestureThrottle.clear(handler.player.getUUID()));
+                SomeStacksServer.onPlayerLeft(handler.player.getUUID()));
 
-        SomeStacksCommon.LOGGER.info("Some Stacks v{} initialized for Fabric", modVersion());
-    }
-
-    private static String modVersion() {
-        return FabricLoader.getInstance().getModContainer(SomeStacksCommon.MODID)
-                .map(container -> container.getMetadata().getVersion().getFriendlyString())
-                .orElse("unknown");
+        SomeStacksCommon.LOGGER.info(
+                "Some Stacks v{} initialized for Fabric",
+                PlatformServices.modVersion(SomeStacksCommon.MODID));
     }
 }

@@ -1,61 +1,84 @@
 package com.github.crittscott.somestacks.server;
 
-import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ClientInformation;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.nio.charset.StandardCharsets;
+import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
-import java.util.WeakHashMap;
 
-/**
- * Fabric's {@link EditAuthority}: the automation actor is a synthetic {@link ServerPlayer}, and
- * removal answers to Fabric API's block-break event, the counterpart to Forge's block-break event,
- * so claim and protection mods can veto automation-driven removal the same way they can on Forge.
- *
- * <p>Placement has no comparable vanilla click to consult: automated growth has no player gesture
- * for the mod's placement-protection hook ({@link FabricPlayerEditAuthority}) to fire, and Fabric
- * API has no generic "a block was placed" event the way Forge's block-place event is. FTB Chunks
- * is consulted directly instead, through {@link FtbChunksProtection}, when it is installed; other
- * claim mods are not covered.
- */
+/** Fabric protection queries and native block-break lifecycle for player-attributed edits. */
 public final class FabricEditAuthority implements EditAuthority {
-    private static final GameProfile PROFILE = new GameProfile(
-            UUID.nameUUIDFromBytes("somestacks:fabric_automation".getBytes(StandardCharsets.UTF_8)),
-            "[SomeStacks]");
-
-    private final Map<ServerLevel, ServerPlayer> actors = new WeakHashMap<>();
-
-    public FabricEditAuthority() {
-        if (FtbChunksProtection.isLoaded()) {
-            SomeStacksCommon.LOGGER.info("Enabled direct FTB Chunks protection for automated growth on Fabric");
-        }
-    }
+    private final Map<ResourceKey<Level>, ServerPlayer> actors = new HashMap<>();
+    @Nullable
+    private final FabricProtectionQueries protectionQueries = FabricLoader.getInstance()
+            .isModLoaded("common-protection-api") ? new CommonProtectionQueries() : null;
 
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
-        return actors.computeIfAbsent(level,
-                key -> new ServerPlayer(key.getServer(), key, PROFILE, ClientInformation.createDefault()));
+        return actors.computeIfAbsent(level.dimension(), key ->
+                new SyntheticPlayer(level, AutomationActor.PROFILE));
+    }
+
+    /** Releases actors retaining worlds after a server stops. */
+    public void clear() { actors.clear(); }
+
+    @Override
+    public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
+        if (protectionQueries != null && !protectionQueries.mayUseAdjacent(player, pos)) {
+            return false;
+        }
+        return UseBlockCallback.EVENT.invoker().interact(
+                player, player.serverLevel(), InteractionHand.MAIN_HAND,
+                WorldEdits.adjacentHit(player, pos)) == InteractionResult.PASS;
     }
 
     @Override
-    public PlacementVeto preparePlacement(ServerLevel level, BlockPos pos) {
-        return (placer, placedAgainst) -> {
-            ServerPlayer actor = (ServerPlayer) placer;
-            return FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(actor, pos);
-        };
+    public boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
+        return (protectionQueries == null || protectionQueries.mayPlace(placer, level, pos))
+                && !(placer instanceof ServerPlayer actor
+                && FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(actor, pos));
     }
 
     @Override
-    public boolean vetoesRemoval(ServerLevel level, BlockPos pos, BlockState state) {
-        ServerPlayer breaker = automationActor(level);
-        return !PlayerBlockBreakEvents.BEFORE.invoker()
-                .beforeBlockBreak(level, breaker, pos, state, level.getBlockEntity(pos));
+    public boolean place(Player placer, ServerLevel level, BlockPos pos,
+                         BlockState state, Direction placedAgainst) {
+        return mayPlace(placer, level, pos)
+                && level.setBlock(pos, state, Block.UPDATE_ALL);
+    }
+
+    @Override
+    public boolean vetoesRemoval(
+            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            @Nullable BlockEntity blockEntity) {
+        boolean allowed = (protectionQueries == null || protectionQueries.mayBreak(actor, level, pos))
+                && PlayerBlockBreakEvents.BEFORE.invoker()
+                .beforeBlockBreak(level, actor, pos, state, blockEntity);
+        if (!allowed) {
+            PlayerBlockBreakEvents.CANCELED.invoker()
+                    .onBlockBreakCanceled(level, actor, pos, state, blockEntity);
+        }
+        return !allowed;
+    }
+
+    @Override
+    public void afterRemoval(
+            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            @Nullable BlockEntity blockEntity) {
+        PlayerBlockBreakEvents.AFTER.invoker()
+                .afterBlockBreak(level, actor, pos, state, blockEntity);
     }
 }

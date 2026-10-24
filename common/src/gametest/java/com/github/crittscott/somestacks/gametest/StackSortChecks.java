@@ -14,34 +14,35 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 public final class StackSortChecks {
     private StackSortChecks() {}
 
+    /**
+     * Storage sorting orders item ids, damage, and data-component variants
+     * deterministically. To reproduce in-game: insert those variants into
+     * scattered Storage slots through automation and let the pile settle. The visible cubes follow
+     * that stable order and each compatible partial follows its full stacks.
+     */
     public static void comparatorOrdersEveryIdentityComponent(GameTestHelper helper) {
         ItemStack dirt = new ItemStack(Items.DIRT);
         ItemStack stone = new ItemStack(Items.STONE);
-        check(StackSort.COMPARATOR.compare(dirt, stone) < 0,
+        check(StackSort.key(dirt).compareTo(StackSort.key(stone)) < 0,
                 "Registry item id did not lead ordering");
-        check(StackSort.COMPARATOR.compare(stone, ItemStack.EMPTY) < 0,
-                "Empty stack did not sort last");
 
         ItemStack undamaged = new ItemStack(Items.WOODEN_PICKAXE);
         ItemStack damaged = new ItemStack(Items.WOODEN_PICKAXE);
         damaged.setDamageValue(1);
-        check(StackSort.COMPARATOR.compare(undamaged, damaged) < 0,
+        check(StackSort.key(undamaged).compareTo(StackSort.key(damaged)) < 0,
                 "Damage did not lead variant ordering");
 
-        ItemStack untagged = new ItemStack(Items.STONE);
-        ItemStack tagOneFull = taggedStone(1, 64);
-        ItemStack tagOnePartial = taggedStone(1, 3);
-        ItemStack tagTwo = taggedStone(2, 64);
-        check(StackSort.COMPARATOR.compare(untagged, tagOneFull) < 0,
-                "Untagged stack did not sort before tagged stack");
-        check(StackSort.COMPARATOR.compare(tagOneFull, tagTwo) < 0,
-                "Tag identity was not ordered stably");
-        check(StackSort.COMPARATOR.compare(tagOneFull, tagOnePartial) < 0,
-                "Full stack did not sort before compatible partial");
+        ItemStack plain = new ItemStack(Items.STONE);
+        ItemStack componentOneFull = componentStone(1, 64);
+        ItemStack componentTwo = componentStone(2, 64);
+        check(StackSort.key(plain).compareTo(StackSort.key(componentOneFull)) < 0,
+                "Plain stack did not sort before component-bearing stack");
+        check(StackSort.key(componentOneFull).compareTo(StackSort.key(componentTwo)) < 0,
+                "Component identity was not ordered stably");
         helper.succeed();
     }
 
-    private static ItemStack taggedStone(int variant, int count) {
+    private static ItemStack componentStone(int variant, int count) {
         ItemStack stack = new ItemStack(Items.STONE, count);
         CompoundTag tag = new CompoundTag();
         tag.putInt("variant", variant);

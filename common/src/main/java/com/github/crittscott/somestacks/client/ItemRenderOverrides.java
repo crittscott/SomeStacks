@@ -1,15 +1,19 @@
 package com.github.crittscott.somestacks.client;
 
-import com.github.crittscott.somestacks.PlatformPaths;
+import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +43,7 @@ import java.util.TreeMap;
 
 /**
  * The client's item render configuration, layered by authority. The first matching entry owns the
- * entire presentation: server-synced admin overrides, then the user's override file, then bundled
+ * entire presentation: the user's override file, then bundled
  * resource overrides. Items absent from every layer use measured profiles.
  *
  * <p>A bundled resource-override file is named for the namespace whose items it covers, and covers
@@ -48,19 +52,31 @@ import java.util.TreeMap;
  * whose name is not a namespace therefore applies to nothing.
  */
 public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
+    public static final ResourceLocation RELOAD_LISTENER_ID =
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "item_render_overrides");
+
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path USER_FILE = PlatformPaths.modConfigFolder().resolve("item_overrides.json");
-    private static final Path GENERATED_DIR = PlatformPaths.modConfigFolder().resolve("generated_overrides");
-    private static final float[] ZERO_OFFSET = new float[3];
-
+    private static final Path USER_FILE = PlatformServices.modConfigFolder().resolve("item_overrides.json");
+    private static final Path GENERATED_DIR = PlatformServices.modConfigFolder().resolve("generated_overrides");
     /** Bundled resource overrides, from client resource reload. */
     public static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
-    /** Admin overrides synced from the server. */
-    public static final Map<ResourceLocation, ItemRenderConfig> SERVER_OVERRIDES = new HashMap<>();
     /** The user's own overrides: {@code ss item} changes plus the loaded user file. */
     private static final Map<ResourceLocation, ItemRenderConfig> USER_OVERRIDES = new HashMap<>();
     private static boolean userFileLoaded = false;
+    private static final Map<Item, RenderProfile> RESOLVED_PROFILES = new HashMap<>();
+    /** Counts discards of the resolved profiles, so prepared presentation can tell it is stale. */
+    private static int generation;
+
+    static void clearResolvedProfiles() {
+        RESOLVED_PROFILES.clear();
+        generation++;
+    }
+
+    /** Changes whenever any item's resolved profile may have changed, including on resource reload. */
+    static int generation() {
+        return generation;
+    }
 
     @Override
     protected Map<ResourceLocation, ItemRenderConfig> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
@@ -114,21 +130,21 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     protected void apply(Map<ResourceLocation, ItemRenderConfig> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         CONFIG_MAP.clear();
         CONFIG_MAP.putAll(prepared);
+        clearResolvedProfiles();
     }
 
-    public static void setSyncedServerOverrides(Map<ResourceLocation, ItemRenderConfig> overrides) {
-        SERVER_OVERRIDES.clear();
-        SERVER_OVERRIDES.putAll(overrides);
-    }
-
+    /** Changes one in-memory user override; {@link #handleWriteRequest()} persists the layer. */
     public static void putUser(ResourceLocation itemId, ItemRenderConfig config) {
         ensureUserFileLoaded();
         USER_OVERRIDES.put(itemId, config);
+        clearResolvedProfiles();
     }
 
+    /** Removes one in-memory user override; {@link #handleWriteRequest()} persists the layer. */
     public static void removeUser(ResourceLocation itemId) {
         ensureUserFileLoaded();
         USER_OVERRIDES.remove(itemId);
+        clearResolvedProfiles();
     }
 
     /**
@@ -146,11 +162,12 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         }
         ensureUserFileLoaded();
 
+        return RESOLVED_PROFILES.computeIfAbsent(stack.getItem(), ignored -> resolveUncached(stack));
+    }
+
+    private static RenderProfile resolveUncached(ItemStack stack) {
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        ItemRenderConfig entry = SERVER_OVERRIDES.get(itemId);
-        if (entry == null) {
-            entry = USER_OVERRIDES.get(itemId);
-        }
+        ItemRenderConfig entry = USER_OVERRIDES.get(itemId);
         if (entry == null) {
             entry = CONFIG_MAP.get(itemId);
         }
@@ -160,7 +177,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
         RenderMode mode = entry.mode() != null ? entry.mode() : AutoRenderProfiles.get(stack).mode();
         float scale = entry.scale() != null ? entry.scale() : 1.0f;
-        float[] offset = entry.offset() != null ? entry.offset() : ZERO_OFFSET;
+        RenderOffset offset = entry.offset() != null ? entry.offset() : RenderOffset.ZERO;
         return new RenderProfile(mode, scale, offset);
     }
 
@@ -192,7 +209,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
      * under {@code generated_overrides}, and reports the result to the player. Entries are
      * complete. The generated directory is output only, not an active override layer, so dumping a
      * modpack does not freeze its current profiles into the user layer. Each file can be edited and
-     * copied into a resource pack's {@code item_render_overrides} or the server override directory.
+     * copied into a resource pack's {@code item_render_overrides}.
      *
      * <p>Every item a layer does not configure is measured here rather than at first sight of it,
      * so a dump of a large pack is the measurement pass for all of it. The results reach the
@@ -258,7 +275,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
                 itemCount, byNamespace.size() - failed.size(), GENERATED_DIR.toString());
         if (!failed.isEmpty()) {
             message.append(Component.translatable("somestacks.command.dump.failed",
-                    failed.size(), String.join(", ", failed)));
+                    failed.size(), ComponentUtils.formatList(failed, Component::literal)));
         }
         if (!rejected.isEmpty()) {
             message.append(Component.translatable("somestacks.command.dump.rejected", rejected.size()));

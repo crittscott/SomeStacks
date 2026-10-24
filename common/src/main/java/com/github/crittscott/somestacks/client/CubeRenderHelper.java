@@ -1,45 +1,55 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
+import com.github.crittscott.somestacks.util.CubeGrid;
+import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.IntUnaryOperator;
 
 /**
  * Draws one stored item inside one cell according to its render profile. The Storage
@@ -49,11 +59,21 @@ import java.util.Set;
  * <p>The {@code 3d}, {@code gui}, and {@code block} modes hand off to Minecraft's own renderers.
  * The {@code 2d} mode is the one implemented here: flat item art projected onto the visible faces
  * of a small background cube, which is what makes a wall of stored items readable at a distance.
+ *
+ * <p>Work is done when something changes. Each distinct stack's profile, item model, and
+ * {@code 2d} plates are shared by every grid showing it while retained in a bounded cache, until profiles or
+ * resources change or the entry is evicted, so a model that changes with time, such as a compass, shows its state from
+ * when it was prepared.
  */
 public final class CubeRenderHelper {
     private CubeRenderHelper() {}
 
     public static final ResourceLocation STACK_CUBE_TEXTURE = ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/stack_cube");
+    /** The {@code 2d} background drawn without art for an item whose model threw when captured. */
+    public static final ResourceLocation STACK_CUBE_ERROR_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/stack_cube_error");
+    public static final ResourceLocation RENDER_CACHE_RELOAD_LISTENER_ID =
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "render_caches");
 
     /** {@link Direction#values()} clones its array on every call, and this is a per-item loop. */
     private static final Direction[] DIRECTIONS = Direction.values();
@@ -112,16 +132,36 @@ public final class CubeRenderHelper {
         FACE_CORNERS[Direction.DOWN.ordinal()] = new float[]{0,0,0, 1,0,0, 1,0,1, 0,0,1};
     }
 
-    /** Reseeded before every quad group, so one instance serves the whole render thread. */
-    private static final RandomSource RANDOM = RandomSource.create();
+    /** Draws every occupied position in a regular Storage or Singles cube grid. */
+    public static void renderGridItems(
+            SlotAccess items, int slots, CubeGrid grid, int blockRotation,
+            float renderScale, IntUnaryOperator itemRotation,
+            Level level, BlockPos blockPos, PoseStack pose, MultiBufferSource buffers,
+            BlockRenderDispatcher blockRenderer) {
+        int cubeLight = LevelRenderer.getLightColor(level, blockPos);
+        for (int index = 0; index < slots; index++) {
+            ItemStack stack = items.getStackInSlot(index);
+            if (stack.isEmpty()) {
+                continue;
+            }
 
-    private static final BakedQuad[] NO_PLATES = new BakedQuad[0];
+            AABB bounds = grid.localBox(index, blockRotation);
 
-    /**
-     * The quads of each render pass that survive flat projection. Identity keys match baked-model
-     * lifetime: a resource reload replaces every model instance and clears this cache.
-     */
-    private static final Map<BakedModel, BakedQuad[]> PLATE_CACHE = new IdentityHashMap<>();
+            pose.pushPose();
+            pose.translate(bounds.minX, bounds.minY, bounds.minZ);
+            pose.scale(renderScale, renderScale, renderScale);
+
+            int quarterTurns = itemRotation.applyAsInt(index);
+            if (quarterTurns != 0) {
+                pose.translate(CELL_LOCAL_CENTRE, CELL_LOCAL_CENTRE, CELL_LOCAL_CENTRE);
+                pose.mulPose(Axis.YP.rotationDegrees(QuarterTurns.degrees(quarterTurns)));
+                pose.translate(-CELL_LOCAL_CENTRE, -CELL_LOCAL_CENTRE, -CELL_LOCAL_CENTRE);
+            }
+
+            renderItemInCube(stack, pose, buffers, cubeLight, blockRenderer, level);
+            pose.popPose();
+        }
+    }
 
     /**
      * Items whose block form threw when drawn. Cached so the attempt is made once per bake
@@ -132,91 +172,170 @@ public final class CubeRenderHelper {
     private static final Set<Item> BLOCK_RENDER_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
 
     /**
-     * Draws {@code stack} inside the current cell, in whichever presentation
-     * {@link ItemRenderOverrides#resolve} selects for it, or draws nothing if {@code stack} is
-     * empty. {@code pose} must already be positioned at the cell being drawn; this method only
-     * pushes/pops the transforms needed for the item's own presentation within it.
+     * Items whose model threw while its {@code 2d} art was captured. Cached so the model is asked
+     * once per bake; these draw the error cube until the next resource reload.
      */
-    public static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
-                                        BlockRenderDispatcher blockRenderer, Level level) {
-        RenderProfile profile = ItemRenderOverrides.resolve(stack);
-        if (profile == null) {
+    private static final Set<Item> FLAT_CAPTURE_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
+
+    /** The pose {@code 2d} captures run under; render-thread only, and never pushed. */
+    private static final PoseStack SCRATCH_POSE = new PoseStack();
+
+    private record CaptureKey(Item item, DataComponentPatch components, int count) {
+        static CaptureKey of(ItemStack stack) {
+            return new CaptureKey(stack.getItem(), stack.getComponentsPatch(), stack.getCount());
+        }
+    }
+
+    /**
+     * One distinct stack's presentation. A {@code 2d} item carries its plates, or null when its
+     * model threw and it draws the error cube; any other mode carries its resolved item model in
+     * the GUI or FIXED context, which {@code block} also falls back to.
+     */
+    private record PreparedItem(RenderProfile profile, @Nullable List<ItemCapture.TintedQuad> plates,
+                                @Nullable PreparedModel item) {}
+
+    private record PreparedModel(ItemStack stack, BakedModel model, ItemDisplayContext context) {}
+
+    /** Maximum number of component/count-distinct prepared displays retained across all grids. */
+    private static final int MAX_PREPARED_ITEMS = 2048;
+    /** Prepared displays in access order, valid for {@link #preparedGeneration} of the profiles. */
+    private static final Map<CaptureKey, PreparedItem> PREPARED = new LinkedHashMap<>(16, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<CaptureKey, PreparedItem> eldest) {
+            return size() > MAX_PREPARED_ITEMS;
+        }
+    };
+    private static int preparedGeneration = -1;
+
+    private static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers,
+            int light, BlockRenderDispatcher blockRenderer, Level level) {
+        PreparedItem prepared = prepared(stack, level);
+        if (prepared == null) {
             return;
         }
+        RenderProfile profile = prepared.profile();
         float scale = profile.scale();
-        float[] offset = profile.offset();
+        RenderOffset offset = profile.offset();
 
         switch (profile.mode()) {
-            case TWO_D -> render2DItem(stack, pose, buffers, light, level, scale, offset);
-            case THREE_D -> render3DItem(stack, pose, buffers, light, level, scale, offset);
-            case BLOCK -> renderBlockItem(stack, pose, buffers, light, blockRenderer, level, scale, offset);
-            case GUI -> renderGuiItem(stack, pose, buffers, light, level, scale, offset);
+            case TWO_D -> render2DItem(prepared.plates(), pose, buffers, light, scale, offset);
+            case THREE_D -> renderModel(prepared.item(), pose, buffers, light, scale, offset, false);
+            case BLOCK -> renderBlockItem(stack, prepared.item(), pose, buffers, light, blockRenderer, scale, offset);
+            case GUI -> renderModel(prepared.item(), pose, buffers, light, scale, offset, true);
         }
     }
 
-    private static void render3DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                     float finalScale, float[] offset) {
+    /**
+     * The stack's shared presentation, prepared the first time any grid shows it since the
+     * profiles or resources last changed or its entry was evicted; null for a stack with no profile.
+     */
+    @Nullable
+    private static PreparedItem prepared(ItemStack stack, Level level) {
+        int generation = ItemRenderOverrides.generation();
+        if (generation != preparedGeneration) {
+            PREPARED.clear();
+            preparedGeneration = generation;
+        }
+        CaptureKey key = CaptureKey.of(stack);
+        PreparedItem prepared = PREPARED.get(key);
+        if (prepared == null) {
+            prepared = prepareItem(stack.copy(), level);
+            if (prepared != null) {
+                PREPARED.put(key, prepared);
+            }
+        }
+        return prepared;
+    }
+
+    @Nullable
+    private static PreparedItem prepareItem(ItemStack stack, Level level) {
+        RenderProfile profile = ItemRenderOverrides.resolve(stack);
+        if (profile == null) {
+            return null;
+        }
+        if (profile.mode() == RenderMode.TWO_D) {
+            return new PreparedItem(profile, captureFlatArt(stack, level), null);
+        }
+        ItemDisplayContext context = profile.mode() == RenderMode.GUI
+                ? ItemDisplayContext.GUI : ItemDisplayContext.FIXED;
+        var model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
+        PreparedModel item = new PreparedModel(stack, model, context);
+        return new PreparedItem(profile, null, item);
+    }
+
+    /** Draws a resolved {@code 3d} or {@code gui} item model centered in the cell. */
+    private static void renderModel(PreparedModel item, PoseStack pose, MultiBufferSource buffers,
+                                    int light, float finalScale, RenderOffset offset, boolean gui) {
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
         pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
                 CELL_LOCAL_CENTRE / finalScale);
-        pose.translate(offset[0] / finalScale, offset[1] / finalScale, offset[2] / finalScale);
-
-        Minecraft.getInstance().getItemRenderer().renderStatic(
-                stack,
-                ItemDisplayContext.FIXED,
-                light,
-                OverlayTexture.NO_OVERLAY,
-                pose,
-                buffers,
-                level,
-                0
-        );
-
+        pose.translate(offset.x() / finalScale, offset.y() / finalScale, offset.z() / finalScale);
+        if (gui) {
+            applyGuiCounterRotation(pose);
+        }
+        Minecraft.getInstance().getItemRenderer().render(item.stack(), item.context(), false,
+                pose, buffers, light, OverlayTexture.NO_OVERLAY, item.model());
         pose.popPose();
     }
 
-    private static void renderGuiItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                      float finalScale, float[] offset) {
-        pose.pushPose();
-        pose.scale(finalScale, finalScale, finalScale);
-        pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
-                CELL_LOCAL_CENTRE / finalScale);
-        pose.translate(offset[0] / finalScale, offset[1] / finalScale, offset[2] / finalScale);
-
-        // Counter-rotate the GUI display context transforms
+    /** Applies the counter-rotation shared by GUI rendering and automatic GUI measurement. */
+    public static void applyGuiCounterRotation(PoseStack pose) {
         pose.mulPose(Axis.YP.rotationDegrees(-45.0f));
         pose.mulPose(Axis.XP.rotationDegrees(-30.0f));
-
-        Minecraft.getInstance().getItemRenderer().renderStatic(
-                stack,
-                ItemDisplayContext.GUI,
-                light,
-                OverlayTexture.NO_OVERLAY,
-                pose,
-                buffers,
-                level,
-                0
-        );
-
-        pose.popPose();
     }
 
-    private static void render2DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                     float scale, float[] offset) {
+    private static void render2DItem(@Nullable List<ItemCapture.TintedQuad> quads, PoseStack pose,
+                                     MultiBufferSource buffers, int light, float scale, RenderOffset offset) {
         pose.pushPose();
         pose.scale(CELL_LOCAL_SIZE, CELL_LOCAL_SIZE, CELL_LOCAL_SIZE);
         pose.translate(0.5f, 0.5f, 0.5f);
         pose.scale(CUBE_INSET, CUBE_INSET, CUBE_INSET);
         pose.translate(-0.5f, -0.5f, -0.5f);
-        BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
-        render2DItemCube(pose, buffers, stack, model, light, scale, offset);
+        if (quads == null) {
+            render2DItemCube(pose, buffers, List.of(), STACK_CUBE_ERROR_TEXTURE, light, scale, offset);
+        } else {
+            render2DItemCube(pose, buffers, quads, STACK_CUBE_TEXTURE, light, scale, offset);
+        }
         pose.popPose();
     }
 
-    private static void renderBlockItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
-                                        BlockRenderDispatcher blockRenderer, Level level,
-                                        float finalScale, float[] offset) {
+    /**
+     * The plates {@code 2d} lays onto the cube, or null when the item's model has thrown. The
+     * capture records without drawing, so a model that throws partway leaves no buffer mid-quad.
+     *
+     * <p>An item model lays its art on a front and a back plate and hangs a sliver off every span
+     * of the sprite's outline. The slivers stand perpendicular to the plates to give a held item its
+     * thickness; flattened onto a cell face they are edge-on and cover nothing, so only quads facing
+     * along Z are kept. Both plates are kept and the render type's own back-face culling shows the
+     * outward one, exactly as it does for an item in the hand.
+     */
+    @Nullable
+    private static List<ItemCapture.TintedQuad> captureFlatArt(ItemStack stack, Level level) {
+        Item item = stack.getItem();
+        if (FLAT_CAPTURE_FAILURES.contains(item)) {
+            return null;
+        }
+        try {
+            List<ItemCapture.TintedQuad> plates = new ArrayList<>();
+            for (ItemCapture.TintedQuad tinted : ItemCapture.captureQuads(
+                    stack, ItemDisplayContext.FIXED, level, SCRATCH_POSE).quads()) {
+                if (tinted.quad().getDirection().getAxis() == Direction.Axis.Z) {
+                    plates.add(tinted);
+                }
+            }
+            return List.copyOf(plates);
+        } catch (RuntimeException e) {
+            FLAT_CAPTURE_FAILURES.add(item);
+            SomeStacksCommon.LOGGER.warn("Item model threw while capturing 2d art for {}; drawing the error cube instead",
+                    BuiltInRegistries.ITEM.getKey(item), e);
+            return null;
+        }
+    }
+
+    private static void renderBlockItem(ItemStack stack, PreparedModel item, PoseStack pose,
+                                        MultiBufferSource buffers, int light, BlockRenderDispatcher blockRenderer,
+                                        float finalScale, RenderOffset offset) {
         if (!(stack.getItem() instanceof BlockItem blockItem)) {
             // Block mode has no meaningful rendering path for a non-BlockItem.
             return;
@@ -230,7 +349,7 @@ public final class CubeRenderHelper {
         // with the real stack under FIXED, and cannot leave the pose stack unbalanced.
         if (blockState.getRenderShape() != RenderShape.MODEL
                 || BLOCK_RENDER_FAILURES.contains(stack.getItem())) {
-            render3DItem(stack, pose, buffers, light, level, finalScale, offset);
+            renderModel(item, pose, buffers, light, finalScale, offset, false);
             return;
         }
 
@@ -238,7 +357,7 @@ public final class CubeRenderHelper {
         pose.scale(finalScale, finalScale, finalScale);
         pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
                 CELL_LOCAL_CENTRE / finalScale);
-        pose.translate(offset[0] / finalScale, offset[1] / finalScale, offset[2] / finalScale);
+        pose.translate(offset.x() / finalScale, offset.y() / finalScale, offset.z() / finalScale);
         pose.mulPose(Axis.YP.rotationDegrees(180));
         pose.translate(-0.5, -0.5, -0.5);
 
@@ -252,93 +371,44 @@ public final class CubeRenderHelper {
                 SomeStacksCommon.LOGGER.warn("Block rendering threw for {}; drawing it as 3d instead",
                         BuiltInRegistries.ITEM.getKey(stack.getItem()), e);
             }
-            render3DItem(stack, pose, buffers, light, level, finalScale, offset);
+            renderModel(item, pose, buffers, light, finalScale, offset, false);
             return;
         }
 
         pose.popPose();
     }
 
-    /**
-     * The flag Forge and NeoForge item renderers use when selecting a model's passes and render types:
-     * false only for the translucent blocks
-     * vanilla draws through the indirect buffers outside GUI and first-person contexts.
-     */
-    public static boolean fabulousFlag(ItemStack stack, ItemDisplayContext context) {
-        if (context == ItemDisplayContext.GUI || context.firstPerson()
-                || !(stack.getItem() instanceof BlockItem blockItem)) {
-            return true;
-        }
-        Block block = blockItem.getBlock();
-        return !(block instanceof HalfTransparentBlock) && !(block instanceof StainedGlassPaneBlock);
-    }
-
-    private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedModel model, int light,
-                                         float scale, float[] offset) {
+    private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, List<ItemCapture.TintedQuad> quads,
+                                         ResourceLocation background, int light, float scale, RenderOffset offset) {
         List<FaceTarget> faces = visibleFaces(pose, scale, offset);
         if (faces.isEmpty()) {
             return;
         }
 
         TextureAtlasSprite backgroundSprite = Minecraft.getInstance()
-                .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-                .apply(STACK_CUBE_TEXTURE);
+                .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
+                .apply(background);
         VertexConsumer solidVc = buffers.getBuffer(RenderType.solid());
         for (FaceTarget target : faces) {
             emitBackgroundFace(pose.last().pose(), solidVc, backgroundSprite, light, target);
         }
 
+        if (quads.isEmpty()) {
+            return;
+        }
         VertexConsumer vc = buffers.getBuffer(RenderType.cutout());
-        // Resolving the model and its passes stays here, so a stack's own state still chooses both:
-        // a charged crossbow draws charged, a coated weapon draws its coating. Only the step from a
-        // pass to the quads worth drawing depends on nothing but the pass, and that one is cached.
-        List<BakedModel> passes = ClientRenderPlatform.renderPasses(
-                model, stack, ItemDisplayContext.FIXED);
-        for (int i = 0; i < passes.size(); i++) {
-            emitQuads(vc, stack, plates(passes.get(i)), light, faces);
-        }
-    }
-
-    private static BakedQuad[] plates(BakedModel pass) {
-        BakedQuad[] cached = PLATE_CACHE.get(pass);
-        if (cached == null) {
-            cached = gatherPlates(pass);
-            PLATE_CACHE.put(pass, cached);
-        }
-        return cached;
+        emitPlates(vc, quads, light, faces);
     }
 
     /**
-     * Collects the quads of one pass that the flat projection can show. An item model lays its art on
-     * a front and a back plate and hangs a sliver off every span of the sprite's outline. The slivers
-     * stand perpendicular to the plates to give a held item its thickness; flattened onto a cell face
-     * they are edge-on and cover nothing, and they outnumber the plates by up to a hundred to one.
+     * Immediately discards prepared models and failure state tied to the replaced resources.
      */
-    private static BakedQuad[] gatherPlates(BakedModel pass) {
-        // Walk the pass as ItemRenderer.renderModelLists does: each culled direction group and then
-        // the unculled group, reseeding per group.
-        List<BakedQuad> plates = new ArrayList<>(2);
-        for (Direction bucket : DIRECTIONS) {
-            RANDOM.setSeed(42L);
-            collectPlates(pass.getQuads(null, bucket, RANDOM), plates);
-        }
-        RANDOM.setSeed(42L);
-        collectPlates(pass.getQuads(null, null, RANDOM), plates);
-        return plates.isEmpty() ? NO_PLATES : plates.toArray(NO_PLATES);
-    }
-
-    private static void collectPlates(List<BakedQuad> quads, List<BakedQuad> plates) {
-        for (BakedQuad quad : quads) {
-            if (quad.getDirection().getAxis() == Direction.Axis.Z) {
-                plates.add(quad);
-            }
-        }
-    }
-
-    /** Clears geometry and failure state tied to baked models being replaced by a resource reload. */
     public static void onResourceReload() {
-        PLATE_CACHE.clear();
+        PREPARED.clear();
         BLOCK_RENDER_FAILURES.clear();
+        FLAT_CAPTURE_FAILURES.clear();
+        BarStackBER.onResourceReload();
+        ItemRenderOverrides.clearResolvedProfiles();
     }
 
     /**
@@ -353,7 +423,7 @@ public final class CubeRenderHelper {
      * cell center lies on the face's inward side. The faces that fail the test are behind the
      * opaque background cube, so skipping them removes nothing that could be seen.
      */
-    private static List<FaceTarget> visibleFaces(PoseStack pose, float scale, float[] offset) {
+    private static List<FaceTarget> visibleFaces(PoseStack pose, float scale, RenderOffset offset) {
         Matrix3f cellNormal = pose.last().normal();
         Vector3f centre = pose.last().pose().transformPosition(new Vector3f(0.5f, 0.5f, 0.5f));
 
@@ -376,7 +446,7 @@ public final class CubeRenderHelper {
      * the target face, sit just outside it keeping a sliver of the quad's own depth, then shrink the
      * art about the face center to leave a border and apply the profile's offset.
      */
-    private static Matrix4f artMatrix(PoseStack pose, Direction face, float scale, float[] offset) {
+    private static Matrix4f artMatrix(PoseStack pose, Direction face, float scale, RenderOffset offset) {
         pose.pushPose();
 
         Quaternionf rotation = FACE_ROTATIONS[face.ordinal()];
@@ -389,7 +459,7 @@ public final class CubeRenderHelper {
         pose.translate(0.0f, 0.0f, 1.0f + FACE_OFFSET);
         pose.scale(1.0f, 1.0f, FACE_DEPTH);
 
-        pose.translate(0.5f + offset[0], 0.5f + offset[1], 0.0f);
+        pose.translate(0.5f + offset.x(), 0.5f + offset.y(), 0.0f);
         pose.scale(ART_INSET * scale, ART_INSET * scale, 1.0f);
         pose.translate(-0.5f, -0.5f, 0.0f);
 
@@ -398,37 +468,28 @@ public final class CubeRenderHelper {
         return art;
     }
 
-    private static void emitQuads(VertexConsumer vc, ItemStack stack, BakedQuad[] plates, int light,
-                                  List<FaceTarget> faces) {
-        int tintIndex = Integer.MIN_VALUE;
-        int r = 0xFF, g = 0xFF, b = 0xFF;
-
-        // Both plates are kept and the render type's own back-face culling shows the outward one,
-        // exactly as it does for an item in the hand.
-        for (BakedQuad quad : plates) {
-            // Every quad of a layer carries that layer's tint index, so a pass resolves its color
-            // once rather than once per quad. Color cannot be cached with the geometry: a potion's
-            // and a coated weapon's are per stack.
-            if (quad.getTintIndex() != tintIndex) {
-                tintIndex = quad.getTintIndex();
-                int color = tintIndex >= 0
-                        ? ClientRenderPlatform.itemColor(stack, tintIndex)
-                        : 0xFFFFFFFF;
-                r = (color >> 16) & 0xFF;
-                g = (color >> 8) & 0xFF;
-                b = color & 0xFF;
-            }
+    /** Lays the item's plates onto each visible face. */
+    private static void emitPlates(VertexConsumer vc, List<ItemCapture.TintedQuad> quads, int light,
+                                   List<FaceTarget> faces) {
+        for (ItemCapture.TintedQuad tinted : quads) {
+            BakedQuad quad = tinted.quad();
+            int color = tinted.color();
+            int r = FastColor.ARGB32.red(color);
+            int g = FastColor.ARGB32.green(color);
+            int b = FastColor.ARGB32.blue(color);
 
             int[] vertices = quad.getVertices();
             for (FaceTarget target : faces) {
                 for (int i = 0; i < 4; i++) {
-                    int base = i * 8;
+                    int base = i * ItemCapture.BLOCK_VERTEX_STRIDE;
+                    int position = base + ItemCapture.BLOCK_POSITION_OFFSET;
+                    int uv = base + ItemCapture.BLOCK_UV_OFFSET;
                     vertex(vc, target.art(),
-                            Float.intBitsToFloat(vertices[base]),
-                            Float.intBitsToFloat(vertices[base + 1]),
-                            Float.intBitsToFloat(vertices[base + 2]),
-                            Float.intBitsToFloat(vertices[base + 4]),
-                            Float.intBitsToFloat(vertices[base + 5]),
+                            Float.intBitsToFloat(vertices[position]),
+                            Float.intBitsToFloat(vertices[position + 1]),
+                            Float.intBitsToFloat(vertices[position + 2]),
+                            Float.intBitsToFloat(vertices[uv]),
+                            Float.intBitsToFloat(vertices[uv + 1]),
                             r, g, b, light, target);
                 }
             }

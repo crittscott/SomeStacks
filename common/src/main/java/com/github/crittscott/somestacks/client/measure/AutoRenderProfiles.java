@@ -1,13 +1,13 @@
 package com.github.crittscott.somestacks.client.measure;
 
-import com.github.crittscott.somestacks.PlatformPaths;
+import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.client.ClientRenderPlatform;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
-import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.client.RenderProfile;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -49,7 +49,7 @@ import java.util.TreeMap;
  * mod versions and resource-pack list with the current client.
  */
 public final class AutoRenderProfiles {
-    static final int CACHE_FORMAT_VERSION = 1;
+    static final int CACHE_FORMAT_VERSION = 3;
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String FIELD_FORMAT = "format";
@@ -100,17 +100,25 @@ public final class AutoRenderProfiles {
             initialResourceLoadSeen = true;
             return;
         }
+        int clearedProfiles = CACHE.size();
         CACHE.clear();
         cacheLoaded = true;
         dirty = false;
         Path cacheFile = cacheFile();
+        boolean deleted = false;
         try {
-            Files.deleteIfExists(cacheFile);
+            deleted = Files.deleteIfExists(cacheFile);
         } catch (IOException e) {
             SomeStacksCommon.LOGGER.warn("Failed to delete {}: {}", cacheFile, e.getMessage());
         }
+        if (clearedProfiles > 0 || deleted) {
+            SomeStacksCommon.LOGGER.info(
+                    "Cleared measured render cache after resource reload ({} in-memory profile(s))",
+                    clearedProfiles);
+        }
     }
 
+    /** Writes the measured cache only when a profile has changed since its last load or save. */
     public static void saveCache() {
         if (!dirty) {
             return;
@@ -123,7 +131,7 @@ public final class AutoRenderProfiles {
             RenderProfile profile = entry.getValue();
             entries.put(id, new ItemRenderConfig(profile.mode(), profile.scale(), profile.offset()));
             if (!versions.has(id.getNamespace())) {
-                versions.addProperty(id.getNamespace(), modVersion(id.getNamespace()));
+                versions.addProperty(id.getNamespace(), PlatformServices.modVersion(id.getNamespace()));
             }
         }
 
@@ -157,6 +165,9 @@ public final class AutoRenderProfiles {
             JsonObject root = GSON.fromJson(Files.readString(cacheFile), JsonObject.class);
             if (!isCurrentCacheFormat(root) || !root.has(FIELD_ENTRIES)) {
                 dirty = true;
+                SomeStacksCommon.LOGGER.info(
+                        "Discarded measured render cache {} because its format is obsolete or invalid",
+                        cacheFile);
                 return;
             }
 
@@ -166,6 +177,9 @@ public final class AutoRenderProfiles {
             String packs = root.has(FIELD_PACKS) ? root.get(FIELD_PACKS).getAsString() : null;
             if (packs == null || !packs.equals(selectedPackIds())) {
                 dirty = true;
+                SomeStacksCommon.LOGGER.info(
+                        "Discarded measured render cache {} because the selected resource packs changed",
+                        cacheFile);
                 return;
             }
 
@@ -173,34 +187,43 @@ public final class AutoRenderProfiles {
                     ? root.getAsJsonObject(FIELD_VERSIONS)
                     : new JsonObject();
 
+            JsonObject encodedEntries = root.getAsJsonObject(FIELD_ENTRIES);
             Map<ResourceLocation, ItemRenderConfig> entries =
-                    OverrideJsonCodec.parse(root.getAsJsonObject(FIELD_ENTRIES), cacheFile.toString());
+                    OverrideJsonCodec.parse(encodedEntries, cacheFile.toString());
+            int skipped = encodedEntries.size() - entries.size();
             for (Map.Entry<ResourceLocation, ItemRenderConfig> entry : entries.entrySet()) {
                 ResourceLocation id = entry.getKey();
                 ItemRenderConfig config = entry.getValue();
                 if (config.mode() == null || config.scale() == null || config.offset() == null) {
                     dirty = true;
+                    skipped++;
                     continue;
                 }
                 JsonElement recorded = versions.get(id.getNamespace());
-                if (recorded == null || !recorded.getAsString().equals(modVersion(id.getNamespace()))) {
+                if (recorded == null
+                        || !recorded.getAsString().equals(PlatformServices.modVersion(id.getNamespace()))) {
                     dirty = true;
+                    skipped++;
                     continue;
                 }
                 if (!BuiltInRegistries.ITEM.containsKey(id)) {
                     dirty = true;
+                    skipped++;
                     continue;
                 }
                 Item item = BuiltInRegistries.ITEM.get(id);
                 CACHE.put(item, new RenderProfile(config.mode(), config.scale(), config.offset()));
             }
+            SomeStacksCommon.LOGGER.info(
+                    "Loaded {} measured render profile(s) from {}; skipped {} stale or invalid cache entries",
+                    CACHE.size(), cacheFile, skipped);
         } catch (Exception e) {
             SomeStacksCommon.LOGGER.warn("Failed to read {}: {}", cacheFile, e.getMessage());
         }
     }
 
     private static Path cacheFile() {
-        return PlatformPaths.modConfigFolder().resolve("measured_cache.json");
+        return PlatformServices.modConfigFolder().resolve("measured_cache.json");
     }
 
     static boolean isCurrentCacheFormat(@Nullable JsonObject root) {
@@ -219,10 +242,6 @@ public final class AutoRenderProfiles {
         return String.join("\n", Minecraft.getInstance().getResourcePackRepository().getSelectedIds());
     }
 
-    private static String modVersion(String namespace) {
-        return ClientRenderPlatform.modVersion(namespace);
-    }
-
     private static RenderProfile compute(ItemStack stack) {
         float scaleFactor = fitScaleFactor(stack);
 
@@ -239,18 +258,12 @@ public final class AutoRenderProfiles {
         ModelMeasurement.Result result = ModelMeasurement.measure(stack);
         RenderMode mode = selectMode(result);
         if (mode == RenderMode.TWO_D) {
-            return new RenderProfile(RenderMode.TWO_D, 1.0f, new float[3]);
+            return new RenderProfile(RenderMode.TWO_D, 1.0f, RenderOffset.ZERO);
         }
 
-        if (result.failure() != null) {
-            logFallback(stack, result.failure());
-        }
         RenderProfile fitted = fit(result, RenderMode.THREE_D, scaleFactor);
         if (fitted == null) {
-            if (result.failure() == null) {
-                logFallback(stack, "3d fit failed");
-            }
-            return new RenderProfile(RenderMode.THREE_D, 1.0f, new float[3]);
+            return new RenderProfile(RenderMode.THREE_D, 1.0f, RenderOffset.ZERO);
         }
         return fitted;
     }
@@ -280,11 +293,6 @@ public final class AutoRenderProfiles {
         return flatByModel || flatByShape ? RenderMode.TWO_D : RenderMode.THREE_D;
     }
 
-    private static void logFallback(ItemStack stack, String reason) {
-        SomeStacksCommon.LOGGER.debug("Render measurement used default 3d profile for {}: {}",
-                BuiltInRegistries.ITEM.getKey(stack.getItem()), reason);
-    }
-
     /**
      * Fits measured bounds to a stack cell. Returns null when the measurement produced
      * nothing usable, leaving the caller to fall back.
@@ -306,11 +314,11 @@ public final class AutoRenderProfiles {
 
         // The measured bounds already include the renderer's -0.5 shift, so the geometry
         // center directly gives the offset that recenters it on the cell center.
-        float[] offset = new float[]{
+        RenderOffset offset = new RenderOffset(
                 (float) (-scale * (bounds.minX + bounds.maxX) * 0.5),
                 (float) (-scale * (bounds.minY + bounds.maxY) * 0.5),
                 (float) (-scale * (bounds.minZ + bounds.maxZ) * 0.5)
-        };
+        );
 
         return new RenderProfile(mode, scale, offset);
     }

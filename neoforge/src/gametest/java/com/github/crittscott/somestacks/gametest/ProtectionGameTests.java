@@ -6,31 +6,16 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.block.StorageStackBlock;
-import com.github.crittscott.somestacks.network.DepositPkt;
-import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
-import com.github.crittscott.somestacks.network.RotateItemPkt;
-import com.github.crittscott.somestacks.network.TogglePermanentPkt;
-import com.github.crittscott.somestacks.server.GestureThrottle;
-import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.border.WorldBorder;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -39,7 +24,10 @@ import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.neoforged.neoforge.items.IItemHandler;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -47,8 +35,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 
 /**
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
- * and the same-tick claim that stops the vanilla interaction following a gesture from acting on the
- * position the gesture just used.
+ * loader-native interaction denial, and world protection.
  *
  * <p>These fire the NeoForge events themselves, so they cover the order a consult and the commit
  * that follows must agree on.
@@ -58,226 +45,43 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 public final class ProtectionGameTests {
     private ProtectionGameTests() {}
 
+    /** See {@link ProtectionChecks#automationUsesSharedIdentity}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void automationUsesSharedIdentity(GameTestHelper helper) {
+        ProtectionChecks.automationUsesSharedIdentity(helper);
+    }
+
+    /** See {@link ProtectionChecks#checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
             GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos valid = helper.absolutePos(ORIGIN);
-        BlockPos invalid = new BlockPos(
-                valid.getX(), level.getMinBuildHeight() - 1, valid.getZ());
-
-        check(WorldEdits.placeChecked(
-                        player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
-                "Valid checked placement was rejected");
-        check(level.getBlockState(valid).is(Blocks.STONE),
-                "Valid checked placement did not change the world");
-        check(!WorldEdits.placeChecked(
-                        player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
-                "Out-of-height checked placement was accepted");
-        helper.succeed();
+        ProtectionChecks.checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link ProtectionChecks#checkedPlacementRejectsAnObstructingEntity}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        putCowIn(helper, ORIGIN);
-
-        check(!WorldEdits.placeChecked(
-                        player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
-                "Entity-obstructed checked placement was accepted");
-        helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
-        helper.succeed();
+        ProtectionChecks.checkedPlacementRejectsAnObstructingEntity(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void sameTickSuppressionVetoesOnlyTheMarkedPosition(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos marked = helper.absolutePos(ORIGIN);
-        BlockPos other = marked.east();
-
-        check(Protection.claimInteraction(player, marked, marked),
-                "The claim itself was refused");
-
-        check(!Protection.mayInteract(player, marked),
-                "Marked same-tick interaction was not suppressed");
-        check(Protection.mayInteract(player, other),
-                "Different position was suppressed");
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
-    public static void suppressionExpiresOnTheNextTick(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos marked = helper.absolutePos(ORIGIN);
-
-        check(Protection.claimInteraction(player, marked, marked),
-                "The claim itself was refused");
-        helper.runAfterDelay(1, () -> {
-            check(Protection.mayInteract(player, marked),
-                    "Expired suppression still vetoed interaction");
-            helper.succeed();
-        });
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void rotationClaimsButPermanenceDoesNotClaimTheTrailingClick(
-            GameTestHelper helper) {
-        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
-        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN.east(3));
-        BlockPos singlesPos = singles.getBlockPos();
-        BlockPos storagePos = storage.getBlockPos();
-
-        try {
-            player.setPos(singlesPos.getX() + 0.5, singlesPos.getY(), singlesPos.getZ() + 0.5);
-            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.SOUL_TORCH));
-            GestureThrottle.clear(player.getUUID());
-            RotateItemPkt.handleServer(new RotateItemPkt(singlesPos, 0), player);
-            check(!Protection.mayInteract(player, singlesPos),
-                    "Empty-cell rotation did not suppress the trailing torch click");
-
-            player.setPos(storagePos.getX() + 0.5, storagePos.getY(), storagePos.getZ() + 0.5);
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-            GestureThrottle.clear(player.getUUID());
-            TogglePermanentPkt.handleServer(new TogglePermanentPkt(storagePos), player);
-            check(storage.pile().isPermanent(), "Permanence toggle did not run");
-            check(Protection.mayInteract(player, storagePos),
-                    "Permanence toggle suppressed its trailing empty-hand click");
-        } finally {
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-            GestureThrottle.clear(player.getUUID());
-        }
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void permanenceToggleHonorsInteractionDenial(GameTestHelper helper) {
-        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        BlockPos target = storage.getBlockPos();
-        Consumer<PlayerInteractEvent.RightClickBlock> denyTarget = event -> {
-            if (event.getEntity() == player && event.getPos().equals(target)) {
-                event.setUseBlock(TriState.FALSE);
-            }
-        };
-
-        player.setPos(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
-        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-        GestureThrottle.clear(player.getUUID());
-        NeoForge.EVENT_BUS.addListener(denyTarget);
-        try {
-            TogglePermanentPkt.handleServer(new TogglePermanentPkt(target), player);
-            check(!storage.pile().isPermanent(),
-                    "Interaction-denied permanence toggle changed the pile");
-        } finally {
-            NeoForge.EVENT_BUS.unregister(denyTarget);
-            GestureThrottle.clear(player.getUUID());
-        }
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void depositSuppressesTheClickedBlockAndStillDeposits(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        BlockPos clicked = target.north();
-        GameTestScaffold.placeStorage(helper, ORIGIN);
-
-        withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                DepositPkt.apply(player, new DepositPkt(target, clicked)));
-
-        checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
-                "Deposit did not reach the stack");
-        check(!Protection.mayInteract(player, clicked),
-                "The clicked block was left open to the vanilla interaction");
-        check(Protection.mayInteract(player, target),
-                "The deposit target was suppressed instead of the clicked block");
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void placementSuppressesTheClickedBlockAndStillPlaces(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        BlockPos clicked = target.below();
-
-        withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
-                        BlockType.STORAGE_STACK, Direction.UP, target)));
-
-        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        check(!Protection.mayInteract(player, clicked),
-                "The clicked block was left open to the vanilla interaction");
-        check(Protection.mayInteract(player, target),
-                "The placed position was suppressed instead of the clicked block");
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void depositConsultsTheAdjacentBlockThatWasActuallyClicked(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        BlockPos clicked = target.north();
-        GameTestScaffold.placeStorage(helper, ORIGIN);
-
-        // The stack itself is open; the block the player put their cursor on is not. The deposit
-        // reaches the stack through that click, so refusing the click refuses the deposit.
-        Consumer<PlayerInteractEvent.RightClickBlock> denyClicked = event -> {
-            if (event.getEntity() == player && event.getPos().equals(clicked)) {
-                event.setUseBlock(TriState.FALSE);
-            }
-        };
-
-        NeoForge.EVENT_BUS.addListener(denyClicked);
-        try {
-            withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                    DepositPkt.apply(player, new DepositPkt(target, clicked)));
-        } finally {
-            NeoForge.EVENT_BUS.unregister(denyClicked);
-        }
-
-        checkEquals(0, GameTestScaffold.heldAt(helper, target, Items.DIRT),
-                "Deposit ran despite the clicked block being denied");
-        helper.succeed();
-    }
-
+    /** See {@link ProtectionChecks#creativeDepositFillsTheStackWithoutSpendingTheHand}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        GameTestScaffold.placeStorage(helper, ORIGIN);
-
-        player.getAbilities().instabuild = true;
-        try {
-            withMainHand(player, new ItemStack(Items.DIRT, 64), () -> {
-                DepositPkt.apply(player, new DepositPkt(target, target));
-                checkEquals(64, player.getMainHandItem().getCount(),
-                        "A creative deposit spent the held stack");
-            });
-        } finally {
-            player.getAbilities().instabuild = false;
-        }
-
-        checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
-                "Creative deposit did not reach the stack");
-        helper.succeed();
+        ProtectionChecks.creativeDepositFillsTheStackWithoutSpendingTheHand(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     // Mod-driven removal under protection
     //
-    // A settle or a collapse takes down the blocks it empties, and that is a world edit with no
-    // actor left to ask, so it uses the level's fake player exactly as growth does. A refusal
-    // has to leave the block standing without leaving the run's own model out of step with it.
+    // An unattended settle has no player actor, so it uses the level's automation player exactly
+    // as growth does. A refusal must leave the block and the run model in step.
 
+    /**
+     * To reproduce in-game: have a claim deny SomeStacks permission to remove an empty top Storage
+     * block, trigger settling, and verify the protected block remains.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper) {
         BlockPos topRelative = ORIGIN.above();
@@ -297,7 +101,7 @@ public final class ProtectionGameTests {
             StoragePile pile = base.pile();
             check(pile != null, "Pile did not resolve");
             pile.settle();
-            helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
+            helper.assertBlockPresent(CommonRegistry.storageStackBlock(), topRelative);
             checkEquals(2, pile.height(), "The pile dropped a block it never removed");
         } finally {
             NeoForge.EVENT_BUS.unregister(denyTop);
@@ -307,66 +111,183 @@ public final class ProtectionGameTests {
         StoragePile pile = base.pile();
         check(pile != null, "Pile did not resolve after the refusal");
         pile.settle();
-        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), topRelative);
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
+     * extract the last Single. Player-attributed cleanup removes the empty block.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerExtractionUsesPlayerForCleanup(GameTestHelper helper) {
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        singles.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
+        BlockPos target = helper.absolutePos(ORIGIN);
+        AtomicReference<Player> observedActor = new AtomicReference<>();
+        Consumer<BlockEvent.BreakEvent> captureActor = event -> {
+            if (event.getPos().equals(target)) {
+                observedActor.set(event.getPlayer());
+            }
+        };
+
+        NeoForge.EVENT_BUS.addListener(captureActor);
+        try {
+            check(!singles.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
+        } finally {
+            NeoForge.EVENT_BUS.unregister(captureActor);
+        }
+
+        check(observedActor.get() == player, "Cleanup break event did not carry the player");
+        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN);
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
+     * extract the last Storage item. Deferred cleanup retains the player and removes the block.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerStorageSettlementUsesPlayerForCleanup(GameTestHelper helper) {
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
+        BlockPos target = helper.absolutePos(ORIGIN);
+        AtomicReference<Player> observedActor = new AtomicReference<>();
+        Consumer<BlockEvent.BreakEvent> captureActor = event -> {
+            if (event.getPos().equals(target)) {
+                observedActor.set(event.getPlayer());
+            }
+        };
+
+        NeoForge.EVENT_BUS.addListener(captureActor);
+        try {
+            check(!storage.extractAt(0, 64, ItemStack.EMPTY, player).isEmpty(),
+                    "Player extraction returned nothing");
+            StoragePile pile = storage.pile();
+            check(pile != null, "Pile did not resolve before settlement");
+            pile.settle();
+        } finally {
+            NeoForge.EVENT_BUS.unregister(captureActor);
+        }
+
+        check(observedActor.get() == player, "Deferred cleanup did not retain the player");
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN);
         helper.succeed();
     }
 
     // Waterlogging
 
+    /** See {@link ProtectionChecks#placementIntoWaterKeepsTheWater}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void placementIntoWaterKeepsTheWater(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        level.setBlock(target, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
-
-        withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
-                        BlockType.STORAGE_STACK, Direction.UP, target)));
-
-        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        check(level.getBlockState(target).getValue(StorageStackBlock.WATERLOGGED),
-                "A stack placed into water was not waterlogged");
-        check(level.getFluidState(target).getType() == Fluids.WATER,
-                "A stack placed into water swallowed the water");
-        helper.succeed();
+        ProtectionChecks.placementIntoWaterKeepsTheWater(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /**
-     * Runs {@code action} with {@code stack} held, and empties the hand again before returning.
-     * The fake player is shared across tests, so what it carries has to be put back.
+     * Neighbor deposits consult protection at the destination and honor cancellation or either
+     * use denial. To reproduce in-game: hold the modifier and click the support beneath an empty
+     * Singles cell; it fills when allowed and preserves the held item when a claim denies use.
      */
-    private static void withMainHand(ServerPlayer player, ItemStack stack, Runnable action) {
-        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        try {
-            action.run();
-        } finally {
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-        }
-    }
-
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void placementHonorsUseItemDenyWithoutChangingBlockAccess(
-            GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos clicked = helper.absolutePos(ORIGIN);
-        Consumer<PlayerInteractEvent.RightClickBlock> denyItem = event -> {
-            if (event.getEntity() == player && event.getPos().equals(clicked)) {
-                event.setUseItem(TriState.FALSE);
+    public static void adjacentStackConsultsDestinationProtection(GameTestHelper helper) {
+        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
+        BlockPos target = helper.absolutePos(ORIGIN);
+        AtomicInteger clicks = new AtomicInteger();
+        AtomicInteger denial = new AtomicInteger();
+        Consumer<PlayerInteractEvent.RightClickBlock> observe = event -> {
+            if (event.getLevel() != helper.getLevel() || !event.getPos().equals(target)) return;
+            clicks.incrementAndGet();
+            check(WorldEdits.isConsultingAdjacent(), "Destination consultation lacks its gesture guard");
+            switch (denial.get()) {
+                case 1 -> event.setCanceled(true);
+                case 2 -> event.setUseBlock(TriState.FALSE);
+                case 3 -> event.setUseItem(TriState.FALSE);
+                default -> { }
             }
         };
-
-        NeoForge.EVENT_BUS.addListener(denyItem);
+        NeoForge.EVENT_BUS.addListener(observe);
         try {
-            check(Protection.mayInteract(player, clicked),
-                    "Item-use denial incorrectly vetoed block access");
-            check(!Protection.mayUseItemOn(player, clicked),
-                    "Item-use denial did not veto placement");
+            check(WorldEdits.mayUseAdjacent(player, target), "Allowed destination was refused");
+            checkEquals(1, clicks.get(), "Destination consultation count");
+            helper.getLevel().removeBlock(target, false);
+            ProtectionChecks.checkAdjacentAndDirectDeposits(helper, GameTestSupport.playerFactory(helper), true);
+            for (int reason = 1; reason <= 3; reason++) {
+                denial.set(reason);
+                check(!WorldEdits.mayUseAdjacent(player, target), "Destination denial was ignored");
+                helper.getLevel().removeBlock(target, false);
+                ProtectionChecks.checkAdjacentAndDirectDeposits(helper, GameTestSupport.playerFactory(helper), false);
+            }
+            check(!WorldEdits.isConsultingAdjacent(), "Destination consultation guard leaked");
         } finally {
-            NeoForge.EVENT_BUS.unregister(denyItem);
+            NeoForge.EVENT_BUS.unregister(observe);
         }
         helper.succeed();
+    }
+
+    /** See {@link ProtectionChecks#adjacentDepositsFillGroundedCells}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void adjacentDepositsFillGroundedCells(GameTestHelper helper) {
+        ProtectionChecks.adjacentDepositsFillGroundedCells(helper, GameTestSupport.playerFactory(helper));
+        helper.succeed();
+    }
+
+    /** See {@link ProtectionChecks#placementPublicationAnswersToVeto}. */
+    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 30)
+    public static void placementPublicationAnswersToVeto(GameTestHelper helper) {
+        BlockPos pos = helper.absolutePos(ORIGIN);
+        Consumer<BlockEvent.EntityPlaceEvent> deny = event -> {
+            if (event.getPos().equals(pos)) event.setCanceled(true);
+        };
+        ProtectionChecks.placementPublicationAnswersToVeto(helper,
+                GameTestSupport.playerFactory(helper),
+                () -> NeoForge.EVENT_BUS.addListener(deny),
+                () -> NeoForge.EVENT_BUS.unregister(deny));
+    }
+
+    /** See {@link ProtectionChecks#playerBarExtractionUsesPlayerForCleanup}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerBarExtractionUsesPlayerForCleanup(GameTestHelper helper) {
+        ProtectionChecks.playerBarExtractionUsesPlayerForCleanup(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link ProtectionChecks#mixedStorageSettlementUsesAutomationForCleanup}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
+        ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    private static Runnable observeRemoval(ServerLevel level, BlockPos pos,
+            Consumer<Player> observed, Predicate<Player> allowed) {
+        Consumer<BlockEvent.BreakEvent> listener = event -> {
+            if (event.getLevel() == level && event.getPos().equals(pos)) {
+                observed.accept(event.getPlayer());
+                if (!allowed.test(event.getPlayer())) {
+                    event.setCanceled(true);
+                }
+            }
+        };
+        NeoForge.EVENT_BUS.addListener(listener);
+        return () -> NeoForge.EVENT_BUS.unregister(listener);
+    }
+
+    /** See {@link ProtectionChecks#vetoedPlacementRestoresBlockEntity}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void vetoedPlacementRestoresBlockEntity(GameTestHelper helper) {
+        BlockPos pos = helper.absolutePos(ORIGIN);
+        Consumer<BlockEvent.EntityPlaceEvent> listener = event -> {
+            if (event.getPos().equals(pos)) {
+                event.setCanceled(true);
+            }
+        };
+        ProtectionChecks.vetoedPlacementRestoresBlockEntity(helper,
+                GameTestSupport.playerFactory(helper),
+                () -> NeoForge.EVENT_BUS.addListener(listener),
+                () -> NeoForge.EVENT_BUS.unregister(listener));
     }
 
     // Growth under protection
@@ -377,6 +298,10 @@ public final class ProtectionGameTests {
     // with the world border. Spawn protection, the other half of the same predicate, cannot be staged
     // here: it is implemented on DedicatedServer, and the server running these tests is not one.
 
+    /**
+     * To reproduce in-game: protect the space above a full Storage pile from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -390,7 +315,7 @@ public final class ProtectionGameTests {
         check(capability.insertItem(headroom, offered, true).isEmpty(),
                 "A full pile with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
             checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
                     "Simulated remainder");
             checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
@@ -399,10 +324,14 @@ public final class ProtectionGameTests {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.storageStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
@@ -417,7 +346,7 @@ public final class ProtectionGameTests {
         checkEquals(3, capability.insertItem(headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
             checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
                     "Simulated remainder");
             checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
@@ -426,10 +355,14 @@ public final class ProtectionGameTests {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.singlesStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: protect the space above a full Bar column from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
@@ -445,7 +378,7 @@ public final class ProtectionGameTests {
         checkEquals(3, capability.insertItem(headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
             checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
                     "Simulated remainder");
             checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
@@ -454,12 +387,16 @@ public final class ProtectionGameTests {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
     // Growth through entities
 
+    /**
+     * To reproduce in-game: stand in the growth space above a full Storage pile and insert through
+     * item automation; it accepts nothing and does not grow into the entity.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -469,7 +406,7 @@ public final class ProtectionGameTests {
         }
         IItemHandler capability = GameTestSupport.capability(storage);
         ItemStack offered = new ItemStack(Items.STONE, 4);
-        putCowIn(helper, ORIGIN.above());
+        GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = StorageStackBE.SLOTS;
         checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
@@ -478,10 +415,14 @@ public final class ProtectionGameTests {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.storageStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: stand in the growth space above a full Singles column and insert through
+     * item automation; it accepts nothing and does not grow into the entity.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -491,7 +432,7 @@ public final class ProtectionGameTests {
         }
         IItemHandler capability = GameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
-        putCowIn(helper, ORIGIN.above());
+        GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = SinglesStackBE.SLOTS;
         checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
@@ -500,10 +441,14 @@ public final class ProtectionGameTests {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.singlesStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: stand in the growth space above a full Bar column and insert through
+     * item automation; it accepts nothing and does not grow into the entity.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -514,7 +459,7 @@ public final class ProtectionGameTests {
         }
         IItemHandler capability = GameTestSupport.capability(bars);
         ItemStack offered = new ItemStack(bar, 4);
-        putCowIn(helper, ORIGIN.above());
+        GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = BarStackBE.SLOTS;
         checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
@@ -523,49 +468,14 @@ public final class ProtectionGameTests {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
-
-    /**
-     * Puts a living placement-blocking entity across the bottom north-west cell and bar position
-     * of {@code relative}.
-     */
-    private static void putCowIn(GameTestHelper helper, BlockPos relative) {
-        ServerLevel level = helper.getLevel();
-        BlockPos target = helper.absolutePos(relative);
-        Cow cow = EntityType.COW.create(level);
-        check(cow != null, "Could not create obstruction cow");
-        check(cow.blocksBuilding, "Cow does not block building");
-        cow.moveTo(
-                target.getX() + 0.5,
-                target.getY(),
-                target.getZ() + 0.5,
-                0.0F,
-                0.0F);
-        check(level.addFreshEntity(cow), "Could not add obstruction cow");
+    /** See {@link InteractionChecks#deniedCleanupEmitsOnlyBlockChange}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void deniedCleanupEmitsOnlyBlockChange(GameTestHelper helper) {
+        InteractionChecks.deniedCleanupEmitsOnlyBlockChange(helper,
+                GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
     }
 
-    /**
-     * Runs {@code action} with the world border moved off the test structure, and restores it
-     * before returning. The border is level-wide state, but the move and the restore both happen
-     * inside this one synchronous call, so no other test observes it moved.
-     */
-    private static void outsideTheBorder(GameTestHelper helper, Runnable action) {
-        WorldBorder border = helper.getLevel().getWorldBorder();
-        BlockPos above = helper.absolutePos(ORIGIN.above());
-        double centerX = border.getCenterX();
-        double centerZ = border.getCenterZ();
-        double size = border.getSize();
-        try {
-            border.setCenter(above.getX() + 1000.0, above.getZ());
-            border.setSize(16.0);
-            check(!border.isWithinBounds(above),
-                    "Test setup left the position inside the world border");
-            action.run();
-        } finally {
-            border.setCenter(centerX, centerZ);
-            border.setSize(size);
-        }
-    }
 }

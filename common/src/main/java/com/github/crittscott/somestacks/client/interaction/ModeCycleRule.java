@@ -10,8 +10,7 @@ import com.github.crittscott.somestacks.client.ClientGestures;
 public final class ModeCycleRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {
-        return ctx.isClientSide()
-                && ctx.isMainHand()
+        return ctx.isMainHand()
                 && ctx.isVDown()
                 && !ctx.isHittingBlock();
     }
@@ -19,6 +18,7 @@ public final class ModeCycleRule implements InteractionRule {
     @Override
     public void execute(InteractionContext ctx) {
         ClientGestures.cycleMode();
+        ClientGestures.syncState(true);
         ClientGestures.displayModeMessage(ctx.getPlayer());
         if (ctx.hasItemInHand()) {
             ctx.cancelEvent();

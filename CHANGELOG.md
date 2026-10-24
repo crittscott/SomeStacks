@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.8.3 — unreleased
+
+- Stack actions use vanilla block interactions. Only mode/modifier state is sent separately; the server selects deposit, extraction, and rotation cells from the actual hit ray.
+- `/ss item` and `/ss write` run locally without operator permission. Render profiles resolve user overrides, resource packs, then automatic measurement; servers share profiles through a server resource pack. Server-imposed override files and their network commands are removed.
+- Stack actions use registered sound events with subtitles, replaceable through resource-pack `sounds.json`. Server data-pack sound mappings are removed.
+- Placement and cleanup use native protection hooks, snapshot rollback, a shared automation identity, and player attribution for player-caused cleanup. Fabric adds optional Common Protection API queries; direct Fabric/NeoForge FTB Chunks placement checks remain.
+- Saved items record their data version. Preceding-release NBT and component-format saves migrate on load, including layout rotation and permanence. Unreadable entries remain in saved recovery data, retry on load, and prevent automatic cleanup from deleting their block.
+- Item rendering caches prepared presentations and profiles, invalidates them on edits/reloads, and displays an error cube for failed flat model capture. Measurement uses the 1.21.1 renderer and a new cache format.
+- Shared mechanics retain whole-run automation, positional Singles/Bar insertion, comparator batching, and the distinct gravity/backfill behaviors. NeoForge and Forge retain their native `IItemHandler` APIs.
+- Server policy uses TOML on every loader; preceding-release world JSON migrates with an archived original. Ingot/brick membership uses the `somestacks:ingots` data-pack tag.
+- Loader GameTest suites cover interactions, protection, profile precedence, persistence, recovery, and mixed-format migration. Development client runs provide `/ssclienttest`; Fabric supports provider-present and provider-absent protection checks.
+
 ## 0.8.2 — Minecraft 1.21.1 port 
 
 1.21.1 for Fabric, Forge, and Neoforge.

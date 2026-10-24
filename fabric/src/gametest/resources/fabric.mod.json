@@ -4,19 +4,23 @@
   "version": "${mod_version}",
   "name": "Some Stacks GameTests",
   "description": "Development-only Fabric GameTests for Some Stacks.",
-  "environment": "server",
+  "environment": "*",
   "entrypoints": {
     "fabric-gametest": [
       "com.github.crittscott.somestacks.gametest.StackSortGameTests",
       "com.github.crittscott.somestacks.gametest.ItemOpsGameTests",
       "com.github.crittscott.somestacks.gametest.ConfigurationGameTests",
       "com.github.crittscott.somestacks.gametest.RenderGalleryGameTests",
-      "com.github.crittscott.somestacks.gametest.PacketBoundaryGameTests",
-      "com.github.crittscott.somestacks.gametest.CapabilityAndPersistenceGameTests",
+      "com.github.crittscott.somestacks.gametest.InteractionGameTests",
+      "com.github.crittscott.somestacks.gametest.StorageAndPersistenceGameTests",
+      "com.github.crittscott.somestacks.gametest.FabricTransferGameTests",
       "com.github.crittscott.somestacks.gametest.StoragePileGameTests",
       "com.github.crittscott.somestacks.gametest.SinglesColumnGameTests",
       "com.github.crittscott.somestacks.gametest.BarColumnGameTests",
-      "com.github.crittscott.somestacks.gametest.ProtectionGameTests"
+      "com.github.crittscott.somestacks.gametest.ProtectionGameTests"${protection_api_gametest_entrypoint}${no_protection_api_gametest_entrypoint}
+    ],
+    "client": [
+      "com.github.crittscott.somestacks.gametest.ClientCallbackGameTests"
     ]
   },
   "depends": {

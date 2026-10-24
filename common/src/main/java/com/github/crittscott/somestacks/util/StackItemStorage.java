@@ -1,40 +1,43 @@
 package com.github.crittscott.somestacks.util;
 
-import com.mojang.serialization.Dynamic;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.util.datafix.DataFixers;
-import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
+
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives all three loaders the
  * item-handler insert/extract semantics and NBT shape
- * ({@code {Size, Items:[{Slot, ...stack}]}}) used by the block entities.
+ * ({@code {Items:[{Slot, ...stack}], SetAside:[...]}}) used by the block entities.
+ *
+ * <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
+ * aside rather than dropped: it is kept verbatim under {@code SetAside}, saved back with the
+ * block, and retried on every load, so contents from a temporarily missing mod return when it does.
  *
  * <p>Subclasses override {@link #onContentsChanged(int)}, {@link #isItemValid(int, ItemStack)}, and
  * {@link #getSlotLimit(int)} to specialize notification, admission, and capacity.
  */
 public class StackItemStorage implements SlotAccess {
-    private static final String TAG_SLOT = "Slot";
-    private static final String TAG_SIZE = "Size";
-    private static final String TAG_ITEMS = "Items";
+    public static final String TAG_SLOT = "Slot";
+    public static final String TAG_ITEMS = "Items";
+    public static final String TAG_SET_ASIDE = "SetAside";
 
     /** Per-slot max-stack-size cap used by the Forge and NeoForge item-handler contracts. */
     private static final int DEFAULT_SLOT_LIMIT = 64;
 
-    /** Data version of Minecraft 1.20.1, the last release before the item Data Components rewrite. */
-    private static final int LEGACY_ITEM_DATA_VERSION = 3465;
-
     private final ItemStack[] stacks;
+    private final ListTag setAside = new ListTag();
+
+    /** Counts of newly retained entries and persisted entries that still could not be restored. */
+    public record LoadResult(int newlySetAside, int failedRetries) {}
 
     public StackItemStorage(int size) {
         stacks = new ItemStack[size];
@@ -52,6 +55,10 @@ public class StackItemStorage implements SlotAccess {
         return stacks[slot];
     }
 
+    /**
+     * Replaces a slot directly and reports the change, bypassing admission and capacity checks.
+     * Internal relocation and settlement use this only for already-stored contents.
+     */
     public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
         stacks[slot] = stack;
         onContentsChanged(slot);
@@ -150,45 +157,75 @@ public class StackItemStorage implements SlotAccess {
         }
         CompoundTag nbt = new CompoundTag();
         nbt.put(TAG_ITEMS, list);
-        nbt.putInt(TAG_SIZE, stacks.length);
+        if (!setAside.isEmpty()) {
+            nbt.put(TAG_SET_ASIDE, setAside.copy());
+        }
         return nbt;
     }
 
     /**
-     * Loads slot contents from NBT. A pre-1.21 item tag is upgraded through vanilla's
-     * DataFixerUpper before parsing; the return value tells the caller whether any such
-     * upgrade happened, so it can mark the owning block entity dirty and persist the rewrite.
+     * Loads slot contents from NBT, setting aside every item tag that cannot be placed. The tag must
+     * already be in the running game's format. Ordinary entries take precedence over retries;
+     * loading bypasses admission and does not call contents-change hooks. The caller reports
+     * returned retention counts once it knows the world location.
      */
-    public boolean deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt) {
+    public LoadResult deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt) {
         Arrays.fill(stacks, ItemStack.EMPTY);
-        boolean upgraded = false;
-        ListTag list = nbt.getList(TAG_ITEMS, Tag.TAG_COMPOUND);
+        setAside.clear();
+        readItems(registries, nbt.getList(TAG_ITEMS, Tag.TAG_COMPOUND));
+        int newlySetAside = setAside.size();
+        readItems(registries, nbt.getList(TAG_SET_ASIDE, Tag.TAG_COMPOUND));
+        return new LoadResult(newlySetAside, setAside.size() - newlySetAside);
+    }
+
+    private void readItems(HolderLookup.Provider registries, ListTag list) {
         for (int i = 0; i < list.size(); i++) {
             CompoundTag itemTag = list.getCompound(i);
             int slot = itemTag.getInt(TAG_SLOT);
-            if (isLegacyItemTag(itemTag)) {
-                itemTag = upgradeLegacyItemTag(registries, itemTag);
-                itemTag.putInt(TAG_SLOT, slot);
-                upgraded = true;
-            }
-            if (slot >= 0 && slot < stacks.length) {
-                stacks[slot] = ItemStack.parse(registries, itemTag).orElse(ItemStack.EMPTY);
+            Optional<ItemStack> parsed = slot >= 0 && slot < stacks.length && stacks[slot].isEmpty()
+                    ? ItemStack.parse(registries, itemTag)
+                    : Optional.empty();
+            if (parsed.isPresent()) {
+                stacks[slot] = parsed.get();
+            } else {
+                setAside.add(itemTag.copy());
             }
         }
-        return upgraded;
     }
 
-    /** A pre-1.21 item tag has a byte {@code Count}; the Data Components format has an int {@code count}. */
-    private static boolean isLegacyItemTag(CompoundTag itemTag) {
-        return !itemTag.contains("count");
+    /** Validates a current-format client snapshot before replacing any local contents. */
+    public boolean deserializeClientUpdate(HolderLookup.Provider registries, CompoundTag nbt) {
+        if (nbt.contains(TAG_SET_ASIDE) || !(nbt.get(TAG_ITEMS) instanceof ListTag list)
+                || list.size() > stacks.length
+                || (!list.isEmpty() && list.getElementType() != Tag.TAG_COMPOUND)) {
+            return false;
+        }
+        ItemStack[] decoded = new ItemStack[stacks.length];
+        Arrays.fill(decoded, ItemStack.EMPTY);
+        boolean[] used = new boolean[stacks.length];
+        RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, registries);
+        for (int i = 0; i < list.size(); i++) {
+            CompoundTag entry = list.getCompound(i);
+            if (!entry.contains(TAG_SLOT, Tag.TAG_INT)) return false;
+            int slot = entry.getInt(TAG_SLOT);
+            if (slot < 0 || slot >= stacks.length || used[slot]) return false;
+            Optional<ItemStack> parsed = ItemStack.CODEC.parse(ops, entry).result();
+            if (parsed.isEmpty() || parsed.get().isEmpty()) return false;
+            used[slot] = true;
+            decoded[slot] = parsed.get();
+        }
+        System.arraycopy(decoded, 0, stacks, 0, stacks.length);
+        setAside.clear();
+        return true;
     }
 
-    private static CompoundTag upgradeLegacyItemTag(HolderLookup.Provider registries, CompoundTag itemTag) {
-        Dynamic<Tag> fixed = DataFixers.getDataFixer().update(
-                References.ITEM_STACK,
-                new Dynamic<>(RegistryOps.create(NbtOps.INSTANCE, registries), itemTag),
-                LEGACY_ITEM_DATA_VERSION,
-                SharedConstants.getCurrentVersion().getDataVersion().getVersion());
-        return (CompoundTag) fixed.getValue();
+    /** Whether disk recovery data still needs this block entity to remain in the world. */
+    public boolean hasRetainedItems() {
+        return !setAside.isEmpty();
+    }
+
+    /** Removes the set-aside tags from serialized storage, which clients have no use for. */
+    public static void stripSetAside(CompoundTag nbt) {
+        nbt.remove(TAG_SET_ASIDE);
     }
 }

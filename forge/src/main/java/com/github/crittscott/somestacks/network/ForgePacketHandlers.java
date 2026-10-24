@@ -1,12 +1,10 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
 
-import java.util.function.Consumer;
 
 /**
  * Forge side adapters around the loader-neutral packet codecs and behavior. Registered through
@@ -17,46 +15,11 @@ import java.util.function.Consumer;
 final class ForgePacketHandlers {
     private ForgePacketHandlers() {}
 
-    static void handlePlaceAndDeposit(PlaceAndDepositPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> PlaceAndDepositPkt.handleServer(msg, player));
+    static void handleGestureState(GestureStatePkt msg, CustomPayloadEvent.Context ctx) {
+        GestureStatePkt.handleServer(msg, ctx.getSender());
     }
 
-    static void handleDeposit(DepositPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> DepositPkt.handleServer(msg, player));
-    }
-
-    static void handleTogglePermanent(TogglePermanentPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> TogglePermanentPkt.handleServer(msg, player));
-    }
-
-    static void handleRotateBlock(RotateBlockPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> RotateBlockPkt.handleServer(msg, player));
-    }
-
-    static void handleRotateItem(RotateItemPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> RotateItemPkt.handleServer(msg, player));
-    }
-
-    static void handleExtract(ExtractPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> ExtractPkt.handleServer(msg, player));
-    }
-
-    static void handleConfigSync(ConfigSyncPkt msg, CustomPayloadEvent.Context ctx) {
+    static void handleClient(ConfigSyncPkt msg, CustomPayloadEvent.Context ctx) {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientRenderPacketSink.apply(msg));
-    }
-
-    static void handleRenderOverride(RenderOverridePkt msg, CustomPayloadEvent.Context ctx) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientRenderPacketSink.apply(msg));
-    }
-
-    static void handleWriteOverrides(WriteOverridesPkt msg, CustomPayloadEvent.Context ctx) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientRenderPacketSink.apply(msg));
-    }
-
-    private static void server(CustomPayloadEvent.Context ctx, Consumer<ServerPlayer> work) {
-        ServerPlayer sender = ctx.getSender();
-        if (sender != null) {
-            work.accept(sender);
-        }
     }
 }

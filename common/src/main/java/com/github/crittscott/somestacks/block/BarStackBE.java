@@ -4,27 +4,25 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
-import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * One Bar Stack: 64 bars laid in eight alternating layers of eight.
@@ -37,29 +35,11 @@ import java.util.Arrays;
  * <p>Capability exposure is loader-specific and lives outside this class; {@link #getItems()} is
  * what a loader-specific capability view adapts.
  */
-public class BarStackBE extends BlockEntity {
+public class BarStackBE extends StackBlockEntity {
     /** Positions in one block. The column's flat range is this times its height. */
     public static final int SLOTS = BarCubeIdx.CELLS;
 
-    private static final String TAG_ITEMS = "Items";
-
     private VoxelShape cachedShape = null;
-    private boolean suppressSync = false;
-    private boolean batchTouched = false;
-
-    /**
-     * Set when a content edit still requires client synchronization and a light update. The
-     * column's scheduled publication pass clears it; see {@link #schedulePublish()}.
-     */
-    private boolean publishPending = false;
-
-    /**
-     * The comparator output last published for the column this block is the bottom of, or -1 before
-     * the first publication. Only the bottom block's copy is consulted, and it is runtime state
-     * rather than saved NBT: a freshly loaded column has published nothing, so its first change
-     * should notify.
-     */
-    private int publishedSignal = -1;
 
     /**
      * Set when a cascade is removing this block, so {@link BarStackBlock#onRemove} knows the
@@ -67,40 +47,29 @@ public class BarStackBE extends BlockEntity {
      */
     private boolean removedByCascade = false;
 
-    /** The column resolved for this block, good for the tick it was taken on. See {@link #column()}. */
-    private BarColumn cachedColumn;
-    private long cachedColumnTick = Long.MIN_VALUE;
-
-    private final StackItemStorage items = new StackItemStorage(SLOTS) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-            cachedShape = null;
-            if (suppressSync) {
-                batchTouched = true;
-            } else {
-                schedulePublish();
-            }
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return 1;
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return isValidBarItem(stack);
-        }
-    };
-
     public BarStackBE(BlockPos pos, BlockState state) {
-        super(CommonRegistry.BAR_STACK_BE.get(), pos, state);
+        super(CommonRegistry.barStackBe(), pos, state, SLOTS);
+    }
+
+    @Override
+    protected boolean isStoredItemValid(ItemStack stack) {
+        return isValidBarItem(stack);
+    }
+
+    @Override
+    protected int localSlotLimit() {
+        return 1;
+    }
+
+    @Override
+    protected void onLocalContentsChanged(int slot) {
+        cachedShape = null;
     }
 
     /** Reloadable data-pack classification of items that belong in Bar rather than Singles. */
-    public static final TagKey<Item> INGOTS = TagKey.create(Registries.ITEM,
-            ResourceLocation.fromNamespaceAndPath("somestacks", "ingots"));
+    public static final TagKey<Item> INGOTS =
+            TagKey.create(Registries.ITEM,
+                    ResourceLocation.fromNamespaceAndPath("somestacks", "ingots"));
 
     /** Accepts nonempty tagged items whose namespaces are not disabled by server policy. */
     public static boolean isValidBarItem(ItemStack stack) {
@@ -121,36 +90,12 @@ public class BarStackBE extends BlockEntity {
      */
     @Nullable
     public BarColumn column() {
-        if (level == null || level.isClientSide) {
-            return null;
-        }
-
-        long now = level.getGameTime();
-        if (cachedColumn != null && cachedColumnTick == now) {
-            return cachedColumn;
-        }
-
-        cachedColumn = BarColumn.resolve(level, getBlockPos());
-        cachedColumnTick = now;
-        return cachedColumn;
+        return (BarColumn) itemRun();
     }
 
-    /** Invalidates the cached column so the next lookup walks the world again. */
-    void invalidateColumn() {
-        cachedColumn = null;
-    }
-
-    /**
-     * Records the comparator output the column is about to publish.
-     *
-     * @return whether the signal changed and comparator neighbors must be notified
-     */
-    boolean exchangePublishedSignal(int signal) {
-        if (publishedSignal == signal) {
-            return false;
-        }
-        publishedSignal = signal;
-        return true;
+    @Override
+    protected StackRunItemAccess resolveRun(ServerLevel serverLevel) {
+        return BarColumn.resolve(serverLevel, getBlockPos());
     }
 
     /** Builds the union of the occupied bars' boxes. */
@@ -183,6 +128,7 @@ public class BarStackBE extends BlockEntity {
      * and overlapping a bar below. Refuses rather than redirecting the item elsewhere, so a caller
      * walking positions from the bottom fills the supported ones in order.
      *
+     * @param index the position to fill, in {@code [0, SLOTS)}
      * @return whether the bar moved; the hand shrinks by one only then
      */
     public boolean depositAt(int index, ItemStack fromHand) {
@@ -190,19 +136,10 @@ public class BarStackBE extends BlockEntity {
             return false;
         }
 
-        if (index < 0 || index >= SLOTS) {
-            return false;
-        }
-
-        if (!items.getStackInSlot(index).isEmpty()) {
-            return false;
-        }
-
         if (!isValidBarItem(fromHand)) {
             return false;
         }
-
-        if (!BarCubeIdx.isGrounded(index, items, index < BarCubeIdx.LAYER_SIZE ? seamBeneath() : null)) {
+        if (!canDepositAt(index)) {
             return false;
         }
 
@@ -221,12 +158,12 @@ public class BarStackBE extends BlockEntity {
     /**
      * The player's extraction: takes one bar and lets go of whatever it was holding up. Automation
      * takes a different path — see {@link BarColumn#extract}, which backfills instead.
+     *
+     * @param index the position to empty, in {@code [0, SLOTS)}
+     * @param actor the player responsible for cleanup, or null for automation
      */
-    public ItemStack extractAt(int index) {
-        if (index < 0 || index >= SLOTS) {
-            return ItemStack.EMPTY;
-        }
-
+    public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
+        ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
         boolean[] topBefore = BarCubeIdx.topLayerOccupancy(items);
         BarDropBatch drops = new BarDropBatch();
 
@@ -235,16 +172,15 @@ public class BarStackBE extends BlockEntity {
         try {
             extracted = items.extractItem(index, 1, false);
 
-            if (!extracted.isEmpty() && level != null && !level.isClientSide) {
-                cascadeFrom(level, this, seamBeneath(), topBefore, drops);
+            if (!extracted.isEmpty()) {
+                cascadeFrom(serverLevel, this,
+                        supportSeamBeneath(level, getBlockPos()), topBefore, drops, actor);
             }
         } finally {
             endBatch();
         }
 
-        if (level != null) {
-            drops.spawn(level);
-        }
+        drops.spawn(serverLevel);
         return extracted;
     }
 
@@ -258,13 +194,30 @@ public class BarStackBE extends BlockEntity {
         items.setStackInSlot(index, bar);
     }
 
+    /** Whether this local position is valid, empty, and supported by the layer or seam below. */
+    public boolean canDepositAt(int index) {
+        return index >= 0
+                && index < SLOTS
+                && items.getStackInSlot(index).isEmpty()
+                && BarCubeIdx.isGrounded(
+                        index, items, index < BarCubeIdx.LAYER_SIZE
+                                ? supportSeamBeneath(level, getBlockPos()) : null);
+    }
+
+    /** Whether an empty Bar block at {@code pos} supports its first bar. */
+    public static boolean supportsFreshDeposit(Level level, BlockPos pos, int index) {
+        return index >= 0
+                && index < SLOTS
+                && BarCubeIdx.freshBlockSupports(index, supportSeamBeneath(level, pos));
+    }
+
     /**
-     * The support this block's bottom layer rests on: the top-layer occupancy of the Bar Stack
-     * directly below, or null when this block stands on the world instead of on another Bar Stack.
+     * Top-layer occupancy of the Bar Stack below {@code pos}, or null when no Bar Stack is beneath it.
+     * A null seam grounds a bottom-layer deposit directly on the world.
      */
     @Nullable
-    private boolean[] seamBeneath() {
-        if (level != null && level.getBlockEntity(getBlockPos().below()) instanceof BarStackBE below) {
+    public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
+        if (level != null && level.getBlockEntity(pos.below()) instanceof BarStackBE below) {
             return BarCubeIdx.topLayerOccupancy(below.items);
         }
         return null;
@@ -280,9 +233,9 @@ public class BarStackBE extends BlockEntity {
      * seam. {@code topBefore} is {@code start}'s top layer as it stood before the edit that prompted
      * the settle, which the edit itself may already have changed.
      */
-    static void cascadeFrom(Level columnLevel, BarStackBE start,
+    static void cascadeFrom(ServerLevel columnLevel, BarStackBE start,
                             @Nullable boolean[] seamBelow, boolean[] topBefore,
-                            BarDropBatch drops) {
+                            BarDropBatch drops, @Nullable ServerPlayer actor) {
         BarStackBE be = start;
         boolean[] seam = seamBelow;
         boolean[] before = topBefore;
@@ -304,9 +257,12 @@ public class BarStackBE extends BlockEntity {
             //
             // The flag is raised first because the removal runs onRemove, which reads it to know
             // the cascade is already walking its own way up, and lowered again if nothing went.
-            if (be.isEmpty() && columnLevel instanceof ServerLevel serverLevel) {
+            if (be.isEmpty()) {
                 be.removedByCascade = true;
-                if (!WorldEdits.removeChecked(serverLevel, be.getBlockPos())) {
+                boolean removed = actor == null
+                        ? WorldEdits.removeChecked(columnLevel, be.getBlockPos())
+                        : WorldEdits.removeChecked(actor, columnLevel, be.getBlockPos());
+                if (!removed) {
                     be.removedByCascade = false;
                 }
             }
@@ -326,23 +282,13 @@ public class BarStackBE extends BlockEntity {
     }
 
     /**
-     * A Bar Stack has gone from beneath {@code removed}, so the column above it has lost the seam it
-     * stood on. Carries an empty seam upward, which is the same thing a cascade hands on when it
-     * empties a block: nothing overlaps it, so the column comes down.
-     *
-     * <p>Server only, as the extraction route into the cascade is. A client reaches this while
-     * applying the server's own removal, and would go on to empty block entities and set blocks to
-     * air on its own authority — deciding a collapse the server has already decided and is sending.
-     * The re-entrancy flag a cascade sets is runtime state that is never synced, so a client could
-     * not even tell it was inside one.
+     * Propagates an empty support seam above a removed Bar block on the server. Unsupported bars
+     * enter the supplied drop batch, and emptied blocks are removed through automation authority.
      */
-    static void collapseAbove(Level level, BlockPos removed, BarDropBatch drops) {
-        if (level.isClientSide) {
-            return;
-        }
+    static void collapseAbove(ServerLevel level, BlockPos removed, BarDropBatch drops) {
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {
             cascadeFrom(level, above, BarCubeIdx.emptySeam(),
-                    BarCubeIdx.topLayerOccupancy(above.items), drops);
+                    BarCubeIdx.topLayerOccupancy(above.items), drops, null);
         }
     }
 
@@ -372,111 +318,8 @@ public class BarStackBE extends BlockEntity {
         }
     }
 
-    public boolean isEmpty() {
-        return ItemOps.isHandlerEmpty(items);
-    }
-
-    /** Synchronizes this block's contents to tracking clients. */
-    public void syncToClients() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
-        }
-    }
-
-    /**
-     * Opens a batch of edits that should publish once. Per-slot synchronization is suppressed, and
-     * {@link #endBatch()} schedules publication only if this block changed.
-     *
-     * <p>Batches nest here, so unlike Storage and Singles this does not clear {@code batchTouched}:
-     * {@link #extractAt} opens one, takes a bar, and calls {@link #cascadeFrom}, which opens another
-     * on this same block. The outer change flag must survive the nested batch even when the cascade
-     * removes nothing else, or clients continue rendering the extracted bar.
-     */
-    void beginBatch() {
-        suppressSync = true;
-    }
-
-    void endBatch() {
-        suppressSync = false;
-        if (batchTouched) {
-            batchTouched = false;
-            schedulePublish();
-        }
-    }
-
-    /**
-     * Marks this block for publication and schedules a pass on the column's bottom block.
-     *
-     * <p>Publishing costs an update packet, a comparator walk of the whole column, and a light
-     * recompute. A position holds one bar, so a caller moving a stack calls the handler once per
-     * bar; deferring to a block tick on the column's bottom keeps one stack from costing all of
-     * that sixty-four times over.
-     */
-    private void schedulePublish() {
-        if (level == null || level.isClientSide) {
-            return;
-        }
-        publishPending = true;
-
-        BarColumn column = column();
-        if (column != null) {
-            column.markDirty();
-        }
-    }
-
-    /**
-     * Publishes this block's deferred contents and emitted light level. Comparator output belongs
-     * to the column and is published once for the whole run by {@link BarColumn#publishPending()}.
-     *
-     * @return whether anything was owed
-     */
-    boolean publishIfPending() {
-        Level columnLevel = level;
-        if (columnLevel == null || columnLevel.isClientSide || !publishPending) {
-            return false;
-        }
-        publishPending = false;
-        syncToClients();
-
-        int newLight = ItemOps.calculateLightLevelFromItems(items);
-        BlockState state = getBlockState();
-        if (state.getValue(BarStackBlock.LIGHT_LEVEL) != newLight) {
-            columnLevel.setBlock(getBlockPos(), state.setValue(BarStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
-        }
-        return true;
-    }
-
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        if (tag.contains(TAG_ITEMS) && items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS))) {
-            setChanged();
-        }
+    protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
         cachedShape = null;
     }
-
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put(TAG_ITEMS, items.serializeNBT(registries));
-    }
-
-    /** This block's local slots, for callers that already hold the block entity. */
-    public StackItemStorage getItems() {
-        return items;
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        return tag;
-    }
-
 }

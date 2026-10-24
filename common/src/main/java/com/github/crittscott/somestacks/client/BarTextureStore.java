@@ -5,19 +5,22 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -34,14 +37,17 @@ import java.util.Map;
  * differently if their resource packs differ.
  */
 public class BarTextureStore extends SimplePreparableReloadListener<Map<ResourceLocation, BarTextureStore.BarTextureData>> {
+    public static final ResourceLocation RELOAD_LISTENER_ID =
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "bar_textures");
+
     private static final Gson GSON = new Gson();
-    /** Resource-pack mappings; an automatic-tint entry is replaced by its derived tint on first render. */
     private static final Map<ResourceLocation, BarTextureData> textureMap = new HashMap<>();
     /** Auto-tints for items no mapping covers, computed on first render and held until the next reload. */
     private static final Map<ResourceLocation, BarTextureData> unmappedTints = new HashMap<>();
     private static final ResourceLocation DEFAULT_TEXTURE = ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
     private static final BarTextureData FALLBACK = BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
     private static final float BRIGHTEN_FACTOR = 0.1f;
+    private static final int OPAQUE_PIXEL_ALPHA_THRESHOLD = 127;
     private static final String COMMENT_PREFIX = "_comment";
     private static final String FIELD_TEXTURE = "texture";
     private static final String FIELD_TINT = "tint";
@@ -53,7 +59,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     public record BarTextureData(ResourceLocation texture, int color, boolean autoTint) {
         public static final int WHITE = 0xFFFFFFFF;
 
-        /** Creates a mapping whose tint will be derived from the item's sprite and registered tint. */
+        /** Creates a mapping whose tint will be derived from the sprite and tint the item draws with. */
         public static BarTextureData auto(ResourceLocation texture) {
             return new BarTextureData(texture, WHITE, true);
         }
@@ -64,19 +70,19 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         }
 
         public int red() {
-            return (color >> 16) & 0xFF;
+            return FastColor.ARGB32.red(color);
         }
 
         public int green() {
-            return (color >> 8) & 0xFF;
+            return FastColor.ARGB32.green(color);
         }
 
         public int blue() {
-            return color & 0xFF;
+            return FastColor.ARGB32.blue(color);
         }
 
         public int alpha() {
-            return (color >> 24) & 0xFF;
+            return FastColor.ARGB32.alpha(color);
         }
     }
 
@@ -145,8 +151,8 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     @Override
     protected void apply(Map<ResourceLocation, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         textureMap.clear();
-        unmappedTints.clear();
         textureMap.putAll(prepared);
+        unmappedTints.clear();
         SomeStacksCommon.LOGGER.info("Applied {} bar texture mappings", textureMap.size());
     }
 
@@ -157,35 +163,25 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             }
             Item item = BuiltInRegistries.ITEM.get(itemLoc);
 
-            ItemStack stack = new ItemStack(item);
-
-            // Rendering multiplies the sprite by the item's registered tint, so the derived bar tint
-            // must include both. Either contribution is white when the item does not supply it.
-            int spriteColor = averageSpriteColor(stack, resourceManager);
-            int itemColor = registeredItemColor(stack);
-            int tint = multiplyColors(spriteColor, itemColor);
-            return tint;
+            // Rendering multiplies a quad's sprite by its layer's tint, so the derived bar tint
+            // must include both. The first quad drawn stands for the item.
+            ItemCapture capture = ItemCapture.capture(
+                    new ItemStack(item), ItemDisplayContext.GUI, null, new PoseStack());
+            if (capture.quads().isEmpty()) {
+                return BarTextureData.WHITE;
+            }
+            ItemCapture.TintedQuad first = capture.quads().getFirst();
+            return FastColor.ARGB32.multiply(averageSpriteColor(first.quad().getSprite(), resourceManager),
+                    FastColor.ARGB32.color(0xFF, FastColor.ARGB32.red(first.color()), FastColor.ARGB32.green(first.color()),
+                            FastColor.ARGB32.blue(first.color())));
         } catch (Exception e) {
             SomeStacksCommon.LOGGER.warn("Could not auto-calculate tint for {}: {}", itemLoc, e.getMessage(), e);
             return BarTextureData.WHITE;
         }
     }
 
-    /**
-     * The average of the sprite the item's baked model puts on the item atlas, or white when there
-     * is none to read. An item drawn by a custom renderer carries its art in that renderer rather
-     * than in its model, so its particle resolves to the missing texture and only its registered
-     * tint describes its color.
-     */
-    private static int averageSpriteColor(ItemStack stack, ResourceManager resourceManager) {
-        Minecraft mc = Minecraft.getInstance();
-        BakedModel model = mc.getItemRenderer().getModel(stack, null, null, 0);
-
-        TextureAtlasSprite sprite = model.getParticleIcon();
-        if (sprite == null) {
-            return BarTextureData.WHITE;
-        }
-
+    /** The average color of {@code sprite}'s source texture, or white when there is none to read. */
+    private static int averageSpriteColor(TextureAtlasSprite sprite, ResourceManager resourceManager) {
         ResourceLocation spriteName = sprite.contents().name();
         if (spriteName.equals(MissingTextureAtlasSprite.getLocation())) {
             return BarTextureData.WHITE;
@@ -203,18 +199,6 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         } finally {
             image.close();
         }
-    }
-
-    /** The color the item's mod registers for the primary layer, or white when it registers none. */
-    private static int registeredItemColor(ItemStack stack) {
-        return ClientRenderPlatform.itemColor(stack, 0) | 0xFF000000;
-    }
-
-    private static int multiplyColors(int left, int right) {
-        int r = (((left >> 16) & 0xFF) * ((right >> 16) & 0xFF)) / 0xFF;
-        int g = (((left >> 8) & 0xFF) * ((right >> 8) & 0xFF)) / 0xFF;
-        int b = ((left & 0xFF) * (right & 0xFF)) / 0xFF;
-        return 0xFF000000 | (r << 16) | (g << 8) | b;
     }
 
     private static ResourceLocation getTextureResourceLocation(ResourceLocation spriteName) {
@@ -245,12 +229,14 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
                 int abgr = image.getPixelRGBA(x, y);
-                int a = (abgr >> 24) & 0xFF;
+                int argb = FastColor.ARGB32.color(abgr >>> 24, abgr & 255,
+                        (abgr >>> 8) & 255, (abgr >>> 16) & 255);
+                int a = FastColor.ARGB32.alpha(argb);
 
-                if (a > 127) {
-                    int r = abgr & 0xFF;
-                    int g = (abgr >> 8) & 0xFF;
-                    int b = (abgr >> 16) & 0xFF;
+                if (a > OPAQUE_PIXEL_ALPHA_THRESHOLD) {
+                    int r = FastColor.ARGB32.red(argb);
+                    int g = FastColor.ARGB32.green(argb);
+                    int b = FastColor.ARGB32.blue(argb);
 
                     sumR += r;
                     sumG += g;
@@ -273,7 +259,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         int brightG = (int) Math.min(255, avgG + (255 - avgG) * BRIGHTEN_FACTOR);
         int brightB = (int) Math.min(255, avgB + (255 - avgB) * BRIGHTEN_FACTOR);
 
-        return 0xFF000000 | (brightR << 16) | (brightG << 8) | brightB;
+        return FastColor.ARGB32.color(0xFF, brightR, brightG, brightB);
     }
 
     private static int parseColor(String colorStr) {

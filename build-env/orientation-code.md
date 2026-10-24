@@ -18,6 +18,4 @@
 
 ## Configuration and presentation
 
-## Maintenance invariants
-
 ## GameTests

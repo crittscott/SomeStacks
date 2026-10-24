@@ -6,6 +6,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 
 /** Storage settling order across every item-identity component used by the comparator. */
 public final class StackSortGameTests implements FabricGameTest {
+    /** See {@link StackSortChecks#comparatorOrdersEveryIdentityComponent}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void comparatorOrdersEveryIdentityComponent(GameTestHelper helper) {
         StackSortChecks.comparatorOrdersEveryIdentityComponent(helper);

@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
@@ -11,11 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.storage.LevelResource;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +25,12 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 public final class RenderGalleryChecks {
     private RenderGalleryChecks() {}
 
+    /**
+     * A queued Storage gallery builds its sandstone floor, one column per item group, and reports
+     * planned and completed totals. To reproduce in-game: enable galleries and run an
+     * {@code /ss gallery} form containing multiple groups. The rows begin east of the player on a
+     * sandstone floor and the completion message reports the placed stacks and items.
+     */
     public static void queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(
             GameTestHelper helper, ServerPlayer player) {
         BlockPos playerPos = helper.absolutePos(ORIGIN);
@@ -77,23 +78,16 @@ public final class RenderGalleryChecks {
      */
     public static void queuedStorageGallerySpreadsWorkAcrossTicks(
             GameTestHelper helper, ServerPlayer player) {
-        Path serverConfigDir = helper.getLevel().getServer()
-                .getWorldPath(LevelResource.ROOT)
-                .resolve("serverconfig");
-        ServerConfig.Backend original = ServerConfig.backend();
-        ServerConfig.Settings originalPolicy = ServerConfig.settings();
-        Path fixture = serverConfigDir.resolve(SomeStacksCommon.MODID + "-gallery-budget.toml");
+        ServerConfig.Settings original = ServerConfig.settings();
         BlockPos playerPos = helper.absolutePos(ORIGIN);
         BlockPos[] bases = {playerPos.east(), playerPos.east(8)};
         RenderGalleryGenerator.Result[] completed = new RenderGalleryGenerator.Result[2];
         try {
-            // Absent fields use defaults; this fixture changes the placement budget.
-            Files.createDirectories(serverConfigDir);
-            Files.writeString(fixture, "[render_gallery]\nplacements_per_tick = 4\n");
-            var backend = new com.github.crittscott.somestacks.TomlServerConfig();
-            ServerConfig.install(backend);
-            ServerConfig.apply(backend.load(fixture));
-            checkEquals(4, ServerConfig.renderGalleryPlacementsPerTick(), "Test placement budget");
+            ServerConfig.apply(new ServerConfig.Settings(original.maxPileHeight(),
+                    original.enableStorageStackBlock(), original.enableSinglesStackBlock(),
+                    original.enableBarStackBlock(), original.disableMods(), original.disableItems(),
+                    4, original.galleryEnabled(), original.galleryPermissionLevel(),
+                    original.genMods(), original.genItems()));
             for (int job = 0; job < bases.length; job++) {
                 BlockPos base = bases[job];
                 for (int x = -1; x <= 1; x++) {
@@ -136,8 +130,6 @@ public final class RenderGalleryChecks {
                 checkEquals(1, result.totalStacks(), "Completed stack count");
                 checkEquals(1, result.totalItems(), "Completed item count");
             }
-        } catch (IOException e) {
-            throw new IllegalStateException("Could not write the gallery budget fixture", e);
         } finally {
             // This test runs in its own GameTest batch. Drain only its jobs even if an assertion fails.
             try {
@@ -145,18 +137,17 @@ public final class RenderGalleryChecks {
                     RenderGalleryGenerator.onServerTick();
                 }
             } finally {
-                ServerConfig.install(original);
-                ServerConfig.apply(originalPolicy);
-                try {
-                    Files.deleteIfExists(fixture);
-                } catch (IOException e) {
-                    SomeStacksCommon.LOGGER.warn("Could not delete GameTest config fixture {}", fixture, e);
-                }
+                ServerConfig.apply(original);
             }
         }
         helper.succeed();
     }
 
+    /**
+     * A Bar gallery lays out rows and fills each block up to its capacity before starting the next.
+     * To reproduce in-game: enable galleries and run {@code /ss ingotgallery} for more than one
+     * block's worth of one ingot. The first row is full and the next holds the remainder.
+     */
     public static void queuedBarGalleryBuildsRowsAndFillsBars(
             GameTestHelper helper, ServerPlayer player) {
         BlockPos playerPos = helper.absolutePos(ORIGIN);

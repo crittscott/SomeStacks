@@ -1,10 +1,11 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.server.level.ClientInformation;
+import com.github.crittscott.somestacks.server.SyntheticPlayer;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 import java.util.WeakHashMap;
+import java.util.function.Function;
 
 /**
  * Forge-native scaffolding for the GameTests: the unprefixed template name, {@code IItemHandler}
@@ -58,17 +60,21 @@ public final class GameTestSupport {
 
     /**
      * A synthetic {@link ServerPlayer} for {@code level}, one per level for the run, standing in for
-     * the {@code FakePlayerFactory} Forge 1.21.1 no longer ships. Built the same way
+     * the {@code FakePlayerFactory} Forge does not ship. Built the same way
      * {@link com.github.crittscott.somestacks.server.ForgeEditAuthority} builds its automation actor.
      */
     public static ServerPlayer fakePlayer(ServerLevel level) {
-        return FAKE_PLAYERS.computeIfAbsent(level, key -> new ServerPlayer(
-                key.getServer(), key, FAKE_PLAYER_PROFILE, ClientInformation.createDefault()) {
-            @Override
-            public void displayClientMessage(Component message, boolean actionBar) {
-                // GameTest players have no network connection; action-bar output is not the
-                // behavior these server-side tests observe.
-            }
-        });
+        return FAKE_PLAYERS.computeIfAbsent(level,
+                key -> new SyntheticPlayer(key, FAKE_PLAYER_PROFILE));
+    }
+
+    /** A fake-player factory that resets the main hand for each shared check. */
+    public static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        return mainHand -> {
+            ServerPlayer player = fakePlayer(level);
+            player.setItemInHand(InteractionHand.MAIN_HAND, mainHand);
+            return player;
+        };
     }
 }

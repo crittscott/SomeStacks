@@ -82,9 +82,14 @@ public final class RenderGalleryGenerator {
             return List.copyOf(index().keySet());
         }
 
-        /** The items of one namespace this kind can show, in registry order. */
+        /**
+         * The items of one namespace this kind can show, in registry order. Items the server
+         * disabled by id are left out, so a gallery never hands players an item barred from stacks.
+         */
         public List<Item> itemsIn(String modId) {
-            return index().getOrDefault(modId, List.of());
+            return index().getOrDefault(modId, List.of()).stream()
+                    .filter(item -> !ServerConfig.isItemDisabled(BuiltInRegistries.ITEM.getKey(item)))
+                    .toList();
         }
 
         private Map<String, List<Item>> index() {
@@ -114,47 +119,35 @@ public final class RenderGalleryGenerator {
      * Membership is the Bar Stack's own validity test rather than the registry, so unlike the
      * registry grouping this one is rebuilt whenever Bar validity can have changed.
      */
-    private static Map<String, List<Item>> barItemsByNamespace;
 
-    /** Invalidates tag-dependent grouping at world start and data-pack reload. */
-    public static void invalidateBarItems() { barItemsByNamespace = null; }
+    /** The ingot generation {@link #barItemsByNamespace} was grouped under. */
 
     /** Queued galleries. Server thread only: appended by the command, drained by the tick handler. */
     private static final Deque<Job> jobs = new ArrayDeque<>();
 
+    /**
+     * Every item grouped by namespace, with namespaces and each namespace's items in id order, so
+     * a gallery reads alphabetically and an item's place in it can be guessed from its name.
+     */
     private static Map<String, List<Item>> itemsByNamespace() {
         if (itemsByNamespace == null) {
             Map<String, List<Item>> map = new TreeMap<>();
-            BuiltInRegistries.ITEM.entrySet().forEach(entry -> map
-                    .computeIfAbsent(entry.getKey().location().getNamespace(), ns -> new ArrayList<>())
-                    .add(entry.getValue()));
+            BuiltInRegistries.ITEM.keySet().stream().sorted().forEach(id -> map
+                    .computeIfAbsent(id.getNamespace(), ns -> new ArrayList<>())
+                    .add(BuiltInRegistries.ITEM.get(id)));
             itemsByNamespace = map;
         }
         return itemsByNamespace;
     }
 
     private static Map<String, List<Item>> barItemsByNamespace() {
-        if (barItemsByNamespace == null) {
-            Map<String, List<Item>> map = new TreeMap<>();
-            itemsByNamespace().forEach((namespace, items) -> {
-                List<Item> ingots = items.stream()
-                        .filter(item -> BarStackBE.isValidBarItem(new ItemStack(item)))
-                        .toList();
-                if (!ingots.isEmpty()) {
-                    map.put(namespace, ingots);
-                }
-            });
-            barItemsByNamespace = map;
-        }
-        return barItemsByNamespace;
-    }
-
-    public static List<String> getModIdsWithItems() {
-        return List.copyOf(itemsByNamespace().keySet());
-    }
-
-    public static List<Item> collectModItems(String modId) {
-        return itemsByNamespace().getOrDefault(modId, List.of());
+        Map<String, List<Item>> map = new TreeMap<>();
+        itemsByNamespace().forEach((namespace, items) -> {
+            List<Item> ingots = items.stream()
+                    .filter(item -> BarStackBE.isValidBarItem(new ItemStack(item))).toList();
+            if (!ingots.isEmpty()) map.put(namespace, ingots);
+        });
+        return map;
     }
 
     /** Planned gallery size, known before placement begins. */
@@ -217,6 +210,12 @@ public final class RenderGalleryGenerator {
 
             if (job.isDone()) {
                 jobs.poll();
+                int skipped = job.expectedStacks - job.placedStacks;
+                if (skipped > 0) {
+                    SomeStacksCommon.LOGGER.warn(
+                            "Gallery for {} skipped {} of {} stack placement(s)",
+                            job.player.getGameProfile().getName(), skipped, job.expectedStacks);
+                }
                 job.onComplete.accept(new Result(job.placedStacks, job.expectedStacks, job.totalItems));
             }
         }
@@ -304,13 +303,13 @@ public final class RenderGalleryGenerator {
     }
 
     private static boolean fillStorageStack(Level level, BlockPos pos, List<Item> batch) {
-        if (!placeStack(level, pos, CommonRegistry.STORAGE_STACK_BLOCK.get())) {
+        if (!placeStack(level, pos, CommonRegistry.storageStackBlock())) {
             return false;
         }
         StorageStackBE sbe = (StorageStackBE) level.getBlockEntity(pos);
 
         for (Item item : batch) {
-            sbe.deposit(new ItemStack(item, 1));
+            sbe.deposit(new ItemStack(item, 1), null);
         }
         return true;
     }
@@ -321,7 +320,7 @@ public final class RenderGalleryGenerator {
      * grounds outright.
      */
     private static boolean fillBarStack(Level level, BlockPos pos, List<Item> batch) {
-        if (!placeStack(level, pos, CommonRegistry.BAR_STACK_BLOCK.get())) {
+        if (!placeStack(level, pos, CommonRegistry.barStackBlock())) {
             return false;
         }
         BarStackBE bbe = (BarStackBE) level.getBlockEntity(pos);
@@ -332,16 +331,13 @@ public final class RenderGalleryGenerator {
         return true;
     }
 
-    /** Places a stack block at {@code pos}, logging any rejected placement. */
+    /** Places a stack block at {@code pos}. */
     private static boolean placeStack(Level level, BlockPos pos, Block block) {
         if (level.isOutsideBuildHeight(pos)) {
-            SomeStacksCommon.LOGGER.warn("Gallery stack skipped at {}: outside build height", pos);
             return false;
         }
 
         if (!level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_ALL)) {
-            SomeStacksCommon.LOGGER.warn("Gallery stack placement rejected at {}, block there is {}",
-                    pos, level.getBlockState(pos));
             return false;
         }
 

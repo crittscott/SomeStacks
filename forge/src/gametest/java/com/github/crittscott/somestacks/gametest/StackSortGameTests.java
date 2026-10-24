@@ -10,6 +10,7 @@ import net.minecraftforge.gametest.GameTestHolder;
 public final class StackSortGameTests {
     private StackSortGameTests() {}
 
+    /** See {@link StackSortChecks#comparatorOrdersEveryIdentityComponent}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorOrdersEveryIdentityComponent(GameTestHelper helper) {
         StackSortChecks.comparatorOrdersEveryIdentityComponent(helper);

@@ -30,12 +30,17 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 public final class StoragePileChecks {
     private StoragePileChecks() {}
 
+    /**
+     * A deposit fills a compatible partial stack before using an empty slot. To reproduce in-game:
+     * leave a partial stack of one item in Storage, then deposit more of that item. The partial
+     * reaches its limit before any remainder appears in another cube.
+     */
     public static void depositFillsCompatiblePartialBeforeEmptySlot(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         storage.getItems().insertItem(5, new ItemStack(Items.STONE, 60), false);
         ItemStack offered = new ItemStack(Items.STONE, 8);
 
-        int moved = storage.deposit(offered);
+        int moved = storage.deposit(offered, null);
 
         checkEquals(8, moved, "Moved count");
         checkEquals(0, offered.getCount(), "Offered remainder");
@@ -46,6 +51,11 @@ public final class StoragePileChecks {
         helper.succeed();
     }
 
+    /**
+     * Depositing into a full Storage pile grows it upward by one block. To reproduce in-game: fill
+     * every slot in one Storage block, then deposit one more allowed item. A second Storage block
+     * appears above and holds the item.
+     */
     public static void fullPileGrowsByOneBlock(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
@@ -53,7 +63,7 @@ public final class StoragePileChecks {
         }
         ItemStack offered = new ItemStack(Items.STONE, 1);
 
-        int moved = storage.deposit(offered);
+        int moved = storage.deposit(offered, null);
         StoragePile pile = storage.pile();
 
         checkEquals(1, moved, "Moved count");
@@ -65,6 +75,12 @@ public final class StoragePileChecks {
         helper.succeed();
     }
 
+    /**
+     * Settlement merges only exact component identities, restores legal stack sizes, sorts, and
+     * packs downward. To reproduce in-game: put scattered compatible and component-distinct items
+     * in a Storage pile through automation, then let it settle. Compatible items merge at the base
+     * while distinct component or damage variants remain separate in stable order.
+     */
     public static void settleConsolidatesExactIdentityAndPacksDown(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         CompoundTag firstTag = new CompoundTag();
@@ -81,6 +97,12 @@ public final class StoragePileChecks {
         storage.getItems().insertItem(10, first, false);
         storage.getItems().insertItem(20, compatible, false);
         storage.getItems().insertItem(25, distinct, false);
+        ItemStack firstPickaxe = new ItemStack(Items.WOODEN_PICKAXE);
+        firstPickaxe.setDamageValue(1);
+        ItemStack secondPickaxe = new ItemStack(Items.WOODEN_PICKAXE);
+        secondPickaxe.setDamageValue(2);
+        storage.getItems().insertItem(3, firstPickaxe, false);
+        storage.getItems().insertItem(4, secondPickaxe, false);
 
         StoragePile pile = storage.pile();
         check(pile != null, "Pile did not resolve");
@@ -88,21 +110,28 @@ public final class StoragePileChecks {
 
         checkEquals(64, pile.getSlot(0).getCount(), "Consolidated full stack");
         checkEquals(6, pile.getSlot(1).getCount(), "Consolidated partial stack");
-        checkEquals(5, pile.getSlot(2).getCount(), "Distinct tagged stack");
-        check(pile.getSlot(3).isEmpty(), "Packed contents left a gap");
+        checkEquals(5, pile.getSlot(2).getCount(), "Distinct component stack");
+        check(pile.getSlot(5).isEmpty(), "Packed contents left a gap");
         checkEquals(CustomData.of(firstTag), pile.getSlot(0).get(DataComponents.CUSTOM_DATA),
                 "First component identity");
         checkEquals(CustomData.of(secondTag), pile.getSlot(2).get(DataComponents.CUSTOM_DATA),
                 "Distinct component identity");
+        checkEquals(1, pile.getSlot(3).getDamageValue(), "First damage component identity");
+        checkEquals(2, pile.getSlot(4).getDamageValue(), "Second damage component identity");
         helper.succeed();
     }
 
+    /**
+     * Extraction schedules settlement instead of leaving a lasting gap. To reproduce in-game:
+     * store two different stacks, extract the lower visible stack, and wait a moment. The remaining
+     * stack packs into the first Storage position.
+     */
     public static void extractionSettlesOnScheduledBlockTick(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         storage.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
         storage.getItems().insertItem(1, new ItemStack(Items.DIRT, 1), false);
 
-        ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY);
+        ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY, null);
         checkEquals(64, extracted.getCount(), "Extracted count");
 
         helper.runAfterDelay(2, () -> {
@@ -116,6 +145,11 @@ public final class StoragePileChecks {
         });
     }
 
+    /**
+     * Empty temporary piles disappear while permanent piles retain their blocks. To reproduce
+     * in-game: empty one ordinary Storage pile, then toggle another permanent with an empty hand in
+     * permanence mode and empty it. Only the permanent block remains.
+     */
     public static void emptyTemporaryPileDisappearsButPermanentPileRemains(GameTestHelper helper) {
         StorageStackBE temporary = placeStorage(helper, ORIGIN);
         StoragePile temporaryPile = temporary.pile();
@@ -136,6 +170,11 @@ public final class StoragePileChecks {
         helper.succeed();
     }
 
+    /**
+     * Every block in a Storage pile reports the same whole-pile comparator signal. To reproduce
+     * in-game: make a two-block pile with contents only in one block and place comparators against
+     * both blocks. Their outputs match.
+     */
     public static void comparatorReadsTheWholePileFromEveryBlock(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
@@ -154,6 +193,12 @@ public final class StoragePileChecks {
         helper.succeed();
     }
 
+    /**
+     * Placing Storage beneath a permanent pile preserves permanence, repacks contents into the new
+     * base, and republishes comparator output. To reproduce in-game: make a full one-block permanent
+     * pile with a comparator, place another Storage block beneath it, and wait. The joined pile stays
+     * permanent, moves contents downward, and the comparator changes to the two-block fill value.
+     */
     public static void ordinaryPlacementBelowPermanentPileRepairsDerivedState(
             GameTestHelper helper) {
         var level = helper.getLevel();
@@ -189,7 +234,7 @@ public final class StoragePileChecks {
 
             check(level.setBlock(
                             lowerPos,
-                            CommonRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState(),
+                            CommonRegistry.storageStackBlock().defaultBlockState(),
                             Block.UPDATE_ALL),
                     "Could not place Storage Stack below pile");
 
@@ -214,9 +259,48 @@ public final class StoragePileChecks {
     }
 
     /**
+     * Breaking the middle Storage block drops only that block's contents and leaves independent
+     * runs above and below. To reproduce in-game: put different items in each block of a
+     * three-block pile and break the middle block. Its items drop, while the other two blocks keep
+     * their own contents and settle independently.
+     */
+    public static void breakingMiddleBlockDropsItsContentsAndSplitsThePile(
+            GameTestHelper helper) {
+        StorageStackBE lower = placeStorage(helper, ORIGIN);
+        StorageStackBE middle = placeStorage(helper, ORIGIN.above());
+        StorageStackBE upper = placeStorage(helper, ORIGIN.above(2));
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 2), false);
+        middle.getItems().insertItem(0, new ItemStack(Items.DIRT, 7), false);
+        upper.getItems().insertItem(0, new ItemStack(Items.APPLE, 3), false);
+
+        helper.setBlock(ORIGIN.above(), Blocks.AIR);
+
+        helper.runAfterDelay(3, () -> {
+            checkEquals(7, GameTestScaffold.droppedNear(
+                    helper, middle.getBlockPos(), Items.DIRT), "Dropped middle contents");
+            checkEquals(2, GameTestScaffold.heldAt(
+                    helper, lower.getBlockPos(), Items.STONE), "Lower-run contents");
+            checkEquals(3, GameTestScaffold.heldAt(
+                    helper, upper.getBlockPos(), Items.APPLE), "Upper-run contents");
+            check(helper.getLevel().getBlockEntity(lower.getBlockPos()) instanceof StorageStackBE,
+                    "Lower run disappeared");
+            check(helper.getLevel().getBlockEntity(upper.getBlockPos()) instanceof StorageStackBE,
+                    "Upper run disappeared");
+            checkEquals(1, ((StorageStackBE) helper.getLevel()
+                    .getBlockEntity(lower.getBlockPos())).pile().height(), "Lower-run height");
+            checkEquals(1, ((StorageStackBE) helper.getLevel()
+                    .getBlockEntity(upper.getBlockPos())).pile().height(), "Upper-run height");
+            helper.succeed();
+        });
+    }
+
+    /**
      * The comparator range reserves 0 for an empty pile, as a vanilla container's does. A pile is
      * large enough that a proportional conversion would round hundreds of items down to 0, so the
      * reserved value is what makes an emptiness circuit read a pile correctly.
+     *
+     * <p>To reproduce in-game: compare an empty Storage pile, the same pile with one item, and a
+     * full pile. Their comparator outputs are 0, at least 1, and 15 respectively.
      */
     public static void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
@@ -232,6 +316,27 @@ public final class StoragePileChecks {
             storage.getItems().insertItem(slot, new ItemStack(Items.STONE, 64), false);
         }
         checkEquals(15, pile.comparatorSignal(), "Full pile signal");
+        helper.succeed();
+    }
+    /**
+     * To reproduce in-game: fill a Storage pile with mixed stack limits, save and reopen
+     * the world, then extract an item. Comparators match the contents immediately after loading
+     * and again after extraction, before the deferred settlement runs.
+     */
+    public static void comparatorContributionLoadsAndTracksMutations(GameTestHelper helper) {
+        StorageStackBE source = placeStorage(helper, ORIGIN);
+        source.getItems().setStackInSlot(0, new ItemStack(Items.STONE, 64));
+        source.getItems().setStackInSlot(1, new ItemStack(Items.WOODEN_PICKAXE));
+        StorageStackBE loaded = placeStorage(helper, ORIGIN.east(3));
+        loaded.loadWithComponents(source.saveWithoutMetadata(helper.getLevel().registryAccess()),
+                helper.getLevel().registryAccess());
+        checkEquals(source.pile().comparatorSignal(), loaded.pile().comparatorSignal(),
+                "Signal after loading saved contents");
+        checkEquals(2, loaded.pile().comparatorSignal(), "Mixed stack-limit fill");
+        loaded.getItems().extractItem(1, 1, false);
+        checkEquals(1, loaded.pile().comparatorSignal(), "Signal after extraction");
+        loaded.getItems().setStackInSlot(0, ItemStack.EMPTY);
+        checkEquals(0, loaded.pile().comparatorSignal(), "Signal after clearing the last slot");
         helper.succeed();
     }
 }

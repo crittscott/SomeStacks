@@ -1,45 +1,65 @@
 package com.github.crittscott.somestacks.network;
 
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
-import com.github.crittscott.somestacks.client.RenderMode;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
-import net.minecraft.network.FriendlyByteBuf;
+import io.netty.handler.codec.DecoderException;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
 
-/**
- * Server-to-client synchronization of the settings the client must agree with the server about:
- * which stack types are enabled, and the server's item render overrides. Sent on login and on
- * an explicit server resynchronization such as {@code /ss reload}.
- *
- * <p>Blacklists and pile limits are not sent. They gate server-side decisions only, and the client
- * never needs to predict them.
- */
-public class ConfigSyncPkt implements CustomPacketPayload {
+/** One byte-bounded chunk of the server settings synchronized to clients. */
+public record ConfigSyncPkt(
+        int generation,
+        boolean first,
+        boolean last,
+        boolean enableStack,
+        boolean enableSingles,
+        boolean enableBar,
+        int totalGenMods,
+        int totalDisabledMods,
+        List<String> genMods,
+        List<String> disabledMods) implements CustomPacketPayload {
+
     public static final Type<ConfigSyncPkt> TYPE = new Type<>(
             ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "config_sync"));
-    public static final StreamCodec<FriendlyByteBuf, ConfigSyncPkt> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, ConfigSyncPkt> STREAM_CODEC =
             StreamCodec.ofMember(ConfigSyncPkt::encode, ConfigSyncPkt::decode);
 
-    /** Defensive upper bound on synchronized override entries. */
-    private static final int MAX_OVERRIDE_ENTRIES = 65536;
+    public static final int MAX_PACKET_BYTES = 256 * 1024;
+    private static final int PACKET_OVERHEAD_BYTES = 64;
+    private static final int MAX_TOTAL_NAMESPACES = 4_096;
+    private static final int MAX_NAMESPACE_LENGTH = 256;
+    private static final int MAX_ENCODED_NAMESPACE_BYTES = MAX_NAMESPACE_LENGTH + 2;
+    private static final int MAX_NAMESPACE_BYTES = 2 * MAX_TOTAL_NAMESPACES * MAX_ENCODED_NAMESPACE_BYTES;
+    public static final int MAX_GENERATION_CHUNKS = (MAX_NAMESPACE_BYTES
+            + MAX_PACKET_BYTES - PACKET_OVERHEAD_BYTES - MAX_ENCODED_NAMESPACE_BYTES - 1)
+            / (MAX_PACKET_BYTES - PACKET_OVERHEAD_BYTES - MAX_ENCODED_NAMESPACE_BYTES);
+    public static final int MAX_GENERATION_BYTES = MAX_NAMESPACE_BYTES
+            + MAX_GENERATION_CHUNKS * PACKET_OVERHEAD_BYTES;
 
-    private final boolean enableStack;
-    private final boolean enableSingles;
-    private final boolean enableBar;
-    private final Map<ResourceLocation, ItemRenderConfig> renderOverrides;
+    private static volatile List<ConfigSyncPkt> currentPackets = List.of();
+    private static int nextGeneration;
 
-    public ConfigSyncPkt(boolean enableStack, boolean enableSingles, boolean enableBar,
-                         Map<ResourceLocation, ItemRenderConfig> renderOverrides) {
-        this.enableStack = enableStack;
-        this.enableSingles = enableSingles;
-        this.enableBar = enableBar;
-        this.renderOverrides = renderOverrides;
+    public ConfigSyncPkt {
+        genMods = List.copyOf(genMods);
+        disabledMods = List.copyOf(disabledMods);
+        if (generation <= 0 || totalGenMods < 0 || totalGenMods > MAX_TOTAL_NAMESPACES
+                || totalDisabledMods < 0 || totalDisabledMods > MAX_TOTAL_NAMESPACES
+                || genMods.size() > totalGenMods || disabledMods.size() > totalDisabledMods) {
+            throw new DecoderException("Invalid config synchronization totals");
+        }
+        validateNamespaces(genMods);
+        validateNamespaces(disabledMods);
+        if (budgetBytes(genMods, disabledMods) > MAX_PACKET_BYTES) {
+            throw new DecoderException("Config synchronization packet exceeds byte limit");
+        }
     }
 
     @Override
@@ -47,81 +67,218 @@ public class ConfigSyncPkt implements CustomPacketPayload {
         return TYPE;
     }
 
-    public static void encode(ConfigSyncPkt msg, FriendlyByteBuf buf) {
-        buf.writeBoolean(msg.enableStack);
-        buf.writeBoolean(msg.enableSingles);
-        buf.writeBoolean(msg.enableBar);
+    /**
+     * Replaces the immutable cached sequence with a new generation after world policy is loaded
+     * or changed. Call before sending login or reload synchronization; this does not send packets.
+     */
+    public static synchronized void rebuildCurrent() {
+        nextGeneration = nextGeneration == Integer.MAX_VALUE ? 1 : nextGeneration + 1;
 
-        buf.writeInt(msg.renderOverrides.size());
-        for (Map.Entry<ResourceLocation, ItemRenderConfig> entry : msg.renderOverrides.entrySet()) {
-            buf.writeResourceLocation(entry.getKey());
-            ItemRenderConfig config = entry.getValue();
+        List<String> genMods = boundedNamespaces(ServerConfig.GEN_MODS.get(), "gallery mod");
+        List<String> disabledMods = boundedNamespaces(
+                ServerConfig.DISABLE_MODS.get(), "disabled mod");
 
-            buf.writeBoolean(config.mode() != null);
-            if (config.mode() != null) {
-                buf.writeUtf(config.mode().getId());
-            }
-            buf.writeBoolean(config.scale() != null);
-            if (config.scale() != null) {
-                buf.writeFloat(config.scale());
-            }
-            buf.writeBoolean(config.offset() != null);
-            if (config.offset() != null) {
-                buf.writeFloat(config.offset()[0]);
-                buf.writeFloat(config.offset()[1]);
-                buf.writeFloat(config.offset()[2]);
-            }
-        }
+        currentPackets = buildPackets(
+                nextGeneration,
+                ServerConfig.enableStorageStackBlock(),
+                ServerConfig.enableSinglesStackBlock(),
+                ServerConfig.enableBarStackBlock(),
+                genMods,
+                disabledMods);
     }
 
-    /**
-     * Decodes an invalid entry count to a null-map sentinel for {@link #isValid()} to reject. An empty
-     * map is valid and would clear the client's server override layer, so it cannot represent
-     * failure.
-     */
-    public static ConfigSyncPkt decode(FriendlyByteBuf buf) {
+    /** The packet sequence most recently built at server start or by {@code /ss reload}. */
+    public static List<ConfigSyncPkt> currentPackets() {
+        return currentPackets;
+    }
+
+    private static List<String> boundedNamespaces(List<String> source, String label) {
+        LinkedHashSet<String> result = new LinkedHashSet<>();
+        for (String entry : source) {
+            String namespace = entry.trim().toLowerCase(Locale.ROOT);
+            if (namespace.isEmpty() || !result.add(namespace)) {
+                continue;
+            }
+            if (ResourceLocation.tryBuild(namespace, "validation") == null
+                    || namespace.length() > MAX_NAMESPACE_LENGTH) {
+                result.remove(namespace);
+                SomeStacksCommon.LOGGER.warn(
+                        "Ignoring invalid {} namespace '{}' in client synchronization", label, entry);
+                continue;
+            }
+            if (result.size() == MAX_TOTAL_NAMESPACES) {
+                SomeStacksCommon.LOGGER.warn(
+                        "The {} list exceeds the synchronization limit of {}; remaining entries "
+                                + "will not be sent",
+                        label, MAX_TOTAL_NAMESPACES);
+                break;
+            }
+        }
+        return List.copyOf(result);
+    }
+
+    private static List<ConfigSyncPkt> buildPackets(
+            int generation,
+            boolean enableStack,
+            boolean enableSingles,
+            boolean enableBar,
+            List<String> genMods,
+            List<String> disabledMods) {
+        List<Chunk> chunks = new ArrayList<>();
+        Chunk chunk = new Chunk();
+
+        for (String namespace : genMods) {
+            int size = encodedStringSize(namespace);
+            if (!chunk.isEmpty() && chunk.encodedBytes + size > MAX_PACKET_BYTES) {
+                chunks.add(chunk);
+                chunk = new Chunk();
+            }
+            chunk.genMods.add(namespace);
+            chunk.encodedBytes += size;
+        }
+        for (String namespace : disabledMods) {
+            int size = encodedStringSize(namespace);
+            if (!chunk.isEmpty() && chunk.encodedBytes + size > MAX_PACKET_BYTES) {
+                chunks.add(chunk);
+                chunk = new Chunk();
+            }
+            chunk.disabledMods.add(namespace);
+            chunk.encodedBytes += size;
+        }
+        if (!chunk.isEmpty() || chunks.isEmpty()) {
+            chunks.add(chunk);
+        }
+
+        List<ConfigSyncPkt> packets = new ArrayList<>(chunks.size());
+        for (int i = 0; i < chunks.size(); i++) {
+            Chunk current = chunks.get(i);
+            packets.add(new ConfigSyncPkt(
+                    generation,
+                    i == 0,
+                    i == chunks.size() - 1,
+                    enableStack,
+                    enableSingles,
+                    enableBar,
+                    genMods.size(),
+                    disabledMods.size(),
+                    current.genMods,
+                    current.disabledMods));
+        }
+        return List.copyOf(packets);
+    }
+
+    private static void encode(ConfigSyncPkt packet, RegistryFriendlyByteBuf buf) {
+        buf.writeVarInt(packet.generation);
+        buf.writeBoolean(packet.first);
+        buf.writeBoolean(packet.last);
+        buf.writeBoolean(packet.enableStack);
+        buf.writeBoolean(packet.enableSingles);
+        buf.writeBoolean(packet.enableBar);
+        buf.writeVarInt(packet.totalGenMods);
+        buf.writeVarInt(packet.totalDisabledMods);
+
+        writeNamespaces(buf, packet.genMods);
+        writeNamespaces(buf, packet.disabledMods);
+    }
+
+    private static ConfigSyncPkt decode(RegistryFriendlyByteBuf buf) {
+        if (buf.readableBytes() > MAX_PACKET_BYTES) {
+            throw new DecoderException("Config synchronization packet exceeds byte limit");
+        }
+        int generation = buf.readVarInt();
+        if (generation <= 0) {
+            throw new DecoderException("Invalid config generation: " + generation);
+        }
+        boolean first = buf.readBoolean();
+        boolean last = buf.readBoolean();
         boolean enableStack = buf.readBoolean();
         boolean enableSingles = buf.readBoolean();
         boolean enableBar = buf.readBoolean();
+        int totalGenMods = readBoundedCount(buf, MAX_TOTAL_NAMESPACES, "gallery mod total");
+        int totalDisabledMods = readBoundedCount(
+                buf, MAX_TOTAL_NAMESPACES, "disabled mod total");
 
-        int size = buf.readInt();
-        if (size < 0 || size > MAX_OVERRIDE_ENTRIES) {
-            SomeStacksCommon.LOGGER.warn("Ignoring config sync claiming {} render overrides", size);
-            return new ConfigSyncPkt(enableStack, enableSingles, enableBar, null);
+        List<String> genMods = readNamespaces(buf, totalGenMods, "gallery mod chunk");
+        List<String> disabledMods = readNamespaces(
+                buf, totalDisabledMods, "disabled mod chunk");
+        return new ConfigSyncPkt(
+                generation, first, last, enableStack, enableSingles, enableBar,
+                totalGenMods, totalDisabledMods,
+                genMods, disabledMods);
+    }
+
+    /** Conservative encoded size, including bounded metadata overhead. */
+    public int budgetBytes() {
+        return budgetBytes(genMods, disabledMods);
+    }
+
+    private static int budgetBytes(List<String> genMods, List<String> disabledMods) {
+        int bytes = PACKET_OVERHEAD_BYTES;
+        for (String namespace : genMods) bytes += encodedStringSize(namespace);
+        for (String namespace : disabledMods) bytes += encodedStringSize(namespace);
+        return bytes;
+    }
+
+    private static void validateNamespaces(List<String> namespaces) {
+        for (String namespace : namespaces) {
+            if (namespace.isEmpty() || namespace.length() > MAX_NAMESPACE_LENGTH
+                    || ResourceLocation.tryBuild(namespace, "validation") == null) {
+                throw new DecoderException("Invalid synchronized namespace");
+            }
         }
+    }
 
-        Map<ResourceLocation, ItemRenderConfig> renderOverrides = new HashMap<>();
-        for (int i = 0; i < size; i++) {
-            ResourceLocation itemId = buf.readResourceLocation();
-            RenderMode mode = buf.readBoolean() ? RenderMode.fromString(buf.readUtf()) : null;
-            Float scale = buf.readBoolean() ? buf.readFloat() : null;
-            float[] offset = buf.readBoolean()
-                    ? new float[]{buf.readFloat(), buf.readFloat(), buf.readFloat()}
-                    : null;
-            renderOverrides.put(itemId,
-                    OverrideJsonCodec.sanitize(new ItemRenderConfig(mode, scale, offset)));
+    private static void writeNamespaces(RegistryFriendlyByteBuf buf, List<String> namespaces) {
+        buf.writeVarInt(namespaces.size());
+        for (String namespace : namespaces) {
+            buf.writeUtf(namespace, MAX_NAMESPACE_LENGTH);
         }
-
-        return new ConfigSyncPkt(enableStack, enableSingles, enableBar, renderOverrides);
     }
 
-    public boolean isValid() {
-        return renderOverrides != null;
+    private static List<String> readNamespaces(
+            RegistryFriendlyByteBuf buf, int total, String description) {
+        int count = readBoundedCount(buf, total, description);
+        List<String> namespaces = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            String namespace = buf.readUtf(MAX_NAMESPACE_LENGTH);
+            if (namespace.isEmpty() || ResourceLocation.tryBuild(namespace, "validation") == null) {
+                throw new DecoderException("Invalid synchronized namespace: " + namespace);
+            }
+            namespaces.add(namespace);
+        }
+        return namespaces;
     }
 
-    public boolean enableStack() {
-        return enableStack;
+    private static int readBoundedCount(
+            RegistryFriendlyByteBuf buf, int maximum, String description) {
+        int count = buf.readVarInt();
+        if (count < 0 || count > maximum) {
+            throw new DecoderException("Invalid " + description + " count: " + count);
+        }
+        return count;
     }
 
-    public boolean enableSingles() {
-        return enableSingles;
+    private static int encodedStringSize(String value) {
+        int bytes = value.getBytes(StandardCharsets.UTF_8).length;
+        return varIntSize(bytes) + bytes;
     }
 
-    public boolean enableBar() {
-        return enableBar;
+    private static int varIntSize(int value) {
+        int bytes = 1;
+        while ((value & ~0x7F) != 0) {
+            value >>>= 7;
+            bytes++;
+        }
+        return bytes;
     }
 
-    public Map<ResourceLocation, ItemRenderConfig> renderOverrides() {
-        return renderOverrides;
+    private static final class Chunk {
+        private final List<String> genMods = new ArrayList<>();
+        private final List<String> disabledMods = new ArrayList<>();
+        private int encodedBytes = PACKET_OVERHEAD_BYTES;
+
+        private boolean isEmpty() {
+            return genMods.isEmpty() && disabledMods.isEmpty();
+        }
     }
 }

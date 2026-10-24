@@ -1,0 +1,38 @@
+{
+  "block.storage_stack.deposit": {
+    "subtitle": "subtitles.somestacks.storage_stack.deposit",
+    "sounds": [{ "name": "minecraft:block.wood.place", "type": "event" }]
+  },
+  "block.storage_stack.extract": {
+    "subtitle": "subtitles.somestacks.storage_stack.extract",
+    "sounds": [{ "name": "minecraft:block.wood.break", "type": "event" }]
+  },
+  "block.storage_stack.rotate": {
+    "subtitle": "subtitles.somestacks.storage_stack.rotate",
+    "sounds": [{ "name": "minecraft:block.wood.hit", "type": "event" }]
+  },
+  "block.singles_stack.deposit": {
+    "subtitle": "subtitles.somestacks.singles_stack.deposit",
+    "sounds": [{ "name": "minecraft:block.wood.place", "type": "event" }]
+  },
+  "block.singles_stack.extract": {
+    "subtitle": "subtitles.somestacks.singles_stack.extract",
+    "sounds": [{ "name": "minecraft:block.wood.break", "type": "event" }]
+  },
+  "block.singles_stack.rotate": {
+    "subtitle": "subtitles.somestacks.singles_stack.rotate",
+    "sounds": [{ "name": "minecraft:block.wood.hit", "type": "event" }]
+  },
+  "block.singles_stack.rotate_item": {
+    "subtitle": "subtitles.somestacks.singles_stack.rotate_item",
+    "sounds": [{ "name": "minecraft:block.wood.hit", "type": "event" }]
+  },
+  "block.bar_stack.deposit": {
+    "subtitle": "subtitles.somestacks.bar_stack.deposit",
+    "sounds": [{ "name": "minecraft:block.wood.place", "type": "event" }]
+  },
+  "block.bar_stack.extract": {
+    "subtitle": "subtitles.somestacks.bar_stack.extract",
+    "sounds": [{ "name": "minecraft:block.wood.break", "type": "event" }]
+  }
+}

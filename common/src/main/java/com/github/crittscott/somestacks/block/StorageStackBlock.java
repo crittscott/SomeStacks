@@ -5,27 +5,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
@@ -37,46 +24,27 @@ import javax.annotation.Nullable;
  * <p>Breaking drops only this block's own contents. What that does to the rest of the pile, which
  * may need to settle or shrink around the gap, belongs to {@link StoragePile}.
  */
-public class StorageStackBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
-    /**
-     * Light this block emits, derived from the {@code BlockItem}s stored in it and kept in the
-     * block state so lighting updates travel by the ordinary block-state path.
-     */
-    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
-
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-
+public class StorageStackBlock extends StackBlock {
     public StorageStackBlock(Properties props) {
         super(props);
-        registerDefaultState(defaultBlockState()
-                .setValue(LIGHT_LEVEL, 0)
-                .setValue(WATERLOGGED, false));
+        registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL, WATERLOGGED);
+        super.createBlockStateDefinition(builder);
+        builder.add(HORIZONTAL_FACING);
     }
 
     @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED)
-                ? Fluids.WATER.getSource(false)
-                : super.getFluidState(state);
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(
+                HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
-                                  LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        if (state.getValue(WATERLOGGED)) {
-            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-        }
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return rotate(state, mirror.getRotation(state.getValue(HORIZONTAL_FACING)));
     }
 
     @Nullable
@@ -100,11 +68,6 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
         return 0;
     }
 
-    @Override
-    public boolean hasAnalogOutputSignal(BlockState state) {
-        return true;
-    }
-
     /** Reports the whole pile's fill, so a comparator reads the same value anywhere along it. */
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
@@ -113,18 +76,6 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
             return 0;
         }
         return pile.comparatorSignal();
-    }
-
-    @Override
-    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
-                                            BlockHitResult hit) {
-        return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
-    }
-
-    @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
-                                           Player player, InteractionHand hand, BlockHitResult hit) {
-        return level.isClientSide ? ItemInteractionResult.SUCCESS : ItemInteractionResult.CONSUME;
     }
 
     /**

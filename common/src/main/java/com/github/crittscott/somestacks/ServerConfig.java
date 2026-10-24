@@ -54,7 +54,6 @@ public final class ServerConfig {
     public static void apply(Settings policy) {
         settings = policy;
         bakeServerLists();
-        com.github.crittscott.somestacks.command.RenderGalleryGenerator.invalidateBarItems();
     }
     /** Loads and applies this world's policy using the installed backend before world activity. */
     public static void loadFor(MinecraftServer server) { apply(backend.loadFor(server)); }

@@ -113,7 +113,8 @@ public final class NeoForgeServerConfig implements ServerConfig.Backend {
         if (server != null) server.execute(() -> {
             if (runningServer != server) return;
             ServerConfig.reload();
-            com.github.crittscott.somestacks.command.CommandNetwork.syncAllPlayers(server);
+            com.github.crittscott.somestacks.network.ConfigSyncPkt.rebuildCurrent();
+            com.github.crittscott.somestacks.network.ConfigSyncNetwork.syncAllPlayers(server);
         });
     }
 

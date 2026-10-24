@@ -31,6 +31,6 @@
     "java": ">=21"
   },
   "suggests": {
-    "ftbchunks": "*"
+    "common-protection-api": ">=${common_protection_api_version}"
   }
 }

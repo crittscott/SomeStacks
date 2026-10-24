@@ -3,23 +3,23 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.ItemOps;
+import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import java.util.Objects;
 
 /**
  * One Singles Stack: 64 single items drawn as a rotatable 4 x 4 x 4 grid.
@@ -32,63 +32,32 @@ import javax.annotation.Nullable;
  * <p>Capability exposure is loader-specific and lives outside this class; {@link #getItems()} is
  * what a loader-specific capability view adapts.
  */
-public class SinglesStackBE extends BlockEntity {
+public class SinglesStackBE extends StackBlockEntity {
     /** Cells in one block. The column's flat range is this times its height. */
     public static final int SLOTS = SinglesCubeIdx.CELLS;
 
-    private static final String TAG_ITEMS = "Items";
-    private static final String TAG_ROTATION = "Rotation";
     private static final String TAG_CUBE_ROTATIONS = "CubeRotations";
 
     private VoxelShape cachedShape = null;
-    private int rotation = 0;
+    private int cachedShapeRotation = -1;
     private int[] cubeRotations = new int[SLOTS];
-    private boolean suppressSync = false;
-    private boolean batchTouched = false;
-
-    /**
-     * Set when a content edit still requires client synchronization and a light update. The
-     * column's scheduled publication pass clears it; see {@link #schedulePublish()}.
-     */
-    private boolean publishPending = false;
-
-    /**
-     * The comparator output last published for the column this block is the bottom of, or -1 before
-     * the first publication. Only the bottom block's copy is consulted, and it is runtime state
-     * rather than saved NBT: a freshly loaded column has published nothing, so its first change
-     * should notify.
-     */
-    private int publishedSignal = -1;
-
-    /** The column resolved for this block, good for the tick it was taken on. See {@link #column()}. */
-    private SinglesColumn cachedColumn;
-    private long cachedColumnTick = Long.MIN_VALUE;
-
-    private final StackItemStorage items = new StackItemStorage(SLOTS) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-            cachedShape = null;
-            if (suppressSync) {
-                batchTouched = true;
-            } else {
-                schedulePublish();
-            }
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return 1;
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return isValidSinglesItem(stack);
-        }
-    };
-
     public SinglesStackBE(BlockPos pos, BlockState state) {
-        super(CommonRegistry.SINGLES_STACK_BE.get(), pos, state);
+        super(CommonRegistry.singlesStackBe(), pos, state, SLOTS);
+    }
+
+    @Override
+    protected boolean isStoredItemValid(ItemStack stack) {
+        return isValidSinglesItem(stack);
+    }
+
+    @Override
+    protected int localSlotLimit() {
+        return 1;
+    }
+
+    @Override
+    protected void onLocalContentsChanged(int slot) {
+        cachedShape = null;
     }
 
     /**
@@ -99,41 +68,17 @@ public class SinglesStackBE extends BlockEntity {
      */
     @Nullable
     public SinglesColumn column() {
-        if (level == null || level.isClientSide) {
-            return null;
-        }
-
-        long now = level.getGameTime();
-        if (cachedColumn != null && cachedColumnTick == now) {
-            return cachedColumn;
-        }
-
-        cachedColumn = SinglesColumn.resolve(level, getBlockPos());
-        cachedColumnTick = now;
-        return cachedColumn;
+        return (SinglesColumn) itemRun();
     }
 
-    /** Invalidates the cached column so the next lookup walks the world again. */
-    void invalidateColumn() {
-        cachedColumn = null;
+    @Override
+    protected StackRunItemAccess resolveRun(ServerLevel serverLevel) {
+        return SinglesColumn.resolve(serverLevel, getBlockPos());
     }
 
     /**
-     * Records the comparator output the column is about to publish.
-     *
-     * @return whether the signal changed and comparator neighbors must be notified
-     */
-    boolean exchangePublishedSignal(int signal) {
-        if (publishedSignal == signal) {
-            return false;
-        }
-        publishedSignal = signal;
-        return true;
-    }
-
-    /**
-     * Whether Singles accepts this item. Bar-valid items are excluded, so widening the ingot tags
-     * narrows what Singles takes by the same set.
+     * Whether Singles accepts this item. Items from disabled namespaces and items accepted by Bar
+     * are excluded, so widening the reloadable {@code somestacks:ingots} item tag narrows what Singles accepts.
      */
     public static boolean isValidSinglesItem(ItemStack stack) {
         if (stack.isEmpty()) {
@@ -146,33 +91,31 @@ public class SinglesStackBE extends BlockEntity {
     }
 
     public int getRotation() {
-        return rotation;
+        return blockRotation();
     }
 
+    /**
+     * Invalidates the local shape and requests {@link #setBlockRotation(int)} modulo four.
+     * The outer block-state update applies immediately on a server level, including during an inventory batch.
+     */
     public void setRotation(int rotation) {
-        this.rotation = rotation % 4;
-        setChanged();
         cachedShape = null;
-        if (!suppressSync) {
-            syncToClients();
-        }
+        setBlockRotation(rotation);
     }
 
-    /** The rendered rotation of one item, in quarter turns. Out-of-range indexes read as unrotated. */
+    /** The rendered rotation of the item at {@code index}, which must be in {@code [0, SLOTS)}. */
     public int getCubeRotation(int index) {
-        if (index < 0 || index >= SLOTS) {
-            return 0;
-        }
         return cubeRotations[index];
     }
 
+    /**
+     * Sets the rendered item rotation at {@code index} modulo four and publishes immediately unless
+     * a batch is open. The index must be in {@code [0, SLOTS)}.
+     */
     public void setCubeRotation(int index, int cubeRot) {
-        if (index < 0 || index >= SLOTS) {
-            return;
-        }
-        cubeRotations[index] = cubeRot % 4;
+        cubeRotations[index] = QuarterTurns.normalize(cubeRot);
         setChanged();
-        if (!suppressSync) {
+        if (!isBatching()) {
             syncToClients();
         }
     }
@@ -180,7 +123,7 @@ public class SinglesStackBE extends BlockEntity {
     /** Builds the union of the occupied cells' boxes at the current layout rotation. */
     public VoxelShape computeShape() {
         VoxelShape shape = Shapes.empty();
-        int blockRotation = this.rotation;
+        int blockRotation = getRotation();
 
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
@@ -197,8 +140,10 @@ public class SinglesStackBE extends BlockEntity {
      * the cache. Shape queries occur frequently enough that they must not rebuild it unconditionally.
      */
     public VoxelShape getCachedShape() {
-        if (cachedShape == null) {
+        int blockRotation = getRotation();
+        if (cachedShape == null || cachedShapeRotation != blockRotation) {
             cachedShape = computeShape();
+            cachedShapeRotation = blockRotation;
         }
         return cachedShape;
     }
@@ -208,22 +153,14 @@ public class SinglesStackBE extends BlockEntity {
      * Refuses rather than redirecting the item elsewhere, so a caller walking cells from the bottom
      * fills the supported ones in order.
      *
+     * @param index the cell to fill, in {@code [0, SLOTS)}
      * @return whether the item moved; the hand shrinks by one only then
      */
     public boolean depositAt(int index, ItemStack fromHand) {
         if (fromHand.isEmpty()) {
             return false;
         }
-
-        if (index < 0 || index >= SLOTS) {
-            return false;
-        }
-
-        if (!items.getStackInSlot(index).isEmpty()) {
-            return false;
-        }
-
-        if (!SinglesCubeIdx.isGrounded(index, items, rotation, seamBeneath())) {
+        if (!canDepositAt(index)) {
             return false;
         }
 
@@ -243,18 +180,21 @@ public class SinglesStackBE extends BlockEntity {
      * Takes the item out of the named cell and settles the visual column above it downward, drawing
      * items across block seams as needed so nothing is left unsupported.
      *
+     * @param index the cell to empty, in {@code [0, SLOTS)}
      * @return the extracted item, or empty when the cell held nothing
      */
     public ItemStack extractAt(int index) {
-        if (index < 0 || index >= SLOTS) {
-            return ItemStack.EMPTY;
-        }
+        return extractAt(index, null);
+    }
 
+    /** Player-facing extraction variant that preserves the actor through structural cleanup. */
+    public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
+        ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
         int column = SinglesCubeIdx.columnFromIndex(index);
         int y = SinglesCubeIdx.xyzFromIndex(index)[1];
 
         ItemStack extracted;
-        suppressSync = true;
+        beginBatch();
         try {
             extracted = items.extractItem(index, 1, false);
             if (extracted.isEmpty()) {
@@ -262,17 +202,10 @@ public class SinglesStackBE extends BlockEntity {
             }
             shiftColumnDown(column, y);
         } finally {
-            suppressSync = false;
+            endBatchWithoutPublish();
         }
 
-        if (level == null || level.isClientSide) {
-            clearEmptyCubeRotations();
-            setChanged();
-            schedulePublish();
-            return extracted;
-        }
-
-        drawDownColumn(column);
+        drawDownColumn(serverLevel, column, actor);
         return extracted;
     }
 
@@ -281,9 +214,26 @@ public class SinglesStackBE extends BlockEntity {
      * directly below, or null when this block stands on the world instead of on another Singles
      * Stack.
      */
-    private boolean[] seamBeneath() {
-        if (level != null && level.getBlockEntity(getBlockPos().below()) instanceof SinglesStackBE below) {
-            return SinglesCubeIdx.topLayerOccupancy(below.items, below.rotation);
+    public boolean canDepositAt(int index) {
+        return index >= 0
+                && index < SLOTS
+                && items.getStackInSlot(index).isEmpty()
+                && SinglesCubeIdx.isGrounded(
+                        index, items, getRotation(), supportSeamBeneath(level, getBlockPos()));
+    }
+
+    /** Whether an empty, unrotated Singles block at {@code pos} supports its first item. */
+    public static boolean supportsFreshDeposit(Level level, BlockPos pos, int index) {
+        return index >= 0
+                && index < SLOTS
+                && SinglesCubeIdx.freshBlockSupports(index, supportSeamBeneath(level, pos));
+    }
+
+    /** The visual-column occupancy supporting the bottom layer at {@code pos}. */
+    @Nullable
+    public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
+        if (level != null && level.getBlockEntity(pos.below()) instanceof SinglesStackBE below) {
+            return SinglesCubeIdx.topLayerOccupancy(below.items, below.getRotation());
         }
         return null;
     }
@@ -297,7 +247,7 @@ public class SinglesStackBE extends BlockEntity {
      * <p>The cell moved into is always empty — vacated by the extraction that started the pass,
      * emptied by the previous step, or empty already — so the item is written straight into it
      * rather than inserted. Validity gates what a deposit may add rather than what the structure may
-     * carry, so an item stored before an {@code ss ingot} edit or a data pack reload narrowed the
+     * carry, so an item stored before a data pack reload narrowed the
      * rule still moves with its column.
      */
     private void shiftColumnDown(int column, int fromY) {
@@ -322,12 +272,8 @@ public class SinglesStackBE extends BlockEntity {
      * sees as continuous is the visual one. The walk ends at the first block that hands nothing
      * down. The receiving cell is written directly, for the reason {@link #shiftColumnDown} gives.
      */
-    private void drawDownColumn(int column) {
-        Level columnLevel = level;
-        if (columnLevel == null) {
-            return;
-        }
-
+    private void drawDownColumn(ServerLevel columnLevel, int column,
+                                @Nullable ServerPlayer actor) {
         SinglesStackBE be = this;
         int col = column;
 
@@ -336,16 +282,18 @@ public class SinglesStackBE extends BlockEntity {
             int nextColumn = -1;
 
             if (columnLevel.getBlockEntity(be.getBlockPos().above()) instanceof SinglesStackBE above) {
-                int visualColumn = SinglesCubeIdx.visualColumnFromStorage(col, be.rotation);
-                int aboveColumn = SinglesCubeIdx.storageColumnFromVisual(visualColumn, above.rotation);
+                int visualColumn = SinglesCubeIdx.visualColumnFromStorage(
+                        col, be.getRotation());
+                int aboveColumn = SinglesCubeIdx.storageColumnFromVisual(
+                        visualColumn, above.getRotation());
 
                 int sourceIndex = SinglesCubeIdx.indexFromColumn(aboveColumn, 0);
 
                 if (!above.items.getStackInSlot(sourceIndex).isEmpty()) {
                     int targetIndex = SinglesCubeIdx.indexFromColumn(col, SinglesCubeIdx.TOP_LAYER_Y);
 
-                    be.suppressSync = true;
-                    above.suppressSync = true;
+                    be.beginBatch();
+                    above.beginBatch();
                     try {
                         be.items.setStackInSlot(targetIndex,
                                 above.items.extractItem(sourceIndex, 1, false));
@@ -354,8 +302,8 @@ public class SinglesStackBE extends BlockEntity {
                         be.cubeRotations[targetIndex] = above.cubeRotations[sourceIndex];
                         above.shiftColumnDown(aboveColumn, 0);
                     } finally {
-                        above.suppressSync = false;
-                        be.suppressSync = false;
+                        above.endBatchWithoutPublish();
+                        be.endBatchWithoutPublish();
                     }
 
                     next = above;
@@ -363,7 +311,7 @@ public class SinglesStackBE extends BlockEntity {
                 }
             }
 
-            be.publishColumnEdit(columnLevel);
+            be.publishColumnEdit(columnLevel, actor);
 
             if (next == null) {
                 return;
@@ -381,14 +329,13 @@ public class SinglesStackBE extends BlockEntity {
      *
      * <p>A block protection refuses to remove stays, and publishes as the empty block it now is.
      */
-    private void publishColumnEdit(Level columnLevel) {
+    private void publishColumnEdit(ServerLevel columnLevel, @Nullable ServerPlayer actor) {
         clearEmptyCubeRotations();
 
         if (isEmpty()
                 && !(columnLevel.getBlockEntity(getBlockPos().above()) instanceof SinglesStackBE)
-                && columnLevel instanceof ServerLevel serverLevel
-                && WorldEdits.removeChecked(serverLevel, getBlockPos())) {
-            removeEmptyBelow(serverLevel, getBlockPos().below());
+                && removeChecked(actor, columnLevel, getBlockPos())) {
+            removeEmptyBelow(columnLevel, getBlockPos().below(), actor);
             return;
         }
 
@@ -397,15 +344,23 @@ public class SinglesStackBE extends BlockEntity {
     }
 
     /** Stops at the first block that is not an empty Singles Stack, or that protection keeps. */
-    private static void removeEmptyBelow(ServerLevel columnLevel, BlockPos pos) {
+    private static void removeEmptyBelow(ServerLevel columnLevel, BlockPos pos,
+                                         @Nullable ServerPlayer actor) {
         BlockPos current = pos;
 
         while (columnLevel.getBlockEntity(current) instanceof SinglesStackBE be && be.isEmpty()) {
-            if (!WorldEdits.removeChecked(columnLevel, current)) {
+            if (!removeChecked(actor, columnLevel, current)) {
                 return;
             }
             current = current.below();
         }
+    }
+
+    private static boolean removeChecked(@Nullable ServerPlayer actor, ServerLevel level,
+                                         BlockPos pos) {
+        return actor == null
+                ? WorldEdits.removeChecked(level, pos)
+                : WorldEdits.removeChecked(actor, level, pos);
     }
 
     /**
@@ -420,124 +375,36 @@ public class SinglesStackBE extends BlockEntity {
         }
     }
 
-    public boolean isEmpty() {
-        return ItemOps.isHandlerEmpty(items);
-    }
-
-    /** Synchronizes this block's contents and presentation state to tracking clients. */
-    public void syncToClients() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
-        }
-    }
-
-    /**
-     * Opens a batch of edits that should publish once. Per-slot synchronization is suppressed, and
-     * {@link #endBatch()} schedules publication only if this block changed. Column draw-down
-     * publishes through its own path, so a new batch clears any prior touch state.
-     */
-    void beginBatch() {
-        suppressSync = true;
-        batchTouched = false;
-    }
-
-    void endBatch() {
-        suppressSync = false;
-        if (batchTouched) {
-            batchTouched = false;
-            schedulePublish();
-        }
-    }
-
-    /**
-     * Marks this block for publication and schedules a pass on the column's bottom block.
-     *
-     * <p>Publishing costs an update packet, a comparator walk of the whole column, and a light
-     * recompute. A cell holds one item, so a caller moving a stack calls the handler once per item,
-     * and one removal draws an item down out of every block above it; deferring to a block tick on
-     * the column's bottom keeps either from paying that at each step.
-     */
-    private void schedulePublish() {
-        if (level == null || level.isClientSide) {
-            return;
-        }
-        publishPending = true;
-
-        SinglesColumn column = column();
-        if (column != null) {
-            column.markDirty();
-        }
-    }
-
-    /**
-     * Publishes this block's deferred contents and emitted light level. Comparator output belongs
-     * to the column and is published once for the whole run by
-     * {@link SinglesColumn#publishPending()}.
-     *
-     * @return whether anything was owed
-     */
-    boolean publishIfPending() {
-        Level columnLevel = level;
-        if (columnLevel == null || columnLevel.isClientSide || !publishPending) {
-            return false;
-        }
-        publishPending = false;
-        syncToClients();
-
-        int newLight = ItemOps.calculateLightLevelFromItems(items);
-        BlockState state = getBlockState();
-        if (state.getValue(SinglesStackBlock.LIGHT_LEVEL) != newLight) {
-            columnLevel.setBlock(getBlockPos(),
-                    state.setValue(SinglesStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
+    @Override
+    protected boolean isValidClientStackData(CompoundTag tag) {
+        if (!tag.contains(TAG_CUBE_ROTATIONS, Tag.TAG_INT_ARRAY)) return false;
+        int[] rotations = tag.getIntArray(TAG_CUBE_ROTATIONS);
+        if (rotations.length != SLOTS) return false;
+        for (int rotation : rotations) {
+            if (rotation < 0 || rotation >= QuarterTurns.COUNT) return false;
         }
         return true;
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        if (tag.contains(TAG_ITEMS) && items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS))) {
-            setChanged();
-        }
-        if (tag.contains(TAG_ROTATION)) {
-            rotation = tag.getInt(TAG_ROTATION);
-        }
+    protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
         if (tag.contains(TAG_CUBE_ROTATIONS)) {
             int[] loaded = tag.getIntArray(TAG_CUBE_ROTATIONS);
             if (loaded.length == SLOTS) {
                 cubeRotations = loaded.clone();
+                for (int i = 0; i < cubeRotations.length; i++) {
+                    cubeRotations[i] = QuarterTurns.normalize(cubeRotations[i]);
+                }
             }
         }
         cachedShape = null;
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put(TAG_ITEMS, items.serializeNBT(registries));
-        tag.putInt(TAG_ROTATION, rotation);
+    protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
         // IntArrayTag holds the array it is given, and an integrated server hands its update
         // packets to the client unserialized: both sides must get their own copy, or the client
         // renders the server's in-progress rotations against its own not-yet-updated items.
         tag.putIntArray(TAG_CUBE_ROTATIONS, cubeRotations.clone());
     }
-
-    /** This block's local slots, for callers that already hold the block entity. */
-    public StackItemStorage getItems() {
-        return items;
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        return tag;
-    }
-
 }

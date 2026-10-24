@@ -2,18 +2,13 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
-import com.github.crittscott.somestacks.network.DepositPkt;
-import com.github.crittscott.somestacks.network.ExtractPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
-import com.github.crittscott.somestacks.network.RotateBlockPkt;
-import com.github.crittscott.somestacks.network.RotateItemPkt;
-import com.github.crittscott.somestacks.network.TogglePermanentPkt;
-import com.github.crittscott.somestacks.util.StackMode;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -23,41 +18,60 @@ import net.minecraftforge.network.PacketDistributor;
 
 /**
  * The client's gesture entry point: the three right-click events feed
- * {@link InteractionRuleRegistry}, and the send methods here are how a matched rule reaches the
- * server. Also holds the selected placement mode, which is client state alone.
+ * {@link InteractionRuleRegistry}. A matched block rule is carried by the normal vanilla use
+ * packet; the custom packet synchronizes only the selected mode and modifier state.
  *
  * <p>A canceled event denies both the block use and the item use, so a gesture never also spends
  * what the player is holding.
  */
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
-public final class ClientEvents implements ClientGestures.Sender {
+public final class ClientEvents {
     private ClientEvents() {}
 
     public static void init() {
-        ClientGestures.setSender(new ClientEvents());
+        ClientGestures.setSender(payload ->
+                ModNetworking.CHANNEL.send(payload, PacketDistributor.SERVER.noArg()));
+    }
+
+    @SubscribeEvent
+    public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
+        ClientRenderCommands.register(event.getDispatcher(), new ClientRenderCommands.Feedback<>() {
+            @Override
+            public void success(CommandSourceStack source,
+                                Component message) {
+                source.sendSuccess(() -> message, false);
+            }
+
+            @Override
+            public void failure(CommandSourceStack source,
+                                Component message) {
+                source.sendFailure(message);
+            }
+        });
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty evt) {
-        if (evt.isCanceled()) return;
-
+        // RightClickEmpty is a pure notification: there is no vanilla action behind an empty-hand
+        // air click to suppress, so the rules run but nothing is canceled.
         InteractionContext ctx = InteractionContext.forAirClick(
                 evt.getEntity(), evt.getLevel(), evt.getHand(),
-                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
+                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown(),
+                ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
+        ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processEmptyHandRules(ctx);
-
-        if (ctx.shouldCancel()) {
-            evt.setCanceled(true);
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem evt) {
+        if (!evt.getLevel().isClientSide()) return;
         if (evt.isCanceled()) return;
 
         InteractionContext ctx = InteractionContext.forAirClick(
                 evt.getEntity(), evt.getLevel(), evt.getHand(),
-                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
+                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown(),
+                ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
+        ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processItemRules(ctx);
 
         if (ctx.shouldCancel()) {
@@ -68,9 +82,8 @@ public final class ClientEvents implements ClientGestures.Sender {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClick(PlayerInteractEvent.RightClickBlock evt) {
         // Only the client-side firing drives the gesture rules. In single player the integrated
-        // server shares this event bus, and the server re-fires RightClickBlock when consulting
-        // protection for our own deposit/extract packets; handling that re-fire would re-run the
-        // rules and cancel the very interaction being validated.
+        // server shares this event bus, and adjacent protection consultation re-fires
+        // RightClickBlock; handling that server-side re-fire would re-run the client rules.
         if (!evt.getLevel().isClientSide()) {
             return;
         }
@@ -80,6 +93,7 @@ public final class ClientEvents implements ClientGestures.Sender {
         InteractionContext ctx = InteractionContext.forBlockClick(
                 evt.getEntity(), evt.getLevel(), evt.getHand(), evt.getPos(), evt.getFace(),
                 ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
+        ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processBlockRules(ctx);
 
         if (ctx.shouldCancel()) {
@@ -91,37 +105,5 @@ public final class ClientEvents implements ClientGestures.Sender {
             // the held item, so a bucket empties itself into the space the gesture is aiming at.
             evt.setCancellationResult(InteractionResult.SUCCESS);
         }
-    }
-
-    @Override
-    public void sendTogglePermanent(BlockPos pos) {
-        ModNetworking.CHANNEL.send(new TogglePermanentPkt(pos), PacketDistributor.SERVER.noArg());
-    }
-
-    @Override
-    public void sendPlaceAndDeposit(StackMode mode, BlockPos placePos, Direction face) {
-        ModNetworking.CHANNEL.send(
-                new PlaceAndDepositPkt(mode.toBlockType(), face, placePos),
-                PacketDistributor.SERVER.noArg());
-    }
-
-    @Override
-    public void sendDeposit(BlockPos pos, BlockPos clickedPos) {
-        ModNetworking.CHANNEL.send(new DepositPkt(pos, clickedPos), PacketDistributor.SERVER.noArg());
-    }
-
-    @Override
-    public void sendExtract(BlockPos pos, int index) {
-        ModNetworking.CHANNEL.send(new ExtractPkt(pos, index), PacketDistributor.SERVER.noArg());
-    }
-
-    @Override
-    public void sendRotateBlock(BlockPos pos) {
-        ModNetworking.CHANNEL.send(new RotateBlockPkt(pos), PacketDistributor.SERVER.noArg());
-    }
-
-    @Override
-    public void sendRotateItem(BlockPos pos, int slotIndex) {
-        ModNetworking.CHANNEL.send(new RotateItemPkt(pos, slotIndex), PacketDistributor.SERVER.noArg());
     }
 }

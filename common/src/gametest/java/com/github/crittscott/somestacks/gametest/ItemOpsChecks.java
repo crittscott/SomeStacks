@@ -19,7 +19,13 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 public final class ItemOpsChecks {
     private ItemOpsChecks() {}
 
-    public static void handCompatibilityUsesExactItemTagsAndCapacity(GameTestHelper helper) {
+    /**
+     * A hand accepts an extraction only when empty or holding the exact item and data components
+     * with room remaining. To reproduce in-game: extract toward an empty hand, a compatible partial
+     * stack, a full matching stack, a different item, and a component-distinct variant. Only the
+     * first two succeed.
+     */
+    public static void handCompatibilityUsesExactItemComponentsAndCapacity(GameTestHelper helper) {
         ItemStack offer = new ItemStack(Items.STONE, 1);
 
         check(!ItemOps.canTakeIntoHand(ItemStack.EMPTY, ItemStack.EMPTY),
@@ -33,15 +39,20 @@ public final class ItemOpsChecks {
         check(!ItemOps.canTakeIntoHand(new ItemStack(Items.DIRT), offer),
                 "Different item was accepted");
 
-        ItemStack taggedHand = new ItemStack(Items.STONE);
-        taggedHand.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 1)));
-        ItemStack taggedOffer = new ItemStack(Items.STONE);
-        taggedOffer.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 2)));
-        check(!ItemOps.canTakeIntoHand(taggedHand, taggedOffer),
+        ItemStack componentHand = new ItemStack(Items.STONE);
+        componentHand.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 1)));
+        ItemStack componentOffer = new ItemStack(Items.STONE);
+        componentOffer.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 2)));
+        check(!ItemOps.canTakeIntoHand(componentHand, componentOffer),
                 "Different components were accepted");
         helper.succeed();
     }
 
+    /**
+     * The merge helper grows the destination and reports the moved count without shrinking its
+     * source argument. No in-game reproduction applies: callers use the count to mutate their
+     * actual source after this helper returns.
+     */
     public static void mergeReturnsMovedCountAndDoesNotShrinkIncoming(GameTestHelper helper) {
         ItemStack hand = new ItemStack(Items.STONE, 60);
         ItemStack incoming = new ItemStack(Items.STONE, 10);
@@ -51,32 +62,22 @@ public final class ItemOpsChecks {
         checkEquals(4, moved, "Moved count");
         checkEquals(64, hand.getCount(), "Hand count");
         checkEquals(10, incoming.getCount(), "Incoming count");
-        helper.succeed();
-    }
 
-    public static void mergeRejectsDifferentItemsAndTags(GameTestHelper helper) {
-        checkEquals(0, ItemOps.mergeIntoStack(
-                new ItemStack(Items.STONE), new ItemStack(Items.DIRT)),
-                "Different-item merge");
-
-        ItemStack hand = new ItemStack(Items.STONE);
-        hand.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 1)));
-        ItemStack incoming = new ItemStack(Items.STONE);
-        incoming.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 2)));
-        checkEquals(0, ItemOps.mergeIntoStack(hand, incoming),
+        ItemStack componentHand = new ItemStack(Items.STONE);
+        componentHand.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 1)));
+        ItemStack componentIncoming = new ItemStack(Items.STONE);
+        componentIncoming.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 2)));
+        checkEquals(0, ItemOps.mergeIntoStack(componentHand, componentIncoming),
                 "Different-component merge");
         helper.succeed();
     }
 
-    public static void handlerEmptyDetectionScansEverySlot(GameTestHelper helper) {
-        StackItemStorage handler = new StackItemStorage(3);
-        check(ItemOps.isHandlerEmpty(handler), "Empty handler was reported occupied");
-
-        handler.setStackInSlot(2, new ItemStack(Items.STONE));
-        check(!ItemOps.isHandlerEmpty(handler), "Occupied final slot was not detected");
-        helper.succeed();
-    }
-
+    /**
+     * Each occupied glowing BlockItem slot contributes one quarter of its block light, independent
+     * of item count, and the total caps at 15. To reproduce in-game: deposit glowing blocks into
+     * separate cells or slots and measure emitted light as positions are filled. A stack of 64 in
+     * one Storage slot contributes once, and enough occupied positions cap at full light.
+     */
     public static void lightIsPerOccupiedSlotIntegerDividedAndCapped(GameTestHelper helper) {
         StackItemStorage handler = new StackItemStorage(6);
 

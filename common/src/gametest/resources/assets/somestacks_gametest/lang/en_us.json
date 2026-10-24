@@ -1,0 +1,4 @@
+{
+  "somestacks_gametest.message.client_callback_passed": "Some Stacks client callback and render-profile checks passed.",
+  "somestacks_gametest.message.client_callback_failed": "Some Stacks client callback or render-profile checks failed: %s"
+}

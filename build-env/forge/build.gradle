@@ -21,6 +21,11 @@ loom {
     }
 
     runs {
+        clientGameTests {
+            client()
+            name 'Client Game Tests'
+            source sourceSets.gametest
+        }
         gameTestServer {
             server()
             environment 'gametestserver'
@@ -99,3 +104,7 @@ sourcesJar {
 remapJar {
     inputFile.set shadowJar.archiveFile
 }
+
+// Register the server-policy migration before Forge selects the world's config.
+loom { forge { mixinConfig "somestacks-migration.mixins.json" } }
+jar { manifest { attributes 'MixinConfigs': 'somestacks-migration.mixins.json' } }

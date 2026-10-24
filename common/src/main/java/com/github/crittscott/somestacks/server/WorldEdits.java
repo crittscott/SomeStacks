@@ -1,38 +1,29 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.PlatformServices;
+import com.github.crittscott.somestacks.block.StackBlockEntity;
+import com.github.crittscott.somestacks.util.ViewRays;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
- * Vanilla world-edit mechanics for automated growth and removal: world border and spawn
- * protection, entity obstruction, and the actual block placement/removal. The one loader-specific
- * decision each carries — who the automation actor is, and whether a claim/logging mod vetoes the
- * edit — is delegated to {@link EditAuthority}.
+ * Vanilla world-edit mechanics for stack growth and removal: world border and spawn protection,
+ * entity obstruction, actor propagation, and the actual block edit. Automation identity and
+ * loader-native claim/logging hooks are delegated to {@link EditAuthority}.
  */
 public final class WorldEdits {
+    private static final ThreadLocal<Boolean> consultingAdjacent = ThreadLocal.withInitial(() -> false);
     private WorldEdits() {
-    }
-
-    private static EditAuthority authority;
-
-    /** Installed once by the loader's entry point before any world logic can run. */
-    public static void setAuthority(EditAuthority impl) {
-        authority = impl;
-    }
-
-    private static EditAuthority authority() {
-        return authority;
     }
 
     /** Vanilla's own gate on a block interaction: world border and spawn protection. */
@@ -45,27 +36,53 @@ public final class WorldEdits {
         return isProtected(automationActor(level), pos);
     }
 
+    /** Vanilla and loader query checks used before automation promises growth capacity. */
+    public static boolean mayPlace(ServerPlayer player, BlockPos pos) {
+        return !isProtected(player, pos)
+                && PlatformServices.editAuthority().mayPlace(player, player.serverLevel(), pos);
+    }
+
+    public static boolean mayPlace(ServerLevel level, BlockPos pos) {
+        return mayPlace(automationActor(level), pos);
+    }
+
+    /** Consults destination protection without allowing the consultation to execute gestures. */
+    public static boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
+        if (isConsultingAdjacent() || isProtected(player, pos)) {
+            return false;
+        }
+        consultingAdjacent.set(true);
+        try {
+            return PlatformServices.editAuthority().mayUseAdjacent(player, pos);
+        } finally {
+            consultingAdjacent.remove();
+        }
+    }
+
+    public static boolean isConsultingAdjacent() {
+        return consultingAdjacent.get();
+    }
+
+    /** Destination hit used by loader protection listeners for a neighboring deposit. */
+    public static BlockHitResult adjacentHit(ServerPlayer player, BlockPos pos) {
+        var level = player.serverLevel();
+        var ray = ViewRays.of(player);
+        BlockHitResult hit = level.getBlockState(pos).getInteractionShape(level, pos)
+                .clip(ray.eye(), ray.end(), pos);
+        return hit != null ? hit
+                : new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
+    }
+
     /** The actor automation-driven growth and removal are attributed to. */
     public static ServerPlayer automationActor(ServerLevel level) {
-        return authority().automationActor(level);
+        return PlatformServices.editAuthority().automationActor(level);
     }
 
     /** Vanilla's placement obstruction test for a block-local collision shape. */
     public static boolean isUnobstructed(ServerLevel level, BlockPos pos, VoxelShape localShape) {
-        if (localShape.isEmpty()) {
-            return true;
-        }
-        VoxelShape worldShape = localShape.move(pos.getX(), pos.getY(), pos.getZ());
-        return level.getEntities(
-                (Entity) null,
-                worldShape.bounds(),
-                entity -> !entity.isRemoved()
-                        && entity.blocksBuilding
-                        && Shapes.joinIsNotEmpty(
-                                worldShape,
-                                Shapes.create(entity.getBoundingBox()),
-                                BooleanOp.AND))
-                .isEmpty();
+        return localShape.isEmpty()
+                || level.isUnobstructed(
+                        null, localShape.move(pos.getX(), pos.getY(), pos.getZ()));
     }
 
     /**
@@ -81,9 +98,11 @@ public final class WorldEdits {
     }
 
     /**
-     * Places {@code state} at {@code pos}, restoring the previous state if a claim/logging mod
-     * vetoes it. {@code finalCollision} is the completed placement's collision shape, since a
-     * block-entity stack can start empty and acquire its real shape only with its first deposit.
+     * Places {@code state} at {@code pos}. Loader checks that can run as queries happen before the
+     * world changes; loader placement transactions defer publication until protection accepts
+     * the edit, restoring captured state and block-entity data on denial. {@code finalCollision} is the
+     * completed placement's collision shape, since a block-entity stack can start empty and acquire
+     * its real shape only with its first deposit.
      */
     public static boolean placeChecked(Player placer, ServerLevel level, BlockPos pos,
                                        BlockState state, Direction placedAgainst,
@@ -91,15 +110,14 @@ public final class WorldEdits {
         if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
-        EditAuthority.PlacementVeto placementVeto = authority().preparePlacement(level, pos);
-        BlockState previous = level.getBlockState(pos);
-        if (!level.setBlock(pos, state, Block.UPDATE_ALL)) {
+        if (!PlatformServices.editAuthority().place(placer, level, pos, state, placedAgainst)) {
             return false;
         }
-        if (placementVeto.isVetoed(placer, placedAgainst)) {
-            level.setBlock(pos, previous, Block.UPDATE_ALL);
-            return false;
-        }
+        BlockState placedState = level.getBlockState(pos);
+        placedState.getBlock().setPlacedBy(
+                level, pos, placedState, placer, placer.getMainHandItem());
+        level.gameEvent(
+                GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(placer, placedState));
         return true;
     }
 
@@ -110,13 +128,30 @@ public final class WorldEdits {
      * @return whether the block was removed
      */
     public static boolean removeChecked(ServerLevel level, BlockPos pos) {
-        if (isProtected(level, pos)) {
+        return removeChecked(automationActor(level), level, pos);
+    }
+
+    /**
+     * Removes a stack block on behalf of {@code actor}, preserving that identity through vanilla
+     * protection, loader-native removal events, and the emitted game event.
+     */
+    public static boolean removeChecked(ServerPlayer actor, ServerLevel level, BlockPos pos) {
+        if (isProtected(actor, pos)) {
             return false;
         }
         BlockState state = level.getBlockState(pos);
-        if (authority().vetoesRemoval(level, pos, state)) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof StackBlockEntity stack && stack.getItems().hasRetainedItems()) {
             return false;
         }
-        return level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        if (PlatformServices.editAuthority().vetoesRemoval(actor, level, pos, state, blockEntity)) {
+            return false;
+        }
+        if (!level.removeBlock(pos, false)) {
+            return false;
+        }
+        PlatformServices.editAuthority().afterRemoval(actor, level, pos, state, blockEntity);
+        level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(actor, state));
+        return true;
     }
 }

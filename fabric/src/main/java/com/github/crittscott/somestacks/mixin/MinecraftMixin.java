@@ -25,16 +25,15 @@ abstract class MinecraftMixin {
     @Inject(method = "startUseItem", at = @At("HEAD"))
     private void somestacks$onEmptyHandAirClick(CallbackInfo callback) {
         if (player == null
-                || !player.getMainHandItem().isEmpty()
-                || !player.getOffhandItem().isEmpty()
-                || hitResult == null
-                || hitResult.getType() != HitResult.Type.MISS) {
+                || !ClientGestures.isEmptyMainHandAirClick(player, hitResult)) {
             return;
         }
 
         InteractionContext context = InteractionContext.forAirClick(
                 player, player.level(), InteractionHand.MAIN_HAND,
-                ClientGestures.currentMode(), FabricKeyMappings.STACK_MODE_KEY.isDown());
+                ClientGestures.currentMode(), FabricKeyMappings.STACK_MODE_KEY.isDown(),
+                ClientGestures.isHittingBlock(hitResult));
+        ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processEmptyHandRules(context);
     }
 }

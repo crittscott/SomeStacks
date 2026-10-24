@@ -33,9 +33,9 @@ Fabric uses Loom's current Mixin remapping path without the legacy annotation pr
 
 The common module declares Fabric Loader as compile-only to resolve Minecraft's environment annotations; it is not bundled or added as a runtime requirement for Forge or NeoForge.
 
-Each loader module compiles against common through the `common` configuration. Fabric also places it on its runtime and development classpaths; Forge and NeoForge runs receive common only through their `loom.mods` source sets, because a second copy would split its packages across two modules. Fabric and NeoForge declare FTB Chunks as compile-only (`ftb-chunks-fabric` and `ftb-chunks-neoforge`); it is never bundled, and `FtbChunksProtection` consults it only when it is installed. Fabric metadata suggests `ftbchunks` without requiring it; Forge and NeoForge metadata do not mention it.
+Each loader module compiles against common through the `common` configuration. Fabric also places it on its runtime and development classpaths; Forge and NeoForge runs receive common only through their `loom.mods` source sets, because a second copy would split its packages across two modules. Fabric and NeoForge declare FTB Chunks as compile-only (`ftb-chunks-fabric` and `ftb-chunks-neoforge`); it is never bundled, and `FtbChunksProtection` consults it only when it is installed. Fabric metadata suggests Common Protection API without requiring it; both optional claim integrations remain unbundled. Fabric compiles against Common Protection API 1.0.0 from Nucleoid Maven. `-PwithCommonProtectionApi=true` adds it to development runtime and selects provider-backed GameTests; the default runs the absence checks.
 
-Fabric, Forge, and NeoForge each call the root `configureGameTests` helper, which creates a `gametest` source set over the shared scenarios in `common/src/gametest/java`, registers `generateGameTestStructures` to decode the checked-in `common/src/gametest/fixtures/somestacks_empty.nbt.b64` into the source set's generated resources, and registers `gametestJavadoc`. Each loader maps that source set to a separate `somestacks_gametest` development mod and wires it into a `runGameTestServer` run: Forge and NeoForge enable the `somestacks` GameTest namespace, Fabric passes `-Dfabric-api.gametest` with a report file and clears its development GameTest world before each run. There are no client GameTest runs.
+Fabric, Forge, and NeoForge each call the root `configureGameTests` helper, which creates a `gametest` source set over the shared scenarios in `common/src/gametest/java`, registers `generateGameTestStructures` to decode the checked-in `common/src/gametest/fixtures/somestacks_empty.nbt.b64` into the source set's generated resources, and registers `gametestJavadoc`. Each loader maps that source set to a separate `somestacks_gametest` development mod and wires it into a `runGameTestServer` run: Forge and NeoForge enable the `somestacks` GameTest namespace, Fabric passes `-Dfabric-api.gametest` with a report file and clears its development GameTest world before each run. Each loader also has a `runClientGameTests` run with the `/ssclienttest` callback/profile check. Fabric test metadata conditionally includes the provider-backed or absence checks.
 
 On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX launcher. The wrapper selects the Gradle distribution, while the launcher selects its host JVM from the machine's Java configuration. Use Java 21 for the Gradle host JVM, including IntelliJ's Gradle JVM setting, and select the Gradle wrapper in IntelliJ. The root build declares a Java 21 toolchain, which Gradle applies by convention to compilation, Javadoc, and Gradle-launched Java executions; that toolchain does not select the host JVM.
 
@@ -60,6 +60,7 @@ The root `collectJars` task copies each enabled loader's already-built productio
 | Fabric Loader | `net.fabricmc:fabric-loader:0.16.0` | Fabric loader dependency |
 | Fabric API | `net.fabricmc.fabric-api:fabric-api:0.102.0+1.21.1` | Fabric runtime and development API |
 | FTB Chunks | `dev.ftb.mods:ftb-chunks-fabric:2101.1.21`, `dev.ftb.mods:ftb-chunks-neoforge:2101.1.21` | Optional Fabric and NeoForge claim API; compile-only |
+| Common Protection API | `eu.pb4:common-protection-api:1.0.0` | Optional Fabric protection queries; compile-only unless enabled for development |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
 
 The Java setting is exact only at the language/toolchain-major level. The repository does not pin a JDK vendor, distribution, or patch release, and it does not pin the host JVM that runs Gradle. Gradle core plugins such as `base` and `java` use Gradle `9.5.1` and therefore have no separate declared version.
@@ -78,7 +79,7 @@ These values do not select build tools, but they are versioned inputs consumed b
 | NeoForge compatibility | `[21.1.100,22)` |
 | NeoForge JavaFML loader compatibility | `[1,)` |
 | Fabric Loader compatibility | `>=0.16.0` |
-| FTB Chunks suggested version (Fabric metadata) | any (`*`) |
+| Common Protection API suggested version (Fabric metadata) | `>=1.0.0` |
 | Fabric API runtime declaration | `>=0.102.0+1.21.1`; compilation uses `0.102.0+1.21.1` |
 
 ## Resolution and version authorities

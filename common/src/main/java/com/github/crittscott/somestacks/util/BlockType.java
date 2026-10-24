@@ -15,13 +15,6 @@ public enum BlockType {
     SINGLES_STACK,
     BAR_STACK;
 
-    /** The type with this ordinal, or null when the ordinal names none. */
-    @Nullable
-    public static BlockType fromOrdinal(int ordinal) {
-        BlockType[] values = values();
-        return ordinal >= 0 && ordinal < values.length ? values[ordinal] : null;
-    }
-
     /** The type whose block this is, or null when it names none of the three. */
     @Nullable
     public static BlockType of(Block block) {
@@ -35,9 +28,9 @@ public enum BlockType {
 
     public Block getBlock() {
         return switch (this) {
-            case STORAGE_STACK -> CommonRegistry.STORAGE_STACK_BLOCK.get();
-            case SINGLES_STACK -> CommonRegistry.SINGLES_STACK_BLOCK.get();
-            case BAR_STACK -> CommonRegistry.BAR_STACK_BLOCK.get();
+            case STORAGE_STACK -> CommonRegistry.storageStackBlock();
+            case SINGLES_STACK -> CommonRegistry.singlesStackBlock();
+            case BAR_STACK -> CommonRegistry.barStackBlock();
         };
     }
 
