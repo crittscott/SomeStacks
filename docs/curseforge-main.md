@@ -3,7 +3,7 @@
 
 # Some Stacks
 
-For Minecraft **1.20.1, 1.21.1/4/8/11, and 26.***. Install the file matching your Minecraft version and loader; loader availability varies by Minecraft version.
+For Minecraft **1.20.1, 1.21.1/4/8/11, and 26.***.
 
 **Storage you can see.** Why keep that gold hidden away in a chest? Can't remember which shulker box has all your granite? Put it all out where you can see it using Bar Stacks or Storage Stacks. Like the look of that Mekanism Digital Miner but can't fit it in your study? Place a small copy and rotate it as you like with a Singles Stack. Need just a little light? Add torches, for a light level of 3 each.
 
@@ -13,8 +13,8 @@ An extension and complete rewrite of [Stackable](https://www.curseforge.com/mine
 
 | | | |
 | --- | --- | --- |
-| **Storage Stack** | 27 item stacks in a 3×3×3 grid | The bulk option. A vertical run of them is one shared inventory that fills from the bottom, sorts itself, packs down, and shrinks when you empty it. |
-| **Singles Stack** | 64 items, one per cell, in a 4×4×4 grid | The display case. Every item needs something under it, and pulling one out drops the rest of its column down a layer. Rotate individual items to line them up. |
+| **Storage Stack** | 27 item stacks in a 3×3×3 grid | The bulk option. A vertical run of them is one shared inventory that fills from the bottom, sorts itself, packs down, and shrinks or grows as needed. |
+| **Singles Stack** | 64 items, one per cell, in a 4×4×4 grid | The display case. Every item needs something under it, and pulling one out drops the rest of its column down a layer. Rotate individual items for best display. |
 | **Bar Stack** | 64 ingots or bricks as stacked bars | The vault. Eight alternating layers of eight bars, each resting on the ones below. Pull a bar out from underneath and everything it was holding up comes down. |
 
 No items and no recipes. A stack exists because you put something in it, and it goes away when you take everything back out. Storage piles can be set permanent for connection to inventory management systems.
@@ -23,7 +23,7 @@ No items and no recipes. A stack exists because you put something in it, and it 
 
 1. Hold **V** and **right-click the air** to cycle the placement mode: Storage, Singles, Bar, Toggle Permanent.
 2. Hold **V** and **right-click a block** with something in your hand to create a stack.
-3. Keep holding **V** and clicking to add more. The stack grows upward on its own when it fills, to a server-config-determined maximum height. Singles and Bar stacks require you to choose the placement location.
+3. Keep holding **V** and clicking to add more. The stack grows upward on its own when it fills, to a server-config-determined maximum height. Singles and Bar stacks require you to choose the in-block placement location.
 4. **Right-click without V** to take an item back out.
 
 ## Details
