@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -39,6 +40,9 @@ public final class ServerConfig {
      */
     public static final List<String> DEFAULT_DISABLE_ITEMS = List.of("evilcraft:broom_part");
 
+    public static final int MAX_NAMESPACE_LENGTH = 256;
+    public static final int MAX_NAMESPACE_ENTRIES = 256;
+
     private static Backend backend;
     private static volatile Settings settings = defaults();
     private static volatile Set<String> disabledMods = Set.of();
@@ -50,21 +54,35 @@ public final class ServerConfig {
     public static Backend backend() { return backend; }
     /** Current immutable in-memory policy. */
     public static Settings settings() { return settings; }
-    /** Publishes already-validated policy and rebuilds admission sets; does not save or synchronize clients. */
+    /** Validates namespace lists and rebuilds admission sets; does not save or synchronize clients. */
     public static void apply(Settings policy) {
-        settings = policy;
+        List<String> mods = prepareNamespaces(policy.disableMods(), "disable_mods");
+        List<String> generated = prepareNamespaces(policy.genMods(), "gen_mods");
+        settings = new Settings(policy.maxPileHeight(), policy.enableStorageStackBlock(),
+                policy.enableSinglesStackBlock(), policy.enableBarStackBlock(), mods, policy.disableItems(),
+                policy.renderGalleryPlacementsPerTick(), policy.galleryEnabled(),
+                policy.galleryPermissionLevel(), generated, policy.genItems());
         bakeServerLists();
     }
     /** Loads and applies this world's policy using the installed backend before world activity. */
-    public static void loadFor(MinecraftServer server) { apply(backend.loadFor(server)); }
-    /**
-     * Applies the backend's current policy. True means a backend existed, not that parsing succeeded;
-     * a backend may return defaults for invalid input. Does not save or synchronize clients.
-     */
+    public static void loadFor(MinecraftServer server) {
+        apply(defaults());
+        try {
+            apply(backend.loadFor(server));
+        } catch (IllegalArgumentException rejected) {
+            SomeStacksCommon.LOGGER.warn("Keeping default server policy: {}", rejected.getMessage());
+        }
+    }
+    /** Refreshes policy without saving or sending packets; rejected namespaces preserve active policy. */
     public static boolean reload() {
         if (backend == null) return false;
-        apply(backend.reload());
-        return true;
+        try {
+            apply(backend.reload());
+            return true;
+        } catch (IllegalArgumentException rejected) {
+            SomeStacksCommon.LOGGER.warn("Keeping previous server policy: {}", rejected.getMessage());
+            return false;
+        }
     }
     /** Saves current policy without changing it; false when no backend exists or saving fails. */
     public static boolean save() { return backend != null && backend.save(settings); }
@@ -163,12 +181,43 @@ public final class ServerConfig {
 
     }
 
+    /** Validates namespace syntax using the platform's public identifier parser. */
+    public static boolean isValidNamespace(String namespace) {
+        return !namespace.isEmpty() && ResourceLocation.tryParse(namespace + ":_") != null;
+    }
+
+    private static List<String> prepareNamespaces(List<String> entries, String label) {
+        Set<String> result = new LinkedHashSet<>();
+        for (String entry : entries) {
+            String namespace = entry.trim().toLowerCase(Locale.ROOT);
+            if (namespace.isEmpty()) continue;
+            if (!isValidNamespace(namespace)) {
+                SomeStacksCommon.LOGGER.warn("Ignoring malformed namespace '{}' in {}", entry, label);
+                continue;
+            }
+            if (namespace.length() > MAX_NAMESPACE_LENGTH) {
+                throw new IllegalArgumentException(label + " contains an overlong namespace");
+            }
+            result.add(namespace);
+            if (result.size() > MAX_NAMESPACE_ENTRIES) {
+                throw new IllegalArgumentException(label + " exceeds the namespace entry limit");
+            }
+        }
+        return List.copyOf(result);
+    }
+
     /**
      * Adds an entry to one of the server's text lists, re-bakes the lookup sets, and saves.
      *
      * @return whether the entry was added; false when the list already contains it
      */
     public static boolean addListEntry(ListSetting list, String entry) {
+        if (list == DISABLE_MODS || list == GEN_MODS) {
+            entry = entry.trim().toLowerCase(Locale.ROOT);
+            if (entry.length() > MAX_NAMESPACE_LENGTH || !isValidNamespace(entry)) {
+                throw new IllegalArgumentException("Invalid namespace");
+            }
+        }
         List<String> updated = new ArrayList<>(list.get());
         for (String existing : updated) {
             if (existing.equalsIgnoreCase(entry)) {

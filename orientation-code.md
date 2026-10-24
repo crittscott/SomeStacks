@@ -12,8 +12,6 @@ Java 21, Minecraft 1.21.1; package `com.github.crittscott.somestacks`, id `somes
 
 `common` ships in each loader JAR without loader imports. `PlatformServices.Backend` supplies paths, versions, networking and edit authority. Loaders own gestures and automation adapters; `CommonRegistry` supplies identifiers and lookups.
 
-Blocks and local storage:
-
 `ShapedStackBlock` gives Singles/Bar occupied-content targeting, outlines and collision, full-block interaction, and empty visual shapes. Targeting passes through empty space; empty stacks have no outline.
 
 | Block | Block entity | Local storage |
@@ -51,7 +49,7 @@ Blocks and local storage:
 | Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
 | Edit protection | vanilla plus place/break events | vanilla plus place/break events | vanilla and break callbacks; optional Common Protection API queries |
 
-Fabric checks protocol markers both ways.
+Fabric checks both protocol markers.
 
 ## Runtime and movement model
 
@@ -85,19 +83,17 @@ The sole play-phase server-to-client payload is a cached config snapshot. Decodi
 
 Non-sneaking stack clicks run from `StackBlock.useItemOn`/`useWithoutItem`; loader server hooks handle sneaking torch rotation plus placement or deposit reached through a neighboring non-stack block. Both pass vanilla's `BlockHitResult` to `StackInteractions`, after target, reach pacing, and the ordinary interaction event. Common handling validates hand, spectator/protection state, item, support, enablement, height, obstruction and authority. Placement plus first deposit is one transaction; successful player creation fires `PLACED_BLOCK` with the original held stack, while pile growth does not. Cell selection for deposit, extraction, and Singles item rotation is recomputed server-side by extending a ray through the vanilla hit location; no client cell index is accepted.
 
-Forge/NeoForge consult destination right-click events for neighbor deposits, honoring cancellation and block/item denial. Fabric uses destination callbacks plus optional protection queries. A scoped guard prevents consultation from executing gestures. Local commands and server help share syntax; Fabric passes unclaimed `ss` forms to the server.
+Forge/NeoForge consult destination right-click events for neighbor deposits, honoring cancellation and block/item denial. Fabric uses destination callbacks plus optional protection queries. A scoped guard prevents consultation from executing gestures. Local commands execute their syntax tree; server help uses translated usage forms; Fabric passes unclaimed `ss` forms to the server.
 
 ## Configuration and presentation
 
-`ServerConfig` publishes immutable policy. Forge/NeoForge register `ForgeConfigSpec`/`ModConfigSpec` SERVER configs; native load/reload events apply policy and resync changes. Commented TOML supports `<world>/serverconfig/somestacks-server.toml` overrides. Fabric loads `config/somestacks-server.toml` from defaults and reports malformed fields independently. `/ss deny` and `/ss gen` save through the backend. `/ss reload` refreshes policy and resyncs players; Fabric rereads TOML, while Forge/NeoForge use native config events. Bar/Singles classification uses the `somestacks:ingots` tag.
+`ServerConfig` publishes immutable policy. Forge/NeoForge register `ForgeConfigSpec`/`ModConfigSpec` SERVER configs; native load/reload events apply policy and resync changes. Commented TOML supports `<world>/serverconfig/somestacks-server.toml` overrides. Fabric loads `config/somestacks-server.toml` from defaults and reports malformed fields independently. `/ss deny` and `/ss gen` save through the backend. `/ss reload` refreshes policy and syncs changed client settings; Fabric rereads TOML, while Forge/NeoForge use native config events. Bar/Singles classification uses the `somestacks:ingots` tag.
 
-Extension points are the `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute render profiles through ordinary server resource packs.
+Resource extension paths are listed in `orientation-player.md`.
 
 Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Resolved profiles cache per item until override change/reload. `ItemCapture` captures the 1.21.1 item renderer into an isolated pose and records baked quads, tints, and optional bounds. Measurement uses bounds; A 2,048-entry access-ordered cache holds prepared baked models or Z-facing plates by item/components/count and clears immediately on reload; a throwing 2-D capture draws `stack_cube_error` until reload. Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad on first render, after models and sprites are ready. `measured_cache.json` uses format 3, resource packs, and owning-mod versions. Appearance is client resource data; galleries bypass placement protection.
 
 ## GameTests
 
-Development-only `somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; native checks are loader-local. In `runClientGameTests`, aim at a stack, release Shift/modifier, and run `/ssclienttest` to check callbacks and profile precedence/invalidation. The gallery budget check uses an isolated GameTest batch.
-
-
+`somestacks_gametest` is development-only; shared checks are in `common/src/gametest`, native checks in loaders. In `runClientGameTests`, aim at a stack, release Shift/modifier, and run `/ssclienttest` to check callbacks and profile precedence/invalidation. The gallery budget check uses an isolated GameTest batch.
 

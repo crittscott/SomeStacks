@@ -147,7 +147,7 @@ Disabling a type, item, mod, or ingot category never removes or ejects existing 
 | `/ss write changed\|<modid>\|all\|list` | anyone; client-local | Save changed item profiles, or generate complete profile files |
 | `/ss gallery ...` / `/ss ingotgallery ...` | `render_gallery.required_permission_level`; off by default | Build Storage or Bar render galleries |
 | `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
-| `/ss reload` | level 2 | Refresh server policy, then resync players; Fabric rereads TOML |
+| `/ss reload` | level 2 | Refresh policy and sync changed client settings; Fabric rereads TOML |
 
 Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods and items. Fabric `/ss reload` rereads TOML, using defaults for malformed fields; Forge/NeoForge validate TOML through their config lifecycle. Edit ingot classification through `somestacks:ingots`, applied on `/reload`.
 
@@ -164,7 +164,7 @@ For Bar appearance, resource packs map item ids to textures and tints under `ass
 ## Extension points
 
 - Data pack: edit `somestacks:ingots` to classify Bar items. The shipped tag includes optional `c:ingots`, `forge:ingots`, and `c:bricks` tags plus explicitly listed ingots and bricks; child tags are included only through normal tag composition.
-- Resource pack: replace registered `somestacks:block.*` action sounds through `sounds.json`; add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
+- Resource pack: action sounds (`sounds.json`), render profiles, and Bar mappings as above.
 - Server: distribute Storage/Singles profiles and Bar mappings through a server resource pack.
 
 ## Protection and validation
@@ -176,4 +176,6 @@ Gestures use vanilla block-use hits. The server validates the hand, spectator/pr
 ## Saved worlds
 
 Preceding-release saves migrate NBT or component-format items and layout rotations on load. Unreadable entries stay saved, prevent automatic cleanup, and retry into free valid slots on load. Recovery warnings name dimension and position. World JSON policy migrates to TOML, retaining the original as `.migrated`; custom ingot entries are reported for data-pack transfer.
+
+Mod lists: 256 namespaces, 256 characters each; excess preserves policy. Reload reports online players and succeeds with none. Help uses translated usages.
 
