@@ -164,7 +164,7 @@ Bar mappings live at `assets/<namespace>/textures/bars/*.json`; missing tints de
 ## Extension points
 
 - Data pack: edit `somestacks:ingots` to classify Bar items. The shipped tag includes optional `c:ingots` and `c:bricks` tags plus explicitly listed ingots and bricks; child tags are included only through normal tag composition.
-- Resource pack (format 97.1; data packs use 121.0): replace registered `somestacks:block.*` action sounds through `sounds.json`; add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
+- Resource pack (format 97.1; data packs use 121.0): action sounds (`sounds.json`), render profiles, and Bar mappings as above.
 - Server: distribute Storage/Singles profiles and Bar mappings through a server resource pack.
 
 ## Protection and validation
@@ -176,3 +176,6 @@ The gesture payload carries mode/modifier state. The server validates actions ag
 ## Saved worlds
 
 The preceding 26.1 (0.8.3) release upgrades stored items on load. Over-cap Storage entries split into free cubes; excess and unreadable items remain in SetAside and retry their original cube on load. Only that release is supported. Warnings identify dimension/position; failed retries warn once per location/session.
+
+Mod lists: 256 namespaces, 256 characters each; excess preserves policy. Reload reports online players and succeeds with none. Help uses translated usages.
+
