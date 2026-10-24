@@ -1,9 +1,9 @@
-![Some Stacks](https://raw.githubusercontent.com/crittscott/SomeStacks/1.21.4/images/somestacks-splash.png)
+![Some Stacks](https://raw.githubusercontent.com/crittscott/SomeStacks/1.21.1/images/somestacks-splash.png)
 ![Loaders: Fabric Forge Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Forge%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC: 1.20.1, 1.21.1/4/8/11, 26.*](https://img.shields.io/badge/MC-1.20.1%2C%201.21.1%2F4%2F8%2F11%2C%2026.*-8a5a9b?style=for-the-badge)
 
 # Some Stacks
 
-For Minecraft **1.20.1, 1.21.1/4/8/11, and 26.***. Install the file matching your Minecraft version and loader; loader availability varies by Minecraft version.
+For Minecraft **1.20.1, 1.21.1/4/8/11, and 26.***.
 
 **Storage you can see.** Why keep that gold hidden away in a chest? Can't remember which shulker box has all your granite? Put it all out where you can see it using Bar Stacks or Storage Stacks. Like the look of that Mekanism Digital Miner but can't fit it in your study? Place a small copy and rotate it as you like with a Singles Stack. Need just a little light? Add torches, for a light level of 3 each.
 
@@ -13,8 +13,8 @@ An extension and complete rewrite of [Stackable](https://www.curseforge.com/mine
 
 | | | |
 | --- | --- | --- |
-| **Storage Stack** | 27 item stacks in a 3×3×3 grid | The bulk option. A vertical run of them is one shared inventory that fills from the bottom, sorts itself, packs down, and shrinks when you empty it. |
-| **Singles Stack** | 64 items, one per cell, in a 4×4×4 grid | The display case. Every item needs something under it, and pulling one out drops the rest of its column down a layer. Rotate individual items to line them up. |
+| **Storage Stack** | 27 item stacks in a 3×3×3 grid | The bulk option. A vertical run of them is one shared inventory that fills from the bottom, sorts itself, packs down, and shrinks or grows as needed. |
+| **Singles Stack** | 64 items, one per cell, in a 4×4×4 grid | The display case. Every item needs something under it, and pulling one out drops the rest of its column down a layer. Rotate individual items for best display. |
 | **Bar Stack** | 64 ingots or bricks as stacked bars | The vault. Eight alternating layers of eight bars, each resting on the ones below. Pull a bar out from underneath and everything it was holding up comes down. |
 
 No items and no recipes. A stack exists because you put something in it, and it goes away when you take everything back out. Storage piles can be set permanent for connection to inventory management systems.
@@ -23,7 +23,7 @@ No items and no recipes. A stack exists because you put something in it, and it 
 
 1. Hold **V** and **right-click the air** to cycle the placement mode: Storage, Singles, Bar, Toggle Permanent.
 2. Hold **V** and **right-click a block** with something in your hand to create a stack.
-3. Keep holding **V** and clicking to add more. The stack grows upward on its own when it fills, to a server-config-determined maximum height. Singles and Bar stacks require you to choose the placement location.
+3. Keep holding **V** and clicking to add more. The stack grows upward on its own when it fills, to a server-config-determined maximum height. Singles and Bar stacks require you to choose the in-block placement location.
 4. **Right-click without V** to take an item back out.
 
 ## Details
@@ -34,7 +34,7 @@ No items and no recipes. A stack exists because you put something in it, and it 
 | --- | --- |
 | Hold `V`, right-click air | Cycle placement mode. Stack types the server has disabled are skipped. |
 | Hold `V` + item, right-click a stack | Deposit into it. |
-| Hold `V` + item, right-click any other block | Place the selected type in the empty space and make the first deposit. If you aimed through the empty space of a Singles or Bar Stack, the item goes into that cell instead. |
+| Hold `V` + item, right-click any other block | Deposit into an adjacent Singles or Bar Stack, or place the selected type in the empty space and make the first deposit. |
 | Right-click a stack, no `V`, no Shift | Take from the nearest item you are looking at. Storage gives you as much as your hand will hold; Singles and Bar give one. |
 | Select Toggle Permanent, hold `V`, right-click a Storage Stack empty-handed | Stop that pile from removing itself when emptied. |
 | Shift + right-click a Storage or Singles Stack with a **redstone torch** | Rotate the whole block 90°. |
@@ -42,7 +42,7 @@ No items and no recipes. A stack exists because you put something in it, and it 
 
 ## Automation and redstone
 
-Every stack block exposes loader-native item storage on every side (`IItemHandler` on Forge and NeoForge, Transfer API storage on Fabric), and a block in a vertical run exposes the entire run so a hopper under the bottom and a pipe halfway up address the same inventory.
+Every stack block exposes loader-native item storage on every side. A block in a vertical run exposes the entire run, so a hopper under the bottom and a pipe halfway up address the same inventory. The native API depends on your Minecraft version and loader; see the matching automation guide below.
 
 - Slots are positions. A Singles or Bar slot names one cell and holds one item.
 - A run advertises one block of headroom above what it holds, so **inserting into the top grows the column by itself** (up to the configured height, and only where it would be allowed to build).
@@ -51,20 +51,28 @@ Every stack block exposes loader-native item storage on every side (`IItemHandle
 
 ## Server-friendly
 
-Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods can be barred from storage, and single items can be barred from player deposits. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge and NeoForge also fire their place and break events, so claim mods using those hooks can allow, deny, or record the edit. Fabric fires its break events, and when Common Protection API is installed, asks it before placing, growing, or depositing into a neighboring stack.
-
-See **[Server administration](docs/server-admin.md)** for the config file and the `/ss` command.
+Piles have a maximum height, stack types can be switched off, whole mods can be barred from storage, and single items can be barred from player deposits. Structural edits respect build limits, obstruction, spawn protection, and the world border. Claim integration depends on Minecraft version and loader; see the matching server administration guide below.
 
 ## Documentation
 
-- **[Player guide](docs/player-guide.md)** — every gesture, how each stack behaves, gravity and support rules
-- **[Automation](docs/automation.md)** — item handlers, slot layout, comparators, growth
-- **[Server administration](docs/server-admin.md)** — config settings and the full `/ss` command reference
-- **[Pack authors](docs/pack-authors.md)** — data packs, resource packs, bar textures, and item render overrides
+Choose the documentation for your Minecraft version. Pack formats, loader APIs, protection integrations, and render controls vary by version.
+
+| Minecraft | Player guide | Automation | Server administration | Pack authors |
+| --- | --- | --- | --- | --- |
+| 1.20.1 | [Guide](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/player-guide.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/automation.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/server-admin.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/pack-authors.md) |
+| 1.21.1 | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.1/docs/player-guide.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.1/docs/automation.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.1/docs/server-admin.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.1/docs/pack-authors.md) |
+| 1.21.4 | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.4/docs/player-guide.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.4/docs/automation.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.4/docs/server-admin.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.4/docs/pack-authors.md) |
+| 1.21.8 | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.8/docs/player-guide.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.8/docs/automation.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.8/docs/server-admin.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.8/docs/pack-authors.md) |
+| 1.21.11 | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.11/docs/player-guide.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.11/docs/automation.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.11/docs/server-admin.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/1.21.11/docs/pack-authors.md) |
+| 26.1 | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1/docs/player-guide.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1/docs/automation.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1/docs/server-admin.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1/docs/pack-authors.md) |
+| 26.1.1 | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1.1/docs/player-guide.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1.1/docs/automation.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1.1/docs/server-admin.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1.1/docs/pack-authors.md) |
+| 26.1.2 | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1.2/docs/player-guide.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1.2/docs/automation.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1.2/docs/server-admin.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.1.2/docs/pack-authors.md) |
+| 26.2 | [Guide](https://github.com/crittscott/SomeStacks/blob/26.2/docs/player-guide.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.2/docs/automation.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.2/docs/server-admin.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.2/docs/pack-authors.md) |
+| 26.3 | [Guide](https://github.com/crittscott/SomeStacks/blob/26.3/docs/player-guide.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.3/docs/automation.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.3/docs/server-admin.md) | [Guide](https://github.com/crittscott/SomeStacks/blob/26.3/docs/pack-authors.md) |
 
 ## Compatibility
 
-Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server through its server resource pack. See [Pack authors](docs/pack-authors.md).
+Some Stacks accepts items from other mods, subject to server policy and stack type. Items whose models do not sit well inside a cell are measured automatically and can be corrected with render overrides. See the matching pack author guide above for local, resource-pack, and server controls.
 
 ## Issues and suggestions
 
@@ -72,4 +80,4 @@ Please report bugs and ideas on the [issue tracker](https://github.com/crittscot
 
 ## License
 
-[GNU General Public License v3.0](LICENSE). You are free to use this mod in modpacks, public or private, and to redistribute and modify it, provided derivative works carry the same license and make their source available.
+[GNU General Public License v3.0](https://github.com/crittscott/SomeStacks/blob/1.21.1/LICENSE). You are free to use this mod in modpacks, public or private, and to redistribute and modify it, provided derivative works carry the same license and make their source available.
