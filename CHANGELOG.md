@@ -1,43 +1,31 @@
 # Changelog
 
-## Unreleased — Minecraft 1.21.4 port
+## 0.8.3 — Minecraft 1.21.4
 
-1.21.4 for Fabric, Forge, and NeoForge. Changes since 0.8.2 (1.21.1).
-
-### Platform
-
-- Forge **54.x** (accepts `[54.1.14,55)`), NeoForge **21.4.x** (accepts `[21.4.158,22)`).
-- Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.119.4+1.21.4**. Common Protection API **1.0.0** is optional.
-- Mappings updated to Mojang official + Parchment **2025.03.23-1.21.4**.
-- Build toolchain: Architectury Loom **1.17.493**; Gradle **9.5.1** and Shadow **9.4.3** unchanged.
-- Client and server must run the same loader build of the mod. Fabric checks this both ways when a player connects.
-
-### Breaking — worlds, configs, and packs
-
-- **Bar Stack contents come from the `somestacks:ingots` item tag alone.** The `compatibility.ingots` config setting and the `/ss ingot` command are gone. Change Bar contents with a data pack (see [Server administration](docs/server-admin.md#ingots)). On server start, any custom entries left in a 1.21.1 config's `ingots` list are logged so they can be moved into the tag.
-- **Forge and NeoForge use a TOML config.** Server policy is now a loader-managed SERVER config, `<world>/serverconfig/somestacks-server.toml`, picked up when the file changes. The 1.21.1 `somestacks-server.json` is not read on these loaders; re-enter any custom settings in the TOML. Fabric keeps the JSON file, and `/ss reload` now rereads it.
-- **Sounds are registered sound events.** Each type and action has its own `somestacks:block.<type>.<action>` sound with a subtitle, replaceable through an ordinary resource-pack `sounds.json`. The `data/<namespace>/somestacks_sounds/` data-pack format is gone.
-- **Server render overrides are gone.** `config/somestacks/server_item_overrides/` is no longer read or sent to clients. Servers distribute item render profiles through their server resource pack instead, and a player's own `item_overrides.json` now takes priority.
-- **FTB Chunks integration removed** on Fabric and NeoForge. Fabric claim mods are reached through Common Protection API instead.
-
-### Added
-
-- **Bar Stacks hold bricks on every loader**, including resin brick, with their own brick-shaped bar. Blocks made from bricks are still refused.
-- **Common Protection API on Fabric.** When installed, it is asked before player placement, automated growth, and deposits into a neighboring stack. A refused automated insertion keeps its items.
-- **Sculk sensors hear stacks.** Placing or removing a stack block and changing its contents emit the matching vibrations.
-- **Error cube for crashing item models.** An item whose model throws while drawn in `2d` mode shows a red "ERR" cube until the next resource reload, and the client log names it. `disable_items` now defaults to `evilcraft:broom_part`, an item that crashes clients when drawn.
-- **1.21.1 stacks migrate automatically.** Saved stack blocks record their data version, and items from 1.21.1 run through vanilla's data fixers on first load.
-- **Unreadable stored items are kept.** An item that cannot load, such as one from a removed mod, is set aside in the block's saved data and returns when it becomes readable. Warnings name the dimension and position.
+For Fabric, Forge, and NeoForge.
 
 ### Changed
 
-- **`/ss item` and `/ss write` run on the client** and need no permission. The server never asks a client to write files.
-- **Gestures use vanilla's block-use pipeline.** Stack clicks are ordinary interactions, so claim, logging, and anti-cheat mods see what they expect. Only the main hand acts.
-- **The server picks the cell.** Extraction and soul-torch rotation are aimed by the server along your line of sight, the same way deposits already were.
-- **Selection outlines.** Singles and Bar Stacks outline only their occupied cells, and aiming through empty space reaches the block behind.
-- **Neighbor deposits respect protection.** Depositing into an adjacent Singles or Bar Stack checks permission at that stack's position on every loader.
-- **One automation identity.** All loaders present automated edits as `[SomeStacks]`. Cleanup a player causes is attributed to that player.
-- **`/ss reload`** refreshes server policy and re-syncs players.
+- Stack gestures use vanilla block interactions, with deposit, extraction, and rotation targets selected by the server from the clicked point and line of sight. Only the main hand acts.
+- Placement, neighboring-stack deposits, growth, and cleanup respect protection checks. Automated edits use `[SomeStacks]`; cleanup caused by a player retains that player's attribution.
+- `/ss item` and `/ss write` run locally without operator permission. Item render profiles resolve local overrides first, then resource packs, then automatic measurement. Servers distribute profiles through their server resource pack instead of server override files.
+- Stack actions use registered sound events with subtitles, customizable through resource-pack `sounds.json`. The old data-pack sound mappings are removed.
+- Server policy uses `somestacks-server.toml` on every loader. Existing world JSON policy migrates automatically; the original is retained as `somestacks-server.json.migrated`. Existing TOML takes precedence.
+- Bar Stacks accept ingots and bricks through the `somestacks:ingots` item tag alone. The `compatibility.ingots` setting and `/ss ingot` command are removed; move custom entries into a data pack. Existing custom entries are logged during config migration.
+- `/ss reload` refreshes server policy and synchronizes changed client settings. Use vanilla `/reload` for item-tag changes.
+
+### Added and fixed
+
+- Bar Stacks render bricks with their own brick-shaped bars. Blocks made from bricks remain excluded.
+- Stack placement, removal, and content changes emit vibrations for sculk sensors.
+- Saved items record their data version and migrate on load. Unreadable items remain in saved recovery data and retry on later loads; cleanup preserves blocks containing recovery data.
+- Singles and Bar selection outlines follow occupied cells, allowing clicks through empty space.
+- Item rendering caches prepared profiles and presentations, refreshes them after edits or resource reloads, and displays a red "ERR" cube when a flat item model fails to render.
+- Expanded loader GameTest coverage for interactions, protection, automation, persistence, and migration.
+
+### Protection integrations
+
+- Fabric supports optional Common Protection API queries. Direct FTB Chunks integration is removed; Fabric claim mods are reached through Common Protection API and block-use callbacks. Forge and NeoForge use native protection hooks.
 
 ## 0.8.2 — Minecraft 1.21.1 port 
 
