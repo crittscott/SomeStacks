@@ -4,7 +4,7 @@ Some Stacks has no screens and no recipes. You place storage by depositing into 
 
 ## The stack modifier key
 
-`V` by default, rebindable under **Options → Controls → Some Stacks → Stack Modifier (Hold)**. It is a *held* modifier, not a toggle: every gesture below is performed while the key is down.
+`V` by default, rebindable under **Options → Controls → Some Stacks → Stack Modifier (Hold)**. It is a *held* modifier, not a toggle. Hold it for placement and deposits; extraction and rotation use the gestures described below.
 
 ## Placement modes
 
@@ -51,7 +51,7 @@ A **vertical run of Storage Stacks is one pile** — one inventory over its whol
 
 Shortly after any change, the pile **settles**:
 
-- compatible stacks merge, by exact item, damage, and NBT;
+- stacks of exactly the same item, with the same data components, merge;
 - everything packs down toward the base and sorts;
 - empty blocks at the top remove themselves.
 
@@ -73,7 +73,7 @@ Sixty-four items, one per cell, in a 4×4×4 grid. Anything a Bar Stack accepts,
 
 Sixty-four ingots rendered as bars: eight layers of eight, each layer laid across the one beneath it.
 
-Which items count as ingots is a server setting (see [Server administration](server-admin.md)) — by default, everything under the `forge:ingots` tags on Forge or `c:ingots` on Fabric and NeoForge, plus the mod's own `somestacks:ingots` tag, which a data pack can extend.
+Bar Stacks accept the items in the `somestacks:ingots` item tag, including the optional common ingot and brick tags and the bundled vanilla and modded entries. A data pack can change this tag; there is no ingot config setting (see [Server administration](server-admin.md)).
 
 **Support:** every bar above the bottom layer must overlap a bar in the layer below.
 

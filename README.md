@@ -1,7 +1,9 @@
 ![Some Stacks](https://raw.githubusercontent.com/crittscott/SomeStacks/1.21.1/images/somestacks-splash.png)
-![Loaders: Fabric Forge Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Forge%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC: 1.21.3 1.21.1 1.20.1](https://img.shields.io/badge/MC-1.21.3%201.21.1%201.20.1-8a5a9b?style=for-the-badge)
+![Loaders: Fabric Forge Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Forge%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC: 1.20.1, 1.21.1/4/8/11, 26.*](https://img.shields.io/badge/MC-1.20.1%2C%201.21.1%2F4%2F8%2F11%2C%2026.*-8a5a9b?style=for-the-badge)
 
 # Some Stacks
+
+For Minecraft **1.20.1, 1.21.1/4/8/11, and 26.***. Install the file matching your Minecraft version and loader; loader availability varies by Minecraft version.
 
 **Storage you can see.** Why keep that gold hidden away in a chest? Can't remember which shulker box has all your granite? Put it all out where you can see it using Bar Stacks or Storage Stacks. Like the look of that Mekanism Digital Miner but can't fit it in your study? Place a small copy and rotate it as you like with a Singles Stack. Need just a little light? Add torches, for a light level of 3 each.
 
@@ -15,7 +17,7 @@ An extension and complete rewrite of [Stackable](https://www.curseforge.com/mine
 | **Singles Stack** | 64 items, one per cell, in a 4×4×4 grid | The display case. Every item needs something under it, and pulling one out drops the rest of its column down a layer. Rotate individual items to line them up. |
 | **Bar Stack** | 64 ingots as stacked bars | The vault. Eight alternating layers of eight bars, each resting on the ones below. Pull a bar out from underneath and everything it was holding up comes down. |
 
-No items and no recipes. A stack exists because you put something in it, and it goes away when you take everything back out, unless you set it permanent for connection to inventory management systems.
+No items and no recipes. A stack exists because you put something in it, and it goes away when you take everything back out. Storage piles can be set permanent for connection to inventory management systems.
 
 ## Getting started
 

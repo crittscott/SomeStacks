@@ -56,10 +56,10 @@ Some subcommands additionally require a **player** rather than the console, beca
 | `/ss deny mod add\|remove\|list <modid>` | Level 2 | Edit the disabled namespace list. |
 | `/ss deny item add\|remove\|list <item>` | Level 2 | Edit the disabled item list. |
 | `/ss ingot add\|remove\|list <#tag \| item>` | Level 2 | Edit the ingot list — `#` tag patterns and item ids. |
-| `/ss reload` | Level 2 | Re-read server render overrides and re-sync every player. |
+| `/ss reload` | Level 2 | Refresh server policy and render overrides, then re-sync every player. |
 | `/ss help [<command>]` | Anyone | Command forms, gates, and detail. |
 
-Command edits to the five text lists update both the running server and the config file, so a later save cannot undo them.
+Command edits to the four text lists update both the running server and the config file, so a later save cannot undo them.
 
 An item id is checked against the registry when it is added to a list, because those lists are matched by exact id and a typo would sit there looking effective. A mod id is taken as typed, since it may name a mod that is not installed yet.
 
@@ -79,8 +79,8 @@ On login and `/ss reload`, the server sends each player the three stack-type ena
 
 ## Protection and claim mods
 
-On both loaders, the mod checks build limits, replaceability, entity obstruction, the world border, and spawn protection before structural edits. Player gestures — deposit, extract, place, rotate, toggle-permanent — also re-run a real interaction event on both loaders, so claim and protection mods using that hook can veto the action: Forge's `RightClickBlock`, Fabric API's `UseBlockCallback`. Automated growth additionally fires Forge's `EntityPlaceEvent`; Fabric has no equivalent placement event for automation to trigger, so Fabric growth answers to the vanilla checks only.
+On all three loaders, the mod checks build limits, replaceability, entity obstruction, the world border, and spawn protection before structural edits. Player gestures — deposit, extract, place, rotate, toggle-permanent — also re-run a real interaction event on both loaders, so claim and protection mods using that hook can veto the action: Forge's `RightClickBlock`, Fabric API's `UseBlockCallback`. Automated growth additionally fires Forge's `EntityPlaceEvent`; Fabric has no equivalent placement event for automation to trigger, so Fabric growth queries Common Protection API when installed, in addition to vanilla checks.
 
-Blocks the mod removes on its own — an emptied block a settle or a collapse leaves behind — are attributed to the loader's automation actor and reported through a real break event on both loaders: Forge's `BreakEvent`, Fabric API's `PlayerBlockBreakEvents`. **A refused removal leaves the block standing**, and the run carries on around it: the mod will not delete where it may not build.
+Blocks the mod removes on its own — an emptied block a settle or a collapse leaves behind — are attributed to the loader's automation actor and reported through a real break event on all three loaders: Forge's `BreakEvent`, Fabric API's `PlayerBlockBreakEvents`. **A refused removal leaves the block standing**, and the run carries on around it: the mod will not delete where it may not build.
 
 The server validates every packet independently of the client: the sender, one gesture per player per tick, that the sender is not a spectator, that the target is loaded and within reach, and every operation-specific rule. Deposit targeting and support are recomputed from the player's current view rather than trusted from the packet.
