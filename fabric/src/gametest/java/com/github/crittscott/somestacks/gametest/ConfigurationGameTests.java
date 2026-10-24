@@ -19,7 +19,7 @@ public final class ConfigurationGameTests implements FabricGameTest {
     }
 
     @GameTest(template = TEMPLATE)
-    public void serverConfigLoadsBoundsListsAndIngotGlobs(GameTestHelper helper) {
-        ConfigurationChecks.serverConfigLoadsBoundsListsAndIngotGlobs(helper);
+    public void serverConfigLoadsBoundsListsAndTags(GameTestHelper helper) {
+        ConfigurationChecks.serverConfigLoadsBoundsListsAndTags(helper);
     }
 }

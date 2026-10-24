@@ -24,7 +24,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,20 +34,15 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+
 /**
  * The {@code ss} command: render override authoring, render gallery generation, server list
- * editing, and override reloading.
+ * editing, and policy reloading.
  *
- * <p>Everything here is an administrative tool, so every subcommand but {@code help} requires a
- * vanilla permission level. The render subcommands, {@code item} and {@code write}, are issued
- * against the sender's own view and so are player-only on top of that; the two gallery generators
- * need a player because a gallery is built where the sender stands.
- *
- * <p>The gallery generators sit a level above the rest. They overwrite a region of the world outright,
- * without the protection checks applied to placement gestures, which is a wider authority than
- * editing config or tuning how an item is drawn. Because of that, they are also the one pair of
- * subcommands gated by server config rather than a fixed level: {@code render_gallery.enabled}
- * (off by default) and {@code render_gallery.required_permission_level} (default 3).
+ * <p>Render authoring changes only the sender's view and requires a player, not operator access.
+ * Policy and list edits require an operator. Galleries require a player and follow the server's
+ * enablement and permission settings because they overwrite blocks.
  *
  * <p>{@link SsHelp} carries each subcommand's forms, gate, and summary, and {@code ss help} is
  * gated by nothing, so a player who cannot run a subcommand can still read what it needs.
@@ -65,7 +59,6 @@ public final class SsCommand {
     static final String COMMAND_RELOAD = "reload";
     static final String COMMAND_GEN = "gen";
     static final String COMMAND_DENY = "deny";
-    static final String COMMAND_INGOT = "ingot";
     static final String COMMAND_HELP = "help";
 
     private static final String ARG_ITEM = "item";
@@ -75,13 +68,11 @@ public final class SsCommand {
     private static final String ARG_Y = "y";
     private static final String ARG_Z = "z";
     private static final String ARG_MODID = "modid";
-    private static final String ARG_ENTRY = "entry";
 
     private static final String DISABLED_MODS_LABEL = "somestacks.command.label.disabled_mods";
     private static final String DISABLED_ITEMS_LABEL = "somestacks.command.label.disabled_items";
     private static final String GEN_MODS_LABEL = "somestacks.command.label.gen_mods";
     private static final String GEN_ITEMS_LABEL = "somestacks.command.label.gen_items";
-    private static final String INGOTS_LABEL = "somestacks.command.label.ingots";
 
     /** Override dumps cover all items, matching the Storage gallery's item selection. */
     private static final RenderGalleryGenerator.Kind DUMP_KIND = RenderGalleryGenerator.Kind.STORAGE;
@@ -92,7 +83,7 @@ public final class SsCommand {
         dispatcher.register(
                 Commands.literal(COMMAND_ROOT)
                         .then(Commands.literal(COMMAND_ITEM)
-                                .requires(SsCommand::isAdminPlayer)
+                                .requires(SsCommand::isPlayer)
                                 .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
                                         .then(Commands.literal("reset")
@@ -122,7 +113,6 @@ public final class SsCommand {
                                 .executes(SsCommand::reload))
                         .then(genTree())
                         .then(denyTree())
-                        .then(ingotTree())
                         .then(SsHelp.tree())
         );
     }
@@ -169,7 +159,7 @@ public final class SsCommand {
      */
     private static LiteralArgumentBuilder<CommandSourceStack> writeTree() {
         return Commands.literal(COMMAND_WRITE)
-                .requires(SsCommand::isAdminPlayer)
+                .requires(SsCommand::isPlayer)
                 .then(Commands.literal("changed")
                         .executes(SsCommand::writeChanged))
                 .then(Commands.literal("all")
@@ -202,28 +192,28 @@ public final class SsCommand {
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                                 RenderGalleryGenerator.getModIdsWithItems(), builder))
-                                        .executes(ctx -> addEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
+                                        .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_MODS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.GEN_MODS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL, false))))
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL, false))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
                                 .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
                                         .executes(ctx -> addItemEntry(
-                                                ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL))))
+                                                ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_ITEMS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.GEN_ITEMS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL,
                                                 ResourceLocationArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL, true))));
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL, true))));
     }
 
     /**
@@ -240,103 +230,28 @@ public final class SsCommand {
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                                 RenderGalleryGenerator.getModIdsWithItems(), builder))
-                                        .executes(ctx -> addEntry(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL,
+                                        .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.DISABLE_MODS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.DISABLE_MODS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL, true))))
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL, true))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
                                 .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
                                         .executes(ctx -> addItemEntry(
-                                                ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL))))
+                                                ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.DISABLE_ITEMS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.DISABLE_ITEMS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL,
                                                 ResourceLocationArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
-    }
-
-    /**
-     * The {@code ss ingot} subtree, editing what a Bar Stack takes its contents from. A {@code #}
-     * entry names an item tag and may carry {@code *} wildcards; any other entry is an item id. It
-     * is read as a greedy string rather than a resource location because neither a wildcard nor an
-     * unquoted colon survives the word parser.
-     *
-     * <p>A {@code #} entry is taken as typed, as a denied mod id is, because it may legitimately
-     * name a tag no loaded data pack declares or match one by wildcard; the bake warns when it
-     * matches nothing. A bare item id is checked against the registry here, the way
-     * {@code ss deny item add} checks one, since a typo would otherwise sit in the list accepting
-     * nothing. Either way an edit reports how many items the list now accepts.
-     */
-    private static LiteralArgumentBuilder<CommandSourceStack> ingotTree() {
-        return Commands.literal(COMMAND_INGOT)
-                .requires(SsCommand::isAdmin)
-                .then(Commands.literal("add")
-                        .then(Commands.argument(ARG_ENTRY, StringArgumentType.greedyString())
-                                .suggests(SsCommand::suggestIngotEntries)
-                                .executes(ctx -> addIngotEntry(ctx,
-                                        StringArgumentType.getString(ctx, ARG_ENTRY).trim()))))
-                .then(Commands.literal("remove")
-                        .then(Commands.argument(ARG_ENTRY, StringArgumentType.greedyString())
-                                .suggests((ctx, builder) -> suggestEntries(ServerConfig.INGOTS, builder))
-                                .executes(ctx -> reportIngotEdit(ctx, removeEntry(ctx, ServerConfig.INGOTS,
-                                        INGOTS_LABEL,
-                                        StringArgumentType.getString(ctx, ARG_ENTRY).trim())))))
-                .then(Commands.literal("list")
-                        .executes(ctx -> listEntries(ctx, ServerConfig.INGOTS, INGOTS_LABEL, true)));
-    }
-
-    /**
-     * Adds one entry to the ingot list, rejecting a bare item id the registry does not know before
-     * it reaches the list. A {@code #} tag entry is passed through unchecked.
-     */
-    private static int addIngotEntry(CommandContext<CommandSourceStack> ctx, String entry) {
-        if (!entry.startsWith("#")) {
-            ResourceLocation itemId = ResourceLocation.tryParse(entry.toLowerCase(Locale.ROOT));
-            if (itemId == null || !BuiltInRegistries.ITEM.containsKey(itemId)) {
-                ctx.getSource().sendFailure(Component.translatable(
-                        "somestacks.command.unknown_item", entry));
-                return 0;
-            }
-        }
-        return reportIngotEdit(ctx, addEntry(ctx, ServerConfig.INGOTS, INGOTS_LABEL, entry));
-    }
-
-    /**
-     * Completions for an ingot entry: the known item-tag names, each with a leading {@code #}, once
-     * the input opens with {@code #}; otherwise item namespaces and their ids as {@code ss item}
-     * completes them, plus {@code #} itself.
-     */
-    private static CompletableFuture<Suggestions> suggestIngotEntries(
-            CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
-        if (builder.getRemaining().startsWith("#")) {
-            return SharedSuggestionProvider.suggest(
-                    ServerConfig.itemTagNames().stream().map(name -> "#" + name).toList(), builder);
-        }
-        if (builder.getRemaining().isEmpty()) {
-            builder.suggest("#");
-        }
-        return suggestItems(ctx, builder);
-    }
-
-    /**
-     * Reports how an ingot-list edit changed the accepted item set. The list names tags and items,
-     * while Bar Stack behavior depends on the items those resolve to.
-     */
-    private static int reportIngotEdit(CommandContext<CommandSourceStack> ctx, int result) {
-        if (result != 0) {
-            ctx.getSource().sendSuccess(() -> Component.translatable(
-                    "somestacks.command.ingot.accepted", ServerConfig.ingotItemCount()), false);
-        }
-        return result;
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
     }
 
     private static boolean isPlayer(CommandSourceStack source) {
@@ -351,9 +266,7 @@ public final class SsCommand {
      * The gate on the render subcommands: they configure the server's rendering, which is an
      * operator's job, and they act on the sender's own view, which needs a sender to have one.
      */
-    private static boolean isAdminPlayer(CommandSourceStack source) {
-        return isPlayer(source) && isAdmin(source);
-    }
+    
 
     private static CompletableFuture<Suggestions> suggestEntries(
             ServerConfig.ListSetting list, SuggestionsBuilder builder) {
@@ -421,7 +334,8 @@ public final class SsCommand {
         String modeString = StringArgumentType.getString(ctx, ARG_MODE);
         if (RenderMode.fromString(modeString) == null) {
             ctx.getSource().sendFailure(Component.translatable(
-                    "somestacks.command.unknown_render_mode", modeString));
+                    "somestacks.command.unknown_render_mode", modeString,
+                    java.util.Arrays.stream(RenderMode.values()).map(RenderMode::getId).collect(Collectors.joining(", "))));
             return 0;
         }
 
@@ -532,7 +446,7 @@ public final class SsCommand {
         List<String> unusableMods = new ArrayList<>();
         Set<String> seen = new HashSet<>();
 
-        for (String entry : ServerConfig.GEN_MODS.get()) {
+        for (String entry : ServerConfig.ListSetting.GEN_MODS.get()) {
             String modId = entry.trim().toLowerCase(Locale.ROOT);
             if (modId.isEmpty() || !seen.add(modId)) {
                 continue;
@@ -576,7 +490,7 @@ public final class SsCommand {
         List<String> unknownItems = new ArrayList<>();
         Set<String> seen = new HashSet<>();
 
-        for (String entry : ServerConfig.GEN_ITEMS.get()) {
+        for (String entry : ServerConfig.ListSetting.GEN_ITEMS.get()) {
             String trimmed = entry.trim().toLowerCase(Locale.ROOT);
             if (trimmed.isEmpty() || !seen.add(trimmed)) {
                 continue;
@@ -608,7 +522,7 @@ public final class SsCommand {
         return new ItemSelection(
                 itemIds.stream().map(BuiltInRegistries.ITEM::getValue).toList(),
                 List.of(new Skips(Component.translatable(
-                                "somestacks.command.skip.from_disabled_mods"), disabledItems),
+                                "somestacks.command.skip.disabled"), disabledItems),
                         new Skips(Component.translatable("somestacks.command.skip.unknown"), unknownItems)));
     }
 
@@ -703,10 +617,15 @@ public final class SsCommand {
     }
 
     private static int reload(CommandContext<CommandSourceStack> ctx) {
-        int synced = CommandNetwork.syncAllPlayers(ctx.getSource().getServer());
+        if (!ServerConfig.reload()) {
+            ctx.getSource().sendFailure(Component.translatable("somestacks.command.policy_rejected"));
+            return 0;
+        }
+        ServerConfig.logActivePolicy();
+        int online = ctx.getSource().getServer().getPlayerList().getPlayerCount();
         ctx.getSource().sendSuccess(() -> Component.translatable(
-                "somestacks.command.reloaded", synced), true);
-        return synced;
+                "somestacks.command.reloaded", online), true);
+        return 1;
     }
 
     /**
@@ -728,7 +647,15 @@ public final class SsCommand {
     private static int addEntry(CommandContext<CommandSourceStack> ctx,
                                 ServerConfig.ListSetting list,
                                 String label, String entry) {
-        if (!ServerConfig.addListEntry(list, entry)) {
+        boolean added;
+        try {
+            added = ServerConfig.addListEntry(list, entry);
+        } catch (IllegalArgumentException rejected) {
+            ctx.getSource().sendFailure(Component.translatable("somestacks.command.namespace_rejected",
+                    entry, ServerConfig.MAX_NAMESPACE_LENGTH, ServerConfig.MAX_NAMESPACE_ENTRIES));
+            return 0;
+        }
+        if (!added) {
             ctx.getSource().sendFailure(Component.translatable(
                     "somestacks.command.list_contains", Component.translatable(label), entry));
             return 0;

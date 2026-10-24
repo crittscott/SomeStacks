@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.ServerOverridesLoader;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -73,8 +72,7 @@ public final class FabricNetworking {
         return new ConfigSyncPkt(
                 ServerConfig.enableStorageStackBlock(),
                 ServerConfig.enableSinglesStackBlock(),
-                ServerConfig.enableBarStackBlock(),
-                ServerOverridesLoader.load());
+                ServerConfig.enableBarStackBlock());
     }
 
     private static <T extends CustomPacketPayload> void registerServer(

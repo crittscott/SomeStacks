@@ -1,11 +1,11 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.FabricItemStorage;
-import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.FabricCommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
+import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.server.FabricEditAuthority;
 import com.github.crittscott.somestacks.server.FabricPlayerEditAuthority;
 import com.github.crittscott.somestacks.server.FabricStackSoundData;
@@ -13,9 +13,9 @@ import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
@@ -30,7 +30,6 @@ public final class SomeStacksFabric implements ModInitializer {
     public void onInitialize() {
         FabricRegistry.init();
         FabricItemStorage.init();
-        ServerConfig.useCommonIngotDefaults();
         WorldEdits.setAuthority(new FabricEditAuthority());
         PlayerEdits.setAuthority(new FabricPlayerEditAuthority());
         FabricNetworking.registerPayloads();
@@ -46,12 +45,12 @@ public final class SomeStacksFabric implements ModInitializer {
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             var configDir = server.getWorldPath(LevelResource.ROOT).resolve("serverconfig");
-            ServerConfig.load(configDir.resolve(SomeStacksCommon.MODID + "-server.json"));
+            ServerConfig.load(configDir.resolve(SomeStacksCommon.MODID + "-server.json"), server);
         });
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
                 (server, resourceManager, success) -> {
                     if (success) {
-                        ServerConfig.rebakeIngots();
+                        RenderGalleryGenerator.invalidateBarItems();
                     }
                 });
 

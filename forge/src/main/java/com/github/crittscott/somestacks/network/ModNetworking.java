@@ -22,7 +22,7 @@ import net.minecraftforge.network.SimpleChannel;
 public final class ModNetworking {
     private ModNetworking() {}
 
-    private static final int PROTOCOL = 2;
+    private static final int PROTOCOL = 3;
     public static SimpleChannel CHANNEL;
 
     public static void init() {

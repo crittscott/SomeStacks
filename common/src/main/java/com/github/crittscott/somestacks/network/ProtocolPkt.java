@@ -15,7 +15,7 @@ public record ProtocolPkt() implements CustomPacketPayload {
     public static final ProtocolPkt INSTANCE = new ProtocolPkt();
 
     public static final Type<ProtocolPkt> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "protocol_2"));
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "protocol_3"));
     public static final StreamCodec<FriendlyByteBuf, ProtocolPkt> STREAM_CODEC =
             StreamCodec.unit(INSTANCE);
 

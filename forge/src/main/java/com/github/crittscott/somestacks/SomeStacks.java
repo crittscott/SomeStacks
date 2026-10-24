@@ -1,9 +1,9 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.client.ClientSetup;
-import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.ForgeCommandNetwork;
+import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
@@ -73,12 +73,11 @@ public class SomeStacks {
 
     /**
      * Loads the world-specific server config. There is no automatic file-watch reload behind this
-     * hand-rolled reader/writer; command edits are saved immediately, while manual file edits take
-     * effect on the next server start.
+     * hand-rolled reader/writer; command edits are saved immediately; /ss reload rereads manual file edits.
      */
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
         var configDir = event.getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig");
-        ServerConfig.load(configDir.resolve(MODID + "-server.json"));
+        ServerConfig.load(configDir.resolve(MODID + "-server.json"), event.getServer());
     }
 
     private void onAddReloadListeners(AddReloadListenerEvent event) {
@@ -86,7 +85,7 @@ public class SomeStacks {
     }
 
     private void onTagsUpdated(TagsUpdatedEvent event) {
-        ServerConfig.rebakeIngots();
+        RenderGalleryGenerator.invalidateBarItems();
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
@@ -112,8 +111,7 @@ public class SomeStacks {
     }
 
     /**
-     * Sends the current server config to every player, reading the override directory once
-     * for the whole broadcast.
+     * Sends the current stack-type flags to every player.
      *
      * @return the number of players synced
      */
@@ -126,7 +124,6 @@ public class SomeStacks {
         return new ConfigSyncPkt(
                 ServerConfig.enableStorageStackBlock(),
                 ServerConfig.enableSinglesStackBlock(),
-                ServerConfig.enableBarStackBlock(),
-                ServerOverridesLoader.load());
+                ServerConfig.enableBarStackBlock());
     }
 }

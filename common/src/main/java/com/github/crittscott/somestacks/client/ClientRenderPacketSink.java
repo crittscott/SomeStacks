@@ -13,13 +13,9 @@ public final class ClientRenderPacketSink {
     private ClientRenderPacketSink() {}
 
     public static void apply(ConfigSyncPkt packet) {
-        if (!packet.isValid()) {
-            return;
-        }
         StackState.setBlockEnabled(BlockType.STORAGE_STACK, packet.enableStack());
         StackState.setBlockEnabled(BlockType.SINGLES_STACK, packet.enableSingles());
         StackState.setBlockEnabled(BlockType.BAR_STACK, packet.enableBar());
-        ItemRenderOverrides.setSyncedServerOverrides(packet.renderOverrides());
     }
 
     public static void apply(RenderOverridePkt packet) {

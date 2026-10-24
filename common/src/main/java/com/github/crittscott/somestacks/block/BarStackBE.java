@@ -1,16 +1,19 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -19,9 +22,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.Arrays;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 
 /**
  * One Bar Stack: 64 bars laid in eight alternating layers of eight.
@@ -37,6 +41,10 @@ import java.util.Arrays;
 public class BarStackBE extends BlockEntity {
     /** Positions in one block. The column's flat range is this times its height. */
     public static final int SLOTS = BarCubeIdx.CELLS;
+
+    /** Data-pack classification shared by Bar and Singles admission. */
+    public static final TagKey<Item> INGOTS = TagKey.create(Registries.ITEM,
+            ResourceLocation.fromNamespaceAndPath("somestacks", "ingots"));
 
     private static final String TAG_ITEMS = "Items";
 
@@ -95,13 +103,7 @@ public class BarStackBE extends BlockEntity {
         super(CommonRegistry.BAR_STACK_BE.get(), pos, state);
     }
 
-    /**
-     * Whether a Bar Stack accepts this item, the single decision point every deposit, column
-     * insertion and capability path consults. Ingot-ness is the server's {@code ingots} list
-     * resolved against the loaded item tags and named item ids, so an admin widens or narrows it
-     * without a data pack; because the Singles rule is this rule's complement, widening it narrows
-     * Singles by as much.
-     */
+    /** Accepts tagged items whose namespaces are not disabled by policy. */
     public static boolean isValidBarItem(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -109,7 +111,7 @@ public class BarStackBE extends BlockEntity {
         if (ItemOps.isItemFromDisabledMod(stack)) {
             return false;
         }
-        return ServerConfig.isIngotItem(stack.getItem());
+        return stack.is(INGOTS);
     }
 
     /**

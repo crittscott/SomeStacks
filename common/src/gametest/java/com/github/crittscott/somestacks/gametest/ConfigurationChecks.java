@@ -7,8 +7,6 @@ import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -136,20 +134,19 @@ public final class ConfigurationChecks {
         helper.succeed();
     }
 
-    public static void serverConfigLoadsBoundsListsAndIngotGlobs(GameTestHelper helper) {
+    public static void serverConfigLoadsBoundsListsAndTags(GameTestHelper helper) {
+        PolicyParityChecks.verify(helper);
         Path serverConfigDir = helper.getLevel().getServer()
                 .getWorldPath(LevelResource.ROOT)
                 .resolve("serverconfig");
         Path original = serverConfigDir.resolve(SomeStacksCommon.MODID + "-server.json");
         Path fixture = serverConfigDir.resolve(SomeStacksCommon.MODID + "-gametest.json");
         Item knownIngot = GameTestScaffold.firstBarItem();
-        String matchingTag = tagContaining(knownIngot);
-        String glob = matchingTag.substring(0, matchingTag.length() - 1) + "*";
 
         try {
             Files.createDirectories(serverConfigDir);
-            Files.writeString(fixture, configJson(999, -3, 0, "#" + glob));
-            ServerConfig.load(fixture);
+            Files.writeString(fixture, configJson(999, -3, 0));
+            ServerConfig.load(fixture, helper.getLevel().getServer());
 
             checkEquals(64, ServerConfig.maxPileHeight(), "Maximum pile-height clamp");
             checkEquals(0, ServerConfig.galleryRequiredPermissionLevel(),
@@ -160,42 +157,44 @@ public final class ConfigurationChecks {
             check(ServerConfig.enableSinglesStackBlock(), "Singles enable flag");
             check(!ServerConfig.enableBarStackBlock(), "Bar enable flag");
             check(ServerConfig.galleryEnabled(), "Gallery enable flag");
-            checkEquals(List.of("minecraft"), ServerConfig.GEN_MODS.get(), "Gallery mod list");
-            checkEquals(List.of("minecraft:stone"), ServerConfig.GEN_ITEMS.get(),
+            checkEquals(List.of("minecraft"), ServerConfig.ListSetting.GEN_MODS.get(), "Gallery mod list");
+            checkEquals(List.of("minecraft:stone"), ServerConfig.ListSetting.GEN_ITEMS.get(),
                     "Gallery item list");
             check(ServerConfig.isModDisabled("MINECRAFT"),
                     "Disabled mod lookup was not case-insensitive");
             check(ServerConfig.isModDisabled("examplemod"), "Disabled mod was not baked");
             check(ServerConfig.isItemDisabled(ResourceLocation.parse("minecraft:stone")),
                     "Disabled item was not baked");
-            check(ServerConfig.isIngotItem(knownIngot), "Wildcard ingot tag did not admit its item");
-            boolean foundNonIngot = false;
-            for (Item item : BuiltInRegistries.ITEM) {
-                if (!ServerConfig.isIngotItem(item)) {
-                    foundNonIngot = true;
-                    break;
-                }
-            }
-            check(foundNonIngot, "Ingot glob unexpectedly admitted every registered item");
+            check(new net.minecraft.world.item.ItemStack(knownIngot).is(
+                    com.github.crittscott.somestacks.block.BarStackBE.INGOTS), "Bar classification bypassed the data-pack tag");
 
-            Files.writeString(fixture, configJson(-9, 99, 7, "#" + matchingTag));
-            ServerConfig.load(fixture);
+            Files.writeString(fixture, configJson(-9, 99, 7));
+            ServerConfig.load(fixture, helper.getLevel().getServer());
             checkEquals(1, ServerConfig.maxPileHeight(), "Minimum pile-height clamp");
             checkEquals(4, ServerConfig.galleryRequiredPermissionLevel(),
                     "Maximum gallery-permission clamp");
             checkEquals(7, ServerConfig.renderGalleryPlacementsPerTick(),
                     "Positive gallery placement budget");
-            check(ServerConfig.isIngotItem(knownIngot), "Exact ingot tag did not admit its item");
-
-            Files.writeString(fixture, configJson(8, 2, 8,
-                    String.valueOf(BuiltInRegistries.ITEM.getKey(knownIngot))));
-            ServerConfig.load(fixture);
-            check(ServerConfig.isIngotItem(knownIngot), "Bare item id did not admit its own item");
-            checkEquals(1, ServerConfig.ingotItemCount(), "Bare item id admitted more than itself");
+            ServerConfig.Settings accepted = ServerConfig.settings();
+            JsonObject excessive = JsonParser.parseString(configJson(8, 2, 8)).getAsJsonObject();
+            com.google.gson.JsonArray namespaces = new com.google.gson.JsonArray();
+            for (int i = 0; i <= ServerConfig.MAX_NAMESPACE_ENTRIES; i++) namespaces.add("example_" + i);
+            excessive.getAsJsonObject("render_gallery").add("gen_mods", namespaces);
+            Files.writeString(fixture, excessive.toString());
+            check(!ServerConfig.reload(), "Over-limit file reload was accepted");
+            checkEquals(accepted, ServerConfig.settings(), "Rejected file replaced the active policy");
+            Files.writeString(fixture, configJson(8, 2, 8));
+            try {
+                checkEquals(1, helper.getLevel().getServer().getCommands().getDispatcher().execute("ss reload",
+                        helper.getLevel().getServer().createCommandSourceStack().withSuppressedOutput()),
+                        "Successful reload did not return command success");
+            } catch (com.mojang.brigadier.exceptions.CommandSyntaxException failure) {
+                throw new AssertionError("Reload command failed", failure);
+            }
         } catch (IOException e) {
             throw new GameTestAssertException("Could not prepare server-config fixture: " + e);
         } finally {
-            ServerConfig.load(original);
+            ServerConfig.load(original, helper.getLevel().getServer());
             try {
                 Files.deleteIfExists(fixture);
             } catch (IOException e) {
@@ -205,7 +204,7 @@ public final class ConfigurationChecks {
         helper.succeed();
     }
 
-    private static String configJson(int height, int permission, int placements, String ingotEntry) {
+    private static String configJson(int height, int permission, int placements) {
         return """
                 {
                   "piles": {"max_pile_height": %d},
@@ -216,8 +215,7 @@ public final class ConfigurationChecks {
                   },
                   "compatibility": {
                     "disable_mods": [" MineCraft ", "ExampleMod"],
-                    "disable_items": ["minecraft:stone", "not an item id"],
-                    "ingots": ["%s"]
+                    "disable_items": ["minecraft:stone", "not an item id"]
                   },
                   "render_gallery": {
                     "placements_per_tick": %d,
@@ -227,19 +225,10 @@ public final class ConfigurationChecks {
                     "gen_items": ["minecraft:stone"]
                   }
                 }
-                """.formatted(height, ingotEntry, placements, permission);
+                """.formatted(height, placements, permission);
     }
 
-    private static String tagContaining(Item item) {
-        for (HolderSet.Named<Item> tag : BuiltInRegistries.ITEM.getTags().toList()) {
-            for (var holder : tag) {
-                if (holder.value() == item) {
-                    return tag.key().location().toString();
-                }
-            }
-        }
-        throw new GameTestAssertException("Known Bar item belongs to no item tag");
-    }
+    
 
     private static void checkConfigEquals(
             ItemRenderConfig expected, ItemRenderConfig actual, String message) {

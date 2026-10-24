@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.PlatformPaths;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.util.OverrideJsonCodec;
@@ -9,11 +10,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -21,7 +22,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,9 +37,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.annotation.Nullable;
+
 /**
  * The client's item render configuration, layered by authority. The first matching entry owns the
- * entire presentation: server-synced admin overrides, then the user's override file, then bundled
+ * entire presentation: the user's override file, then bundled
  * resource overrides. Items absent from every layer use measured profiles.
  *
  * <p>A bundled resource-override file is named for the namespace whose items it covers, and covers
@@ -56,8 +58,6 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
     /** Bundled resource overrides, from client resource reload. */
     public static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
-    /** Admin overrides synced from the server. */
-    public static final Map<ResourceLocation, ItemRenderConfig> SERVER_OVERRIDES = new HashMap<>();
     /** The user's own overrides: {@code ss item} changes plus the loaded user file. */
     private static final Map<ResourceLocation, ItemRenderConfig> USER_OVERRIDES = new HashMap<>();
     private static boolean userFileLoaded = false;
@@ -116,10 +116,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         CONFIG_MAP.putAll(prepared);
     }
 
-    public static void setSyncedServerOverrides(Map<ResourceLocation, ItemRenderConfig> overrides) {
-        SERVER_OVERRIDES.clear();
-        SERVER_OVERRIDES.putAll(overrides);
-    }
+    
 
     public static void putUser(ResourceLocation itemId, ItemRenderConfig config) {
         ensureUserFileLoaded();
@@ -147,10 +144,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         ensureUserFileLoaded();
 
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        ItemRenderConfig entry = SERVER_OVERRIDES.get(itemId);
-        if (entry == null) {
-            entry = USER_OVERRIDES.get(itemId);
-        }
+        ItemRenderConfig entry = USER_OVERRIDES.get(itemId);
         if (entry == null) {
             entry = CONFIG_MAP.get(itemId);
         }
@@ -203,7 +197,8 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         List<String> rejected = new ArrayList<>();
         for (String namespace : namespaces) {
             // A valid namespace contains no path separator, so it cannot escape the dump directory.
-            if (ResourceLocation.tryBuild(namespace, "validation") == null) {
+            if (!ServerConfig.isValidNamespace(namespace)
+                    || namespace.length() > ServerConfig.MAX_NAMESPACE_LENGTH) {
                 SomeStacksCommon.LOGGER.warn("Ignoring dump request for invalid namespace '{}'", namespace);
                 rejected.add(namespace);
                 continue;

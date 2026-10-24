@@ -116,8 +116,8 @@ public final class RenderGalleryGenerator {
      */
     private static Map<String, List<Item>> barItemsByNamespace;
 
-    /** The ingot generation {@link #barItemsByNamespace} was grouped under. */
-    private static int barItemsGeneration;
+    /** Invalidates the tag-dependent index after a data reload or admission-policy change. */
+    public static void invalidateBarItems() { barItemsByNamespace = null; }
 
     /** Queued galleries. Server thread only: appended by the command, drained by the tick handler. */
     private static final Deque<Job> jobs = new ArrayDeque<>();
@@ -134,8 +134,7 @@ public final class RenderGalleryGenerator {
     }
 
     private static Map<String, List<Item>> barItemsByNamespace() {
-        int generation = ServerConfig.ingotGeneration();
-        if (barItemsByNamespace == null || barItemsGeneration != generation) {
+        if (barItemsByNamespace == null) {
             Map<String, List<Item>> map = new TreeMap<>();
             itemsByNamespace().forEach((namespace, items) -> {
                 List<Item> ingots = items.stream()
@@ -146,7 +145,6 @@ public final class RenderGalleryGenerator {
                 }
             });
             barItemsByNamespace = map;
-            barItemsGeneration = generation;
         }
         return barItemsByNamespace;
     }

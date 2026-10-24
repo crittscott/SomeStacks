@@ -46,7 +46,6 @@ public class SomeStacksNeoForge {
         WorldEdits.setAuthority(new NeoForgeEditAuthority());
         PlayerEdits.setAuthority(new NeoForgePlayerEditAuthority());
         PlayerReach.setProvider(player -> player.blockInteractionRange());
-        ServerConfig.useCommonIngotDefaults();
 
         ModRegistry.init(modBus);
         modBus.addListener(ModNetworking::onRegisterPayloadHandlers);
@@ -76,7 +75,7 @@ public class SomeStacksNeoForge {
 
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
         var configDir = event.getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig");
-        ServerConfig.load(configDir.resolve(MODID + "-server.json"));
+        ServerConfig.load(configDir.resolve(MODID + "-server.json"), event.getServer());
     }
 
     private void onAddReloadListeners(AddReloadListenerEvent event) {
@@ -84,7 +83,7 @@ public class SomeStacksNeoForge {
     }
 
     private void onTagsUpdated(TagsUpdatedEvent event) {
-        ServerConfig.rebakeIngots();
+        RenderGalleryGenerator.invalidateBarItems();
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
@@ -122,7 +121,6 @@ public class SomeStacksNeoForge {
         return new ConfigSyncPkt(
                 ServerConfig.enableStorageStackBlock(),
                 ServerConfig.enableSinglesStackBlock(),
-                ServerConfig.enableBarStackBlock(),
-                ServerOverridesLoader.load());
+                ServerConfig.enableBarStackBlock());
     }
 }

@@ -25,7 +25,7 @@ public final class ConfigurationGameTests {
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void serverConfigLoadsBoundsListsAndIngotGlobs(GameTestHelper helper) {
-        ConfigurationChecks.serverConfigLoadsBoundsListsAndIngotGlobs(helper);
+    public static void serverConfigLoadsBoundsListsAndTags(GameTestHelper helper) {
+        ConfigurationChecks.serverConfigLoadsBoundsListsAndTags(helper);
     }
 }

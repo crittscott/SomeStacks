@@ -29,7 +29,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | `StoragePile`, `SinglesColumn`, `BarColumn` | Run-wide growth, mutation, fill, cleanup, structure |
 | `StackItemStorage`, `SlotAccess` | Loader-neutral fixed-slot storage contract |
 | `util/*CubeIdx`, `ViewRay` | Geometry, rotation, support, seams, targeting |
-| `ServerConfig` | Per-world policy, deny sets, resolved ingot membership |
+| `ServerConfig` | Per-world policy, deny sets, data-pack tag admission |
 | `WorldEdits`, `EditAuthority` | World edits and loader protection seam |
 | `network/*` | Payloads and shared request validation |
 | `client/*` | Renderers, profiles, measurement, bar textures, gesture rules |
@@ -67,7 +67,7 @@ The three movement models are distinct:
 
 ## Admission, automation, and edits
 
-Storage accepts ordinary nonempty items; Bar accepts the configured ingot list; Singles accepts allowed non-Bar items. `disable_mods` applies to gestures and automation, while `disable_items` applies only to player deposits. Internal settlement, gravity, and backfill never reapply admission rules.
+Storage accepts ordinary nonempty items; Bar accepts the `somestacks:ingots` item tag; Singles accepts allowed non-Bar items. `disable_mods` applies to gestures and automation, while `disable_items` applies only to player deposits. Internal settlement, gravity, and backfill never reapply admission rules.
 
 Every loader-native view spans the whole run plus one headroom block while growth is allowed. Storage slots use item stack limits; Singles and Bar slots hold one item. Fabric stages mutations until outer transaction commit and permits one structural extraction position per transaction. `RunEdit` refuses reentrant automation mutations.
 
@@ -83,11 +83,11 @@ Forge and NeoForge protection events run before `RightClickBlockSuppressor` cons
 
 ## Configuration and presentation
 
-World policy is `<world>/serverconfig/somestacks-server.json`, owned by `ServerConfig` and loaded at server startup. `/ss deny`, `/ss ingot`, and `/ss gen` save immediately. `/ss reload` reloads server render overrides and resyncs players but does not reread policy JSON. Ingot-list entries are either a `#`-prefixed item-tag pattern (`*` allowed, matched against whole tag names) or a bare item id, and resolve again on configuration or tag reload.
+World policy is `<world>/serverconfig/somestacks-server.json`, owned by `ServerConfig`. `/ss deny` and `/ss gen` save immediately; `/ss reload` rereads policy and sends changed client flags. Bar/Singles classification uses the reloadable `somestacks:ingots` tag.
 
-Extension points are the configured ingot list; `data/<namespace>/somestacks_sounds/*.json`; `assets/<namespace>/item_render_overrides/*.json`; `assets/<namespace>/textures/bars/*.json`; and `config/somestacks/server_item_overrides/*.json`.
+Extension points are the `somestacks:ingots` item tag; `data/<namespace>/somestacks_sounds/*.json`; `assets/<namespace>/item_render_overrides/*.json`; `assets/<namespace>/textures/bars/*.json`.
 
-All types use block entity renderers. `CubeRenderHelper` renders Storage and Singles item models; Bar uses fixed cuboids with resource-defined textures and tints. Storage/Singles profile precedence is server, user, resource pack, then measurement. `AutoRenderProfiles` uses the 2-D projector only for flat geometry it can reproduce; Fabric models with no ordinary quads stay on the 3-D renderer path. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Bar appearance is client-only. Galleries spread work across ticks but bypass normal placement protection.
+All types use block entity renderers. `CubeRenderHelper` renders Storage and Singles item models; Bar uses fixed cuboids with resource-defined textures and tints. Storage/Singles profile precedence is user, resource pack, then measurement. `AutoRenderProfiles` uses the 2-D projector only for flat geometry it can reproduce; Fabric models with no ordinary quads stay on the 3-D renderer path. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Bar appearance is client-only. Galleries spread work across ticks but bypass normal placement protection.
 
 ## GameTests
 
@@ -103,3 +103,4 @@ There is no JUnit or production `test` source set. Each loader has a development
 - Every client request is validated independently of client gesture recognition.
 - Render-profile precedence is fixed; the measurement format version changes when fitting semantics change.
 - Storage and Singles render scales are separate in `CubeRenderHelper`.
+

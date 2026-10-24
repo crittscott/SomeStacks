@@ -16,7 +16,7 @@ Requires Minecraft 1.21.3 and one of Fabric Loader 0.19.5+ with Fabric API 0.114
 | --- | --- | --- | --- |
 | **Storage Stack** | 27 item stacks | Any allowed item | Bulk storage that merges, sorts, packs down, and grows or shrinks |
 | **Singles Stack** | 64 items | Allowed non-ingots | A 4 x 4 x 4 display grid, one item per cell |
-| **Bar Stack** | 64 items | Server-defined ingots | Eight alternating layers of bars |
+| **Bar Stack** | 64 items | Data-pack-tagged ingots | Eight alternating layers of bars |
 
 A vertical run of one stack type is a single pile or column with one shared inventory. Default maximum height is 8 blocks (216 Storage slots, 512 Singles or Bar positions).
 
@@ -46,7 +46,7 @@ Placement into water waterlogs the stack and keeps the water. A top-face deposit
 
 In creative mode, deposits do not reduce the held stack.
 
-Deposits are rejected when the server has disabled the item's mod or exact item id; existing contents stay extractable. Items the selected type does not accept simply do nothing: Bar takes only configured ingots, Singles takes everything allowed that Bar does not.
+Deposits are rejected when the server has disabled the item's mod or exact item id; existing contents stay extractable. Items the selected type does not accept simply do nothing: Bar takes only tagged ingots, Singles takes everything allowed that Bar does not.
 
 ## Extracting
 
@@ -78,7 +78,7 @@ A redstone torch rotates a whole block; a soul torch rotates only the aimed item
 
 ### Bar
 
-64 server-approved ingots rendered as fixed bar cuboids in eight layers of eight, each layer across the one below. The item model is not drawn; a resource pack supplies the bar texture and tint.
+64 tagged ingots rendered as fixed bar cuboids in eight layers of eight, each layer across the one below. The item model is not drawn; a resource pack supplies the bar texture and tint.
 
 Every bar above the bottom layer must overlap a bar directly below, and support crosses a seam between adjacent Bar blocks. Removing a bar, or breaking a Bar block, drops every bar that loses support, possibly cascading through layers and blocks. Bar Stacks have no rotation gesture.
 
@@ -127,7 +127,6 @@ Per-world JSON policy at `<world>/serverconfig/somestacks-server.json`.
 | `stacks.enable_*_stack_block` | `true` | When false, blocks new placement and growth of that type |
 | `compatibility.disable_mods` | empty | Refuses new items from listed namespaces in gestures and automation |
 | `compatibility.disable_items` | empty | Refuses exact items in player deposits only |
-| `compatibility.ingots` | `#forge:ingots*` / `#c:ingots*`, plus `#somestacks:ingots` | What Bar accepts and Singles refuses; `#name` is a tag pattern (`*` allowed), a bare id is one item |
 | `render_gallery.enabled` | `false` | Enables `/ss gallery` and `/ss ingotgallery` |
 | `render_gallery.required_permission_level` | `3` | Permission level those two commands need |
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
@@ -145,10 +144,10 @@ Disabling a type, item, mod, or ingot category never removes or ejects existing 
 | `/ss item ...` / `reset` | level 2 | Change how one item appears on that client |
 | `/ss write changed\|<modid>\|all\|list` | level 2 | Save changed item profiles, or generate complete profile files |
 | `/ss gallery ...` / `/ss ingotgallery ...` | `render_gallery.required_permission_level`; off by default | Build Storage or Bar render galleries |
-| `/ss gen ...` / `deny ...` / `ingot ...` | level 2 | Edit gallery lists, disabled lists, or ingot tag patterns |
-| `/ss reload` | level 2 | Reload server item-render overrides and resync players |
+| `/ss gen ...` / `deny ...` | level 2 | Edit gallery and disabled lists |
+| `/ss reload` | level 2 | Reread world policy and sync changed client settings |
 
-Gallery commands build east of the player over a replaced sandstone floor, skip the protection checks ordinary placement uses (hence off by default), and spread large jobs across ticks. `/ss reload` does not reread the world-policy JSON; direct edits to that file take effect on restart.
+Gallery commands build east of the player over a replaced sandstone floor, skip the protection checks ordinary placement uses (hence off by default), and spread large jobs across ticks. `/ss reload` rereads the active world-policy JSON.
 
 ## Item appearance
 
@@ -162,9 +161,9 @@ Bar appearance is separate and client-side: resource packs map item ids to bar t
 
 ## Extension points
 
-- Data pack: add items to the tags listed in `compatibility.ingots`, including `somestacks:ingots`; replace action sounds via `data/<namespace>/somestacks_sounds/*.json`.
-- Resource pack: add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
-- Server: impose Storage/Singles profiles via `config/somestacks/server_item_overrides/*.json`, synced on login and `/ss reload`.
+- Data pack: add items to `somestacks:ingots`; replace action sounds via `data/<namespace>/somestacks_sounds/*.json`.
+- Resource pack: action sounds (`sounds.json`), render profiles, and Bar mappings as above.
+json`, synced on login and `/ss reload`.
 
 ## Protection and validation
 
@@ -183,3 +182,6 @@ A world saved with the 1.21.1 version of the mod loads with its stack contents u
 - Exact-item denial applies to player gestures only; namespace denial applies to automation too.
 - Server render overrides govern Storage and Singles profiles, not client-only Bar mappings.
 - Existing contents stay legal to extract and move internally after a config or tag change that would reject a new deposit.
+
+Mod lists: 256 namespaces, 256 characters each; excess preserves policy. Reload reports online players and succeeds with none. Help uses translated usages.
+
