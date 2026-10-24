@@ -2,7 +2,7 @@
 
 Some Stacks is extensible from data packs and resource packs. Nothing here requires a Java addon.
 
-For the Minecraft 26.1 target, set `pack.mcmeta` to resource-pack format **84** or data-pack format **101.1**, as appropriate. JSON must use strict syntax: no comments, trailing commas, or unquoted keys.
+For Minecraft 26.1, use resource-pack format **84** or data-pack format **101.1** in `pack.mcmeta`, as appropriate. JSON must use strict syntax: no comments, trailing commas, or unquoted keys.
 
 ## Quick map
 
