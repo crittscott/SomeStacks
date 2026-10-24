@@ -1,8 +1,7 @@
 package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
-import com.github.crittscott.somestacks.network.ConfigSyncPkt;
+import com.github.crittscott.somestacks.SomeStacksServer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -10,8 +9,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceArgument;
@@ -25,7 +24,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,6 +33,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
 
 /**
  * The server-side {@code ss} command: render gallery generation, server list editing, and
@@ -495,12 +495,14 @@ public final class SsCommand {
     }
 
     private static int reload(CommandContext<CommandSourceStack> ctx) {
-        ServerConfig.reload();
-        ConfigSyncPkt.rebuildCurrent();
-        int synced = ConfigSyncNetwork.syncAllPlayers(ctx.getSource().getServer());
+        if (SomeStacksServer.reloadPolicy(ctx.getSource().getServer()) < 0) {
+            ctx.getSource().sendFailure(Component.translatable("somestacks.command.policy_rejected"));
+            return 0;
+        }
+        int online = ctx.getSource().getServer().getPlayerList().getPlayerCount();
         ctx.getSource().sendSuccess(() -> Component.translatable(
-                "somestacks.command.reloaded", synced), true);
-        return synced;
+                "somestacks.command.reloaded", online), true);
+        return 1;
     }
 
     /**
@@ -523,7 +525,15 @@ public final class SsCommand {
     private static int addEntry(CommandContext<CommandSourceStack> ctx,
                                 ServerConfig.ListSetting list,
                                 String label, String entry) {
-        if (!ServerConfig.addListEntry(list, entry)) {
+        boolean added;
+        try {
+            added = ServerConfig.addListEntry(list, entry);
+        } catch (IllegalArgumentException rejected) {
+            ctx.getSource().sendFailure(Component.translatable("somestacks.command.namespace_rejected",
+                    entry, ServerConfig.MAX_NAMESPACE_LENGTH, ServerConfig.MAX_NAMESPACE_ENTRIES));
+            return 0;
+        }
+        if (!added) {
             ctx.getSource().sendFailure(Component.translatable(
                     "somestacks.command.list_contains", Component.translatable(label), entry));
             return 0;
@@ -553,11 +563,7 @@ public final class SsCommand {
     /** Keeps client-local {@code ss write list} inputs current after their server lists change. */
     private static void syncClientToolState(CommandContext<CommandSourceStack> ctx,
                                             ServerConfig.ListSetting list) {
-        if (list != ServerConfig.GEN_MODS && list != ServerConfig.DISABLE_MODS) {
-            return;
-        }
-        ConfigSyncPkt.rebuildCurrent();
-        ConfigSyncNetwork.syncAllPlayers(ctx.getSource().getServer());
+        SomeStacksServer.publishPolicy(ctx.getSource().getServer());
     }
 
     /**
