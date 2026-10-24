@@ -299,6 +299,7 @@ public final class ConfigurationChecks {
      */
     public static void serverCommandsEnforcePermissionsAndPersistEdits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        PolicyParityChecks.verify(helper);
         ServerConfig.Settings original = ServerConfig.settings();
         MinecraftServer server = helper.getLevel().getServer();
         try {
@@ -322,7 +323,8 @@ public final class ConfigurationChecks {
                     "Gen command did not update policy");
 
             ServerConfig.apply(policy(8, true, true, true, List.of(), List.of()));
-            execute(commands.getDispatcher(), operator, "ss reload");
+            checkEquals(1, execute(commands.getDispatcher(), operator, "ss reload"),
+                    "Successful reload did not return command success");
             check(ServerConfig.isItemDisabled(Identifier.parse("minecraft:stone")),
                     "Deny command was not saved immediately");
             check(ServerConfig.ListSetting.GEN_MODS.get().contains("examplemod"),
@@ -338,7 +340,8 @@ public final class ConfigurationChecks {
             ServerConfig.apply(galleryPolicy(baseline, true, 0));
             check(ServerConfig.save(), "Could not save enabled gallery policy");
             ServerConfig.apply(baseline);
-            execute(commands.getDispatcher(), operator, "ss reload");
+            checkEquals(1, execute(commands.getDispatcher(), operator, "ss reload"),
+                    "Successful reload did not return command success");
             check(gallery.canUse(ordinaryPlayer), "Command reload did not enable gallery access");
             ServerConfig.apply(galleryPolicy(baseline, true, 4));
             check(ServerConfig.save(), "Could not save restricted gallery policy");

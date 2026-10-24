@@ -14,10 +14,9 @@ import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.resources.Identifier;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 
-/** Server-safe syntax shared by local render commands and server help. */
+/** Render command syntax without client implementation dependencies. */
 public final class ClientRenderCommandSyntax {
     public static final String ROOT = "ss";
     public static final String ITEM = "item";
@@ -44,18 +43,6 @@ public final class ClientRenderCommandSyntax {
         dispatcher.register(LiteralArgumentBuilder.<S>literal(ROOT)
                 .then(itemTree(commandFor, itemSuggestions))
                 .then(writeTree(commandFor, namespaceSuggestions)));
-    }
-
-    /** Derives help from the same tree without loading or invoking client operations. */
-    public static List<String> usages(String topic) {
-        CommandDispatcher<Object> dispatcher = new CommandDispatcher<>();
-        register(dispatcher, action -> ctx -> 1,
-                (ctx, builder) -> builder.buildFuture(), (ctx, builder) -> builder.buildFuture());
-        var node = dispatcher.getRoot().getChild(ROOT).getChild(topic);
-        if (node == null) return List.of();
-        return Arrays.stream(dispatcher.getAllUsage(node, new Object(), false))
-                .map(form -> "/" + ROOT + " " + topic + " " + form)
-                .toList();
     }
 
     private static <S> LiteralArgumentBuilder<S> itemTree(
