@@ -4,7 +4,7 @@ Some Stacks has no screens and no recipes. You place storage by depositing into 
 
 ## The stack modifier key
 
-`V` by default, rebindable under **Options → Controls → Some Stacks → Stack Modifier (Hold)**. It is a *held* modifier, not a toggle: every gesture below is performed while the key is down.
+`V` by default, rebindable under **Options → Controls → Some Stacks → Stack Modifier (Hold)**. It is a *held* modifier, not a toggle. Hold it for placement and deposits; extraction and rotation use the gestures described below.
 
 ## Placement modes
 

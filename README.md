@@ -1,9 +1,9 @@
 ![Some Stacks](images/somestacks-splash.png)
-![Loaders: Fabric Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC target: 26.3](https://img.shields.io/badge/MC%20target-26.3-8a5a9b?style=for-the-badge)
+![Loaders: Fabric Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC: 1.20.1, 1.21.1/4/8/11, 26.*](https://img.shields.io/badge/MC-1.20.1%2C%201.21.1%2F4%2F8%2F11%2C%2026.*-8a5a9b?style=for-the-badge)
 
 # Some Stacks
 
-This branch targets Minecraft **26.3** on Fabric and NeoForge.
+For Minecraft **1.20.1, 1.21.1/4/8/11, and 26.***. Install the file matching your Minecraft version and loader; loader availability varies by Minecraft version.
 
 **Storage you can see.** Why keep that gold hidden away in a chest? Can't remember which shulker box has all your granite? Put it all out where you can see it using Bar Stacks or Storage Stacks. Like the look of that Mekanism Digital Miner but can't fit it in your study? Place a small copy and rotate it as you like with a Singles Stack. Need just a little light? Add torches, for a light level of 3 each.
 
@@ -17,7 +17,7 @@ An extension and complete rewrite of [Stackable](https://www.curseforge.com/mine
 | **Singles Stack** | 64 items, one per cell, in a 4×4×4 grid | The display case. Every item needs something under it, and pulling one out drops the rest of its column down a layer. Rotate individual items to line them up. |
 | **Bar Stack** | 64 ingots or bricks as stacked bars | The vault. Eight alternating layers of eight bars, each resting on the ones below. Pull a bar out from underneath and everything it was holding up comes down. |
 
-No items and no recipes. A stack exists because you put something in it, and it goes away when you take everything back out, unless you set it permanent for connection to inventory management systems.
+No items and no recipes. A stack exists because you put something in it, and it goes away when you take everything back out. Storage piles can be set permanent for connection to inventory management systems.
 
 ## Getting started
 
@@ -51,7 +51,7 @@ Every stack block exposes loader-native item storage on every side (transactiona
 
 ## Server-friendly
 
-Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods can be barred from storage, and single items can be barred from player deposits. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. NeoForge also fires its place and break events, so claim mods using those hooks can allow, deny, or record the edit. Fabric fires its break events and asks block-use callbacks before depositing into a neighboring stack.
+Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods can be barred from storage, and single items can be barred from player deposits. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. NeoForge also fires its place and break events, so claim mods using those hooks can allow, deny, or record the edit. Fabric fires its break events and queries its bundled Common Protection API before placing, growing, removing, or depositing into a neighboring stack.
 
 See **[Server administration](docs/server-admin.md)** for the config file and the `/ss` command.
 

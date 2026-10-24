@@ -29,7 +29,7 @@ Inserting into that headroom grows the run by a block and stores the item there.
 - the target is inside build height, replaceable, and not obstructed by an entity,
 - and the position passes the world border and spawn protection checks.
 
-Automated growth uses the shared `[SomeStacks]` identity on every loader, so machine and claim policies can recognize it, and answers to vanilla protection checks. NeoForge fires native placement events while staging growth, so a denial refuses the insertion before commit and the items stay with the caller. Fabric growth answers to the vanilla checks only.
+Automated growth uses the shared `[SomeStacks]` identity on every loader, so machine and claim policies can recognize it, and answers to vanilla protection checks. NeoForge fires native placement events while staging growth, so a denial refuses the insertion before commit and the items stay with the caller. Fabric queries its bundled Common Protection API before growth; claim mods provide its permission rules.
 
 The advertised range is deliberately "what is there plus one block" — not the full potential height, which would leave a caller re-deriving a mostly empty range every tick, and not only what exists, which would mean a full run never gets offered the insertion that grows it.
 
