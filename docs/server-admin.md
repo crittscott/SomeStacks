@@ -61,7 +61,7 @@ The two gallery commands overwrite a region of the world outright without the pr
 
 The gallery commands also require a **player** rather than the console, because they build where the sender stands.
 
-`/ss help` is gated by nothing, so a player who cannot run a subcommand can still read what it needs.
+`/ss help` is available to everyone. Its translated usage forms and access descriptions remain visible even when the player cannot run the command.
 
 ## Command reference
 
@@ -77,16 +77,16 @@ The gallery commands also require a **player** rather than the console, because 
 | `/ss gen item add\|remove\|list <item>` | Level 2 | Edit the gallery item list. |
 | `/ss deny mod add\|remove\|list <modid>` | Level 2 | Edit the disabled namespace list. |
 | `/ss deny item add\|remove\|list <item>` | Level 2 | Edit the disabled item list. |
-| `/ss reload` | Level 2 | Refresh policy and synchronize changed client settings. |
+| `/ss reload` | Level 2 | Refresh policy and synchronize changed client settings; report players online. |
 | `/ss help [<command>]` | Anyone | Command forms, gates, and detail. |
 
 Command edits to the four text lists update both the running server and the config file, so a later save cannot undo them.
 
-An item id is checked against the registry when it is added to a list, because those lists are matched by exact id and a typo would sit there looking effective. A mod id is taken as typed, since it may name a mod that is not installed yet.
+Item ids are checked against the registry when added to a list. Mod namespaces are trimmed, lowercased, validated, and deduplicated; the mod need not be installed. Each mod list allows at most 256 unique namespaces of at most 256 characters. Malformed file entries are logged and omitted. A replacement exceeding either limit is rejected as a whole, retaining the active policy (defaults at startup); rejected command additions and reloads report failure.
 
 ### `/ss reload`
 
-Refreshes server policy and pushes changed client-facing settings to every player. Gallery enablement or permission changes also refresh command suggestions without reconnecting. On Fabric it rereads the active `somestacks-server.toml`; on NeoForge, TOML edits are loaded by the loader's config system. It does not reload data packs: use vanilla `/reload` for the ingot tag.
+Refreshes server policy and sends client settings only when their synchronized values change. Fabric rereads the active `somestacks-server.toml`. NeoForge reads the values published by its native TOML config lifecycle. Gallery enablement or permission changes refresh connected players' command availability. The confirmation reports players online, rather than packets sent; a successful reload returns command success even when nobody is online. Over-limit namespace policies leave the previous active policy intact. This command does not reload render resources or data packs: use a resource reload for rendering changes and vanilla `/reload` for the ingot tag.
 
 ### Render galleries
 
@@ -96,7 +96,7 @@ Galleries **overwrite** their floor and stack positions directly and do not appl
 
 ## What the server tells the client
 
-On login and whenever policy changes, the server sends each player the three stack-type enable flags and the namespace lists the client needs. The disabled-item list and the pile settings stay server-side. The ingot tag reaches clients the vanilla way, with the other item tags.
+On login and whenever synchronized settings change, the server sends each player the three stack-type enable flags and the namespace lists the client needs. The disabled-item list and the pile settings stay server-side. The ingot tag reaches clients the vanilla way, with the other item tags.
 
 Item appearance is client resource data. To give players shared render profiles or Bar textures, ship them in a server resource pack.
 
