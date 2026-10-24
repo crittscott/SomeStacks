@@ -104,6 +104,7 @@ public final class ServiceAndConfigChecks {
      * publishing it, and restores both the file and the published policy afterward.
      */
     public static void reloadCommandPublishesStoredPolicy(GameTestHelper helper) {
+        PolicyParityChecks.verify(helper);
         MinecraftServer server = helper.getLevel().getServer();
         ServerConfig.Settings before = ServerConfig.settings();
         String marker = "somestacks_gametest_reload_" + UUID.randomUUID().toString().replace("-", "");
@@ -117,11 +118,11 @@ public final class ServiceAndConfigChecks {
             ServerConfig.publish(before);
             check(!ServerConfig.ListSetting.GEN_MODS.get().contains(marker), "Fixture published the stored policy");
 
-            int synced = server.getCommands().getDispatcher().execute("ss reload",
+            int result = server.getCommands().getDispatcher().execute("ss reload",
                     server.createCommandSourceStack().withSuppressedOutput());
 
             checkEquals(List.of(marker), ServerConfig.ListSetting.GEN_MODS.get(), "Reload did not publish stored policy");
-            checkEquals(server.getPlayerList().getPlayerCount(), synced, "Reload did not count online players");
+            checkEquals(1, result, "Successful reload did not return command success");
         } catch (CommandSyntaxException exception) {
             throw new AssertionError("Reload command failed", exception);
         } finally {

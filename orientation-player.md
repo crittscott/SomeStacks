@@ -160,7 +160,7 @@ Disabled types keep existing blocks and extraction. Policy/tag changes never eje
 
 Galleries build east over sandstone across ticks, in id order without disabled items, replacing floor and stacks without placement protection.
 
-Command edits save immediately. Mod lists normalize case/spacing and duplicates; mods need not be installed. Each allows 256 namespaces of at most 256 characters. Malformed config names are logged and omitted. Over-limit configs retain the previous policy (defaults at startup); rejected additions/reloads report failure.
+Command edits save immediately. Mod lists normalize case/spacing and duplicates; mods need not be installed. Each allows 256 namespaces of at most 256 characters. Malformed config names are logged and omitted. Over-limit configs retain the previous policy (defaults at startup); rejected additions/reloads report failure. Reload reports players online and succeeds with none; help uses translated usage forms.
 
 ## Item appearance
 
@@ -177,7 +177,7 @@ Bar appearance is separate: resource packs map item ids to textures and optional
 ## Extension points
 
 - Data packs: Bar admission through `somestacks:ingots`.
-- Resource packs: profiles at `assets/<namespace>/item_render_overrides/*.json`, Bar mappings as above, and sounds at `assets/somestacks/sounds.json`.
+- Resource pack: action sounds (`sounds.json`), render profiles, and Bar mappings as above.
 
 ## Protection and validation
 
@@ -186,3 +186,4 @@ Player placement, deposit, extraction, and rotation honor build limits, obstruct
 Fabric removal asks Common Protection API and reports cancellation/completion with the original actor, state, and entity.
 
 Block-use clicks use synchronized mode/modifier state. Existing-stack gestures are block use, so a Forge rule denying only item use does not stop them. Vanilla checks reach and loaded chunks; the server validates player status, hand, items, adjacency, support, enablement, height, and protection. Forge restores denied placement state/NBT and publishes neighbor updates after acceptance.
+

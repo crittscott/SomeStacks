@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.command;
 
+import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -28,6 +29,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
 import javax.annotation.Nullable;
 
 /**
@@ -469,15 +471,17 @@ public final class SsCommand {
 
     /** Rereads world policy; publication synchronizes changed client fields. */
     private static int reload(CommandContext<CommandSourceStack> ctx) {
+        ServerConfig.Settings previous = ServerConfig.settings();
         if (!ServerConfig.reload()) {
             ctx.getSource().sendFailure(Component.translatable("somestacks.command.policy_rejected"));
             return 0;
         }
+        ServerLifecycle.refreshCommands(ctx.getSource().getServer(), previous);
         ServerConfig.logActivePolicy();
         int online = ctx.getSource().getServer().getPlayerList().getPlayerCount();
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.reloaded", online), true);
-        return online;
+        return 1;
     }
 
     /**

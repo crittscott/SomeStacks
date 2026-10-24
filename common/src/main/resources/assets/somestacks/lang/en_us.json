@@ -36,6 +36,7 @@
 
   "somestacks.command.all_mods_disabled": "All loaded mods are disabled in server config",
   "somestacks.command.dump.create_failure": "Failed to create %s: %s",
+  "somestacks.command.dump.rejected": ". Ignored %s invalid namespace(s)",
   "somestacks.command.dump.failed": ". Failed to write %s: %s",
   "somestacks.command.dump.success": "Dumped %s render profile(s) for %s namespace(s) to %s",
   "somestacks.command.dumping": "Exporting render profiles for %s.",
@@ -79,7 +80,7 @@
   "somestacks.command.help.audience": "Run by %s.",
   "somestacks.command.help.gate.anyone": "anyone",
   "somestacks.command.help.gate.operator": "an operator, in game or from the server console",
-  "somestacks.command.help.gate.server_admin_in_game": "a server administrator, in game only",
+  "somestacks.command.help.gate.server_admin_in_game": "a player meeting the configured gallery permission, in game only; galleries must be enabled",
   "somestacks.command.help.hint": "Run /ss help <command> for detail.",
   "somestacks.command.help.index_command": "  /ss %s",
   "somestacks.command.help.index_summary": " - %s",
@@ -119,7 +120,7 @@
   "somestacks.command.help.gen.usage.5": "/ss gen item remove <item>",
   "somestacks.command.help.gen.usage.6": "/ss gen item list",
 
-  "somestacks.command.help.help.detail.1": "Every ss subcommand has an entry: ss is an administrator's tool throughout, and the two render gallery commands sit a permission level above the rest because they overwrite the world.",
+  "somestacks.command.help.help.detail.1": "Every ss subcommand has an entry. Render authoring and help are available to anyone; policy and list edits require an operator. Gallery access is controlled by server config because galleries overwrite the world.",
   "somestacks.command.help.help.summary": "List these commands, or explain one",
   "somestacks.command.help.help.usage.1": "/ss help",
   "somestacks.command.help.help.usage.2": "/ss help <command>",

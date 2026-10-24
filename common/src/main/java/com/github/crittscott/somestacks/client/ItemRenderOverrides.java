@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.PlatformServices;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.client.renderconfig.ItemRenderConfig;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
 import javax.annotation.Nullable;
 
 /**
@@ -216,7 +218,13 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
      */
     public static void handleDumpRequest(List<String> namespaces) {
         Map<String, Map<ResourceLocation, ItemRenderConfig>> byNamespace = new LinkedHashMap<>();
+        List<String> rejected = new ArrayList<>();
         for (String namespace : namespaces) {
+            if (!ServerConfig.isValidNamespace(namespace)
+                    || namespace.length() > ServerConfig.MAX_NAMESPACE_LENGTH) {
+                rejected.add(namespace);
+                continue;
+            }
             byNamespace.put(namespace, new HashMap<>());
         }
 
@@ -262,6 +270,9 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         if (!failed.isEmpty()) {
             message.append(Component.translatable("somestacks.command.dump.failed",
                     failed.size(), String.join(", ", failed)));
+        }
+        if (!rejected.isEmpty()) {
+            message.append(Component.translatable("somestacks.command.dump.rejected", rejected.size()));
         }
         report(message);
     }

@@ -133,6 +133,7 @@ public final class ForgeServerConfig {
             if (server != expected || !SPEC.isLoaded()) return;
             Settings previous = ServerConfig.settings();
             if (ServerConfig.reload() && !previous.equals(ServerConfig.settings())) {
+                ServerLifecycle.refreshCommands(expected, previous);
                 ServerConfig.logActivePolicy();
             }
         });

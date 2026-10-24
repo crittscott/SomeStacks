@@ -80,6 +80,14 @@ public final class ServerLifecycle {
         ServerGestureState.clear(playerId);
     }
 
+    /** Refreshes command availability only when gallery access changed. */
+    public static void refreshCommands(MinecraftServer server, ServerConfig.Settings previous) {
+        ServerConfig.Settings current = ServerConfig.settings();
+        if (previous.galleryEnabled() == current.galleryEnabled()
+                && previous.galleryPermissionLevel() == current.galleryPermissionLevel()) return;
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) server.getCommands().sendCommands(player);
+    }
+
     /** Sends one snapshot of the current policy to every player; policy files are not reread. */
     public static int syncAllPlayers(MinecraftServer server) {
         ConfigSyncPkt packet = ConfigSyncPkt.snapshot(ServerConfig.settings());
