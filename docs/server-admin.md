@@ -1,6 +1,6 @@
 # Server administration
 
-This branch targets Minecraft 1.21.9; compilation, GameTests, copied-world migration, and client/server verification remain pending. Use matching client/server loader builds. Back up worlds and test a copy of a world from the preceding 1.21.8 release before using this port. Custom data packs use format **88**; server resource packs use **69** (see [Pack authors](pack-authors.md)).
+These instructions apply to Minecraft 1.21.11. Use matching client/server Minecraft and loader builds. Back up worlds before upgrading. Custom data packs use format **94.1**; server resource packs use **75** (see [Pack authors](pack-authors.md)).
 
 ## The config file
 
@@ -103,7 +103,7 @@ Item appearance is client resource data. To give players shared render profiles 
 
 ## Protection and claim mods
 
-On all three loaders, structural edits answer to build limits, replaceability, obstruction, border, and spawn protection. Player gestures use the real vanilla interaction pipeline; the mod never invents additional right-click events. Forge/NeoForge fire native placement events before publishing new blocks, restoring full snapshots on denial, and consult destination interaction protection before a deposit reaches an adjacent Singles or Bar Stack. Fabric checks destination block-use callbacks for those deposits, and queries Common Protection API for placement, growth, and neighbor deposits when it is installed; without it, vanilla checks govern placement and growth.
+On all three loaders, structural edits answer to build limits, replaceability, obstruction, border, and spawn protection. Player gestures use the real vanilla interaction pipeline; the mod never invents additional right-click events. Forge/NeoForge fire native placement events before publishing new blocks, restoring full snapshots on denial, and consult destination interaction protection before a deposit reaches an adjacent Singles or Bar Stack. Fabric queries Common Protection API for destination interaction, placement, growth, and removal. The API is bundled and required; claim mods provide its permission rules.
 
 Blocks the mod removes during cleanup fire native break hooks: Forge/NeoForge `BreakEvent`, or Fabric's `PlayerBlockBreakEvents` lifecycle. Player cleanup retains the player actor; automated or mixed deferred Storage edits use `[SomeStacks]`. A refused removal leaves the empty block standing. Extracting the final Single or Bar emits destruction only when cleanup succeeds; a surviving block emits change.
 
