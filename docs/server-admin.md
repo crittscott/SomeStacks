@@ -1,6 +1,6 @@
 # Server administration
 
-This branch targets Minecraft 26.1.1 on Fabric and NeoForge. Use matching client/server loader builds. Worlds saved by the preceding 0.8.3 release (Minecraft 26.1) upgrade on first load; back them up first. Custom data packs use format **101.1**; server resource packs use **84** (see [Pack authors](pack-authors.md)).
+These instructions apply to Minecraft 26.1.2. Use matching client/server Minecraft and loader builds. Back up worlds before upgrading. Custom data packs use format **101.1**; server resource packs use **84** (see [Pack authors](pack-authors.md)).
 
 ## The config file
 
@@ -102,7 +102,7 @@ Item appearance is client resource data. To give players shared render profiles 
 
 ## Protection and claim mods
 
-On both loaders, structural edits answer to build limits, replaceability, obstruction, border, and spawn protection. Player gestures use the real vanilla interaction pipeline; the mod never invents additional right-click events. NeoForge fires native placement events before publishing new blocks, restoring full snapshots on denial, and consults destination interaction protection before a deposit reaches an adjacent Singles or Bar Stack. Fabric checks destination block-use callbacks for those deposits; vanilla checks govern placement and growth.
+On both loaders, structural edits answer to build limits, replaceability, obstruction, border, and spawn protection. Player gestures use the real vanilla interaction pipeline; the mod never invents additional right-click events. NeoForge fires native placement events before publishing new blocks, restoring full snapshots on denial, and consults destination interaction protection before a deposit reaches an adjacent Singles or Bar Stack. Fabric queries Common Protection API for destination interaction, placement, growth, and removal. The API is bundled and required; claim mods provide its permission rules.
 
 Blocks the mod removes during cleanup fire native break hooks: NeoForge `BreakEvent`, or Fabric's `PlayerBlockBreakEvents` lifecycle. Player cleanup retains the player actor; automated or mixed deferred Storage edits use `[SomeStacks]`. A refused removal leaves the empty block standing. Extracting the final Single or Bar emits destruction only when cleanup succeeds; a surviving block emits change.
 
