@@ -1019,6 +1019,10 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
  extract the last Storage item.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/PolicyParityChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">PolicyParityChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
+<dd>
+<div class="block">Checks shared command help and atomic namespace-policy validation through the registered GameTests.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
 <div class="block">Loader-neutral placement and player-deposit protection scenarios.</div>
@@ -1447,6 +1451,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">To reproduce: edit a Fabric TOML using comments, multiline lists and quoted item ids;
  run /ss reload, then /ss deny item add minecraft:diamond and inspect the saved file.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/PolicyParityChecks.html#verify(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">verify(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PolicyParityChecks.html" title="class in com.github.crittscott.somestacks.gametest">PolicyParityChecks</a></dt>
+<dd>
+<div class="block">To reproduce in-game: run /ss help for each listed command without operator permission;
+ usages and audience remain visible.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">vetoedPlacementRestoresBlockEntity(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>

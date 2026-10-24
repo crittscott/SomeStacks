@@ -73,7 +73,7 @@ public final class SomeStacksServer {
 
     /** Refreshes policy on the server thread and synchronizes only changed policy. */
     public static int reloadPolicy(MinecraftServer server) {
-        ServerConfig.reload();
+        if (!ServerConfig.reload()) return -1;
         return publishPolicy(server);
     }
 

@@ -103,4 +103,3 @@ Extensions are listed in `orientation-player.md`.
 
 Fabric GameTests install a Common Protection API provider and reject gameplay callbacks during destination queries.
 
-

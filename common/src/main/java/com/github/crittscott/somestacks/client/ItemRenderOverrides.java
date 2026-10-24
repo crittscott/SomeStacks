@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.PlatformServices;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
@@ -12,13 +13,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -26,7 +27,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import javax.annotation.Nullable;
 
 /**
  * The client's item render configuration, layered by authority. The first matching entry owns the
@@ -267,7 +269,8 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         List<String> rejected = new ArrayList<>();
         for (String namespace : namespaces) {
             // A valid namespace contains no path separator, so it cannot escape the dump directory.
-            if (namespace.isEmpty() || !ResourceLocation.isValidNamespace(namespace)) {
+            if (!ServerConfig.isValidNamespace(namespace)
+                    || namespace.length() > ServerConfig.MAX_NAMESPACE_LENGTH) {
                 SomeStacksCommon.LOGGER.warn("Ignoring dump request for invalid namespace '{}'", namespace);
                 rejected.add(namespace);
                 continue;
