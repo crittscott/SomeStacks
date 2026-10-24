@@ -1,9 +1,9 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.TomlServerConfig;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import com.github.crittscott.somestacks.TomlServerConfig;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -400,6 +400,7 @@ public final class ConfigurationChecks {
      */
     public static void serverCommandsEnforcePermissionsAndPersistEdits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        PolicyParityChecks.verify(helper);
         ServerConfig.Backend original = ServerConfig.backend();
         Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-commands-gametest.toml");
         MinecraftServer server = helper.getLevel().getServer();
@@ -430,7 +431,8 @@ public final class ConfigurationChecks {
 
             Files.writeString(fixture, policyToml(8, true, true, true,
                     List.of(), List.of("minecraft:dirt")));
-            execute(commands.getDispatcher(), operator, "ss reload");
+            checkEquals(1, execute(commands.getDispatcher(), operator, "ss reload"),
+                    "Successful reload did not return command success");
             check(ServerConfig.isItemDisabled(ResourceLocation.parse("minecraft:dirt")),
                     "Reload command did not apply the edited file");
 

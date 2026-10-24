@@ -165,7 +165,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">configSnapshotsRoundTripAndPublishAtomically</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Complete snapshots publish flags and both lists only at their final chunk. To reproduce
  in-game: configure disabled types and namespace lists, join, and inspect mode cycling and
- /ss write list. A large list exercises multiple packets; exact atomicity requires this test.</div>
+ /ss write list. The maximum policy list fits one packet; explicit chunk fixtures check staging atomicity.</div>
 </section>
 </li>
 <li>

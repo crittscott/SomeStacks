@@ -89,9 +89,9 @@ The event covers the clicked block. Forge/NeoForge consult a destination right-c
 
 ## Configuration and presentation
 
-`ServerConfig` publishes immutable policy. Forge/NeoForge register `ForgeConfigSpec`/`ModConfigSpec` SERVER configs; native load/reload events apply policy and resync changes. Commented TOML supports `<world>/serverconfig/somestacks-server.toml` overrides. Fabric loads `config/somestacks-server.toml` from defaults and reports malformed fields independently. `/ss deny` and `/ss gen` save through the backend. `/ss reload` refreshes policy and resyncs players; Fabric rereads TOML, while Forge/NeoForge use native config events. Bar/Singles classification uses the `somestacks:ingots` tag.
+`ServerConfig` publishes immutable policy. Forge/NeoForge register `ForgeConfigSpec`/`ModConfigSpec` SERVER configs; native load/reload events apply policy and resync changes. Commented TOML supports `<world>/serverconfig/somestacks-server.toml` overrides. Fabric loads `config/somestacks-server.toml` from defaults and reports malformed fields independently. `/ss deny` and `/ss gen` save through the backend. `/ss reload` refreshes policy and syncs changed client settings; Fabric rereads TOML, while Forge/NeoForge use native config events. Bar/Singles classification uses the `somestacks:ingots` tag.
 
-Extension points are the `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute render profiles through ordinary server resource packs.
+Resource extension paths are listed in `orientation-player.md`.
 
 Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Resolved profiles cache per item until override change/reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; A 2,048-entry access-ordered cache holds prepared models or Z-facing plates by item/components/count and clears immediately on reload; a throwing 2-D capture draws `stack_cube_error` until reload. Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad on first render, after models and sprites are ready. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Appearance is client resource data; galleries bypass placement protection.
 
@@ -100,5 +100,4 @@ Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles
 Development-only `somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; native checks are loader-local. In `runClientGameTests`, aim at a stack, release Shift/modifier, and run `/ssclienttest` to check callbacks and profile precedence/invalidation. The gallery budget check uses an isolated GameTest batch.
 
 Fabric compiles against Common Protection API. `-PwithCommonProtectionApi=true` adds it to development runs and enables provider-backed GameTests; otherwise absence checks run.
-
 
