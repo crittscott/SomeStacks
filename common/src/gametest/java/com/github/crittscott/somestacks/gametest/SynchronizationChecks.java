@@ -32,7 +32,7 @@ public final class SynchronizationChecks {
     /**
      * Complete snapshots publish flags and both lists only at their final chunk. To reproduce
      * in-game: configure disabled types and namespace lists, join, and inspect mode cycling and
-     * /ss write list. A large list exercises multiple packets; exact atomicity requires this test.
+     * /ss write list. The maximum policy list fits one packet; explicit chunk fixtures check staging atomicity.
      */
     public static void configSnapshotsRoundTripAndPublishAtomically(GameTestHelper helper) {
         var policy = ServerConfig.settings();
@@ -41,21 +41,21 @@ public final class SynchronizationChecks {
         boolean[] originalFlags = flags();
         ClientRenderPacketSink.clear();
         try {
-            for (int size : new int[] {0, 1, 4096}) {
+            for (int size : new int[] {0, 1, ServerConfig.MAX_NAMESPACE_ENTRIES}) {
                 List<String> gallery = new ArrayList<>();
                 List<String> denied = new ArrayList<>();
                 for (int i = 0; i < size; i++) {
                     gallery.add("gallery" + i + "a".repeat(240));
                     denied.add("denied" + i + "b".repeat(240));
                 }
-                boolean[] expectedFlags = {size == 4096, size != 4096, size == 0};
+                boolean[] expectedFlags = {size == ServerConfig.MAX_NAMESPACE_ENTRIES, size != ServerConfig.MAX_NAMESPACE_ENTRIES, size == 0};
                 ServerConfig.apply(new ServerConfig.Settings(policy.maxPileHeight(),
                         expectedFlags[0], expectedFlags[1], expectedFlags[2],
                         denied, policy.disableItems(), policy.renderGalleryPlacementsPerTick(),
                         policy.galleryEnabled(), policy.galleryPermissionLevel(), gallery, policy.genItems()));
                 ConfigSyncPkt.rebuildCurrent();
                 List<ConfigSyncPkt> packets = ConfigSyncPkt.currentPackets();
-                check(size == 4096 ? packets.size() > 1 : packets.size() == 1, "Wrong chunking");
+                checkEquals(1, packets.size(), "Bounded policy should fit one packet");
                 List<ConfigSyncPkt> sent = new ArrayList<>();
                 ConfigSyncNetwork.sendCurrent(sent::add);
                 checkEquals(packets, sent, "Delivery skipped/reordered cached chunks");
