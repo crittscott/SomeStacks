@@ -54,7 +54,7 @@ Run `/reload` to apply the change. Items already in a stack stay where they are;
 
 ### Coming from 1.21.1
 
-1.21.1 kept an ingot list in `compatibility.ingots` of `<world>/serverconfig/somestacks-server.json`. That field is no longer read. On server start the mod logs a warning that names any entries in it other than the old defaults (`#forge:ingots*`, `#c:ingots*`, `#somestacks:ingots`, which the shipped tag already covers). Move those entries into a data pack as shown above, then delete the field to stop the warning. A `*` pattern such as `#forge:ingots*` cannot go into a tag; list the parent tag or the specific child tags instead.
+If an older world's `<world>/serverconfig/somestacks-server.json` contains `compatibility.ingots`, move those entries into a data-pack item tag. That field is not used for admission. On server start the mod logs a warning that names any entries in it other than the old defaults (`#forge:ingots*`, `#c:ingots*`, `#somestacks:ingots`, which the shipped tag already covers). Move those entries into a data pack as shown above, then delete the field to stop the warning. A `*` pattern such as `#forge:ingots*` cannot go into a tag; list the parent tag or the specific child tags instead.
 
 ## Permissions
 
