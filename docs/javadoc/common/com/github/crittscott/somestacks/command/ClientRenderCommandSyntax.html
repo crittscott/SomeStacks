@@ -73,7 +73,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#register(com.mojang.brigadier.CommandDispatcher,java.util.function.Function,com.mojang.brigadier.suggestion.SuggestionProvider,com.mojang.brigadier.suggestion.SuggestionProvider)" tabindex="0">register(CommandDispatcher, Function, SuggestionProvider, SuggestionProvider)</a></li>
-<li><a href="#usages(java.lang.String)" tabindex="0">usages(String)</a></li>
 </ol>
 </li>
 </ol>
@@ -91,7 +90,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ClientRenderCommandSyntax</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Server-safe syntax shared by local render commands and server help.</div>
+<div class="block">Render command syntax without client implementation dependencies.</div>
 </div>
 </section>
 <section class="summary">
@@ -170,11 +169,6 @@ loadScripts(document, 'script');</script>
  com.mojang.brigadier.suggestion.SuggestionProvider&lt;S&gt;&nbsp;itemSuggestions,
  com.mojang.brigadier.suggestion.SuggestionProvider&lt;S&gt;&nbsp;namespaceSuggestions)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#usages(java.lang.String)" class="member-name-link">usages</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;topic)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Derives help from the same tree without loading or invoking client operations.</div>
-</div>
 </div>
 </div>
 </div>
@@ -368,15 +362,6 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="ClientRenderCommandSyntax.Action.html" title="enum class in com.github.crittscott.somestacks.command">ClientRenderCommandSyntax.Action</a>, com.mojang.brigadier.Command&lt;S&gt;&gt;&nbsp;commandFor,
  com.mojang.brigadier.suggestion.SuggestionProvider&lt;S&gt;&nbsp;itemSuggestions,
  com.mojang.brigadier.suggestion.SuggestionProvider&lt;S&gt;&nbsp;namespaceSuggestions)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="usages(java.lang.String)">
-<h3>usages</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">usages</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;topic)</span></div>
-<div class="block">Derives help from the same tree without loading or invoking client operations.</div>
 </div>
 </section>
 </li>
