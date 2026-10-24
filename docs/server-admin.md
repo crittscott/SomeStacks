@@ -1,6 +1,6 @@
 # Server administration
 
-This branch targets Minecraft 1.21.9; compilation, GameTests, copied-world migration, and client/server verification remain pending. Use matching client/server loader builds. Back up worlds and test a copy of a world from the preceding 1.21.8 release before using this port. Custom data packs use format **88**; server resource packs use **69** (see [Pack authors](pack-authors.md)).
+These instructions apply to Minecraft 1.21.9. Use matching client/server Minecraft and loader builds. Back up worlds before upgrading. Custom data packs use format **88**; server resource packs use **69** (see [Pack authors](pack-authors.md)).
 
 ## The config file
 
