@@ -45,6 +45,8 @@ The root `collectJars` task copies each enabled loader's already-built productio
 
 The build targets Minecraft 1.21.6. Gradle sync was reported successful before stage 4's Forge validator/run-setting changes. Source implementation and review, pack metadata, and documentation through stage 6 are complete. Source compilation, GameTest execution, and runtime verification remain pending.
 
+`clean` empties `build/`; root `cleanDev` empties every project's `build/` and `run/`, deleting worlds, logs, and configs. Both retain the directories and Dropbox marks set by `../dropbox-ignore.ps1`. `../cleandevs.ps1` runs release checkouts and accepts `-Repos`.
+
 ## Exact build versions
 
 | Component | Exact version or coordinate | Build role |
