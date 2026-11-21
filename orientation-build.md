@@ -43,6 +43,8 @@ Each subproject has the Java plugin's standard production-source `javadoc` task.
 
 The root `collectJars` task copies each enabled loader's already-built production jar (`<archivesName>-<version>.jar` in its `build/libs`, not the dev, dev-shadow, or sources jars) into `../jars`, the directory shared by all version checkouts, for installing into a local launcher. It builds nothing and skips jars that have not been built; it overwrites same-named jars and leaves other versions' jars alone.
 
+`clean` empties `build/`; root `cleanDev` empties every project's `build/` and `run/`, deleting worlds, logs, and configs. Both retain the directories and Dropbox marks set by `../dropbox-ignore.ps1`. `../cleandevs.ps1` runs release checkouts and accepts `-Repos`.
+
 ## Exact build versions
 
 | Component | Exact version or coordinate | Build role |
