@@ -43,6 +43,8 @@ The root `collectJars` task copies each enabled loader's already-built productio
 
 The build targets Minecraft 26.1.2 with Java 25 on Fabric and NeoForge.
 
+`clean` empties `build/`; root `cleanDev` empties every project's `build/` and `run/`, deleting worlds, logs, and configs. Both retain the directories and Dropbox marks set by `../dropbox-ignore.ps1`. `../cleandevs.ps1` runs release checkouts and accepts `-Repos`.
+
 ## Exact build versions
 
 | Component | Exact version or coordinate | Build role |
@@ -57,6 +59,7 @@ The build targets Minecraft 26.1.2 with Java 25 on Fabric and NeoForge.
 | Fabric Loader | `net.fabricmc:fabric-loader:0.19.5` | Fabric loader dependency |
 | Fabric API | `net.fabricmc.fabric-api:fabric-api:0.145.4+26.1.2` | Fabric runtime and development API |
 | Common Protection API | `eu.pb4:common-protection-api:2.0.0` | Fabric compile/runtime dependency, included library |
+| NightConfig core and TOML | `com.electronwill.night-config:core:3.6.7`, `com.electronwill.night-config:toml:3.6.7` | Common compile-only; Fabric bundles and relocates |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
 
 The Java setting is exact only at the language/toolchain-major level. The repository does not pin a JDK vendor, distribution, or patch release, and it does not pin the host JVM that runs Gradle. Gradle core plugins such as `base` and `java` use Gradle `9.5.1` and therefore have no separate declared version.
@@ -82,6 +85,6 @@ These values do not select build tools, but they are versioned inputs consumed b
 
 `gradle.properties` is the authority for the Minecraft, loader, API, compatibility, and mod versions. The root `build.gradle` pins the three external Gradle plugins and JSR 305, and `gradle/wrapper/gradle-wrapper.properties` pins Gradle itself. The loader scripts consume the root properties for the game and loader dependencies.
 
-Plugin resolution uses Fabric Maven, Architectury Maven, NeoForge Maven, and the Gradle Plugin Portal. The Fabric module declares Nucleoid Maven for Common Protection API. The NeoForge module also declares NeoForge Maven for dependencies; Loom supplies its standard Minecraft and Fabric repositories. There is no Gradle version catalog, dependency-lock state, dependency-verification metadata, exact JDK distribution, or wrapper-distribution checksum in the repository. Consequently, the table above records every exact version deliberately declared by the build, but it is not a lock of every transitive artifact selected by Gradle and Loom.
+Plugin resolution uses Fabric Maven, Architectury Maven, NeoForge Maven, and the Gradle Plugin Portal. The Fabric module declares Nucleoid Maven for Common Protection API. The NeoForge module also declares NeoForge Maven for dependencies; Loom supplies its standard Minecraft and Fabric repositories. Common and Fabric also declare Maven Central for NightConfig. There is no Gradle version catalog, dependency-lock state, dependency-verification metadata, exact JDK distribution, or wrapper-distribution checksum in the repository. The versions above do not lock transitive artifacts resolved by Gradle and Loom.
 
-Fabric bundles NightConfig core and TOML 3.6.7 in its Shadow artifact and relocates their packages under Some Stacks. Common code has compile-only TOML dependencies; Forge and NeoForge provide NightConfig. No additional config mod is required.
+Fabric bundles NightConfig core and TOML 3.6.7 in its Shadow artifact and relocates their packages under Some Stacks. Common code has compile-only TOML dependencies; NeoForge provides NightConfig. No additional config mod is required.

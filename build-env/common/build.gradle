@@ -6,3 +6,11 @@ dependencies {
     // Minecraft's environment annotations are needed only while compiling common code.
     compileOnly "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
 }
+
+// TOML API; Fabric bundles the implementation, Forge and NeoForge supply it.
+dependencies {
+    compileOnly "com.electronwill.night-config:core:$rootProject.night_config_version"
+    compileOnly "com.electronwill.night-config:toml:$rootProject.night_config_version"
+}
+
+repositories { mavenCentral() }
