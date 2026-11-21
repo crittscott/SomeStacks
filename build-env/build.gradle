@@ -159,3 +159,30 @@ tasks.register('collectJars', Copy) {
         }
     }
 }
+
+// Dropbox ignores a directory through a mark on the directory itself (set by ../dropbox-ignore.ps1), so
+// removing build/ would drop the mark and let the next build sync again. Every clean therefore empties
+// build/ instead of removing it.
+allprojects {
+    def buildDirectory = layout.buildDirectory
+    tasks.matching { it.name == 'clean' }.configureEach { Delete clean ->
+        def otherTargets = clean.delete.findAll { !it.is(buildDirectory) }
+        if (otherTargets.size() < clean.delete.size()) {
+            clean.delete = (otherTargets + [{ buildDirectory.get().asFile.listFiles() ?: [] }]) as Set
+        }
+    }
+}
+
+// Empties every module's build/ and run/ directories, keeping the directories so their Dropbox marks
+// survive. The next build regenerates build/; the next game or GameTest launch regenerates run/, without
+// its worlds, logs, or edited configs.
+tasks.register('cleanDev', Delete) {
+    group = 'build'
+    description = "Empties every module's build/ and run/ directories, keeping the directories."
+
+    def buildDirectories = allprojects.collect { it.layout.buildDirectory }
+    def runDirectories = allprojects.collect { it.layout.projectDirectory.dir('run').asFile }
+    delete {
+        (buildDirectories.collect { it.get().asFile } + runDirectories).collectMany { (it.listFiles() ?: []) as List }
+    }
+}
