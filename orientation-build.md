@@ -45,6 +45,8 @@ The root `collectJars` task copies each enabled loader's already-built productio
 
 The build targets Minecraft 1.21.9 with Java 21. Dependency versions are pinned to published artifacts, and the user has confirmed IntelliJ Gradle sync succeeds with the retained Gradle and Architectury tooling. Shared client rendering uses the 1.21.9 render-state/submission pipeline, NeoForge automation uses transactional resource capabilities, and loader integration uses registered key-mapping categories and Fabric's `ResourceLoader`. The user has confirmed production builds and GameTests succeed. Forge and NeoForge GameTests use deferred test-function registration and test-instance JSON. Pack metadata declares format 88; third-party resource packs for this target use format 69. In-game runtime verification is in progress.
 
+`clean` empties `build/`; root `cleanDev` empties every project's `build/` and `run/`, deleting worlds, logs, and configs. Both retain the directories and Dropbox marks set by `../dropbox-ignore.ps1`. `../cleandevs.ps1` runs release checkouts and accepts `-Repos`.
+
 ## Exact build versions
 
 | Component | Exact version or coordinate | Build role |
