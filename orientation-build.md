@@ -45,6 +45,8 @@ The root `collectJars` task copies each enabled loader's already-built productio
 
 The build targets Minecraft 1.21.11 with Java 21. Dependency versions are pinned to published artifacts with the retained Gradle and Architectury tooling, and all three loaders build and pass server GameTests on this baseline. Source code is written against 1.21.11 APIs: shared client rendering uses the render-state/submission pipeline, NeoForge automation uses transactional resource capabilities, and loader integration uses registered key-mapping categories and Fabric's `ResourceLoader`. Forge and NeoForge GameTests use deferred test-function registration and test-instance JSON. Pack metadata declares data format 94.1; third-party resource packs for this target use format 75. In-game runtime verification is pending.
 
+`clean` empties `build/`; root `cleanDev` empties every project's `build/` and `run/`, deleting worlds, logs, and configs. Both retain the directories and Dropbox marks set by `../dropbox-ignore.ps1`. `../cleandevs.ps1` runs release checkouts and accepts `-Repos`.
+
 ## Exact build versions
 
 | Component | Exact version or coordinate | Build role |
@@ -63,6 +65,7 @@ The build targets Minecraft 1.21.11 with Java 21. Dependency versions are pinned
 | Fabric API | `net.fabricmc.fabric-api:fabric-api:0.141.6+1.21.11` | Fabric runtime and development API |
 | Common Protection API | `eu.pb4:common-protection-api:1.0.0` | Required Fabric protection-query API, bundled through `include` |
 | Forge EventBus validator | `net.minecraftforge:eventbus-validator:7.0.6` | Annotation processor for Forge production and GameTest sources |
+| NightConfig core and TOML | `com.electronwill.night-config:core:3.6.7`, `com.electronwill.night-config:toml:3.6.7` | Common compile-only; Fabric bundles and relocates |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
 
 The Java setting is exact only at the language/toolchain-major level. The repository does not pin a JDK vendor, distribution, or patch release, and it does not pin the host JVM that runs Gradle. Gradle core plugins such as `base` and `java` use Gradle `9.5.1` and therefore have no separate declared version.
@@ -90,6 +93,6 @@ These values do not select build tools, but they are versioned inputs consumed b
 
 `gradle.properties` is the authority for the Minecraft, mapping, loader, API, compatibility, integration, and mod versions. The root `build.gradle` pins the three external Gradle plugins and JSR 305, `forge/build.gradle` pins the EventBus validator, and `gradle/wrapper/gradle-wrapper.properties` pins Gradle itself. The loader scripts consume the root properties for the game and loader dependencies.
 
-Plugin resolution uses Fabric Maven, Architectury Maven, Forge Maven, and the Gradle Plugin Portal. Every module declares Parchment Maven; the Fabric module also declares Nucleoid Maven (for the Common Protection API), and the NeoForge module also declares NeoForge Maven; Loom supplies its standard Minecraft repositories. There is no Gradle version catalog, dependency-lock state, dependency-verification metadata, exact JDK distribution, or wrapper-distribution checksum in the repository. Consequently, the table above records every exact version deliberately declared by the build, but it is not a lock of every transitive artifact selected by Gradle and Loom.
+Plugin resolution uses Fabric Maven, Architectury Maven, Forge Maven, and the Gradle Plugin Portal. Every module declares Parchment Maven; the Fabric module also declares Nucleoid Maven (for the Common Protection API), and the NeoForge module also declares NeoForge Maven; Loom supplies its standard Minecraft repositories. Common and Fabric also declare Maven Central for NightConfig. There is no Gradle version catalog, dependency-lock state, dependency-verification metadata, exact JDK distribution, or wrapper-distribution checksum in the repository. The versions above do not lock transitive artifacts resolved by Gradle and Loom.
 
 Fabric bundles NightConfig core and TOML 3.6.7 in its Shadow artifact and relocates their packages under Some Stacks. Common code has compile-only TOML dependencies; Forge and NeoForge provide NightConfig. No additional config mod is required.
