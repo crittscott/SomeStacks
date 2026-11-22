@@ -1,7 +1,7 @@
 
 We have done a number of general code review sessions in previous conversations. Now I want to focus on particular topics.
 
-Spawn subagents, one for each item in the list. Give each subagent the prompt below, filling in <topic title> and <topic description> from the list. Spawn at most 4 agents at once.
+Main agent: spawn one subagent for each topic, with at most four running at once. Send the entire text after the Prompt marker through the end of this file as the task message. Replace only <topic title> and <topic description> with the exact title and description from the assigned list item. Copy everything else verbatim, including the report format and severity criteria. Do not summarize the prompt, send a reference in its place, or add instructions that change the scope, finding threshold, or deliverable. Check each outgoing task message against the template before sending it.
 
 Topics:
 1. Dead-code: Do we have dead code or duplicated code?
@@ -20,6 +20,7 @@ Topics:
 14. Build-environment: Have we accumulated cruft? Are we doing things the expected way? Are per-loader differences reasonable?
 15. Test-completeness: Tests are cheap. We don't need to target only vital questions. Nor, though, do we need to test everything imaginable or trivial variations. Is the test system complete? Is it over-complete?
 16. Logging: It should be possible to tell if the mod is working from its log messages. But we do not want to log everything. Do we log the various major events of mod startup? Is there any residual debug logging?
+17. Correctness: Does the mod do what a player expects? Look for behavior bugs: wrong or inverted conditions, client predictions that disagree with the server's result, interactions we swallow or cancel that vanilla should have handled, state that is never cleaned up (entity removal, dimension change, logout, server stop), and the same player action behaving differently on each loader.
 
 
 Prompt:
@@ -30,20 +31,21 @@ The mod has grown via evolution, and the review exists to find what that evoluti
 
 ## Before you start
 
-1. Read CLAUDE.md and follow it. In particular: do not decompile, unarchive, or read Minecraft/Forge source in any form, and do not build or run anything.
+1. Read CLAUDE.md, code-conventions.md, and code-review-decisions.md and follow them. Apply the accepted decisions before forming findings; do not re-report them without a new demonstrated defect. In particular: do not decompile, unarchive, or read Minecraft/Forge source in any form, and do not build or run anything.
 2. Read orientation-code.md (and orientation-player.md if your topic touches player-visible behavior). They are orientation, not specification; the code is the truth.
 3. Then read the code relevant to your topic.
 
 ## Rules
 
+- Follow this prompt as written. Review the full assigned topic and apply the finding criteria below, including the rule on home-grown alternatives. Do not narrow the topic, substitute your own review criteria, or omit required steps. A report with no findings must identify the relevant code paths examined and explain how they satisfy the assigned review criteria. Do not invent findings.
 - Assess the project as it is. Do not inspect git history.
 - Do not make any changes to the code. Your only output is the report file.
-- Do not read other review-*.md files. Other agents are working in the codebase at the same time.
+- Do not read other review-*.md reports. Read code-review-decisions.md: it is shared review policy, not another agent's report.
 - Do not go off and research. Use what you know and the code you are given. If you are unsure whether something is the expected approach, say so in the finding's confidence rather than investigating further.
 
 ## Boring code is the goal
 
-We want boring, expected code. An expert Minecraft modder reading any file should find nothing surprising: vanilla mechanisms used where vanilla has them, loader facilities (Forge, NeoForge, Fabric) used where the loader provides them, and conventional structure and naming throughout. This project tends to drift into clever or home-grown solutions even though it's been told not to. Within your topic, treat every place where the code does something its own way instead of the established way as a finding, even if the home-grown version works.
+We want boring, expected code. An expert Minecraft modder reading any file should find nothing surprising: vanilla mechanisms used where vanilla has them, loader facilities (Forge, NeoForge, Fabric) used where the loader provides them, and conventional structure and naming throughout. This project tends to drift into clever or home-grown solutions even though it's been told not to. Within your topic, identify actionable departures from the established way, subject to the specific accepted decisions in code-review-decisions.md. Do not report an accepted working choice solely because a different approach is more conventional.
 
 ## What counts as a finding
 
@@ -52,8 +54,11 @@ A finding is a specific, verified problem in the code that should be acted on. E
 - praise and descriptions of code that is fine
 - style nits that no one would act on
 - hypothetical problems you have not confirmed by reading the code
+- accepted non-issues and deliberate exceptions in code-review-decisions.md
+- moved or merged findings: remove the old entry instead of leaving relocation history
+- theoretical edge cases without a realistic player, server, or maintenance consequence
 
-If you have a real concern but cannot pin it down to an action, put it under Open questions, stated as a question the owner can answer.
+If you have a real concern but cannot pin it down to an action, put it under Open questions only when the owner can answer it. Resolve source questions from permitted source where possible; otherwise label the needed verification without asserting an unverified bug. Do not ask settled questions again.
 
 ## Report
 

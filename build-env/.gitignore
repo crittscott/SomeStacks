@@ -25,3 +25,6 @@
 # other
 /review-*.md
 /othersource/
+/othersourcecode/
+/tmp/
+/port-*.md
