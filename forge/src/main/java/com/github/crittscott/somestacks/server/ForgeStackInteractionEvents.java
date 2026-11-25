@@ -1,10 +1,11 @@
 package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.common.util.Result;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.listener.Priority;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,10 +24,19 @@ public final class ForgeStackInteractionEvents {
         ServerPlayer player = (ServerPlayer) event.getEntity();
         boolean blockAllowed = event.getUseBlock() != Result.DENY;
         boolean itemAllowed = event.getUseItem() != Result.DENY;
-        boolean handled = StackInteractions.handleSneakingRotation(
-                player, event.getHand(), event.getHitVec(), blockAllowed, itemAllowed)
-                || StackInteractions.handleAdjacentClick(
-                        player, event.getHand(), event.getHitVec(), blockAllowed, itemAllowed);
+        boolean handled =
+                StackInteractions.handleSneakingRotation(
+                                player,
+                                event.getHand(),
+                                event.getHitVec(),
+                                blockAllowed,
+                                itemAllowed)
+                        || StackInteractions.handleAdjacentClick(
+                                player,
+                                event.getHand(),
+                                event.getHitVec(),
+                                blockAllowed,
+                                itemAllowed);
         if (handled) {
             event.setUseBlock(Result.DENY);
             event.setUseItem(Result.DENY);

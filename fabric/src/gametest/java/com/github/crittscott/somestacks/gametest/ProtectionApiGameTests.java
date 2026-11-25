@@ -1,47 +1,60 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.server.WorldEdits;
-import com.mojang.authlib.GameProfile;
-import eu.pb4.common.protection.api.CommonProtection;
-import eu.pb4.common.protection.api.ProtectionProvider;
-import net.fabricmc.fabric.api.entity.FakePlayer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.block.Blocks;
-import net.fabricmc.fabric.api.gametest.v1.GameTest;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 
-/** Provider-backed checks through the required Common Protection API, with a test provider installed. */
+import com.github.crittscott.somestacks.server.WorldEdits;
+import com.mojang.authlib.GameProfile;
+
+import eu.pb4.common.protection.api.CommonProtection;
+import eu.pb4.common.protection.api.ProtectionProvider;
+
+import net.fabricmc.fabric.api.entity.FakePlayer;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
+
+/**
+ * Provider-backed checks through the required Common Protection API, with a test provider
+ * installed.
+ */
 public final class ProtectionApiGameTests {
     static {
-        CommonProtection.register(Identifier.fromNamespaceAndPath("somestacks", "test_protection"),
+        CommonProtection.register(
+                Identifier.fromNamespaceAndPath("somestacks", "test_protection"),
                 new ProtectionProvider() {
                     @Override
-                    public boolean isProtected(Level level, BlockPos pos) { return false; }
+                    public boolean isProtected(Level level, BlockPos pos) {
+                        return false;
+                    }
 
                     @Override
-                    public boolean isAreaProtected(Level level, AABB area) { return false; }
+                    public boolean isAreaProtected(Level level, AABB area) {
+                        return false;
+                    }
 
                     @Override
-                    public boolean canPlaceBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
+                    public boolean canPlaceBlock(
+                            Level level, BlockPos pos, GameProfile profile, Player player) {
                         return ProtectionGameTests.consult(level, pos, player);
                     }
 
                     @Override
-                    public boolean canInteractBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
+                    public boolean canInteractBlock(
+                            Level level, BlockPos pos, GameProfile profile, Player player) {
                         return ProtectionGameTests.consult(level, pos, player);
                     }
 
                     @Override
-                    public boolean canBreakBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
+                    public boolean canBreakBlock(
+                            Level level, BlockPos pos, GameProfile profile, Player player) {
                         return true;
                     }
                 });
@@ -80,10 +93,18 @@ public final class ProtectionApiGameTests {
     public void placementAndAdjacentDepositsWorkWithoutClaims(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(ORIGIN);
         ServerPlayer player = FakePlayer.get(helper.getLevel());
-        check(WorldEdits.mayPlace(player, helper.getLevel(), pos), "Unprotected placement was denied");
+        check(
+                WorldEdits.mayPlace(player, helper.getLevel(), pos),
+                "Unprotected placement was denied");
         check(WorldEdits.mayUseAdjacent(player, pos), "Unprotected neighboring deposit was denied");
-        check(WorldEdits.placeChecked(player, helper.getLevel(), pos,
-                        Blocks.STONE.defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
+        check(
+                WorldEdits.placeChecked(
+                        player,
+                        helper.getLevel(),
+                        pos,
+                        Blocks.STONE.defaultBlockState(),
+                        Direction.DOWN,
+                        net.minecraft.world.phys.shapes.Shapes.block()),
                 "Unprotected placement failed");
         helper.assertBlockPresent(Blocks.STONE, ORIGIN);
         helper.getLevel().removeBlock(pos, false);

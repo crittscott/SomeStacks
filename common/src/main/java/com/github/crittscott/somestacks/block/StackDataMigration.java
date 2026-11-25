@@ -5,28 +5,30 @@ import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Set;
-import java.util.HashSet;
+
 import net.minecraft.SharedConstants;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.world.item.ItemStack;
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.References;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Brings a stack block entity's saved tag up to the running game's data version before the block
@@ -40,13 +42,17 @@ import net.minecraft.util.datafix.fixes.References;
  */
 public final class StackDataMigration {
     // Read raw values so malformed inventory entries and wire field types remain observable.
-    private static final Codec<Tag> RAW_TAG = Codec.PASSTHROUGH.xmap(
-            dynamic -> dynamic.convert(NbtOps.INSTANCE).getValue(),
-            tag -> new Dynamic<>(NbtOps.INSTANCE, tag));
+    private static final Codec<Tag> RAW_TAG =
+            Codec.PASSTHROUGH.xmap(
+                    dynamic -> dynamic.convert(NbtOps.INSTANCE).getValue(),
+                    tag -> new Dynamic<>(NbtOps.INSTANCE, tag));
     private static final String ITEM_COUNT_FIELD = "count";
     private static final String[] PERSISTED_FIELDS = {
-            StackBlockEntity.TAG_DATA_VERSION, StackBlockEntity.TAG_ITEMS, StorageStackBE.TAG_PERMANENT,
-            SinglesStackBE.TAG_CUBE_ROTATIONS, StackItemStorage.TAG_SET_ASIDE
+        StackBlockEntity.TAG_DATA_VERSION,
+        StackBlockEntity.TAG_ITEMS,
+        StorageStackBE.TAG_PERMANENT,
+        SinglesStackBE.TAG_CUBE_ROTATIONS,
+        StackItemStorage.TAG_SET_ASIDE
     };
 
     /** Copies only stack-owned fields at the value-I/O boundary, without typed-list filtering. */
@@ -63,14 +69,16 @@ public final class StackDataMigration {
      * Occupied slots keep priority. Overflow uses free local slots, then the existing SetAside
      * envelope with its original slot for retry; no world edits or item admission are involved.
      */
-    static boolean normalizeStorageInventory(CompoundTag inventory, HolderLookup.Provider registries) {
+    static boolean normalizeStorageInventory(
+            CompoundTag inventory, HolderLookup.Provider registries) {
         ListTag original = inventory.getListOrEmpty(StackItemStorage.TAG_ITEMS);
         ListTag retries = inventory.getListOrEmpty(StackItemStorage.TAG_SET_ASIDE);
         boolean overCap = false;
         for (ListTag list : List.of(original, retries)) {
             for (Tag entry : list) {
                 if (entry instanceof CompoundTag item
-                        && item.getInt(ITEM_COUNT_FIELD).orElse(1) > StackItemStorage.STORAGE_SLOT_LIMIT) {
+                        && item.getInt(ITEM_COUNT_FIELD).orElse(1)
+                                > StackItemStorage.STORAGE_SLOT_LIMIT) {
                     overCap = true;
                     break;
                 }
@@ -79,8 +87,10 @@ public final class StackDataMigration {
         if (!overCap) return false;
         boolean[] occupied = new boolean[StorageStackBE.SLOTS];
         for (Tag entry : original) {
-            if (entry instanceof CompoundTag item && item.get(StackItemStorage.TAG_SLOT) instanceof IntTag slot
-                    && slot.intValue() >= 0 && slot.intValue() < occupied.length) occupied[slot.intValue()] = true;
+            if (entry instanceof CompoundTag item
+                    && item.get(StackItemStorage.TAG_SLOT) instanceof IntTag slot
+                    && slot.intValue() >= 0
+                    && slot.intValue() < occupied.length) occupied[slot.intValue()] = true;
         }
         RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, registries);
         ListTag items = new ListTag();
@@ -92,13 +102,16 @@ public final class StackDataMigration {
                 ListTag destination = source == 0 ? items : retained;
                 if (!(entry instanceof CompoundTag item)
                         || !(item.get(StackItemStorage.TAG_SLOT) instanceof IntTag slotTag)
-                        || slotTag.intValue() < 0 || slotTag.intValue() >= occupied.length) {
+                        || slotTag.intValue() < 0
+                        || slotTag.intValue() >= occupied.length) {
                     destination.add(entry.copy());
                     continue;
                 }
                 var parsed = ItemStack.CODEC.parse(ops, item).result();
-                if (parsed.isEmpty() || parsed.get().isEmpty()
-                        || parsed.get().getCount() <= StackItemStorage.storageSlotLimit(parsed.get())) {
+                if (parsed.isEmpty()
+                        || parsed.get().isEmpty()
+                        || parsed.get().getCount()
+                                <= StackItemStorage.storageSlotLimit(parsed.get())) {
                     destination.add(entry.copy());
                     continue;
                 }
@@ -111,12 +124,19 @@ public final class StackDataMigration {
                     int count = Math.min(remaining, limit);
                     Tag encoded;
                     try {
-                        encoded = ItemStack.CODEC.encodeStart(ops, stack.copyWithCount(count)).getOrThrow();
+                        encoded =
+                                ItemStack.CODEC
+                                        .encodeStart(ops, stack.copyWithCount(count))
+                                        .getOrThrow();
                     } catch (RuntimeException failure) {
-                        throw new IllegalStateException("Cannot normalize saved Storage slot " + slotTag.intValue(), failure);
+                        throw new IllegalStateException(
+                                "Cannot normalize saved Storage slot " + slotTag.intValue(),
+                                failure);
                     }
                     if (!(encoded instanceof CompoundTag piece)) {
-                        throw new IllegalStateException("Storage item codec did not produce a compound for slot " + slotTag.intValue());
+                        throw new IllegalStateException(
+                                "Storage item codec did not produce a compound for slot "
+                                        + slotTag.intValue());
                     }
                     int slot = slotTag.intValue();
                     if (first) {
@@ -149,13 +169,20 @@ public final class StackDataMigration {
         return changed;
     }
 
-    /** Disk recovery counts; failed persisted retries are reported once per location and session. */
+    /**
+     * Disk recovery counts; failed persisted retries are reported once per location and session.
+     */
     public record LoadResult(int newlySetAside, int failedRetries) {}
+
     record LoadOutcome(boolean changed, LoadResult result) {}
+
     private record SavedItemLocation(Identifier dimension, BlockPos pos) {}
+
     private static final Set<SavedItemLocation> reportedSavedItems = new HashSet<>();
 
-    /** Retained raw entries belong to disk recovery and never enter the client inventory decoder. */
+    /**
+     * Retained raw entries belong to disk recovery and never enter the client inventory decoder.
+     */
     public static final class SavedItems {
         private final ListTag retained = new ListTag();
 
@@ -163,7 +190,9 @@ public final class StackDataMigration {
             if (!retained.isEmpty()) tag.put(StackItemStorage.TAG_SET_ASIDE, retained.copy());
         }
 
-        public void clear() { retained.clear(); }
+        public void clear() {
+            retained.clear();
+        }
 
         public <T> LoadResult load(DynamicOps<T> ops, CompoundTag tag, ItemStack[] slots) {
             Arrays.fill(slots, ItemStack.EMPTY);
@@ -182,9 +211,12 @@ public final class StackDataMigration {
                     continue;
                 }
                 int slot = slotTag.intValue();
-                Optional<ItemStack> parsed = slot >= 0 && slot < slots.length && slots[slot].isEmpty()
-                        ? ItemStack.CODEC.parse(ops, NbtOps.INSTANCE.convertTo(ops, itemTag)).result()
-                        : Optional.empty();
+                Optional<ItemStack> parsed =
+                        slot >= 0 && slot < slots.length && slots[slot].isEmpty()
+                                ? ItemStack.CODEC
+                                        .parse(ops, NbtOps.INSTANCE.convertTo(ops, itemTag))
+                                        .result()
+                                : Optional.empty();
                 if (parsed.isPresent() && !parsed.get().isEmpty()) {
                     slots[slot] = parsed.get();
                 } else {
@@ -194,31 +226,42 @@ public final class StackDataMigration {
         }
     }
 
-    /** Upgrades disk data, normalizes Storage limits, then recovers local slots and retained entries. */
-    static LoadOutcome load(CompoundTag tag, StackItemStorage items,
-                            HolderLookup.Provider registries, boolean storage) {
+    /**
+     * Upgrades disk data, normalizes Storage limits, then recovers local slots and retained
+     * entries.
+     */
+    static LoadOutcome load(
+            CompoundTag tag,
+            StackItemStorage items,
+            HolderLookup.Provider registries,
+            boolean storage) {
         boolean changed = upgrade(tag, registries);
-        CompoundTag inventory = tag.getCompound(StackBlockEntity.TAG_ITEMS).orElseGet(CompoundTag::new);
+        CompoundTag inventory =
+                tag.getCompound(StackBlockEntity.TAG_ITEMS).orElseGet(CompoundTag::new);
         if (storage) changed |= normalizeStorageInventory(inventory, registries);
         return new LoadOutcome(changed, items.load(registries, inventory));
     }
 
-    public static synchronized void reportSavedItems(ServerLevel level, BlockPos pos, LoadResult result) {
+    public static synchronized void reportSavedItems(
+            ServerLevel level, BlockPos pos, LoadResult result) {
         if (result.newlySetAside() == 0 && result.failedRetries() == 0) return;
-        SavedItemLocation location = new SavedItemLocation(level.dimension().identifier(), pos.immutable());
+        SavedItemLocation location =
+                new SavedItemLocation(level.dimension().identifier(), pos.immutable());
         boolean firstReport = reportedSavedItems.add(location);
         if (result.newlySetAside() > 0 || firstReport) {
             SomeStacksCommon.LOGGER.warn(
                     "Kept saved item stack(s) aside in {} at {}: {} newly retained, {} failed retries",
-                    location.dimension(), pos.toShortString(), result.newlySetAside(), result.failedRetries());
+                    location.dimension(),
+                    pos.toShortString(),
+                    result.newlySetAside(),
+                    result.failedRetries());
         }
     }
 
     private static long sessionUpgradeCount;
     private static int sessionTargetVersion;
 
-    private StackDataMigration() {
-    }
+    private StackDataMigration() {}
 
     /** Starts migration accounting for a server session. */
     public static synchronized void beginSession() {
@@ -231,8 +274,10 @@ public final class StackDataMigration {
     public static synchronized void endSession() {
         reportedSavedItems.clear();
         if (sessionUpgradeCount > 0) {
-            SomeStacksCommon.LOGGER.info("Upgraded {} Some Stacks block(s) to data version {}",
-                    sessionUpgradeCount, sessionTargetVersion);
+            SomeStacksCommon.LOGGER.info(
+                    "Upgraded {} Some Stacks block(s) to data version {}",
+                    sessionUpgradeCount,
+                    sessionTargetVersion);
         }
         sessionUpgradeCount = 0;
         sessionTargetVersion = 0;
@@ -254,8 +299,13 @@ public final class StackDataMigration {
             return false;
         }
         if (tag.get(StackBlockEntity.TAG_ITEMS) instanceof CompoundTag storage) {
-            upgradeItemList(storage.getListOrEmpty(StackItemStorage.TAG_ITEMS), registries, saved, current);
-            upgradeItemList(storage.getListOrEmpty(StackItemStorage.TAG_SET_ASIDE), registries, saved, current);
+            upgradeItemList(
+                    storage.getListOrEmpty(StackItemStorage.TAG_ITEMS), registries, saved, current);
+            upgradeItemList(
+                    storage.getListOrEmpty(StackItemStorage.TAG_SET_ASIDE),
+                    registries,
+                    saved,
+                    current);
         }
         stampVersion(tag);
         recordUpgrade(saved, current);
@@ -271,13 +321,15 @@ public final class StackDataMigration {
         sessionTargetVersion = to;
     }
 
-    private static void upgradeItemList(ListTag list, HolderLookup.Provider registries, int from, int to) {
+    private static void upgradeItemList(
+            ListTag list, HolderLookup.Provider registries, int from, int to) {
         RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, registries);
         for (int i = 0; i < list.size(); i++) {
             if (!(list.get(i) instanceof CompoundTag itemTag)) continue;
             Tag slot = itemTag.get(StackItemStorage.TAG_SLOT);
-            Dynamic<Tag> fixed = DataFixers.getDataFixer().update(
-                    References.ITEM_STACK, new Dynamic<>(ops, itemTag), from, to);
+            Dynamic<Tag> fixed =
+                    DataFixers.getDataFixer()
+                            .update(References.ITEM_STACK, new Dynamic<>(ops, itemTag), from, to);
             CompoundTag fixedTag = (CompoundTag) fixed.getValue();
             if (slot != null) fixedTag.put(StackItemStorage.TAG_SLOT, slot.copy());
             list.set(i, fixedTag);

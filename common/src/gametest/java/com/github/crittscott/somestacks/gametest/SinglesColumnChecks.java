@@ -1,16 +1,5 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.ViewRay;
-import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
-
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
@@ -21,12 +10,24 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSi
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalAt;
 
+import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
+
 /**
  * Singles support and gravity in a live level that does not touch loader-native automation
- * directly: grounding at the bottom of a column, a cell resting on the one below it, visual
- * columns lining up across differently rotated blocks, and extraction shifting a column down while
- * carrying each item's rotation with it. Loader-automation-facing tests stay in each loader's
- * own {@code SinglesColumnGameTests}.
+ * directly: grounding at the bottom of a column, a cell resting on the one below it, visual columns
+ * lining up across differently rotated blocks, and extraction shifting a column down while carrying
+ * each item's rotation with it. Loader-automation-facing tests stay in each loader's own {@code
+ * SinglesColumnGameTests}.
  */
 public final class SinglesColumnChecks {
     private SinglesColumnChecks() {}
@@ -38,7 +39,8 @@ public final class SinglesColumnChecks {
      */
     public static void standaloneBottomIsGroundedAndFloatingCellIsRejected(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        check(SinglesStackBE.isValidSinglesItem(new ItemStack(Items.STICK)),
+        check(
+                SinglesStackBE.isValidSinglesItem(new ItemStack(Items.STICK)),
                 "Stick is not valid for Singles tests");
 
         ItemStack grounded = new ItemStack(Items.STICK, 2);
@@ -61,9 +63,9 @@ public final class SinglesColumnChecks {
         int bottom = SinglesCubeIdx.indexFromColumn(column, 0);
         int secondLayer = SinglesCubeIdx.indexFromColumn(column, 1);
 
-        check(singles.depositAt(bottom, new ItemStack(Items.STICK)),
-                "Bottom deposit failed");
-        check(singles.depositAt(secondLayer, new ItemStack(Items.PAPER)),
+        check(singles.depositAt(bottom, new ItemStack(Items.STICK)), "Bottom deposit failed");
+        check(
+                singles.depositAt(secondLayer, new ItemStack(Items.PAPER)),
                 "Supported upper deposit failed");
         helper.succeed();
     }
@@ -89,8 +91,7 @@ public final class SinglesColumnChecks {
         lower.getItems().insertItem(lowerTop, new ItemStack(Items.STICK));
         ItemStack offered = new ItemStack(Items.PAPER);
 
-        check(upper.depositAt(upperBottom, offered),
-                "Visual seam did not support the upper block");
+        check(upper.depositAt(upperBottom, offered), "Visual seam did not support the upper block");
         checkEquals(0, offered.getCount(), "Upper deposit remainder");
         helper.succeed();
     }
@@ -115,18 +116,20 @@ public final class SinglesColumnChecks {
         ItemStack extracted = singles.extractAt(bottom, null);
 
         checkEquals(Items.STICK, extracted.getItem(), "Extracted item");
-        checkEquals(Items.PAPER, singles.getItems().getStackInSlot(bottom).getItem(),
+        checkEquals(
+                Items.PAPER,
+                singles.getItems().getStackInSlot(bottom).getItem(),
                 "Middle item did not shift to bottom");
-        checkEquals(1, singles.getCubeRotation(bottom),
-                "Middle item rotation did not move");
-        checkEquals(Items.APPLE, singles.getItems().getStackInSlot(middle).getItem(),
+        checkEquals(1, singles.getCubeRotation(bottom), "Middle item rotation did not move");
+        checkEquals(
+                Items.APPLE,
+                singles.getItems().getStackInSlot(middle).getItem(),
                 "Top item did not shift to middle");
-        checkEquals(3, singles.getCubeRotation(middle),
-                "Top item rotation did not move");
-        check(singles.getItems().getStackInSlot(top).isEmpty(),
+        checkEquals(3, singles.getCubeRotation(middle), "Top item rotation did not move");
+        check(
+                singles.getItems().getStackInSlot(top).isEmpty(),
                 "Top source cell remained occupied");
-        checkEquals(0, singles.getCubeRotation(top),
-                "Vacated cell retained a rotation");
+        checkEquals(0, singles.getCubeRotation(top), "Vacated cell retained a rotation");
         helper.succeed();
     }
 
@@ -144,7 +147,8 @@ public final class SinglesColumnChecks {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BlockPos pos = singles.getBlockPos();
         Item legacy = firstBarItem();
-        check(!SinglesStackBE.isValidSinglesItem(new ItemStack(legacy)),
+        check(
+                !SinglesStackBE.isValidSinglesItem(new ItemStack(legacy)),
                 "Test needs an item a Singles Stack refuses");
         int bottom = SinglesCubeIdx.indexFromColumn(0, 0);
         int second = SinglesCubeIdx.indexFromColumn(0, 1);
@@ -173,7 +177,8 @@ public final class SinglesColumnChecks {
         BlockPos lowerPos = lower.getBlockPos();
         BlockPos upperPos = upper.getBlockPos();
         Item legacy = firstBarItem();
-        check(!SinglesStackBE.isValidSinglesItem(new ItemStack(legacy)),
+        check(
+                !SinglesStackBE.isValidSinglesItem(new ItemStack(legacy)),
                 "Test needs an item a Singles Stack refuses");
         int bottom = SinglesCubeIdx.indexFromColumn(0, 0);
         lower.getItems().insertItem(bottom, new ItemStack(Items.APPLE));
@@ -182,9 +187,10 @@ public final class SinglesColumnChecks {
         ItemStack extracted = lower.extractAt(bottom, null);
 
         checkEquals(Items.APPLE, extracted.getItem(), "Extracted item");
-        int accounted = heldAt(helper, lowerPos, legacy)
-                + heldAt(helper, upperPos, legacy)
-                + droppedNear(helper, lowerPos, legacy);
+        int accounted =
+                heldAt(helper, lowerPos, legacy)
+                        + heldAt(helper, upperPos, legacy)
+                        + droppedNear(helper, lowerPos, legacy);
         checkEquals(1, accounted, "Refused item after being drawn down across the seam");
         helper.succeed();
     }
@@ -205,18 +211,21 @@ public final class SinglesColumnChecks {
 
         singles.extractAt(bottom, null);
 
-        check(singles.getItems().getStackInSlot(bottom).isEmpty(),
+        check(
+                singles.getItems().getStackInSlot(bottom).isEmpty(),
                 "Existing gap was compacted away");
-        checkEquals(Items.PAPER, singles.getItems().getStackInSlot(second).getItem(),
+        checkEquals(
+                Items.PAPER,
+                singles.getItems().getStackInSlot(second).getItem(),
                 "Upper item did not shift exactly one layer");
         helper.succeed();
     }
 
     /**
-     * Extraction draws from the visually aligned column across a differently rotated block seam.
-     * To reproduce in-game: rotate two stacked Singles blocks differently, put items across one
-     * visual seam column, rotate the upper item, and extract the lower item. The upper item crosses
-     * the seam with its item rotation intact and its emptied block disappears.
+     * Extraction draws from the visually aligned column across a differently rotated block seam. To
+     * reproduce in-game: rotate two stacked Singles blocks differently, put items across one visual
+     * seam column, rotate the upper item, and extract the lower item. The upper item crosses the
+     * seam with its item rotation intact and its emptied block disappears.
      */
     public static void extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper helper) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
@@ -224,10 +233,8 @@ public final class SinglesColumnChecks {
         lower.setRotation(1);
         upper.setRotation(2);
         int visualColumn = 9;
-        int lowerColumn =
-                SinglesCubeIdx.storageColumnFromVisual(visualColumn, lower.getRotation());
-        int upperColumn =
-                SinglesCubeIdx.storageColumnFromVisual(visualColumn, upper.getRotation());
+        int lowerColumn = SinglesCubeIdx.storageColumnFromVisual(visualColumn, lower.getRotation());
+        int upperColumn = SinglesCubeIdx.storageColumnFromVisual(visualColumn, upper.getRotation());
         int lowerTop = SinglesCubeIdx.indexFromColumn(lowerColumn, 3);
         int upperBottom = SinglesCubeIdx.indexFromColumn(upperColumn, 0);
         lower.getItems().insertItem(lowerTop, new ItemStack(Items.STICK));
@@ -236,11 +243,13 @@ public final class SinglesColumnChecks {
 
         lower.extractAt(lowerTop, null);
 
-        checkEquals(Items.PAPER, lower.getItems().getStackInSlot(lowerTop).getItem(),
+        checkEquals(
+                Items.PAPER,
+                lower.getItems().getStackInSlot(lowerTop).getItem(),
                 "Item did not cross the visual block seam");
-        checkEquals(3, lower.getCubeRotation(lowerTop),
-                "Cross-seam item rotation changed");
-        check(helper.getLevel().getBlockEntity(upper.getBlockPos()) == null,
+        checkEquals(3, lower.getCubeRotation(lowerTop), "Cross-seam item rotation changed");
+        check(
+                helper.getLevel().getBlockEntity(upper.getBlockPos()) == null,
                 "Emptied top block remained");
         helper.succeed();
     }
@@ -255,11 +264,9 @@ public final class SinglesColumnChecks {
         singles.getItems().insertItem(8, new ItemStack(Items.STICK));
         BlockPos blockPos = singles.getBlockPos();
 
-        int result = SinglesCubeIdx.traceAllPositions(
-                traceThroughBlock(blockPos),
-                blockPos,
-                singles.getItems(),
-                0);
+        int result =
+                SinglesCubeIdx.traceAllPositions(
+                        traceThroughBlock(blockPos), blockPos, singles.getItems(), 0);
 
         checkEquals(4, result, "Trace deposit index");
         helper.succeed();
@@ -274,11 +281,9 @@ public final class SinglesColumnChecks {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BlockPos blockPos = singles.getBlockPos();
 
-        int result = SinglesCubeIdx.traceAllPositions(
-                traceThroughBlock(blockPos),
-                blockPos,
-                singles.getItems(),
-                0);
+        int result =
+                SinglesCubeIdx.traceAllPositions(
+                        traceThroughBlock(blockPos), blockPos, singles.getItems(), 0);
 
         checkEquals(12, result, "Trace deposit index");
         helper.succeed();
@@ -303,35 +308,45 @@ public final class SinglesColumnChecks {
 
         helper.setBlock(ORIGIN.above(), Blocks.AIR);
 
-        checkEquals(1, GameTestScaffold.droppedNear(
-                helper, middle.getBlockPos(), Items.DIRT), "Dropped middle contents");
-        checkEquals(1, GameTestScaffold.heldAt(
-                helper, lower.getBlockPos(), Items.STONE), "Lower contents");
-        checkEquals(1, GameTestScaffold.heldAt(
-                helper, upper.getBlockPos(), Items.APPLE), "Upper contents");
-        check(helper.getLevel().getBlockEntity(upper.getBlockPos()) instanceof SinglesStackBE,
+        checkEquals(
+                1,
+                GameTestScaffold.droppedNear(helper, middle.getBlockPos(), Items.DIRT),
+                "Dropped middle contents");
+        checkEquals(
+                1,
+                GameTestScaffold.heldAt(helper, lower.getBlockPos(), Items.STONE),
+                "Lower contents");
+        checkEquals(
+                1,
+                GameTestScaffold.heldAt(helper, upper.getBlockPos(), Items.APPLE),
+                "Upper contents");
+        check(
+                helper.getLevel().getBlockEntity(upper.getBlockPos()) instanceof SinglesStackBE,
                 "Upper block moved into the gap");
-        checkEquals(Items.APPLE, upper.getItems().getStackInSlot(0).getItem(),
+        checkEquals(
+                Items.APPLE,
+                upper.getItems().getStackInSlot(0).getItem(),
                 "Upper item moved out of its block");
         helper.succeed();
     }
 
     /**
-     * A ray entering the block's lowest north-west cell head on and running clear through it, so the
-     * cells it meets are the column the trace is being asked about.
+     * A ray entering the block's lowest north-west cell head on and running clear through it, so
+     * the cells it meets are the column the trace is being asked about.
      */
     private static ViewRay traceThroughBlock(BlockPos blockPos) {
         double x = blockPos.getX() + 0.125;
         double y = blockPos.getY() + 0.125;
-        return new ViewRay(new Vec3(x, y, blockPos.getZ() - 1.0), new Vec3(x, y, blockPos.getZ() + 2.0));
+        return new ViewRay(
+                new Vec3(x, y, blockPos.getZ() - 1.0), new Vec3(x, y, blockPos.getZ() + 2.0));
     }
 
     /**
-     * The comparator range reserves 0 for an empty column, as a vanilla container's does, and a cell
-     * holds one item, so full means every cell of every block occupied.
+     * The comparator range reserves 0 for an empty column, as a vanilla container's does, and a
+     * cell holds one item, so full means every cell of every block occupied.
      *
-     * <p>To reproduce in-game: compare an empty Singles column, the same column with one item, and a
-     * full column. Their comparator outputs are 0, at least 1, and 15 respectively.
+     * <p>To reproduce in-game: compare an empty Singles column, the same column with one item, and
+     * a full column. Their comparator outputs are 0, at least 1, and 15 respectively.
      */
     public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
@@ -339,8 +354,7 @@ public final class SinglesColumnChecks {
         checkEquals(0, signalAt(helper, ORIGIN), "Empty column signal");
 
         singles.getItems().insertItem(0, new ItemStack(Items.STONE, 1));
-        checkEquals(1, signalAt(helper, ORIGIN),
-                "Signal for a single item in a whole column");
+        checkEquals(1, signalAt(helper, ORIGIN), "Signal for a single item in a whole column");
 
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
             singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1));
@@ -351,8 +365,8 @@ public final class SinglesColumnChecks {
 
     /**
      * Every block in a Singles column reports the same whole-column fill. To reproduce in-game:
-     * make a two-block column with one block's cells full and the other empty, then place comparators
-     * against both blocks. Both report the half-full value.
+     * make a two-block column with one block's cells full and the other empty, then place
+     * comparators against both blocks. Both report the half-full value.
      */
     public static void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
@@ -371,8 +385,9 @@ public final class SinglesColumnChecks {
      * The fill is measured against the column's current height, so a run that loses a block reports
      * the same contents as a larger share of a smaller column.
      *
-     * <p>To reproduce in-game: fill the lower half of a two-block Singles column, read its comparator,
-     * then remove the empty upper block. The lower block's output rises from half full to full.
+     * <p>To reproduce in-game: fill the lower half of a two-block Singles column, read its
+     * comparator, then remove the empty upper block. The lower block's output rises from half full
+     * to full.
      */
     public static void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);

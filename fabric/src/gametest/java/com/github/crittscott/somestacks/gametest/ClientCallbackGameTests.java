@@ -2,17 +2,19 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.client.FabricClientEvents;
 import com.github.crittscott.somestacks.client.FabricKeyMappings;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.storage.TagValueInput;
 
 /** Fabric development-client registration for {@link ClientCallbackChecks#run}. */
 public final class ClientCallbackGameTests implements ClientModInitializer {
     /** Registers the local /ssclienttest smoke command in a client running the test mod. */
+    // spotless:off
     @Override
     public void onInitializeClient() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) ->
@@ -25,4 +27,5 @@ public final class ClientCallbackGameTests implements ClientModInitializer {
                         }, (be, tag, initial) -> be.loadWithComponents(TagValueInput.create(
                                 ProblemReporter.DISCARDING, be.getLevel().registryAccess(), tag))))));
     }
+    // spotless:on
 }

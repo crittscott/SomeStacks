@@ -7,6 +7,7 @@ import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.mojang.brigadier.CommandDispatcher;
+
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
@@ -21,6 +22,7 @@ public final class SomeStacksServer {
     private static volatile MinecraftServer runningServer;
     private static ServerConfig.Settings publishedPolicy;
     private static ConfigSyncPkt clientSnapshot;
+
     /**
      * Starts session accounting, loads world policy, then builds the login snapshot. Loader
      * backends and networking must be installed before this server-thread callback, which runs
@@ -29,7 +31,8 @@ public final class SomeStacksServer {
     public static synchronized void onServerStarting(MinecraftServer server) {
         runningServer = server;
         StackDataMigration.beginSession();
-        if (!(ServerConfig.backend() instanceof TomlServerConfig)) ServerConfigMigration.reportLegacyIngots(server);
+        if (!(ServerConfig.backend() instanceof TomlServerConfig))
+            ServerConfigMigration.reportLegacyIngots(server);
         ServerConfig.loadFor(server);
         publishedPolicy = ServerConfig.settings();
         clientSnapshot = ConfigSyncPkt.fromSettings(publishedPolicy);
@@ -83,17 +86,23 @@ public final class SomeStacksServer {
         return synced;
     }
 
-    /** Records the stack types, run height, gallery access, and deny-list sizes policy now enforces. */
+    /**
+     * Records the stack types, run height, gallery access, and deny-list sizes policy now enforces.
+     */
     private static void logPolicy(String action) {
         ServerConfig.Settings settings = ServerConfig.settings();
-        SomeStacksCommon.LOGGER.info("Server policy {}: Storage {}, Singles {}, Bar {}, maximum run height {}, "
+        SomeStacksCommon.LOGGER.info(
+                "Server policy {}: Storage {}, Singles {}, Bar {}, maximum run height {}, "
                         + "galleries {} at permission {}, {} disabled mods, {} disabled items",
                 action,
                 enabledLabel(settings.enableStorageStackBlock()),
                 enabledLabel(settings.enableSinglesStackBlock()),
                 enabledLabel(settings.enableBarStackBlock()),
-                settings.maxPileHeight(), enabledLabel(settings.galleryEnabled()),
-                settings.galleryPermissionLevel(), settings.disableMods().size(), settings.disableItems().size());
+                settings.maxPileHeight(),
+                enabledLabel(settings.galleryEnabled()),
+                settings.galleryPermissionLevel(),
+                settings.disableMods().size(),
+                settings.disableItems().size());
     }
 
     private static String enabledLabel(boolean enabled) {
@@ -117,8 +126,7 @@ public final class SomeStacksServer {
 
     /** Registers server commands with the loader's dispatcher and current registry context. */
     public static void registerCommands(
-            CommandDispatcher<CommandSourceStack> dispatcher,
-            CommandBuildContext buildContext) {
+            CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         SsCommand.register(dispatcher, buildContext);
     }
 }

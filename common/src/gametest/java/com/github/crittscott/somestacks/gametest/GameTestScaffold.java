@@ -8,6 +8,7 @@ import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -34,8 +35,8 @@ import java.util.Objects;
 /**
  * Scaffolding shared by each loader's GameTests: placing each stack type on the empty template
  * through {@link CommonRegistry}, seeding handlers directly, and the assertion helpers every test
- * reads through. Loader-native automation access stays in Forge's and NeoForge's
- * {@code GameTestSupport} and Fabric's {@code FabricGameTestSupport}.
+ * reads through. Loader-native automation access stays in Forge's and NeoForge's {@code
+ * GameTestSupport} and Fabric's {@code FabricGameTestSupport}.
  *
  * <p>Seeding writes to a handler rather than going through a deposit, so a test can build a state
  * the ordinary rules would not produce and check what happens next.
@@ -62,42 +63,55 @@ public final class GameTestScaffold {
      * rotate a filled Storage/Singles block, waterlog it, or change its stored light source; no
      * contents should fall out and supported Bars above it must remain in place.
      */
-    public static void checkStateUpdatesPreserveContents(GameTestHelper helper, StackBlockEntity entity) {
+    public static void checkStateUpdatesPreserveContents(
+            GameTestHelper helper, StackBlockEntity entity) {
         ServerLevel level = helper.getLevel();
         BlockPos pos = entity.getBlockPos();
         BlockState original = level.getBlockState(pos);
         CompoundTag contents = entity.saveWithoutMetadata(level.registryAccess());
-        int dropsBefore = droppedInColumn(helper, pos, pos).stream()
-                .mapToInt(drop -> drop.getItem().getCount()).sum();
-        BlockState changed = original
-                .setValue(StackBlock.WATERLOGGED, !original.getValue(StackBlock.WATERLOGGED))
-                .setValue(StackBlock.LIGHT_LEVEL, (original.getValue(StackBlock.LIGHT_LEVEL) + 1) % 16);
+        int dropsBefore =
+                droppedInColumn(helper, pos, pos).stream()
+                        .mapToInt(drop -> drop.getItem().getCount())
+                        .sum();
+        BlockState changed =
+                original.setValue(
+                                StackBlock.WATERLOGGED, !original.getValue(StackBlock.WATERLOGGED))
+                        .setValue(
+                                StackBlock.LIGHT_LEVEL,
+                                (original.getValue(StackBlock.LIGHT_LEVEL) + 1) % 16);
         if (changed.hasProperty(StackBlock.HORIZONTAL_FACING)) {
             changed = changed.cycle(StackBlock.HORIZONTAL_FACING);
         }
         level.setBlock(pos, changed, Block.UPDATE_ALL);
         check(level.getBlockEntity(pos) == entity, "State update replaced the block entity");
-        checkEquals(contents, entity.saveWithoutMetadata(level.registryAccess()),
+        checkEquals(
+                contents,
+                entity.saveWithoutMetadata(level.registryAccess()),
                 "State update changed saved contents");
         level.setBlock(pos, original, Block.UPDATE_ALL);
         check(level.getBlockEntity(pos) == entity, "Restoring state replaced the block entity");
-        checkEquals(contents, entity.saveWithoutMetadata(level.registryAccess()),
+        checkEquals(
+                contents,
+                entity.saveWithoutMetadata(level.registryAccess()),
                 "Restoring state changed saved contents");
-        checkEquals(dropsBefore, droppedInColumn(helper, pos, pos).stream()
-                .mapToInt(drop -> drop.getItem().getCount()).sum(), "State update dropped items");
+        checkEquals(
+                dropsBefore,
+                droppedInColumn(helper, pos, pos).stream()
+                        .mapToInt(drop -> drop.getItem().getCount())
+                        .sum(),
+                "State update dropped items");
     }
 
     public static <T extends BlockEntity> T place(
-            GameTestHelper helper,
-            BlockPos relative,
-            Block block,
-            Class<T> type) {
+            GameTestHelper helper, BlockPos relative, Block block, Class<T> type) {
         ServerLevel level = helper.getLevel();
         BlockPos absolute = helper.absolutePos(relative);
-        check(level.setBlock(absolute, block.defaultBlockState(), Block.UPDATE_ALL),
+        check(
+                level.setBlock(absolute, block.defaultBlockState(), Block.UPDATE_ALL),
                 "Could not place " + block + " at " + relative);
         BlockEntity blockEntity = level.getBlockEntity(absolute);
-        check(type.isInstance(blockEntity),
+        check(
+                type.isInstance(blockEntity),
                 "Expected " + type.getSimpleName() + " at " + relative + ", found " + blockEntity);
         return type.cast(blockEntity);
     }
@@ -108,7 +122,8 @@ public final class GameTestScaffold {
                 return item;
             }
         }
-        throw new GameTestAssertException(Component.literal("No item is currently valid for Bar Stack tests"), 0);
+        throw new GameTestAssertException(
+                Component.literal("No item is currently valid for Bar Stack tests"), 0);
     }
 
     public static int count(SlotAccess handler, Item item) {
@@ -135,12 +150,12 @@ public final class GameTestScaffold {
     /**
      * Puts {@code stack} straight into a slot, bypassing the validity test an insertion runs.
      *
-     * <p>This is how a test reaches the state an {@code ss deny mod} edit
-     * or a data pack reload leaves behind: contents a block holds and must keep handing back, which
-     * that same block would refuse from a deposit today. Validity gates insertion only, so the
-     * stored side of that rule has to be set up without going through insertion.
-     * {@link com.github.crittscott.somestacks.block.StorageStackBE#setSlotIfChanged} takes the same
-     * route for the same reason.
+     * <p>This is how a test reaches the state an {@code ss deny mod} edit or a data pack reload
+     * leaves behind: contents a block holds and must keep handing back, which that same block would
+     * refuse from a deposit today. Validity gates insertion only, so the stored side of that rule
+     * has to be set up without going through insertion. {@link
+     * com.github.crittscott.somestacks.block.StorageStackBE#setSlotIfChanged} takes the same route
+     * for the same reason.
      */
     public static void seedSlot(StackItemStorage handler, int slot, ItemStack stack) {
         handler.setStackInSlot(slot, stack);
@@ -148,8 +163,8 @@ public final class GameTestScaffold {
 
     /**
      * Items of {@code item} still held by the stack block at {@code absolutePos}. A position the
-     * block has removed itself from holds none, which is what a caller counting whether an operation
-     * conserved its contents wants to see.
+     * block has removed itself from holds none, which is what a caller counting whether an
+     * operation conserved its contents wants to see.
      */
     public static int heldAt(GameTestHelper helper, BlockPos absolutePos, Item item) {
         BlockEntity blockEntity = helper.getLevel().getBlockEntity(absolutePos);
@@ -167,7 +182,8 @@ public final class GameTestScaffold {
 
     /** Items of {@code item} lying on the ground around {@code center}. */
     public static int droppedNear(GameTestHelper helper, BlockPos center, Item item) {
-        return helper.getLevel()
+        return helper
+                .getLevel()
                 .getEntitiesOfClass(ItemEntity.class, new AABB(center).inflate(2.0))
                 .stream()
                 .filter(entity -> entity.getItem().is(item))
@@ -177,16 +193,16 @@ public final class GameTestScaffold {
 
     /** Item entities around the vertical span from {@code bottom} through {@code top}. */
     public static List<ItemEntity> droppedInColumn(
-            GameTestHelper helper,
-            BlockPos bottom,
-            BlockPos top) {
-        AABB bounds = new AABB(
-                Math.min(bottom.getX(), top.getX()),
-                Math.min(bottom.getY(), top.getY()),
-                Math.min(bottom.getZ(), top.getZ()),
-                Math.max(bottom.getX(), top.getX()) + 1.0,
-                Math.max(bottom.getY(), top.getY()) + 1.0,
-                Math.max(bottom.getZ(), top.getZ()) + 1.0).inflate(2.0);
+            GameTestHelper helper, BlockPos bottom, BlockPos top) {
+        AABB bounds =
+                new AABB(
+                                Math.min(bottom.getX(), top.getX()),
+                                Math.min(bottom.getY(), top.getY()),
+                                Math.min(bottom.getZ(), top.getZ()),
+                                Math.max(bottom.getX(), top.getX()) + 1.0,
+                                Math.max(bottom.getY(), top.getY()) + 1.0,
+                                Math.max(bottom.getZ(), top.getZ()) + 1.0)
+                        .inflate(2.0);
         return helper.getLevel().getEntitiesOfClass(ItemEntity.class, bounds);
     }
 
@@ -207,16 +223,13 @@ public final class GameTestScaffold {
         Cow cow = EntityType.COW.create(level, EntitySpawnReason.COMMAND);
         check(cow != null, "Could not create obstruction cow");
         check(cow.blocksBuilding, "Cow does not block building");
-        cow.snapTo(
-                target.getX() + 0.5,
-                target.getY(),
-                target.getZ() + 0.5,
-                0.0F,
-                0.0F);
+        cow.snapTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5, 0.0F, 0.0F);
         check(level.addFreshEntity(cow), "Could not add obstruction cow");
     }
 
-    /** Runs {@code action} while {@code relative} lies outside the world border, then restores it. */
+    /**
+     * Runs {@code action} while {@code relative} lies outside the world border, then restores it.
+     */
     public static void outsideWorldBorder(
             GameTestHelper helper, BlockPos relative, Runnable action) {
         WorldBorder border = helper.getLevel().getWorldBorder();
@@ -227,7 +240,8 @@ public final class GameTestScaffold {
         try {
             border.setCenter(target.getX() + 1000.0, target.getZ());
             border.setSize(16.0);
-            check(!border.isWithinBounds(target),
+            check(
+                    !border.isWithinBounds(target),
                     "Test setup left the position inside the world border");
             action.run();
         } finally {

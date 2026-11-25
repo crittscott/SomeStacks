@@ -43,7 +43,8 @@ public final class QuarterTurns {
             case WEST -> 1;
             case SOUTH -> 2;
             case EAST -> 3;
-            default -> throw new IllegalArgumentException("Direction is not horizontal: " + direction);
+            default ->
+                    throw new IllegalArgumentException("Direction is not horizontal: " + direction);
         };
     }
 }

@@ -1,6 +1,8 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.block.StackBlockEntity;
+import com.mojang.authlib.GameProfile;
+
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -8,12 +10,11 @@ import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import com.mojang.authlib.GameProfile;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +38,8 @@ public final class FabricGameTestSupport {
     private FabricGameTestSupport() {}
 
     /** Shared scenario adapter: accepted count, with an explicit commit flag. */
-    public static int offerAt(StackBlockEntity blockEntity, int slot, ItemStack stack, boolean commit) {
+    public static int offerAt(
+            StackBlockEntity blockEntity, int slot, ItemStack stack, boolean commit) {
         return stack.getCount() - insertAt(storage(blockEntity), slot, stack, !commit).getCount();
     }
 
@@ -47,28 +49,31 @@ public final class FabricGameTestSupport {
      */
     @SuppressWarnings("unchecked")
     public static SlottedStorage<ItemVariant> storage(BlockEntity blockEntity) {
-        Storage<ItemVariant> storage = ItemStorage.SIDED.find(
-                (ServerLevel) blockEntity.getLevel(),
-                blockEntity.getBlockPos(),
-                blockEntity.getBlockState(),
-                blockEntity,
-                null);
-        GameTestScaffold.check(storage instanceof SlottedStorage,
+        Storage<ItemVariant> storage =
+                ItemStorage.SIDED.find(
+                        (ServerLevel) blockEntity.getLevel(),
+                        blockEntity.getBlockPos(),
+                        blockEntity.getBlockState(),
+                        blockEntity,
+                        null);
+        GameTestScaffold.check(
+                storage instanceof SlottedStorage,
                 "Missing item storage at " + blockEntity.getBlockPos());
         return (SlottedStorage<ItemVariant>) storage;
     }
 
     /**
-     * Inserts {@code stack} into {@code slot}, mirroring Forge's
-     * {@code IItemHandler.insertItem(slot, stack, simulate)}: returns the remainder left over, and
-     * a {@code simulate} transaction is opened and never committed.
+     * Inserts {@code stack} into {@code slot}, mirroring Forge's {@code
+     * IItemHandler.insertItem(slot, stack, simulate)}: returns the remainder left over, and a
+     * {@code simulate} transaction is opened and never committed.
      */
     public static ItemStack insertAt(
             SlottedStorage<ItemVariant> storage, int slot, ItemStack stack, boolean simulate) {
         long inserted;
         try (Transaction transaction = Transaction.openOuter()) {
-            inserted = storage.getSlot(slot).insert(
-                    ItemVariant.of(stack), stack.getCount(), transaction);
+            inserted =
+                    storage.getSlot(slot)
+                            .insert(ItemVariant.of(stack), stack.getCount(), transaction);
             if (!simulate) {
                 transaction.commit();
             }
@@ -79,8 +84,8 @@ public final class FabricGameTestSupport {
     }
 
     /**
-     * Extracts up to {@code amount} from {@code slot}, mirroring Forge's
-     * {@code IItemHandler.extractItem(slot, amount, simulate)}.
+     * Extracts up to {@code amount} from {@code slot}, mirroring Forge's {@code
+     * IItemHandler.extractItem(slot, amount, simulate)}.
      */
     public static ItemStack extractAt(
             SlottedStorage<ItemVariant> storage, int slot, int amount, boolean simulate) {
@@ -122,12 +127,16 @@ public final class FabricGameTestSupport {
         return total;
     }
 
-    /** A fake-player factory that puts the player in Survival and resets the main hand for each shared check. */
+    /**
+     * A fake-player factory that puts the player in Survival and resets the main hand for each
+     * shared check.
+     */
     public static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         return mainHand -> {
             ServerPlayer player = FakePlayer.get(level);
-            // Checks expect Survival spending; the shared fake player keeps whatever mode it last had.
+            // Checks expect Survival spending; the shared fake player keeps whatever mode it last
+            // had.
             player.setGameMode(GameType.SURVIVAL);
             player.setItemInHand(InteractionHand.MAIN_HAND, mainHand);
             return player;
@@ -139,24 +148,34 @@ public final class FabricGameTestSupport {
      * does not record. The player is an ordinary unconnected {@link ServerPlayer} with Survival
      * abilities; changing its mode would broadcast through the connection it lacks.
      */
-    public static Function<ItemStack, ServerPlayer> advancementPlayerFactory(GameTestHelper helper) {
+    public static Function<ItemStack, ServerPlayer> advancementPlayerFactory(
+            GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         return mainHand -> {
-            ServerPlayer player = ADVANCEMENT_PLAYERS.computeIfAbsent(level, key -> new ServerPlayer(
-                    key.getServer(), key, ADVANCEMENT_PLAYER_PROFILE, ClientInformation.createDefault()) {
-                @Override
-                public void displayClientMessage(Component message, boolean actionBar) {
-                    // GameTest players have no network connection.
-                }
-            });
+            ServerPlayer player =
+                    ADVANCEMENT_PLAYERS.computeIfAbsent(
+                            level,
+                            key ->
+                                    new ServerPlayer(
+                                            key.getServer(),
+                                            key,
+                                            ADVANCEMENT_PLAYER_PROFILE,
+                                            ClientInformation.createDefault()) {
+                                        @Override
+                                        public void displayClientMessage(
+                                                Component message, boolean actionBar) {
+                                            // GameTest players have no network connection.
+                                        }
+                                    });
             GameType.SURVIVAL.updatePlayerAbilities(player.getAbilities());
             player.setItemInHand(InteractionHand.MAIN_HAND, mainHand);
             return player;
         };
     }
 
-    private static final GameProfile ADVANCEMENT_PLAYER_PROFILE = new GameProfile(
-            UUID.nameUUIDFromBytes("somestacks:gametest".getBytes(StandardCharsets.UTF_8)),
-            "[SomeStacksGameTest]");
+    private static final GameProfile ADVANCEMENT_PLAYER_PROFILE =
+            new GameProfile(
+                    UUID.nameUUIDFromBytes("somestacks:gametest".getBytes(StandardCharsets.UTF_8)),
+                    "[SomeStacksGameTest]");
     private static final Map<ServerLevel, ServerPlayer> ADVANCEMENT_PLAYERS = new WeakHashMap<>();
 }

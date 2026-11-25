@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraftforge.common.capabilities.Capability;
@@ -27,21 +28,25 @@ public final class ForgeCapabilityAttachment {
     private static final Identifier ITEM_HANDLER_ID =
             Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "item_handler");
 
-    private ForgeCapabilityAttachment() {
-    }
+    private ForgeCapabilityAttachment() {}
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent.BlockEntities event) {
         if (event.getObject() instanceof StackBlockEntity stack) {
             LazyOptional<IItemHandler> lazy = LazyOptional.of(() -> new RunItemHandler(stack));
 
-            event.addCapability(ITEM_HANDLER_ID, new ICapabilityProvider() {
-                @Nonnull
-                @Override
-                public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-                    return cap == ForgeCapabilities.ITEM_HANDLER ? lazy.cast() : LazyOptional.empty();
-                }
-            });
+            event.addCapability(
+                    ITEM_HANDLER_ID,
+                    new ICapabilityProvider() {
+                        @Nonnull
+                        @Override
+                        public <T> LazyOptional<T> getCapability(
+                                @Nonnull Capability<T> cap, @Nullable Direction side) {
+                            return cap == ForgeCapabilities.ITEM_HANDLER
+                                    ? lazy.cast()
+                                    : LazyOptional.empty();
+                        }
+                    });
             event.addListener(lazy::invalidate);
         }
     }

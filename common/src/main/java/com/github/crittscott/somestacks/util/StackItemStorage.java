@@ -1,32 +1,34 @@
 package com.github.crittscott.somestacks.util;
 
-import com.mojang.datafixers.util.Pair;
 import com.github.crittscott.somestacks.block.StackDataMigration;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
- * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives both loaders the
- * local insert/extract semantics and saved shape
- * ({@code {Items:[{Slot, ...stack}], SetAside:[...]}}) used by the block entities.
+ * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives both loaders the local
+ * insert/extract semantics and saved shape ({@code {Items:[{Slot, ...stack}], SetAside:[...]}})
+ * used by the block entities.
  *
  * <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
- * aside rather than dropped: it is kept verbatim under {@code SetAside}, saved back with the
- * block, and retried on every load, so contents from a temporarily missing mod return when it does.
+ * aside rather than dropped: it is kept verbatim under {@code SetAside}, saved back with the block,
+ * and retried on every load, so contents from a temporarily missing mod return when it does.
  *
  * <p>Subclasses override {@link #onContentsChanged(int)}, {@link #isItemValid(int, ItemStack)}, and
  * {@link #getSlotLimit(int)} to specialize notification, admission, and capacity.
@@ -73,7 +75,9 @@ public class StackItemStorage implements SlotAccess {
         onContentsChanged(slot);
     }
 
-    /** Inserts up to the legal capacity, returning the remainder; an accepted stack may be retained. */
+    /**
+     * Inserts up to the legal capacity, returning the remainder; an accepted stack may be retained.
+     */
     @Nonnull
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack) {
         if (stack.isEmpty()) {
@@ -144,10 +148,11 @@ public class StackItemStorage implements SlotAccess {
     }
 
     /** Called after a slot's contents change, including a direct {@link #setStackInSlot}. */
-    protected void onContentsChanged(int slot) {
-    }
+    protected void onContentsChanged(int slot) {}
 
-    /** Uses the value output's registry context for item components, retaining the disk envelope. */
+    /**
+     * Uses the value output's registry context for item components, retaining the disk envelope.
+     */
     public static Codec<StackItemStorage> codec(int slots) {
         return new Codec<>() {
             @Override
@@ -157,11 +162,14 @@ public class StackItemStorage implements SlotAccess {
 
             @Override
             public <T> DataResult<Pair<StackItemStorage, T>> decode(DynamicOps<T> ops, T input) {
-                return CompoundTag.CODEC.decode(ops, input).map(pair -> pair.mapFirst(tag -> {
-                    StackItemStorage storage = new StackItemStorage(slots);
-                    storage.load(ops, tag);
-                    return storage;
-                }));
+                return CompoundTag.CODEC
+                        .decode(ops, input)
+                        .map(pair ->
+                                pair.mapFirst(tag -> {
+                                    StackItemStorage storage = new StackItemStorage(slots);
+                                    storage.load(ops, tag);
+                                    return storage;
+                                }));
             }
         };
     }
@@ -179,11 +187,13 @@ public class StackItemStorage implements SlotAccess {
                 try {
                     encoded = ItemStack.CODEC.encodeStart(ops, stacks[i]).getOrThrow();
                 } catch (RuntimeException failure) {
-                    throw new IllegalStateException("Cannot encode stored item in slot " + i, failure);
+                    throw new IllegalStateException(
+                            "Cannot encode stored item in slot " + i, failure);
                 }
                 Tag raw = ops.convertTo(NbtOps.INSTANCE, encoded);
                 if (!(raw instanceof CompoundTag itemTag)) {
-                    throw new IllegalStateException("Item codec did not produce a compound for slot " + i);
+                    throw new IllegalStateException(
+                            "Item codec did not produce a compound for slot " + i);
                 }
                 itemTag.putInt(TAG_SLOT, i);
                 list.add(itemTag);
@@ -196,8 +206,8 @@ public class StackItemStorage implements SlotAccess {
     }
 
     /**
-     * Loads slot contents from NBT, setting aside every item tag that cannot be placed. The tag must
-     * already be in the running game's format. Ordinary entries take precedence over retries;
+     * Loads slot contents from NBT, setting aside every item tag that cannot be placed. The tag
+     * must already be in the running game's format. Ordinary entries take precedence over retries;
      * loading bypasses admission and does not call contents-change hooks. The caller reports
      * returned retention counts once it knows the world location.
      */
@@ -225,7 +235,8 @@ public class StackItemStorage implements SlotAccess {
 
     @Nullable
     private ItemStack[] decodeClientUpdate(HolderLookup.Provider registries, CompoundTag nbt) {
-        if (nbt.contains(TAG_SET_ASIDE) || !(nbt.get(TAG_ITEMS) instanceof ListTag list)
+        if (nbt.contains(TAG_SET_ASIDE)
+                || !(nbt.get(TAG_ITEMS) instanceof ListTag list)
                 || list.size() > stacks.length) {
             return null;
         }

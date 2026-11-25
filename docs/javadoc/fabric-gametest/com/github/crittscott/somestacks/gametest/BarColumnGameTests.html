@@ -130,8 +130,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#backfillKeepsABarItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">backfillKeepsABarItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Validity gates insertion only, so a bar stored before a data pack
- reload narrowed the rule has to survive the backfill an automated extraction moves it through.</div>
+<div class="block">Validity gates insertion only, so a bar stored before a data pack reload narrowed the rule
+ has to survive the backfill an automated extraction moves it through.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#breakingFullColumnConsolidatesDrops(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">breakingFullColumnConsolidatesDrops</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -197,7 +197,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#storageInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageInsertionAnswersForThePositionItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
- positions; unsupported positions refuse insertion while a supported empty position accepts it.</div>
+ positions; unsupported positions refuse insertion while a supported empty position accepts
+ it.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#storageSimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageSimulationDoesNotMutateExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -331,7 +332,8 @@ loadScripts(document, 'script');</script>
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageInsertionAnswersForThePositionItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
- positions; unsupported positions refuse insertion while a supported empty position accepts it.</div>
+ positions; unsupported positions refuse insertion while a supported empty position accepts
+ it.</div>
 </section>
 </li>
 <li>
@@ -340,14 +342,14 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">backfillKeepsABarItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Validity gates insertion only, so a bar stored before a data pack
- reload narrowed the rule has to survive the backfill an automated extraction moves it through.
- A stick stands in for such a bar: a Bar Stack refuses one from a deposit, but may be holding
- contents the current ingot set no longer covers.
+<div class="block">Validity gates insertion only, so a bar stored before a data pack reload narrowed the rule
+ has to survive the backfill an automated extraction moves it through. A stick stands in for
+ such a bar: a Bar Stack refuses one from a deposit, but may be holding contents the current
+ ingot set no longer covers.
 
  <p>To reproduce in-game: fill a Bar Stack, narrow the ingot rule so one stored bar is no
- longer accepted, then automate extraction below it. Backfill retains or drops that legacy
- bar without deleting or changing it.</div>
+ longer accepted, then automate extraction below it. Backfill retains or drops that legacy bar
+ without deleting or changing it.</div>
 </section>
 </li>
 <li>

@@ -91,10 +91,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">AutomationAndPersistenceChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Disk persistence, client render tags, saved-world migration/recovery, and block shape contracts.
- The
- automation-surface half (whole-run automation-view presence and headroom) stays in each
+ The automation-surface half (whole-run automation-view presence and headroom) stays in each
  loader's own <code>AutomationAndPersistenceGameTests</code>, since it addresses the loader-native
- storage view directly. Native client ingress is exercised by /ssclienttest on client-attached entities.</div>
+ storage view directly. Native client ingress is exercised by /ssclienttest on client-attached
+ entities.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -112,7 +112,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barDiskSaveRoundTripsItems</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Bar disk data from the current format and the 1.21.8 release preserves the item in each position.</div>
+<div class="block">Bar disk data from the current format and the 1.21.8 release preserves the item in each
+ position.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">cachedShapesInvalidateWhenContentsChange</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
@@ -123,8 +124,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">previousReleaseSaveUpgradesOnLoad</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">A Storage Stack saved by the Some Stacks 1.21.8 release keeps its contents and permanence, and
- the block is marked for saving in the current data version, whether it loads in place or
+<div class="block">A Storage Stack saved by the Some Stacks 1.21.8 release keeps its contents and permanence,
+ and the block is marked for saving in the current data version, whether it loads in place or
  before chunk attachment.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
@@ -136,14 +137,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesDiskSaveRoundTripsItemsAndBothRotations</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Singles disk data from the current format and the 1.21.8 release preserves contents plus block-state
- and per-item rotations.</div>
+<div class="block">Singles disk data from the current format and the 1.21.8 release preserves contents plus
+ block-state and per-item rotations.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskSaveRoundTripsItemsRotationAndPermanence</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Storage disk data from the current format and the 1.21.8 release preserves items, data components,
- block-state rotation, and permanence.</div>
+<div class="block">Storage disk data from the current format and the 1.21.8 release preserves items, data
+ components, block-state rotation, and permanence.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structureRotationTransformsRotatableStackFacing</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -183,31 +184,31 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>storageDiskSaveRoundTripsItemsRotationAndPermanence</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageDiskSaveRoundTripsItemsRotationAndPermanence</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Storage disk data from the current format and the 1.21.8 release preserves items, data components,
- block-state rotation, and permanence. To
- reproduce in-game: deposit a component-bearing item, rotate the block, make the pile
- permanent, then save and restart the world. Verify the item and its components by extraction,
- the layout by observation, and permanence by emptying the pile and checking that it remains.
- Also checks a literal 1.21.8 release fixture and failure without partial saves.</div>
+<div class="block">Storage disk data from the current format and the 1.21.8 release preserves items, data
+ components, block-state rotation, and permanence. To reproduce in-game: deposit a
+ component-bearing item, rotate the block, make the pile permanent, then save and restart the
+ world. Verify the item and its components by extraction, the layout by observation, and
+ permanence by emptying the pile and checking that it remains. Also checks a literal 1.21.8
+ release fixture and failure without partial saves.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>singlesDiskSaveRoundTripsItemsAndBothRotations</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesDiskSaveRoundTripsItemsAndBothRotations</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Singles disk data from the current format and the 1.21.8 release preserves contents plus block-state
- and per-item rotations. To reproduce
- in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
- chunk after it has saved and unloaded, or restart the world. Both orientations and the item remain unchanged.</div>
+<div class="block">Singles disk data from the current format and the 1.21.8 release preserves contents plus
+ block-state and per-item rotations. To reproduce in-game: deposit an item, rotate its block
+ and the item itself, then unload and revisit the chunk after it has saved and unloaded, or
+ restart the world. Both orientations and the item remain unchanged.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>barDiskSaveRoundTripsItems</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barDiskSaveRoundTripsItems</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Bar disk data from the current format and the 1.21.8 release preserves the item in each position. To reproduce in-game: deposit Bars,
- save and restart the world, and verify the same Bar positions
- remain occupied.</div>
+<div class="block">Bar disk data from the current format and the 1.21.8 release preserves the item in each
+ position. To reproduce in-game: deposit Bars, save and restart the world, and verify the same
+ Bar positions remain occupied.</div>
 </section>
 </li>
 <li>
@@ -235,18 +236,18 @@ loadScripts(document, 'script');</script>
 <h3>setAsideItemsRecoverIntoFreeSlots</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAsideItemsRecoverIntoFreeSlots</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Set-aside entries in 1.21.8 release data recover only into free valid slots and disappear
- from retained disk data.
- To reproduce recovery in-game: save a stack holding a mod item, reopen and save the world
- with that item mod absent, then restore the mod and reopen the world. The item returns.
- Occupied-slot and invalid-slot retention require inspecting the saved tag.</div>
+ from retained disk data. To reproduce recovery in-game: save a stack holding a mod item,
+ reopen and save the world with that item mod absent, then restore the mod and reopen the
+ world. The item returns. Occupied-slot and invalid-slot retention require inspecting the
+ saved tag.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>previousReleaseSaveUpgradesOnLoad</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">previousReleaseSaveUpgradesOnLoad</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">A Storage Stack saved by the Some Stacks 1.21.8 release keeps its contents and permanence, and
- the block is marked for saving in the current data version, whether it loads in place or
+<div class="block">A Storage Stack saved by the Some Stacks 1.21.8 release keeps its contents and permanence,
+ and the block is marked for saving in the current data version, whether it loads in place or
  before chunk attachment. To reproduce in-game: with the 1.21.8 release, deposit stone into a
  Storage Stack, make the pile permanent, and quit; open the world with this version and
  extract the stone, then empty the pile. The stone is all there and the empty block remains.</div>
@@ -266,12 +267,12 @@ loadScripts(document, 'script');</script>
 <h3>cachedShapesInvalidateWhenContentsChange</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">cachedShapesInvalidateWhenContentsChange</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Singles and Bar targeting, outlines, and collision follow occupied contents.
- To reproduce in-game: use /setblock to place an empty Singles or Bar block, then deposit and
- extract items in different bottom-layer positions. The outline follows the occupied positions;
- aim through empty space at an occupied cell in another stack behind it to target that stack.
- Empty blocks have no outline, collision, or camera fog. Mobs avoid both types.
- Exact shape and path-type assertions require the GameTest.</div>
+<div class="block">Singles and Bar targeting, outlines, and collision follow occupied contents. To reproduce
+ in-game: use /setblock to place an empty Singles or Bar block, then deposit and extract items
+ in different bottom-layer positions. The outline follows the occupied positions; aim through
+ empty space at an occupied cell in another stack behind it to target that stack. Empty blocks
+ have no outline, collision, or camera fog. Mobs avoid both types. Exact shape and path-type
+ assertions require the GameTest.</div>
 </section>
 </li>
 </ul>

@@ -2,25 +2,29 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.client.ForgeClientEvents;
 import com.github.crittscott.somestacks.client.ForgeKeyMappings;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.Commands;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.common.util.Result;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /** Forge development-client registration for {@link ClientCallbackChecks#run}. */
-@Mod.EventBusSubscriber(modid = SomeStacksGameTests.MOD_ID, value = Dist.CLIENT,
+@Mod.EventBusSubscriber(
+        modid = SomeStacksGameTests.MOD_ID,
+        value = Dist.CLIENT,
         bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ClientCallbackGameTests {
     private ClientCallbackGameTests() {}
 
     /** Registers the local /ssclienttest smoke command in a client running the test mod. */
+    // spotless:off
     @SubscribeEvent
     public static void register(RegisterClientCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("ssclienttest").executes(ctx ->
@@ -38,4 +42,5 @@ public final class ClientCallbackGameTests {
                     else be.onDataPacket(null, input, registries);
                 })));
     }
+    // spotless:on
 }

@@ -153,7 +153,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  int&nbsp;slots)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Creates fixed local storage whose mutations refresh fill, notify the subtype, and batch publication.</div>
+<div class="block">Creates fixed local storage whose mutations refresh fill, notify the subtype, and batch
+ publication.</div>
 </div>
 </div>
 </section>
@@ -253,13 +254,15 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLocalContentsChanged(int)" class="member-name-link">onLocalContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt; getItems().getSlots()</code>.</div>
+<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt;
+ getItems().getSlots()</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#preRemoveSideEffects(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">preRemoveSideEffects</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;oldState)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Drops contents while this entity is still available; the block repairs neighboring runs afterward.</div>
+<div class="block">Drops contents while this entity is still available; the block repairs neighboring runs
+ afterward.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#renderCache()" class="member-name-link">renderCache</a>()</code></div>
@@ -287,7 +290,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#schedulePublish()" class="member-name-link">schedulePublish</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Marks local publication pending and coalesces a run tick; unattached/client entities do nothing.</div>
+<div class="block">Marks local publication pending and coalesces a run tick; unattached/client entities do
+ nothing.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLevel(net.minecraft.world.level.Level)" class="member-name-link">setLevel</a><wbr>(net.minecraft.world.level.Level&nbsp;level)</code></div>
@@ -374,7 +378,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  int&nbsp;slots)</span></div>
-<div class="block">Creates fixed local storage whose mutations refresh fill, notify the subtype, and batch publication.</div>
+<div class="block">Creates fixed local storage whose mutations refresh fill, notify the subtype, and batch
+ publication.</div>
 </section>
 </li>
 </ul>
@@ -433,9 +438,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onLocalContentsChanged(int)">
 <h3>onLocalContentsChanged</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onLocalContentsChanged</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
-<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt; getItems().getSlots()</code>.
- Runs on either side after dirty/fill updates, even inside a batch, before deferred publication.
- Disk and client snapshot loads bypass this hook and must refresh subtype state in loadStackData.</div>
+<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt;
+ getItems().getSlots()</code>. Runs on either side after dirty/fill updates, even inside a batch,
+ before deferred publication. Disk and client snapshot loads bypass this hook and must refresh
+ subtype state in loadStackData.</div>
 </section>
 </li>
 <li>
@@ -458,7 +464,8 @@ loadScripts(document, 'script');</script>
 <h3>saveStackData</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">saveStackData</span><wbr><span class="parameters">(net.minecraft.world.level.storage.ValueOutput&nbsp;output)</span></div>
 <div class="block">Adds current subtype metadata after version and inventory serialization. Used for both disk
- saves and update tags; remove private fields in stripServerOnlyUpdateData before transmission.</div>
+ saves and update tags; remove private fields in stripServerOnlyUpdateData before
+ transmission.</div>
 </section>
 </li>
 <li>
@@ -507,7 +514,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="schedulePublish()">
 <h3>schedulePublish</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">schedulePublish</span>()</div>
-<div class="block">Marks local publication pending and coalesces a run tick; unattached/client entities do nothing.</div>
+<div class="block">Marks local publication pending and coalesces a run tick; unattached/client entities do
+ nothing.</div>
 </section>
 </li>
 <li>
@@ -525,7 +533,8 @@ loadScripts(document, 'script');</script>
 <h3>preRemoveSideEffects</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">preRemoveSideEffects</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;oldState)</span></div>
-<div class="block">Drops contents while this entity is still available; the block repairs neighboring runs afterward.</div>
+<div class="block">Drops contents while this entity is still available; the block repairs neighboring runs
+ afterward.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>preRemoveSideEffects</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.entity.BlockEntity</code></dd>

@@ -4,21 +4,20 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.mojang.datafixers.util.Either;
-import java.util.Optional;
-import java.util.function.Function;
-import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.ARGB;
@@ -27,12 +26,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+
+import javax.annotation.Nullable;
 
 /**
  * What each item's bar looks like, loaded from {@code assets/<namespace>/textures/bars/*.json} and
@@ -43,38 +45,68 @@ import java.util.Map;
  * <p>This is client resource data and is never synchronized, so two players may see the same bar
  * differently if their resource packs differ.
  */
-public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifier, BarTextureStore.BarTextureData>> {
+public class BarTextureStore
+        extends SimplePreparableReloadListener<Map<Identifier, BarTextureStore.BarTextureData>> {
     public static final Identifier RELOAD_LISTENER_ID =
             Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "bar_textures");
 
     private static final Gson GSON = new Gson();
-    /** Resource-pack mappings; an automatic-tint entry is replaced by its derived tint on first render. */
+
+    /**
+     * Resource-pack mappings; an automatic-tint entry is replaced by its derived tint on first
+     * render.
+     */
     private static final Map<Identifier, BarTextureData> textureMap = new HashMap<>();
-    /** Auto-tints for items no mapping covers, computed on first render and held until the next reload. */
+
+    /**
+     * Auto-tints for items no mapping covers, computed on first render and held until the next
+     * reload.
+     */
     private static final Map<Identifier, BarTextureData> unmappedTints = new HashMap<>();
-    private static final Identifier DEFAULT_TEXTURE = Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
-    private static final BarTextureData FALLBACK = BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
+
+    private static final Identifier DEFAULT_TEXTURE =
+            Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
+    private static final BarTextureData FALLBACK =
+            BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
     private static final float BRIGHTEN_FACTOR = 0.1f;
     private static final int OPAQUE_PIXEL_ALPHA_THRESHOLD = 127;
     private static final String COMMENT_PREFIX = "_comment";
     private static final String FIELD_TEXTURE = "texture";
     private static final String FIELD_TINT = "tint";
 
-    private static final Codec<Integer> COLOR_CODEC = Codec.STRING.comapFlatMap(value -> {
-        try {
-            return DataResult.success(parseColor(value));
-        } catch (IllegalArgumentException error) {
-            return DataResult.error(error::getMessage);
-        }
-    }, color -> String.format("#%08X", color));
-    private static final Codec<BarTextureData> OBJECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Identifier.CODEC.optionalFieldOf(FIELD_TEXTURE, DEFAULT_TEXTURE).forGetter(BarTextureData::texture),
-            COLOR_CODEC.optionalFieldOf(FIELD_TINT).forGetter(
-                    data -> data.autoTint() ? Optional.empty() : Optional.of(data.color())))
-            .apply(instance, (texture, tint) -> tint.map(color -> BarTextureData.tinted(texture, color))
-                    .orElseGet(() -> BarTextureData.auto(texture))));
-    private static final Codec<BarTextureData> ENTRY_CODEC = Codec.either(Identifier.CODEC, OBJECT_CODEC)
-            .xmap(entry -> entry.map(BarTextureData::auto, Function.identity()), Either::right);
+    private static final Codec<Integer> COLOR_CODEC =
+            Codec.STRING.comapFlatMap(
+                    value -> {
+                        try {
+                            return DataResult.success(parseColor(value));
+                        } catch (IllegalArgumentException error) {
+                            return DataResult.error(error::getMessage);
+                        }
+                    },
+                    color -> String.format("#%08X", color));
+    private static final Codec<BarTextureData> OBJECT_CODEC =
+            RecordCodecBuilder.create(instance ->
+                    instance.group(
+                                    Identifier.CODEC
+                                            .optionalFieldOf(FIELD_TEXTURE, DEFAULT_TEXTURE)
+                                            .forGetter(BarTextureData::texture),
+                                    COLOR_CODEC
+                                            .optionalFieldOf(FIELD_TINT)
+                                            .forGetter(data ->
+                                                    data.autoTint()
+                                                            ? Optional.empty()
+                                                            : Optional.of(data.color())))
+                            .apply(
+                                    instance,
+                                    (texture, tint) ->
+                                            tint.map(color -> BarTextureData.tinted(texture, color))
+                                                    .orElseGet(
+                                                            () -> BarTextureData.auto(texture))));
+    private static final Codec<BarTextureData> ENTRY_CODEC =
+            Codec.either(Identifier.CODEC, OBJECT_CODEC)
+                    .xmap(
+                            entry -> entry.map(BarTextureData::auto, Function.identity()),
+                            Either::right);
 
     /**
      * A bar's texture and tint. {@code autoTint} is separate from {@code color} because white is a
@@ -83,7 +115,10 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
     public record BarTextureData(Identifier texture, int color, boolean autoTint) {
         public static final int WHITE = 0xFFFFFFFF;
 
-        /** Creates a mapping whose tint will be derived from the sprite and tint the item draws with. */
+        /**
+         * Creates a mapping whose tint will be derived from the sprite and tint the item draws
+         * with.
+         */
         public static BarTextureData auto(Identifier texture) {
             return new BarTextureData(texture, WHITE, true);
         }
@@ -111,37 +146,47 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
     }
 
     @Override
-    protected Map<Identifier, BarTextureData> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected Map<Identifier, BarTextureData> prepare(
+            ResourceManager resourceManager, ProfilerFiller profiler) {
         Map<Identifier, BarTextureData> configMap = new HashMap<>();
 
-        var resources = FileToIdConverter.json("textures/bars").listMatchingResources(resourceManager);
+        var resources =
+                FileToIdConverter.json("textures/bars").listMatchingResources(resourceManager);
 
         // Read in file order so that two files mapping one item resolve the same way every reload.
-        resources.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(fileEntry -> {
-            Identifier fileLocation = fileEntry.getKey();
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(fileEntry.getValue().open(), StandardCharsets.UTF_8))) {
-                JsonObject root = GSON.fromJson(reader, JsonObject.class);
+        resources.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(fileEntry -> {
+                    Identifier fileLocation = fileEntry.getKey();
+                    try (BufferedReader reader =
+                            new BufferedReader(
+                                    new InputStreamReader(
+                                            fileEntry.getValue().open(), StandardCharsets.UTF_8))) {
+                        JsonObject root = GSON.fromJson(reader, JsonObject.class);
 
-                for (String key : root.keySet()) {
-                    if (key.startsWith(COMMENT_PREFIX)) continue;
+                        for (String key : root.keySet()) {
+                            if (key.startsWith(COMMENT_PREFIX)) continue;
 
-                    try {
-                        Identifier itemLoc = Identifier.parse(key);
-                        BarTextureData data = parseEntry(root.get(key));
-                        if (data == null) {
-                            SomeStacksCommon.LOGGER.warn("Invalid format for '{}' in {}: expected string or object", key, fileLocation);
-                            continue;
+                            try {
+                                Identifier itemLoc = Identifier.parse(key);
+                                BarTextureData data = parseEntry(root.get(key));
+                                if (data == null) {
+                                    SomeStacksCommon.LOGGER.warn(
+                                            "Invalid format for '{}' in {}: expected string or object",
+                                            key,
+                                            fileLocation);
+                                    continue;
+                                }
+                                configMap.put(itemLoc, data);
+                            } catch (Exception e) {
+                                SomeStacksCommon.LOGGER.warn(
+                                        "Invalid mapping for '{}' in {}", key, fileLocation, e);
+                            }
                         }
-                        configMap.put(itemLoc, data);
                     } catch (Exception e) {
-                        SomeStacksCommon.LOGGER.warn("Invalid mapping for '{}' in {}", key, fileLocation, e);
+                        SomeStacksCommon.LOGGER.warn("Failed to process file {}", fileLocation, e);
                     }
-                }
-            } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to process file {}", fileLocation, e);
-            }
-        });
+                });
 
         return configMap;
     }
@@ -162,28 +207,37 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
     }
 
     @Override
-    protected void apply(Map<Identifier, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(
+            Map<Identifier, BarTextureData> prepared,
+            ResourceManager resourceManager,
+            ProfilerFiller profiler) {
         textureMap.clear();
         unmappedTints.clear();
         textureMap.putAll(prepared);
         SomeStacksCommon.LOGGER.info("Applied {} bar texture mappings", textureMap.size());
     }
 
-    private static int calculateTintFromItemTexture(Identifier itemLoc, ResourceManager resourceManager) {
+    private static int calculateTintFromItemTexture(
+            Identifier itemLoc, ResourceManager resourceManager) {
         try {
             Item item = BuiltInRegistries.ITEM.getValue(itemLoc);
 
             // Rendering multiplies a quad's sprite by its layer's tint, so the derived bar tint
             // must include both. The first quad drawn stands for the item.
-            ItemCapture capture = ItemCapture.captureQuads(
-                    new ItemStack(item), ItemDisplayContext.GUI, null, new PoseStack());
+            ItemCapture capture =
+                    ItemCapture.captureQuads(
+                            new ItemStack(item), ItemDisplayContext.GUI, null, new PoseStack());
             var quads = capture.quads();
             if (quads.isEmpty()) {
                 return BarTextureData.WHITE;
             }
             ItemCapture.TintedQuad first = quads.getFirst();
-            return ARGB.multiply(averageSpriteColor(first.quad().sprite(), resourceManager),
-                    ARGB.color(0xFF, ARGB.red(first.color()), ARGB.green(first.color()),
+            return ARGB.multiply(
+                    averageSpriteColor(first.quad().sprite(), resourceManager),
+                    ARGB.color(
+                            0xFF,
+                            ARGB.red(first.color()),
+                            ARGB.green(first.color()),
                             ARGB.blue(first.color())));
         } catch (Exception e) {
             SomeStacksCommon.LOGGER.warn("Could not auto-calculate tint for {}", itemLoc, e);
@@ -191,8 +245,11 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
         }
     }
 
-    /** The average color of {@code sprite}'s source texture, or white when there is none to read. */
-    private static int averageSpriteColor(TextureAtlasSprite sprite, ResourceManager resourceManager) {
+    /**
+     * The average color of {@code sprite}'s source texture, or white when there is none to read.
+     */
+    private static int averageSpriteColor(
+            TextureAtlasSprite sprite, ResourceManager resourceManager) {
         Identifier spriteName = sprite.contents().name();
         if (spriteName.equals(MissingTextureAtlasSprite.getLocation())) {
             return BarTextureData.WHITE;
@@ -218,7 +275,8 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
         return Identifier.fromNamespaceAndPath(namespace, "textures/" + path + ".png");
     }
 
-    private static NativeImage loadTextureImage(Identifier texturePath, ResourceManager resourceManager) {
+    private static NativeImage loadTextureImage(
+            Identifier texturePath, ResourceManager resourceManager) {
         try {
             var resource = resourceManager.getResource(texturePath);
             if (resource.isEmpty()) {
@@ -289,8 +347,8 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
 
     /**
      * Resolves an explicit bar mapping or the default texture. Automatic tints are derived and
-     * cached on first render, when reloaded item models and atlas sprites are ready.
-     * Empty stacks use the fallback mapping.
+     * cached on first render, when reloaded item models and atlas sprites are ready. Empty stacks
+     * use the fallback mapping.
      */
     public static BarTextureData getTexture(ItemStack stack) {
         if (stack.isEmpty()) return FALLBACK;
@@ -300,15 +358,22 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
         BarTextureData mapped = textureMap.get(itemLoc);
         if (mapped != null) {
             if (mapped.autoTint()) {
-                mapped = BarTextureData.tinted(mapped.texture(), calculateTintFromItemTexture(
-                        itemLoc, Minecraft.getInstance().getResourceManager()));
+                mapped =
+                        BarTextureData.tinted(
+                                mapped.texture(),
+                                calculateTintFromItemTexture(
+                                        itemLoc, Minecraft.getInstance().getResourceManager()));
                 textureMap.put(itemLoc, mapped);
             }
             return mapped;
         }
 
-        return unmappedTints.computeIfAbsent(itemLoc, loc -> BarTextureData.tinted(
-                DEFAULT_TEXTURE,
-                calculateTintFromItemTexture(loc, Minecraft.getInstance().getResourceManager())));
+        return unmappedTints.computeIfAbsent(
+                itemLoc,
+                loc ->
+                        BarTextureData.tinted(
+                                DEFAULT_TEXTURE,
+                                calculateTintFromItemTexture(
+                                        loc, Minecraft.getInstance().getResourceManager())));
     }
 }

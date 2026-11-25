@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -21,11 +22,11 @@ import javax.annotation.Nullable;
  * <p>Cells are a structure, not a bag: a slot index is a position and every item must rest on the
  * cell beneath it or on the seam with the Singles Stack below. So insertion places one item at the
  * cell it is given, and only where that cell is empty and supported, growing the column when the
- * cell lies in the block above it. Refusing an unsupported cell rather than choosing another is what
- * keeps a slot index meaning one place, and no placement can leave an item hanging in the air.
+ * cell lies in the block above it. Refusing an unsupported cell rather than choosing another is
+ * what keeps a slot index meaning one place, and no placement can leave an item hanging in the air.
  *
- * <p>Automation uses the same extraction behavior as the player: the target cell is emptied and
- * its visual column shifts down without drops or horizontal movement. Singles cannot use the Bar
+ * <p>Automation uses the same extraction behavior as the player: the target cell is emptied and its
+ * visual column shifts down without drops or horizontal movement. Singles cannot use the Bar
  * column's topmost-item backfill because different items are not interchangeable.
  *
  * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
@@ -72,8 +73,8 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * Publishes the comparator output of every run a structural change at {@code pos} could have
      * altered. Adding a block lengthens a column, which changes the fill every one of its blocks
      * reports; removing one from the middle splits a column into two runs whose values differ from
-     * the original run. The upper run has a new bottom block that has
-     * published nothing, so it notifies on its first look.
+     * the original run. The upper run has a new bottom block that has published nothing, so it
+     * notifies on its first look.
      *
      * <p>Call after {@link #invalidateAround}, so the runs are walked fresh.
      */
@@ -97,8 +98,8 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
     // Insertion
 
     /**
-     * Places one item at {@code flatSlot}, growing the column when that cell lies in the block above
-     * it.
+     * Places one item at {@code flatSlot}, growing the column when that cell lies in the block
+     * above it.
      *
      * <p>Answering for the cell it was given rather than for the column is what makes the handler's
      * slot range mean something: a caller that walks the range and sums what each cell accepts gets
@@ -121,20 +122,22 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
             return 0;
         }
 
-        return handlerOf(flatSlot).insertItem(
-                flatSlot % SinglesStackBE.SLOTS, stack.copyWithCount(1)).isEmpty() ? 1 : 0;
+        return handlerOf(flatSlot)
+                        .insertItem(flatSlot % SinglesStackBE.SLOTS, stack.copyWithCount(1))
+                        .isEmpty()
+                ? 1
+                : 0;
     }
 
     /**
      * Whether {@code flatSlot} could take an item if every position held what {@code contents}
-     * reports: the cell must be empty and the cell beneath it occupied. A bottom-layer cell rests on
-     * the top-layer cell of the block below in the same visual column, because two stacked blocks
-     * may carry different rotations; the bottom block of all stands on the world.
+     * reports: the cell must be empty and the cell beneath it occupied. A bottom-layer cell rests
+     * on the top-layer cell of the block below in the same visual column, because two stacked
+     * blocks may carry different rotations; the bottom block of all stands on the world.
      *
      * <p>A cell in the block above the column is checked against the block growth would put there —
-     * unrotated as a player's own placement is — and against the side-effect-free checks in
-     * {@link #canGrow(VoxelShape)}. A simulation therefore cannot promise a cell the commit would
-     * refuse.
+     * unrotated as a player's own placement is — and against the side-effect-free checks in {@link
+     * #canGrow(VoxelShape)}. A simulation therefore cannot promise a cell the commit would refuse.
      */
     @Override
     public int acceptsAt(int flatSlot, ItemStack stack, IntFunction<ItemStack> contents) {
@@ -147,18 +150,32 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         int blockIndex = flatSlot / SinglesStackBE.SLOTS;
         int slot = flatSlot % SinglesStackBE.SLOTS;
         int blockStart = blockIndex * SinglesStackBE.SLOTS;
-        boolean supported = SinglesCubeIdx.isSupported(slot,
-                local -> !contents.apply(blockStart + local).isEmpty(), rotationOf(blockIndex),
-                blockIndex == 0 ? null : visual -> {
-                    int below = SinglesCubeIdx.storageColumnFromVisual(visual, rotationOf(blockIndex - 1));
-                    return !contents.apply(blockStart - SinglesStackBE.SLOTS
-                            + SinglesCubeIdx.indexFromColumn(below, SinglesCubeIdx.TOP_LAYER_Y)).isEmpty();
-                });
+        boolean supported =
+                SinglesCubeIdx.isSupported(
+                        slot,
+                        local -> !contents.apply(blockStart + local).isEmpty(),
+                        rotationOf(blockIndex),
+                        blockIndex == 0
+                                ? null
+                                : visual -> {
+                                    int below =
+                                            SinglesCubeIdx.storageColumnFromVisual(
+                                                    visual, rotationOf(blockIndex - 1));
+                                    return !contents.apply(
+                                                    blockStart
+                                                            - SinglesStackBE.SLOTS
+                                                            + SinglesCubeIdx.indexFromColumn(
+                                                                    below,
+                                                                    SinglesCubeIdx.TOP_LAYER_Y))
+                                            .isEmpty();
+                                });
         if (!supported) {
             return 0;
         }
         // Support is checked first so unsupported headroom cells never reach the world checks.
-        return blockIndex < blocks.size() || canGrow(SinglesCubeIdx.GRID.localShape(slot, 0)) ? 1 : 0;
+        return blockIndex < blocks.size() || canGrow(SinglesCubeIdx.GRID.localShape(slot, 0))
+                ? 1
+                : 0;
     }
 
     /** The layout rotation of a run block; headroom is unrotated, as growth places it. */
@@ -170,15 +187,17 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * Whether growth is permitted and the space above the column could take a block: height,
      * enablement, build height, replaceability, and every protection check available without side
      * effects. Simulating and committing share this predicate, so a simulated insertion cannot
-     * promise a block the insertion itself would refuse. Growth carries no player, so protection
-     * is checked against the level's automation actor, which is never exempt from spawn protection.
+     * promise a block the insertion itself would refuse. Growth carries no player, so protection is
+     * checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
         return canGrowBlock(ServerConfig.enableSinglesStackBlock(), null)
                 && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
     }
 
-    /** Adds one block on top, attributing the automated placement to the level's automation actor. */
+    /**
+     * Adds one block on top, attributing the automated placement to the level's automation actor.
+     */
     private boolean grow(int slot) {
         VoxelShape finalCollision = SinglesCubeIdx.GRID.localShape(slot, 0);
         if (!canGrow(finalCollision)) {
@@ -217,6 +236,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
             return taken;
         }
 
-        return blocks.get(flatSlot / SinglesStackBE.SLOTS).extractAt(flatSlot % SinglesStackBE.SLOTS, null);
+        return blocks.get(flatSlot / SinglesStackBE.SLOTS)
+                .extractAt(flatSlot % SinglesStackBE.SLOTS, null);
     }
 }

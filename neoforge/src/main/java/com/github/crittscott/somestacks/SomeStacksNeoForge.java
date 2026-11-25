@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks;
 import com.github.crittscott.somestacks.block.NeoForgeItemHandlers;
 import com.github.crittscott.somestacks.client.NeoForgeClientSetup;
 import com.github.crittscott.somestacks.network.NeoForgeNetworking;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -50,7 +51,8 @@ public class SomeStacksNeoForge {
         }
 
         SomeStacksCommon.LOGGER.info(
-                "Some Stacks v{} initialized for NeoForge", PlatformServices.modVersion(SomeStacksCommon.MODID));
+                "Some Stacks v{} initialized for NeoForge",
+                PlatformServices.modVersion(SomeStacksCommon.MODID));
     }
 
     private void onServerAboutToStart(ServerAboutToStartEvent event) {

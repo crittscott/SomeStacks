@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.PlatformServices;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -25,8 +26,12 @@ public interface EditAuthority {
     }
 
     /** Places a block through the loader's native protection transaction. */
-    boolean place(Player placer, ServerLevel level, BlockPos pos,
-                  BlockState state, Direction placedAgainst);
+    boolean place(
+            Player placer,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
+            Direction placedAgainst);
 
     /** Whether a neighboring click may edit an existing destination stack without another click. */
     default boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
@@ -38,12 +43,17 @@ public interface EditAuthority {
 
     /** Whether a claim, protection, or logging mod refuses this removal. */
     boolean vetoesRemoval(
-            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            ServerPlayer actor,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
             @Nullable BlockEntity blockEntity);
 
     /** Reports a completed removal to loader-native observers. */
     default void afterRemoval(
-            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
-            @Nullable BlockEntity blockEntity) {
-    }
+            ServerPlayer actor,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
+            @Nullable BlockEntity blockEntity) {}
 }

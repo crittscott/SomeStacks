@@ -160,17 +160,18 @@ loadScripts(document, 'script');</script>
  <a href="ClientCallbackChecks.ClientUpdate.html" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a>&nbsp;update)</span></div>
 <div class="block">To reproduce in-game: launch the loader's runClientGameTests client, join a world, aim at any
  stack, release Shift and the Stack Modifier, and run /ssclienttest. It invokes the actual
- loader callback for main/off hand and checks consumption plus block/item suppression. It
- does not send a vanilla use packet or extract contents. A translated success/failure message
+ loader callback for main/off hand and checks consumption plus block/item suppression. It does
+ not send a vanilla use packet or extract contents. A translated success/failure message
  reports the assertions. It also checks item capture, model measurement, render-profile layer
  priority, the drawing work each forced render mode submits, and prepared grid and Bar
- submission, Bar presentation reuse and reload invalidation; server GameTests cannot exercise these client-only boundaries. With default
- resources, view Stone, an Apple, and a Chest in 3d/gui/block/2d profiles, rotate Singles items,
- walk around every face, and reload resources. Models must remain fitted and correctly tinted,
- with special models staying on the 3-D path unless explicitly overridden.
- The command also feeds valid and malformed initial/subsequent updates through each loader's
- native client entry point on scratch entities, checking inventory and inherited components.
- Ordinary clients cannot reproduce malformed wire data through player actions.</div>
+ submission, Bar presentation reuse and reload invalidation; server GameTests cannot exercise
+ these client-only boundaries. With default resources, view Stone, an Apple, and a Chest in
+ 3d/gui/block/2d profiles, rotate Singles items, walk around every face, and reload resources.
+ Models must remain fitted and correctly tinted, with special models staying on the 3-D path
+ unless explicitly overridden. The command also feeds valid and malformed initial/subsequent
+ updates through each loader's native client entry point on scratch entities, checking
+ inventory and inherited components. Ordinary clients cannot reproduce malformed wire data
+ through player actions.</div>
 </section>
 </li>
 </ul>

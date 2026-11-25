@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.client.ForgeClientSetup;
-import com.github.crittscott.somestacks.ForgePlatformServices;
 import com.github.crittscott.somestacks.network.ForgeNetworking;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,16 +13,16 @@ import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 /**
  * The mod entry point: registers the blocks and block entities, the network channel, and the
- * listeners behind server config loading, login sync, and commands. Client
- * registration is deferred to {@link ForgeClientSetup} so the dedicated server never touches it.
+ * listeners behind server config loading, login sync, and commands. Client registration is deferred
+ * to {@link ForgeClientSetup} so the dedicated server never touches it.
  *
  * <p>The mod must be present on both sides; there is no client-optional or server-optional mode.
  */
@@ -53,7 +53,8 @@ public class SomeStacksForge {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ForgeClientSetup.init(modBus));
 
         SomeStacksCommon.LOGGER.info(
-                "Some Stacks v{} initialized for Forge", PlatformServices.modVersion(SomeStacksCommon.MODID));
+                "Some Stacks v{} initialized for Forge",
+                PlatformServices.modVersion(SomeStacksCommon.MODID));
     }
 
     /** Publishes the loader-managed server policy for this world. */

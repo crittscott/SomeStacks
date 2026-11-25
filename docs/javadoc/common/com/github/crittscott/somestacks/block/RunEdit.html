@@ -95,10 +95,10 @@ loadScripts(document, 'script');</script>
 
  <p>One flag serves the whole server and is touched only on the server thread. Callers pair a
  successful <a href="#begin()"><code>begin()</code></a> with <a href="#end()"><code>end()</code></a> in a <code>finally</code>. An edit that arrives while
- another is running is refused with the ordinary failure result for automation: an insertion
- keeps its stack and an extraction yields nothing. Forge simulations remain available because
- they do not touch the world; NeoForge and Fabric offers are refused because their transactions
- do not reveal whether they will commit.</div>
+ another is running is refused with the ordinary failure result for automation: an insertion keeps
+ its stack and an extraction yields nothing. Forge simulations remain available because they do
+ not touch the world; NeoForge and Fabric offers are refused because their transactions do not
+ reveal whether they will commit.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

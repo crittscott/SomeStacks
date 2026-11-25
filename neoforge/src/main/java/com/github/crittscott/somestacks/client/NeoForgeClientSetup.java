@@ -3,11 +3,12 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.NeoForgeRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.network.NeoForgeNetworking;
+
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.GameShuttingDownEvent;
@@ -35,8 +36,10 @@ public final class NeoForgeClientSetup {
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers evt) {
-        evt.registerBlockEntityRenderer(NeoForgeRegistry.STORAGE_STACK_BE.get(), GridStackBER::storage);
-        evt.registerBlockEntityRenderer(NeoForgeRegistry.SINGLES_STACK_BE.get(), GridStackBER::singles);
+        evt.registerBlockEntityRenderer(
+                NeoForgeRegistry.STORAGE_STACK_BE.get(), GridStackBER::storage);
+        evt.registerBlockEntityRenderer(
+                NeoForgeRegistry.SINGLES_STACK_BE.get(), GridStackBER::singles);
         evt.registerBlockEntityRenderer(NeoForgeRegistry.BAR_STACK_BE.get(), BarStackBER::new);
     }
 
@@ -48,10 +51,12 @@ public final class NeoForgeClientSetup {
     private static void onRegisterReloadListeners(AddClientReloadListenersEvent evt) {
         evt.addListener(ItemRenderOverrides.RELOAD_LISTENER_ID, new ItemRenderOverrides());
         evt.addListener(BarTextureStore.RELOAD_LISTENER_ID, new BarTextureStore());
-        evt.addListener(CubeRenderHelper.RENDER_CACHE_RELOAD_LISTENER_ID,
-                (ResourceManagerReloadListener) manager -> {
-                    AutoRenderProfiles.onResourceReload();
-                    CubeRenderHelper.onResourceReload();
-                });
+        evt.addListener(
+                CubeRenderHelper.RENDER_CACHE_RELOAD_LISTENER_ID,
+                (ResourceManagerReloadListener)
+                        manager -> {
+                            AutoRenderProfiles.onResourceReload();
+                            CubeRenderHelper.onResourceReload();
+                        });
     }
 }

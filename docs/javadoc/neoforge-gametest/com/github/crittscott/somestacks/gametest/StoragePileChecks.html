@@ -92,8 +92,8 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Storage pile behavior in a live level that does not touch loader-native automation directly:
  deposits filling partial stacks before empty ones, growth when a pile fills, and settling
- consolidating, packing, and sorting. Loader-automation-facing tests stay in each loader's
- own <code>StoragePileGameTests</code>.</div>
+ consolidating, packing, and sorting. Loader-automation-facing tests stay in each loader's own
+ <code>StoragePileGameTests</code>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -117,8 +117,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorContributionLoadsAndTracksMutations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorContributionLoadsAndTracksMutations</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: fill a Storage pile with mixed stack limits, save and reopen
- the world, then extract an item.</div>
+<div class="block">To reproduce in-game: fill a Storage pile with mixed stack limits, save and reopen the world,
+ then extract an item.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReadsTheWholePileFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReadsTheWholePileFromEveryBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -223,9 +223,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>extractionSettlesOnScheduledBlockTick</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionSettlesOnScheduledBlockTick</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Extraction schedules settlement instead of leaving a lasting gap. To reproduce in-game:
- store two different stacks, extract the lower visible stack, and wait a moment. The remaining
- stack packs into the first Storage position.</div>
+<div class="block">Extraction schedules settlement instead of leaving a lasting gap. To reproduce in-game: store
+ two different stacks, extract the lower visible stack, and wait a moment. The remaining stack
+ packs into the first Storage position.</div>
 </section>
 </li>
 <li>
@@ -251,9 +251,10 @@ loadScripts(document, 'script');</script>
 <h3>ordinaryPlacementBelowPermanentPileRepairsDerivedState</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">ordinaryPlacementBelowPermanentPileRepairsDerivedState</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Placing Storage beneath a permanent pile preserves permanence, repacks contents into the new
- base, and republishes comparator output. To reproduce in-game: make a full one-block permanent
- pile with a comparator, place another Storage block beneath it, and wait. The joined pile stays
- permanent, moves contents downward, and the comparator changes to the two-block fill value.</div>
+ base, and republishes comparator output. To reproduce in-game: make a full one-block
+ permanent pile with a comparator, place another Storage block beneath it, and wait. The
+ joined pile stays permanent, moves contents downward, and the comparator changes to the
+ two-block fill value.</div>
 </section>
 </li>
 <li>
@@ -282,9 +283,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="comparatorContributionLoadsAndTracksMutations(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>comparatorContributionLoadsAndTracksMutations</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorContributionLoadsAndTracksMutations</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: fill a Storage pile with mixed stack limits, save and reopen
- the world, then extract an item. Comparators match the contents immediately after loading
- and again after extraction, before the deferred settlement runs.</div>
+<div class="block">To reproduce in-game: fill a Storage pile with mixed stack limits, save and reopen the world,
+ then extract an item. Comparators match the contents immediately after loading and again
+ after extraction, before the deferred settlement runs.</div>
 </section>
 </li>
 <li>

@@ -1,13 +1,14 @@
 package com.github.crittscott.somestacks.util;
 
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.function.IntFunction;
+
+import javax.annotation.Nullable;
 
 /**
  * The segment a player's view ray sweeps against a block they are interacting with: their eye
@@ -63,8 +64,8 @@ public record ViewRay(Vec3 eye, Vec3 end) {
     }
 
     /** Last empty hit before the first occupied hit; null slots describe a prospective block. */
-    public int lastEmptyBeforeOccupied(int count, @Nullable SlotAccess slots,
-                                       IntFunction<AABB> boxAt) {
+    public int lastEmptyBeforeOccupied(
+            int count, @Nullable SlotAccess slots, IntFunction<AABB> boxAt) {
         var hits = new ArrayList<Hit>();
         for (int slot = 0; slot < count; slot++) {
             Vec3 hit = boxAt.apply(slot).clip(eye, end).orElse(null);

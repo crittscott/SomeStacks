@@ -18,7 +18,10 @@ public final class RenderGalleryGameTests {
     }
 
     /** See {@link RenderGalleryChecks#queuedStorageGallerySpreadsWorkAcrossTicks}. */
-    @GameTest(environment = "somestacks_gametest:gallery_budget", structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    @GameTest(
+            environment = "somestacks_gametest:gallery_budget",
+            structure = FabricGameTestSupport.TEMPLATE,
+            maxTicks = 100)
     public void queuedStorageGallerySpreadsWorkAcrossTicks(GameTestHelper helper) {
         ServerPlayer player = FakePlayer.get(helper.getLevel());
         RenderGalleryChecks.queuedStorageGallerySpreadsWorkAcrossTicks(helper, player);
