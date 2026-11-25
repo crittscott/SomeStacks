@@ -37,7 +37,8 @@ public enum StackMode {
             case STORAGE_STACK -> BlockType.STORAGE_STACK;
             case SINGLES_STACK -> BlockType.SINGLES_STACK;
             case BAR_STACK -> BlockType.BAR_STACK;
-            case TOGGLE_PERMANENT -> throw new IllegalStateException("TOGGLE_PERMANENT is not a block type");
+            case TOGGLE_PERMANENT ->
+                    throw new IllegalStateException("TOGGLE_PERMANENT is not a block type");
         };
     }
 }

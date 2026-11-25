@@ -1,27 +1,30 @@
 package com.github.crittscott.somestacks.client;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.util.ARGB;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Resolves a stack through vanilla's item model pipeline and records what drawing it would emit,
@@ -29,8 +32,8 @@ import java.util.List;
  * layer; geometry written vertex by vertex, as a special model renderer or a loader's own item
  * renderer writes it, counts toward the bounds but cannot be reproduced quad by quad.
  *
- * <p>One instance serves the render thread, and each capture replaces the previous one, so a
- * caller must finish with a result before capturing again.
+ * <p>One instance serves the render thread, and each capture replaces the previous one, so a caller
+ * must finish with a result before capturing again.
  */
 public final class ItemCapture {
     static final int BLOCK_VERTEX_STRIDE =
@@ -65,19 +68,23 @@ public final class ItemCapture {
      * vanilla applies are reflected in {@link #bounds()} but not in the quads, which stay in model
      * space.
      */
-    public static ItemCapture capture(ItemStack stack, ItemDisplayContext context, @Nullable Level level,
-                                      PoseStack pose) {
+    public static ItemCapture capture(
+            ItemStack stack, ItemDisplayContext context, @Nullable Level level, PoseStack pose) {
         return capture(stack, context, level, pose, true);
     }
 
     /** Captures baked quads and tints without transforming vertices for unused bounds. */
-    public static ItemCapture captureQuads(ItemStack stack, ItemDisplayContext context,
-                                          @Nullable Level level, PoseStack pose) {
+    public static ItemCapture captureQuads(
+            ItemStack stack, ItemDisplayContext context, @Nullable Level level, PoseStack pose) {
         return capture(stack, context, level, pose, false);
     }
 
-    private static ItemCapture capture(ItemStack stack, ItemDisplayContext context,
-                                       @Nullable Level level, PoseStack pose, boolean bounds) {
+    private static ItemCapture capture(
+            ItemStack stack,
+            ItemDisplayContext context,
+            @Nullable Level level,
+            PoseStack pose,
+            boolean bounds) {
         ItemCapture capture = INSTANCE;
         capture.reset();
         capture.recordBounds = bounds;
@@ -90,13 +97,15 @@ public final class ItemCapture {
             drawn.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
         }
 
-        Minecraft.getInstance().getItemModelResolver()
+        Minecraft.getInstance()
+                .getItemModelResolver()
                 .updateForTopItem(capture.renderState, drawn, context, false, level, null, 0);
         if (capture.renderState.isEmpty()) {
             return capture;
         }
         capture.gui3d = capture.renderState.isGui3d();
-        capture.renderState.render(pose, capture.buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+        capture.renderState.render(
+                pose, capture.buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         return capture;
     }
 
@@ -120,7 +129,10 @@ public final class ItemCapture {
         return vertexGeometry;
     }
 
-    /** The bounds of everything drawn, in the coordinates of the capture's pose, or null if nothing was. */
+    /**
+     * The bounds of everything drawn, in the coordinates of the capture's pose, or null if nothing
+     * was.
+     */
     @Nullable
     public AABB bounds() {
         return bounded ? new AABB(minX, minY, minZ, maxX, maxY, maxZ) : null;
@@ -146,7 +158,8 @@ public final class ItemCapture {
         bounded = true;
     }
 
-    private void acceptQuad(PoseStack.Pose pose, BakedQuad quad, float r, float g, float b, float a) {
+    private void acceptQuad(
+            PoseStack.Pose pose, BakedQuad quad, float r, float g, float b, float a) {
         quads.add(new TintedQuad(quad, color(r, g, b, a)));
         if (!recordBounds) return;
         Matrix4f matrix = pose.pose();
@@ -169,9 +182,17 @@ public final class ItemCapture {
     /** Receives every buffer the render state asks for; it records and never draws. */
     private final class Recorder implements VertexConsumer {
         @Override
-        public void putBulkData(PoseStack.Pose pose, BakedQuad quad, float[] brightness,
-                                float r, float g, float b, float a, int[] lights, int overlay,
-                                boolean readAlpha) {
+        public void putBulkData(
+                PoseStack.Pose pose,
+                BakedQuad quad,
+                float[] brightness,
+                float r,
+                float g,
+                float b,
+                float a,
+                int[] lights,
+                int overlay,
+                boolean readAlpha) {
             acceptQuad(pose, quad, r, g, b, a);
         }
 

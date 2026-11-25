@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
+
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;

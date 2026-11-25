@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.util.StackMode;
+
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;

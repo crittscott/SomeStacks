@@ -9,6 +9,7 @@ import com.github.crittscott.somestacks.server.RotationSoundThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.mojang.brigadier.CommandDispatcher;
+
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -40,14 +41,17 @@ public final class SomeStacksServer {
         runningServer = server;
         reportedSavedItems.clear();
         StackDataMigration.beginSession();
-        if (!(ServerConfig.backend() instanceof TomlServerConfig)) ServerConfigMigration.reportLegacyIngots(server);
+        if (!(ServerConfig.backend() instanceof TomlServerConfig))
+            ServerConfigMigration.reportLegacyIngots(server);
         ServerConfig.loadFor(server);
         publishedPolicy = ServerConfig.settings();
         ConfigSyncPkt.rebuildCurrent();
         SomeStacksCommon.LOGGER.info(
                 "Server policy and login snapshot ready: Storage={}, Singles={}, Bar={}, maximum height={}",
-                ServerConfig.enableStorageStackBlock(), ServerConfig.enableSinglesStackBlock(),
-                ServerConfig.enableBarStackBlock(), ServerConfig.maxPileHeight());
+                ServerConfig.enableStorageStackBlock(),
+                ServerConfig.enableSinglesStackBlock(),
+                ServerConfig.enableBarStackBlock(),
+                ServerConfig.maxPileHeight());
     }
 
     /** Releases the stopped server and clears session diagnostics after world activity ends. */
@@ -59,18 +63,22 @@ public final class SomeStacksServer {
     }
 
     /**
-     * Reports newly retained disk entries on each occurrence, and failed persisted retries once
-     * per dimension and block position per server session. Call only for server disk loads.
+     * Reports newly retained disk entries on each occurrence, and failed persisted retries once per
+     * dimension and block position per server session. Call only for server disk loads.
      */
     public static synchronized void reportSavedItems(
             ServerLevel level, BlockPos pos, StackItemStorage.LoadResult result) {
         if (result.newlySetAside() == 0 && result.failedRetries() == 0) return;
-        SavedItemLocation location = new SavedItemLocation(level.dimension().location(), pos.immutable());
+        SavedItemLocation location =
+                new SavedItemLocation(level.dimension().location(), pos.immutable());
         boolean firstReport = reportedSavedItems.add(location);
         if (result.newlySetAside() > 0 || firstReport) {
             SomeStacksCommon.LOGGER.warn(
                     "Kept saved item stack(s) aside in {} at {}: {} newly retained, {} failed retries",
-                    location.dimension(), pos.toShortString(), result.newlySetAside(), result.failedRetries());
+                    location.dimension(),
+                    pos.toShortString(),
+                    result.newlySetAside(),
+                    result.failedRetries());
         }
     }
 
@@ -95,10 +103,14 @@ public final class SomeStacksServer {
         ServerConfig.Settings current = ServerConfig.settings();
         if (current.equals(previous)) return 0;
         publishedPolicy = current;
-        SomeStacksCommon.LOGGER.info("Applied server policy: Storage={}, Singles={}, Bar={}; maximum height={}",
-                current.enableStorageStackBlock(), current.enableSinglesStackBlock(),
-                current.enableBarStackBlock(), current.maxPileHeight());
-        if (previous == null || previous.galleryEnabled() != current.galleryEnabled()
+        SomeStacksCommon.LOGGER.info(
+                "Applied server policy: Storage={}, Singles={}, Bar={}; maximum height={}",
+                current.enableStorageStackBlock(),
+                current.enableSinglesStackBlock(),
+                current.enableBarStackBlock(),
+                current.maxPileHeight());
+        if (previous == null
+                || previous.galleryEnabled() != current.galleryEnabled()
                 || previous.galleryPermissionLevel() != current.galleryPermissionLevel()) {
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 server.getCommands().sendCommands(player);
@@ -132,8 +144,7 @@ public final class SomeStacksServer {
 
     /** Registers server commands with the loader's dispatcher and current registry context. */
     public static void registerCommands(
-            CommandDispatcher<CommandSourceStack> dispatcher,
-            CommandBuildContext buildContext) {
+            CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         SsCommand.register(dispatcher, buildContext);
     }
 }

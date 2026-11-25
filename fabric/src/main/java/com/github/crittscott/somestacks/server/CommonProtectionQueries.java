@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import eu.pb4.common.protection.api.CommonProtection;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

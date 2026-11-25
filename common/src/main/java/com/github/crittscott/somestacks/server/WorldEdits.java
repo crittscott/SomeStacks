@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.util.ViewRays;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -21,9 +22,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * loader-native claim/logging hooks are delegated to {@link EditAuthority}.
  */
 public final class WorldEdits {
-    private static final ThreadLocal<Boolean> consultingAdjacent = ThreadLocal.withInitial(() -> false);
-    private WorldEdits() {
-    }
+    private static final ThreadLocal<Boolean> consultingAdjacent =
+            ThreadLocal.withInitial(() -> false);
+
+    private WorldEdits() {}
 
     /** Vanilla's own gate on a block interaction: world border and spawn protection. */
     public static boolean isProtected(ServerPlayer sp, BlockPos pos) {
@@ -66,9 +68,12 @@ public final class WorldEdits {
     public static BlockHitResult adjacentHit(ServerPlayer player, BlockPos pos) {
         var level = player.serverLevel();
         var ray = ViewRays.of(player);
-        BlockHitResult hit = level.getBlockState(pos).getInteractionShape(level, pos)
-                .clip(ray.eye(), ray.end(), pos);
-        return hit != null ? hit
+        BlockHitResult hit =
+                level.getBlockState(pos)
+                        .getInteractionShape(level, pos)
+                        .clip(ray.eye(), ray.end(), pos);
+        return hit != null
+                ? hit
                 : new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
     }
 
@@ -80,8 +85,7 @@ public final class WorldEdits {
     /** Vanilla's placement obstruction test for a block-local collision shape. */
     public static boolean isUnobstructed(ServerLevel level, BlockPos pos, VoxelShape localShape) {
         return localShape.isEmpty()
-                || level.isUnobstructed(
-                        null, localShape.move(pos.getX(), pos.getY(), pos.getZ()));
+                || level.isUnobstructed(null, localShape.move(pos.getX(), pos.getY(), pos.getZ()));
     }
 
     /**
@@ -90,22 +94,30 @@ public final class WorldEdits {
      * real shape only with their first deposit, so callers that place one use the full overload
      * with the completed shape instead.
      */
-    public static boolean placeChecked(Player placer, ServerLevel level, BlockPos pos,
-                                       BlockState state, Direction placedAgainst) {
+    public static boolean placeChecked(
+            Player placer,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
+            Direction placedAgainst) {
         VoxelShape collision = state.getCollisionShape(level, pos, CollisionContext.empty());
         return placeChecked(placer, level, pos, state, placedAgainst, collision);
     }
 
     /**
      * Places {@code state} at {@code pos}. Loader checks that can run as queries happen before the
-     * world changes; loader placement transactions defer publication until protection accepts
-     * the edit, restoring captured state and block-entity data on denial. {@code finalCollision} is the
+     * world changes; loader placement transactions defer publication until protection accepts the
+     * edit, restoring captured state and block-entity data on denial. {@code finalCollision} is the
      * completed placement's collision shape, since a block-entity stack can start empty and acquire
      * its real shape only with its first deposit.
      */
-    public static boolean placeChecked(Player placer, ServerLevel level, BlockPos pos,
-                                       BlockState state, Direction placedAgainst,
-                                       VoxelShape finalCollision) {
+    public static boolean placeChecked(
+            Player placer,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
+            Direction placedAgainst,
+            VoxelShape finalCollision) {
         if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
@@ -113,10 +125,10 @@ public final class WorldEdits {
             return false;
         }
         BlockState placedState = level.getBlockState(pos);
-        placedState.getBlock().setPlacedBy(
-                level, pos, placedState, placer, placer.getMainHandItem());
-        level.gameEvent(
-                GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(placer, placedState));
+        placedState
+                .getBlock()
+                .setPlacedBy(level, pos, placedState, placer, placer.getMainHandItem());
+        level.gameEvent(GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(placer, placedState));
         return true;
     }
 

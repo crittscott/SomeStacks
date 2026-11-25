@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.server.FabricEditAuthority;
+
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -20,7 +21,8 @@ public final class FabricPlatformServices implements PlatformServices.Backend {
 
     @Override
     public String modVersion(String namespace) {
-        return FabricLoader.getInstance().getModContainer(namespace)
+        return FabricLoader.getInstance()
+                .getModContainer(namespace)
                 .map(container -> container.getMetadata().getVersion().getFriendlyString())
                 .orElse("unknown");
     }

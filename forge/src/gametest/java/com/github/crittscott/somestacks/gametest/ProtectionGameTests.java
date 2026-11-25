@@ -1,5 +1,9 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
@@ -8,6 +12,7 @@ import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
 import com.github.crittscott.somestacks.server.WorldEdits;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -30,10 +35,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-
 /**
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
  * loader-native interaction denial, and world protection.
@@ -52,8 +53,8 @@ public final class ProtectionGameTests {
     }
 
     /**
-     * No in-game reproduction applies: a protection listener may message the Forge automation
-     * actor even though it has no client connection, and that message must be discarded safely.
+     * No in-game reproduction applies: a protection listener may message the Forge automation actor
+     * even though it has no client connection, and that message must be discarded safely.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void automationActorDiscardsClientMessages(GameTestHelper helper) {
@@ -104,11 +105,12 @@ public final class ProtectionGameTests {
         base.getItems().insertItem(0, new ItemStack(Items.DIRT, 1), false);
 
         BlockPos top = helper.absolutePos(topRelative);
-        Consumer<BlockEvent.BreakEvent> denyTop = event -> {
-            if (event.getPos().equals(top)) {
-                event.setCanceled(true);
-            }
-        };
+        Consumer<BlockEvent.BreakEvent> denyTop =
+                event -> {
+                    if (event.getPos().equals(top)) {
+                        event.setCanceled(true);
+                    }
+                };
 
         MinecraftForge.EVENT_BUS.addListener(denyTop);
         try {
@@ -140,11 +142,12 @@ public final class ProtectionGameTests {
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
         BlockPos target = helper.absolutePos(ORIGIN);
         AtomicReference<Player> observedActor = new AtomicReference<>();
-        Consumer<BlockEvent.BreakEvent> captureActor = event -> {
-            if (event.getPos().equals(target)) {
-                observedActor.set(event.getPlayer());
-            }
-        };
+        Consumer<BlockEvent.BreakEvent> captureActor =
+                event -> {
+                    if (event.getPos().equals(target)) {
+                        observedActor.set(event.getPlayer());
+                    }
+                };
 
         MinecraftForge.EVENT_BUS.addListener(captureActor);
         try {
@@ -169,15 +172,17 @@ public final class ProtectionGameTests {
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
         BlockPos target = helper.absolutePos(ORIGIN);
         AtomicReference<Player> observedActor = new AtomicReference<>();
-        Consumer<BlockEvent.BreakEvent> captureActor = event -> {
-            if (event.getPos().equals(target)) {
-                observedActor.set(event.getPlayer());
-            }
-        };
+        Consumer<BlockEvent.BreakEvent> captureActor =
+                event -> {
+                    if (event.getPos().equals(target)) {
+                        observedActor.set(event.getPlayer());
+                    }
+                };
 
         MinecraftForge.EVENT_BUS.addListener(captureActor);
         try {
-            check(!storage.extractAt(0, 64, ItemStack.EMPTY, player).isEmpty(),
+            check(
+                    !storage.extractAt(0, 64, ItemStack.EMPTY, player).isEmpty(),
                     "Player extraction returned nothing");
             StoragePile pile = storage.pile();
             check(pile != null, "Pile did not resolve before settlement");
@@ -201,8 +206,8 @@ public final class ProtectionGameTests {
     }
 
     /**
-     * Neighbor deposits consult protection at the destination and honor cancellation or either
-     * use denial. To reproduce in-game: hold the modifier and click the support beneath an empty
+     * Neighbor deposits consult protection at the destination and honor cancellation or either use
+     * denial. To reproduce in-game: hold the modifier and click the support beneath an empty
      * Singles cell; it fills when allowed and preserves the held item when a claim denies use.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
@@ -211,28 +216,34 @@ public final class ProtectionGameTests {
         BlockPos target = helper.absolutePos(ORIGIN);
         AtomicInteger clicks = new AtomicInteger();
         AtomicInteger denial = new AtomicInteger();
-        Consumer<PlayerInteractEvent.RightClickBlock> observe = event -> {
-            if (event.getLevel() != helper.getLevel() || !event.getPos().equals(target)) return;
-            clicks.incrementAndGet();
-            check(WorldEdits.isConsultingAdjacent(), "Destination consultation lacks its gesture guard");
-            switch (denial.get()) {
-                case 1 -> event.setCanceled(true);
-                case 2 -> event.setUseBlock(Event.Result.DENY);
-                case 3 -> event.setUseItem(Event.Result.DENY);
-                default -> { }
-            }
-        };
+        Consumer<PlayerInteractEvent.RightClickBlock> observe =
+                event -> {
+                    if (event.getLevel() != helper.getLevel() || !event.getPos().equals(target))
+                        return;
+                    clicks.incrementAndGet();
+                    check(
+                            WorldEdits.isConsultingAdjacent(),
+                            "Destination consultation lacks its gesture guard");
+                    switch (denial.get()) {
+                        case 1 -> event.setCanceled(true);
+                        case 2 -> event.setUseBlock(Event.Result.DENY);
+                        case 3 -> event.setUseItem(Event.Result.DENY);
+                        default -> {}
+                    }
+                };
         MinecraftForge.EVENT_BUS.addListener(observe);
         try {
             check(WorldEdits.mayUseAdjacent(player, target), "Allowed destination was refused");
             checkEquals(1, clicks.get(), "Destination consultation count");
             helper.getLevel().removeBlock(target, false);
-            ProtectionChecks.checkAdjacentAndDirectDeposits(helper, GameTestSupport.playerFactory(helper), true);
+            ProtectionChecks.checkAdjacentAndDirectDeposits(
+                    helper, GameTestSupport.playerFactory(helper), true);
             for (int reason = 1; reason <= 3; reason++) {
                 denial.set(reason);
                 check(!WorldEdits.mayUseAdjacent(player, target), "Destination denial was ignored");
                 helper.getLevel().removeBlock(target, false);
-                ProtectionChecks.checkAdjacentAndDirectDeposits(helper, GameTestSupport.playerFactory(helper), false);
+                ProtectionChecks.checkAdjacentAndDirectDeposits(
+                        helper, GameTestSupport.playerFactory(helper), false);
             }
             check(!WorldEdits.isConsultingAdjacent(), "Destination consultation guard leaked");
         } finally {
@@ -244,7 +255,8 @@ public final class ProtectionGameTests {
     /** See {@link ProtectionChecks#adjacentDepositsFillGroundedCells}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void adjacentDepositsFillGroundedCells(GameTestHelper helper) {
-        ProtectionChecks.adjacentDepositsFillGroundedCells(helper, GameTestSupport.playerFactory(helper));
+        ProtectionChecks.adjacentDepositsFillGroundedCells(
+                helper, GameTestSupport.playerFactory(helper));
         helper.succeed();
     }
 
@@ -252,10 +264,12 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 30)
     public static void placementPublicationAnswersToVeto(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(ORIGIN);
-        Consumer<BlockEvent.EntityPlaceEvent> deny = event -> {
-            if (event.getPos().equals(pos)) event.setCanceled(true);
-        };
-        ProtectionChecks.placementPublicationAnswersToVeto(helper,
+        Consumer<BlockEvent.EntityPlaceEvent> deny =
+                event -> {
+                    if (event.getPos().equals(pos)) event.setCanceled(true);
+                };
+        ProtectionChecks.placementPublicationAnswersToVeto(
+                helper,
                 GameTestSupport.playerFactory(helper),
                 () -> MinecraftForge.EVENT_BUS.addListener(deny),
                 () -> MinecraftForge.EVENT_BUS.unregister(deny));
@@ -275,16 +289,17 @@ public final class ProtectionGameTests {
                 helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
     }
 
-    private static Runnable observeRemoval(ServerLevel level, BlockPos pos,
-            Consumer<Player> observed, Predicate<Player> allowed) {
-        Consumer<BlockEvent.BreakEvent> listener = event -> {
-            if (event.getLevel() == level && event.getPos().equals(pos)) {
-                observed.accept(event.getPlayer());
-                if (!allowed.test(event.getPlayer())) {
-                    event.setCanceled(true);
-                }
-            }
-        };
+    private static Runnable observeRemoval(
+            ServerLevel level, BlockPos pos, Consumer<Player> observed, Predicate<Player> allowed) {
+        Consumer<BlockEvent.BreakEvent> listener =
+                event -> {
+                    if (event.getLevel() == level && event.getPos().equals(pos)) {
+                        observed.accept(event.getPlayer());
+                        if (!allowed.test(event.getPlayer())) {
+                            event.setCanceled(true);
+                        }
+                    }
+                };
         MinecraftForge.EVENT_BUS.addListener(listener);
         return () -> MinecraftForge.EVENT_BUS.unregister(listener);
     }
@@ -293,12 +308,14 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void vetoedPlacementRestoresBlockEntity(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(ORIGIN);
-        Consumer<BlockEvent.EntityPlaceEvent> listener = event -> {
-            if (event.getPos().equals(pos)) {
-                event.setCanceled(true);
-            }
-        };
-        ProtectionChecks.vetoedPlacementRestoresBlockEntity(helper,
+        Consumer<BlockEvent.EntityPlaceEvent> listener =
+                event -> {
+                    if (event.getPos().equals(pos)) {
+                        event.setCanceled(true);
+                    }
+                };
+        ProtectionChecks.vetoedPlacementRestoresBlockEntity(
+                helper,
                 GameTestSupport.playerFactory(helper),
                 () -> MinecraftForge.EVENT_BUS.addListener(listener),
                 () -> MinecraftForge.EVENT_BUS.unregister(listener));
@@ -306,10 +323,14 @@ public final class ProtectionGameTests {
 
     // Growth under protection
     //
-    // A capability insertion aimed at a slot past what the run holds is the one that grows it, and it
-    // checks the position above the run before promising the caller anything, so a simulation and the
-    // commit that follows agree about a position growth cannot have. The three tests below stage that
-    // with the world border. Spawn protection, the other half of the same predicate, cannot be staged
+    // A capability insertion aimed at a slot past what the run holds is the one that grows it, and
+    // it
+    // checks the position above the run before promising the caller anything, so a simulation and
+    // the
+    // commit that follows agree about a position growth cannot have. The three tests below stage
+    // that
+    // with the world border. Spawn protection, the other half of the same predicate, cannot be
+    // staged
     // here: it is implemented on DedicatedServer, and the server running these tests is not one.
 
     /**
@@ -317,7 +338,8 @@ public final class ProtectionGameTests {
      * through item automation; it accepts nothing and creates no block.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
+    public static void storageGrowthAnswersToProtectionInSimulationAndCommit(
+            GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
             storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
@@ -326,28 +348,36 @@ public final class ProtectionGameTests {
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
         int headroom = StorageStackBE.SLOTS;
-        check(capability.insertItem(headroom, offered, true).isEmpty(),
+        check(
+                capability.insertItem(headroom, offered, true).isEmpty(),
                 "A full pile with free headroom did not credit growth");
 
-        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
-            checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
-                    "Committed remainder");
-        });
+        GameTestScaffold.outsideWorldBorder(
+                helper,
+                ORIGIN.above(),
+                () -> {
+                    checkEquals(
+                            4,
+                            capability.insertItem(headroom, offered, true).getCount(),
+                            "Simulated remainder");
+                    checkEquals(
+                            4,
+                            capability.insertItem(headroom, offered, false).getCount(),
+                            "Committed remainder");
+                });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.storageStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
     /**
-     * To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
-     * through item automation; it accepts nothing and creates no block.
+     * To reproduce in-game: protect the space above a full Singles column from SomeStacks and
+     * insert through item automation; it accepts nothing and creates no block.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
+    public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(
+            GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
             singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
@@ -357,19 +387,27 @@ public final class ProtectionGameTests {
 
         // A cell takes one item, so a credited growth leaves three of the four behind.
         int headroom = SinglesStackBE.SLOTS;
-        checkEquals(3, capability.insertItem(headroom, offered, true).getCount(),
+        checkEquals(
+                3,
+                capability.insertItem(headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
-            checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
-                    "Committed remainder");
-        });
+        GameTestScaffold.outsideWorldBorder(
+                helper,
+                ORIGIN.above(),
+                () -> {
+                    checkEquals(
+                            4,
+                            capability.insertItem(headroom, offered, true).getCount(),
+                            "Simulated remainder");
+                    checkEquals(
+                            4,
+                            capability.insertItem(headroom, offered, false).getCount(),
+                            "Committed remainder");
+                });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.singlesStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -389,19 +427,27 @@ public final class ProtectionGameTests {
 
         // A position takes one bar, so a credited growth leaves three of the four behind.
         int headroom = BarStackBE.SLOTS;
-        checkEquals(3, capability.insertItem(headroom, offered, true).getCount(),
+        checkEquals(
+                3,
+                capability.insertItem(headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
-            checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
-                    "Committed remainder");
-        });
+        GameTestScaffold.outsideWorldBorder(
+                helper,
+                ORIGIN.above(),
+                () -> {
+                    checkEquals(
+                            4,
+                            capability.insertItem(headroom, offered, true).getCount(),
+                            "Simulated remainder");
+                    checkEquals(
+                            4,
+                            capability.insertItem(headroom, offered, false).getCount(),
+                            "Committed remainder");
+                });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.barStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -423,19 +469,22 @@ public final class ProtectionGameTests {
         GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = StorageStackBE.SLOTS;
-        checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
+        checkEquals(
+                4,
+                capability.insertItem(headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
+        checkEquals(
+                4,
+                capability.insertItem(headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.storageStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
     /**
-     * To reproduce in-game: stand in the growth space above a full Singles column and insert through
-     * item automation; it accepts nothing and does not grow into the entity.
+     * To reproduce in-game: stand in the growth space above a full Singles column and insert
+     * through item automation; it accepts nothing and does not grow into the entity.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
@@ -449,13 +498,16 @@ public final class ProtectionGameTests {
         GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = SinglesStackBE.SLOTS;
-        checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
+        checkEquals(
+                4,
+                capability.insertItem(headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
+        checkEquals(
+                4,
+                capability.insertItem(headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.singlesStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -476,20 +528,23 @@ public final class ProtectionGameTests {
         GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = BarStackBE.SLOTS;
-        checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
+        checkEquals(
+                4,
+                capability.insertItem(headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
+        checkEquals(
+                4,
+                capability.insertItem(headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.barStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
+
     /** See {@link InteractionChecks#deniedCleanupEmitsOnlyBlockChange}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void deniedCleanupEmitsOnlyBlockChange(GameTestHelper helper) {
-        InteractionChecks.deniedCleanupEmitsOnlyBlockChange(helper,
-                GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+        InteractionChecks.deniedCleanupEmitsOnlyBlockChange(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
     }
-
 }

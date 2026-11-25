@@ -33,7 +33,10 @@ public final class ConfigurationGameTests implements FabricGameTest {
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
-    /** See {@link ConfigurationChecks#disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically}. */
+    /**
+     * See {@link
+     * ConfigurationChecks#disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically}.
+     */
     @GameTest(template = TEMPLATE)
     public void disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(
             GameTestHelper helper) {
@@ -47,10 +50,10 @@ public final class ConfigurationGameTests implements FabricGameTest {
         ConfigurationChecks.serverCommandsEnforcePermissionsAndPersistEdits(
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
+
     /** See {@link ConfigurationChecks#ingotTagControlsBarAndSinglesAdmission}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void ingotTagControlsBarAndSinglesAdmission(GameTestHelper helper) {
         ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(helper);
     }
-
 }

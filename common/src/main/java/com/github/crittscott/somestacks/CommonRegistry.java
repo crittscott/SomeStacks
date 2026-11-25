@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -27,7 +28,8 @@ public final class CommonRegistry {
     public static final ResourceLocation SINGLES_DEPOSIT_SOUND = id("block.singles_stack.deposit");
     public static final ResourceLocation SINGLES_EXTRACT_SOUND = id("block.singles_stack.extract");
     public static final ResourceLocation SINGLES_ROTATE_SOUND = id("block.singles_stack.rotate");
-    public static final ResourceLocation SINGLES_ROTATE_ITEM_SOUND = id("block.singles_stack.rotate_item");
+    public static final ResourceLocation SINGLES_ROTATE_ITEM_SOUND =
+            id("block.singles_stack.rotate_item");
     public static final ResourceLocation BAR_DEPOSIT_SOUND = id("block.bar_stack.deposit");
     public static final ResourceLocation BAR_EXTRACT_SOUND = id("block.bar_stack.extract");
 

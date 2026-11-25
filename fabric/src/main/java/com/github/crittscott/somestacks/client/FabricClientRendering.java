@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.FabricRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
+
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -13,21 +14,18 @@ public final class FabricClientRendering {
     private FabricClientRendering() {}
 
     public static void init() {
-        BlockEntityRenderers.register(
-                FabricRegistry.STORAGE_STACK_BE, StorageStackBER::new);
-        BlockEntityRenderers.register(
-                FabricRegistry.SINGLES_STACK_BE, SinglesStackBER::new);
-        BlockEntityRenderers.register(
-                FabricRegistry.BAR_STACK_BE, BarStackBER::new);
+        BlockEntityRenderers.register(FabricRegistry.STORAGE_STACK_BE, StorageStackBER::new);
+        BlockEntityRenderers.register(FabricRegistry.SINGLES_STACK_BE, SinglesStackBER::new);
+        BlockEntityRenderers.register(FabricRegistry.BAR_STACK_BE, BarStackBER::new);
 
-        ResourceManagerHelper clientResources = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
+        ResourceManagerHelper clientResources =
+                ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
         clientResources.registerReloadListener(new FabricItemRenderOverrides());
         clientResources.registerReloadListener(new FabricBarTextureStore());
         clientResources.registerReloadListener(new FabricRenderCacheReloadListener());
 
         ClientPlayConnectionEvents.DISCONNECT.register(
                 (handler, client) -> AutoRenderProfiles.saveCache());
-        ClientLifecycleEvents.CLIENT_STOPPING.register(
-                client -> AutoRenderProfiles.saveCache());
+        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> AutoRenderProfiles.saveCache());
     }
 }

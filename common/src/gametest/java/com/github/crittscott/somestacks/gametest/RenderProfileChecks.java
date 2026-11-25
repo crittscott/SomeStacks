@@ -1,10 +1,13 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
 import com.github.crittscott.somestacks.client.RenderProfile;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -15,8 +18,6 @@ import net.minecraft.world.item.Items;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
 /** Development-client checks through the real profile resolution and mutation entry points. */
 public final class RenderProfileChecks extends ItemRenderOverrides {
@@ -32,15 +33,16 @@ public final class RenderProfileChecks extends ItemRenderOverrides {
     public static void run() {
         ItemStack stack = new ItemStack(Items.STONE);
         ResourceLocation id = BuiltInRegistries.ITEM.getKey(Items.STONE);
-        // Resolving loads the existing user layer before its selected entry is saved for restoration.
+        // Resolving loads the existing user layer before its selected entry is saved for
+        // restoration.
         ItemRenderOverrides.resolve(stack);
         ItemRenderConfig originalUser = userEntry(id);
         Map<ResourceLocation, ItemRenderConfig> originalResources = new HashMap<>(CONFIG_MAP);
         RenderProfileChecks listener = new RenderProfileChecks();
-        ItemRenderConfig resource = new ItemRenderConfig(
-                RenderMode.GUI, 0.8f, new RenderOffset(0.1f, 0.2f, 0.3f));
-        ItemRenderConfig user = new ItemRenderConfig(
-                RenderMode.TWO_D, 0.6f, new RenderOffset(-0.1f, -0.2f, -0.3f));
+        ItemRenderConfig resource =
+                new ItemRenderConfig(RenderMode.GUI, 0.8f, new RenderOffset(0.1f, 0.2f, 0.3f));
+        ItemRenderConfig user =
+                new ItemRenderConfig(RenderMode.TWO_D, 0.6f, new RenderOffset(-0.1f, -0.2f, -0.3f));
         try {
             Map<ResourceLocation, ItemRenderConfig> resources = new HashMap<>(originalResources);
             resources.put(id, resource);
@@ -48,20 +50,24 @@ public final class RenderProfileChecks extends ItemRenderOverrides {
             putUser(id, user);
             assertProfile(stack, user, "User precedence");
 
-            ItemRenderConfig changed = new ItemRenderConfig(
-                    RenderMode.THREE_D, 0.9f, new RenderOffset(0.2f, 0.0f, -0.2f));
+            ItemRenderConfig changed =
+                    new ItemRenderConfig(
+                            RenderMode.THREE_D, 0.9f, new RenderOffset(0.2f, 0.0f, -0.2f));
             putUser(id, changed);
             assertProfile(stack, changed, "User edit invalidation");
 
             putUser(id, new ItemRenderConfig(RenderMode.BLOCK, null, null));
-            assertProfile(stack, new ItemRenderConfig(RenderMode.BLOCK, 1.0f, RenderOffset.ZERO),
+            assertProfile(
+                    stack,
+                    new ItemRenderConfig(RenderMode.BLOCK, 1.0f, RenderOffset.ZERO),
                     "Partial user entry owns the complete profile");
 
             removeUser(id);
             assertProfile(stack, resource, "User removal invalidation");
 
-            ItemRenderConfig replacement = new ItemRenderConfig(
-                    RenderMode.THREE_D, 0.4f, new RenderOffset(0.0f, 0.1f, 0.0f));
+            ItemRenderConfig replacement =
+                    new ItemRenderConfig(
+                            RenderMode.THREE_D, 0.4f, new RenderOffset(0.0f, 0.1f, 0.0f));
             resources.put(id, replacement);
             listener.applyResources(resources);
             assertProfile(stack, replacement, "Resource replacement invalidation");
@@ -78,10 +84,15 @@ public final class RenderProfileChecks extends ItemRenderOverrides {
 
     private static void assertProfile(ItemStack stack, ItemRenderConfig expected, String message) {
         RenderProfile actual = resolve(stack);
-        checkEquals(new RenderProfile(expected.mode(), expected.scale(), expected.offset()), actual, message);
+        checkEquals(
+                new RenderProfile(expected.mode(), expected.scale(), expected.offset()),
+                actual,
+                message);
     }
 
-    /** Reads only the restoration value; production mutation still goes through putUser/removeUser. */
+    /**
+     * Reads only the restoration value; production mutation still goes through putUser/removeUser.
+     */
     @SuppressWarnings("unchecked")
     private static ItemRenderConfig userEntry(ResourceLocation id) {
         try {

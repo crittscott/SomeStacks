@@ -12,8 +12,6 @@ import net.minecraft.world.item.ItemStack;
  */
 record StackKey(Item item, DataComponentPatch components) {
     static StackKey of(ItemStack stack) {
-        return new StackKey(
-                stack.getItem(),
-                stack.getComponentsPatch());
+        return new StackKey(stack.getItem(), stack.getComponentsPatch());
     }
 }

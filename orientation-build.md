@@ -43,6 +43,8 @@ Each subproject has the Java plugin's standard production-source `javadoc` task.
 
 The root `collectJars` task copies each enabled loader's already-built production jar (`<archivesName>-<version>.jar` in its `build/libs`, not the dev, dev-shadow, or sources jars) into `../jars`, the directory shared by all version checkouts, for installing into a local launcher. It builds nothing and skips jars that have not been built; it overwrites same-named jars and leaves other versions' jars alone.
 
+The root project applies Spotless to the Java sources under `common/src`, `fabric/src`, `forge/src`, and `neoforge/src`, every source set included. It formats code and javadoc with google-java-format in AOSP style (4-space indent), reorders imports, trims trailing whitespace, ends files with a newline, and honors `// spotless:off` / `// spotless:on`. `spotlessApply` rewrites the files; `spotlessCheck` reports unformatted files but is not attached to `check`, so formatting never fails a build.
+
 `clean` empties `build/`; root `cleanDev` empties every project's `build/` and `run/`, deleting worlds, logs, and configs. Both retain the directories and Dropbox marks set by `../dropbox-ignore.ps1`. `../cleandevs.ps1` runs release checkouts and accepts `-Repos`.
 
 ## Exact build versions
@@ -64,6 +66,8 @@ The root `collectJars` task copies each enabled loader's already-built productio
 | Common Protection API | `eu.pb4:common-protection-api:1.0.0` | Optional Fabric protection-query API; development runtime only with `-PwithCommonProtectionApi=true` |
 | NightConfig core and TOML | `com.electronwill.night-config:core:3.6.7`, `com.electronwill.night-config:toml:3.6.7` | Common compile-only; Fabric bundles and relocates |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
+| Spotless Gradle plugin | `8.12.0` | Runs the source formatter |
+| google-java-format | `2.0.0`, AOSP style | Java source and javadoc formatting; runs in the Gradle host JVM |
 
 The Java setting is exact only at the language/toolchain-major level. The repository does not pin a JDK vendor, distribution, or patch release, and it does not pin the host JVM that runs Gradle. Gradle core plugins such as `base` and `java` use Gradle `9.5.1` and therefore have no separate declared version.
 
@@ -86,7 +90,7 @@ These values do not select build tools, but they are versioned inputs consumed b
 
 ## Resolution and version authorities
 
-`gradle.properties` is the authority for the Minecraft, mapping, loader, API, compatibility, integration, and mod versions. The root `build.gradle` pins the three external Gradle plugins and JSR 305, and `gradle/wrapper/gradle-wrapper.properties` pins Gradle itself. The loader scripts consume the root properties rather than restating dependency versions.
+`gradle.properties` is the authority for the Minecraft, mapping, loader, API, compatibility, integration, formatter, and mod versions. The root `build.gradle` pins the four external Gradle plugins and JSR 305, and `gradle/wrapper/gradle-wrapper.properties` pins Gradle itself. The loader scripts consume the root properties rather than restating dependency versions.
 
 Plugin resolution uses Fabric Maven, Architectury Maven, Forge Maven, and the Gradle Plugin Portal. Every module declares Parchment Maven; the Fabric module also declares Nucleoid Maven (for the Common Protection API), and the NeoForge module also declares NeoForge Maven; Loom supplies its standard Minecraft repositories. Common and Fabric also declare Maven Central for NightConfig. There is no Gradle version catalog, dependency-lock state, dependency-verification metadata, exact JDK distribution, or wrapper-distribution checksum in the repository. The versions above do not lock transitive artifacts resolved by Gradle and Loom.
 

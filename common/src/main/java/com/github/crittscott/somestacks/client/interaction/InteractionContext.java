@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.client.interaction;
 
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -30,9 +31,16 @@ public final class InteractionContext {
 
     private boolean shouldCancel = false;
 
-    private InteractionContext(Player player, Level level, InteractionHand hand,
-                               BlockPos clickedPos, Block clickedBlock, Direction face,
-                               StackMode currentMode, boolean modeKeyDown, boolean hittingBlock) {
+    private InteractionContext(
+            Player player,
+            Level level,
+            InteractionHand hand,
+            BlockPos clickedPos,
+            Block clickedBlock,
+            Direction face,
+            StackMode currentMode,
+            boolean modeKeyDown,
+            boolean hittingBlock) {
         this.player = player;
         this.level = level;
         this.hand = hand;
@@ -46,38 +54,32 @@ public final class InteractionContext {
 
     /** Builds an air/item event context with the loader's explicit crosshair classification. */
     public static InteractionContext forAirClick(
-            Player player, Level level, InteractionHand hand,
-            StackMode currentMode, boolean modeKeyDown, boolean hittingBlock) {
+            Player player,
+            Level level,
+            InteractionHand hand,
+            StackMode currentMode,
+            boolean modeKeyDown,
+            boolean hittingBlock) {
         return new InteractionContext(
-                player,
-                level,
-                hand,
-                null,
-                null,
-                null,
-                currentMode,
-                modeKeyDown,
-                hittingBlock
-        );
+                player, level, hand, null, null, null, currentMode, modeKeyDown, hittingBlock);
     }
 
-    /** Builds a block context from the clicked position and face; its hit classification is always block. */
+    /**
+     * Builds a block context from the clicked position and face; its hit classification is always
+     * block.
+     */
     public static InteractionContext forBlockClick(
-            Player player, Level level, InteractionHand hand, BlockPos pos, Direction face,
-            StackMode currentMode, boolean modeKeyDown) {
+            Player player,
+            Level level,
+            InteractionHand hand,
+            BlockPos pos,
+            Direction face,
+            StackMode currentMode,
+            boolean modeKeyDown) {
         Block block = level.getBlockState(pos).getBlock();
 
         return new InteractionContext(
-                player,
-                level,
-                hand,
-                pos,
-                block,
-                face,
-                currentMode,
-                modeKeyDown,
-                true
-        );
+                player, level, hand, pos, block, face, currentMode, modeKeyDown, true);
     }
 
     public boolean isShift() {

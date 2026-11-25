@@ -1,6 +1,10 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+
 import com.github.crittscott.somestacks.server.WorldEdits;
+
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.core.BlockPos;
@@ -9,9 +13,6 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Blocks;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 
 /** Checks the Fabric edit policy when no protection query provider is installed. */
 public final class NoProtectionApiGameTests implements FabricGameTest {
@@ -26,8 +27,13 @@ public final class NoProtectionApiGameTests implements FabricGameTest {
         ServerPlayer player = FakePlayer.get(helper.getLevel());
         check(WorldEdits.mayPlace(player, pos), "Unprotected placement was denied");
         check(WorldEdits.mayUseAdjacent(player, pos), "Unprotected neighboring deposit was denied");
-        check(WorldEdits.placeChecked(player, helper.getLevel(), pos,
-                        Blocks.STONE.defaultBlockState(), Direction.DOWN),
+        check(
+                WorldEdits.placeChecked(
+                        player,
+                        helper.getLevel(),
+                        pos,
+                        Blocks.STONE.defaultBlockState(),
+                        Direction.DOWN),
                 "Unprotected placement failed");
         helper.assertBlockPresent(Blocks.STONE, ORIGIN);
         helper.getLevel().removeBlock(pos, false);

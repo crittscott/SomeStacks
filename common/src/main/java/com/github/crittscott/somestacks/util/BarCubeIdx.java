@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
@@ -12,8 +13,8 @@ import javax.annotation.Nullable;
  * Geometry and slot indexing shared by Bar Stack rendering, collision, ray targeting, and support.
  *
  * <p>A block contains eight layers of eight bars. Even layers run east-west, two bars across and
- * four deep; odd layers run north-south, four across and two deep. Slots are indexed from the bottom
- * layer upward and row by row within each layer.
+ * four deep; odd layers run north-south, four across and two deep. Slots are indexed from the
+ * bottom layer upward and row by row within each layer.
  *
  * <p>A bar is supported when its footprint overlaps a bar in the layer below. This makes support
  * cross between the alternating orientations instead of following fixed columns. At a block
@@ -22,7 +23,7 @@ import javax.annotation.Nullable;
  * <p>Bars do not rotate with the block; their orientation belongs to the layer.
  */
 public final class BarCubeIdx {
-    private BarCubeIdx(){}
+    private BarCubeIdx() {}
 
     // Bar geometry is expressed in model pixels (1/16 of a block).
     private static final double BAR_HEIGHT = 2.0;
@@ -78,9 +79,14 @@ public final class BarCubeIdx {
             double maxX = minX + barWidth(xyz[1]);
             double maxY = minY + barHeight(xyz[1]);
             double maxZ = minZ + barDepth(xyz[1]);
-            LOCAL_BOXES[index] = new AABB(
-                    minX / 16.0, minY / 16.0, minZ / 16.0,
-                    maxX / 16.0, maxY / 16.0, maxZ / 16.0);
+            LOCAL_BOXES[index] =
+                    new AABB(
+                            minX / 16.0,
+                            minY / 16.0,
+                            minZ / 16.0,
+                            maxX / 16.0,
+                            maxY / 16.0,
+                            maxZ / 16.0);
             LOCAL_SHAPES[index] = Block.box(minX, minY, minZ, maxX, maxY, maxZ);
         }
     }
@@ -132,7 +138,8 @@ public final class BarCubeIdx {
      * Applies {@link #isGrounded} to an occupancy snapshot rather than live slots. Settling and
      * placement simulation use snapshots to evaluate a proposed state without mutating inventory.
      */
-    public static boolean isGroundedIn(boolean[] occupancy, int index, @Nullable boolean[] seamBelow) {
+    public static boolean isGroundedIn(
+            boolean[] occupancy, int index, @Nullable boolean[] seamBelow) {
         int[] xyz = xyzFromIndex(index);
         int y = xyz[1];
 
@@ -194,9 +201,9 @@ public final class BarCubeIdx {
     }
 
     /**
-     * Finds the deposit target for a Bar Stack that does not yet exist and therefore has no occupied
-     * slots. Placement uses this to validate the initial deposit and its resulting collision shape
-     * before adding the block to the world.
+     * Finds the deposit target for a Bar Stack that does not yet exist and therefore has no
+     * occupied slots. Placement uses this to validate the initial deposit and its resulting
+     * collision shape before adding the block to the world.
      */
     public static int traceAllPositions(ViewRay ray, BlockPos blockPos) {
         return traceAllPositions(ray, blockPos, null);
@@ -204,13 +211,13 @@ public final class BarCubeIdx {
 
     /**
      * Finds the slot a deposit targets: the last empty slot along the view ray before the first
-     * occupied one, or the farthest intersected slot if the ray meets no occupied bar. A null handler
-     * describes a prospective, entirely empty block.
+     * occupied one, or the farthest intersected slot if the ray meets no occupied bar. A null
+     * handler describes a prospective, entirely empty block.
      */
-    public static int traceAllPositions(ViewRay ray, BlockPos blockPos,
-                                        @Nullable SlotAccess handler) {
-        return ray.lastEmptyBeforeOccupied(BarStackBE.SLOTS, handler,
-                slot -> getBarBox(slot, blockPos));
+    public static int traceAllPositions(
+            ViewRay ray, BlockPos blockPos, @Nullable SlotAccess handler) {
+        return ray.lastEmptyBeforeOccupied(
+                BarStackBE.SLOTS, handler, slot -> getBarBox(slot, blockPos));
     }
 
     /** Returns the nearest occupied bar intersected by the view ray, or {@code -1} on a miss. */
@@ -218,7 +225,9 @@ public final class BarCubeIdx {
         return ray.nearestOccupied(be.getItems(), slot -> getBarBox(slot, blockPos));
     }
 
-    /** Converts a slot index to its within-layer X and Z indexes and its bottom-based layer index. */
+    /**
+     * Converts a slot index to its within-layer X and Z indexes and its bottom-based layer index.
+     */
     public static int[] xyzFromIndex(int idx) {
         int y = idx / LAYER_SIZE;
         int withinLayer = idx % LAYER_SIZE;
@@ -227,7 +236,7 @@ public final class BarCubeIdx {
         int barsAlongX = isEWLayer(y) ? EW_STARTS_X.length : NS_STARTS_X.length;
         int z = withinLayer / barsAlongX;
         int x = withinLayer % barsAlongX;
-        return new int[]{x, y, z};
+        return new int[] {x, y, z};
     }
 
     /** Returns the bar's Z span in model pixels for layer {@code y}. */
@@ -235,7 +244,10 @@ public final class BarCubeIdx {
         return isEWLayer(y) ? EW_DEPTH : NS_DEPTH;
     }
 
-    /** Returns a bar's constant Y span in model pixels; {@code y} keeps all span helpers layer-indexed. */
+    /**
+     * Returns a bar's constant Y span in model pixels; {@code y} keeps all span helpers
+     * layer-indexed.
+     */
     public static double barHeight(int y) {
         return BAR_HEIGHT;
     }
@@ -251,8 +263,7 @@ public final class BarCubeIdx {
     }
 
     private static boolean footprintsOverlap(AABB a, AABB b) {
-        return !(a.maxX <= b.minX || a.minX >= b.maxX ||
-                a.maxZ <= b.minZ || a.minZ >= b.maxZ);
+        return !(a.maxX <= b.minX || a.minX >= b.maxX || a.maxZ <= b.minZ || a.minZ >= b.maxZ);
     }
 
     private static boolean isEWLayer(int y) {
@@ -295,5 +306,4 @@ public final class BarCubeIdx {
         }
         return occupancy;
     }
-
 }

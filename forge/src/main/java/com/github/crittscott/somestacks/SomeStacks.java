@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks;
 import com.github.crittscott.somestacks.client.ClientSetup;
 import com.github.crittscott.somestacks.forge.ForgePlatformServices;
 import com.github.crittscott.somestacks.network.ModNetworking;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,8 +22,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 /**
  * The mod entry point: registers the blocks and block entities, the network channel, and the
- * listeners behind server config loading, login sync, and commands. Client
- * registration is deferred to {@link ClientSetup} so the dedicated server never touches it.
+ * listeners behind server config loading, login sync, and commands. Client registration is deferred
+ * to {@link ClientSetup} so the dedicated server never touches it.
  *
  * <p>The mod must be present on both sides; there is no client-optional or server-optional mode.
  */

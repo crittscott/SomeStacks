@@ -4,8 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 
 /**
- * Consumes a modified neighbor click toward a Singles or Bar Stack. The server decides whether
- * the loader can authorize the destination without another click; otherwise it refuses the deposit.
+ * Consumes a modified neighbor click toward a Singles or Bar Stack. The server decides whether the
+ * loader can authorize the destination without another click; otherwise it refuses the deposit.
  */
 public final class DepositIntoAdjacentStackRule implements InteractionRule {
     @Override

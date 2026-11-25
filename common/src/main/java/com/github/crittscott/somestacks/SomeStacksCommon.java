@@ -8,8 +8,7 @@ import org.slf4j.LoggerFactory;
  * logging, and metadata remain identical on Forge, NeoForge, and Fabric.
  */
 public final class SomeStacksCommon {
-    private SomeStacksCommon() {
-    }
+    private SomeStacksCommon() {}
 
     public static final String MODID = "somestacks";
     public static final int PROTOCOL_VERSION = 5;

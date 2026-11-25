@@ -1,18 +1,27 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.ShapedStackBlock;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
-import com.github.crittscott.somestacks.block.ShapedStackBlock;
-import com.github.crittscott.somestacks.server.ServerGestureState;
-import com.github.crittscott.somestacks.util.StackMode;
-import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+import com.github.crittscott.somestacks.server.ServerGestureState;
+import com.github.crittscott.somestacks.util.StackItemStorage;
+import com.github.crittscott.somestacks.util.StackMode;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -43,19 +52,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
-
 /**
  * Disk persistence, client render tags, saved-world migration/recovery, and block shape contracts.
- * The
- * automation-surface half (whole-run capability/Transfer-API presence and headroom) stays in each
- * loader's own {@code CapabilityAndPersistenceGameTests}, since it addresses the loader-native
+ * The automation-surface half (whole-run capability/Transfer-API presence and headroom) stays in
+ * each loader's own {@code CapabilityAndPersistenceGameTests}, since it addresses the loader-native
  * storage view directly.
  */
 public final class CapabilityAndPersistenceChecks {
@@ -89,7 +89,9 @@ public final class CapabilityAndPersistenceChecks {
         ItemStack restored = loaded.getItems().getStackInSlot(7);
         checkEquals(Items.STONE, restored.getItem(), "Restored Storage item");
         checkEquals(23, restored.getCount(), "Restored Storage count");
-        checkEquals(CustomData.of(identity), restored.get(DataComponents.CUSTOM_DATA),
+        checkEquals(
+                CustomData.of(identity),
+                restored.get(DataComponents.CUSTOM_DATA),
                 "Restored Storage custom data");
         checkEquals(3, loaded.getRotation(), "Restored Storage rotation");
         check(loaded.isPermanent(), "Restored Storage permanence");
@@ -99,7 +101,8 @@ public final class CapabilityAndPersistenceChecks {
     /**
      * Singles disk data preserves contents plus block-state and per-item rotations. To reproduce
      * in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
-     * chunk after it has saved and unloaded, or restart the world. Both orientations and the item remain unchanged.
+     * chunk after it has saved and unloaded, or restart the world. Both orientations and the item
+     * remain unchanged.
      */
     public static void singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
@@ -114,7 +117,9 @@ public final class CapabilityAndPersistenceChecks {
         copyFacing(helper, source, loaded);
         loaded.loadWithComponents(saved, registries);
 
-        checkEquals(Items.APPLE, loaded.getItems().getStackInSlot(21).getItem(),
+        checkEquals(
+                Items.APPLE,
+                loaded.getItems().getStackInSlot(21).getItem(),
                 "Restored Singles item");
         checkEquals(2, loaded.getRotation(), "Restored Singles block rotation");
         checkEquals(3, loaded.getCubeRotation(21), "Restored Singles item rotation");
@@ -122,9 +127,8 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Bar disk data preserves the item in each position. To reproduce in-game: deposit Bars,
-     * save and restart the world, and verify the same Bar positions
-     * remain occupied.
+     * Bar disk data preserves the item in each position. To reproduce in-game: deposit Bars, save
+     * and restart the world, and verify the same Bar positions remain occupied.
      */
     public static void barDiskSaveRoundTripsItems(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
@@ -135,10 +139,8 @@ public final class CapabilityAndPersistenceChecks {
 
         loaded.loadWithComponents(source.saveWithoutMetadata(registries), registries);
 
-        checkEquals(barItem, loaded.getItems().getStackInSlot(37).getItem(),
-                "Restored Bar item");
-        checkEquals(1, loaded.getItems().getStackInSlot(37).getCount(),
-                "Restored Bar count");
+        checkEquals(barItem, loaded.getItems().getStackInSlot(37).getItem(), "Restored Bar item");
+        checkEquals(1, loaded.getItems().getStackInSlot(37).getCount(), "Restored Bar count");
         helper.succeed();
     }
 
@@ -169,34 +171,37 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag storageTag = storage.getUpdateTag(registries);
         CompoundTag singlesTag = singles.getUpdateTag(registries);
         CompoundTag barTag = bars.getUpdateTag(registries);
-        check(!storageTag.contains("Rotation"),
-                "Storage update tag carried block-state rotation");
-        check(!singlesTag.contains("Rotation"),
-                "Singles update tag carried block-state rotation");
-        check(!storageTag.getCompound("Items").contains("SetAside"),
+        check(!storageTag.contains("Rotation"), "Storage update tag carried block-state rotation");
+        check(!singlesTag.contains("Rotation"), "Singles update tag carried block-state rotation");
+        check(
+                !storageTag.getCompound("Items").contains("SetAside"),
                 "Storage update tag exposed set-aside data");
-        check(!singlesTag.getCompound("Items").contains("SetAside"),
+        check(
+                !singlesTag.getCompound("Items").contains("SetAside"),
                 "Singles update tag exposed set-aside data");
-        check(!barTag.getCompound("Items").contains("SetAside"),
+        check(
+                !barTag.getCompound("Items").contains("SetAside"),
                 "Bar update tag exposed set-aside data");
-        check(!storageTag.contains("Permanent"),
-                "Storage update tag exposed permanence");
+        check(!storageTag.contains("Permanent"), "Storage update tag exposed permanence");
         copyFacing(helper, storage, storageClient);
         copyFacing(helper, singles, singlesClient);
         storageClient.loadCustomOnly(storageTag, registries);
         singlesClient.loadCustomOnly(singlesTag, registries);
         barsClient.loadCustomOnly(barTag, registries);
 
-        checkEquals(3, storageClient.getItems().getStackInSlot(4).getCount(),
+        checkEquals(
+                3,
+                storageClient.getItems().getStackInSlot(4).getCount(),
                 "Storage client item count");
         checkEquals(2, storageClient.getRotation(), "Storage client rotation");
         check(!storageClient.isPermanent(), "Storage client received permanence");
-        checkEquals(Items.APPLE, singlesClient.getItems().getStackInSlot(5).getItem(),
+        checkEquals(
+                Items.APPLE,
+                singlesClient.getItems().getStackInSlot(5).getItem(),
                 "Singles client item");
         checkEquals(1, singlesClient.getRotation(), "Singles client block rotation");
         checkEquals(3, singlesClient.getCubeRotation(5), "Singles client item rotation");
-        checkEquals(barItem, barsClient.getItems().getStackInSlot(6).getItem(),
-                "Bar client item");
+        checkEquals(barItem, barsClient.getItems().getStackInSlot(6).getItem(), "Bar client item");
         helper.succeed();
     }
 
@@ -213,8 +218,8 @@ public final class CapabilityAndPersistenceChecks {
         unknown.putString("id", "examplemod:gone");
         unknown.putInt("count", 2);
         unknown.putInt("Slot", 4);
-        CompoundTag outsideRange = (CompoundTag) new ItemStack(Items.STONE, 5)
-                .save(registries, new CompoundTag());
+        CompoundTag outsideRange =
+                (CompoundTag) new ItemStack(Items.STONE, 5).save(registries, new CompoundTag());
         outsideRange.putInt("Slot", StorageStackBE.SLOTS + 10);
         ListTag entries = new ListTag();
         entries.add(unknown.copy());
@@ -226,22 +231,28 @@ public final class CapabilityAndPersistenceChecks {
         NbtUtils.addCurrentDataVersion(saved);
 
         loaded.loadWithComponents(saved, registries);
-        checkEquals(0, GameTestScaffold.occupied(loaded.getItems()),
+        checkEquals(
+                0,
+                GameTestScaffold.occupied(loaded.getItems()),
                 "Unreadable entries reached live slots");
 
         var probe = new StackItemStorage(StorageStackBE.SLOTS);
-        checkEquals(new StackItemStorage.LoadResult(2, 0), probe.deserializeNBT(registries, storage),
+        checkEquals(
+                new StackItemStorage.LoadResult(2, 0),
+                probe.deserializeNBT(registries, storage),
                 "New retention diagnostic counts");
-        checkEquals(new StackItemStorage.LoadResult(0, 2),
-                probe.deserializeNBT(registries, probe.serializeNBT(registries)), "Persisted retry diagnostic counts");
+        checkEquals(
+                new StackItemStorage.LoadResult(0, 2),
+                probe.deserializeNBT(registries, probe.serializeNBT(registries)),
+                "Persisted retry diagnostic counts");
 
         CompoundTag persisted = loaded.saveWithoutMetadata(registries);
-        ListTag setAside = persisted.getCompound("Items")
-                .getList("SetAside", Tag.TAG_COMPOUND);
+        ListTag setAside = persisted.getCompound("Items").getList("SetAside", Tag.TAG_COMPOUND);
         checkEquals(2, setAside.size(), "Persisted set-aside entry count");
         checkEquals(unknown, setAside.getCompound(0), "Unknown item tag changed");
         checkEquals(outsideRange, setAside.getCompound(1), "Out-of-range item tag changed");
-        check(!loaded.getUpdateTag(registries).getCompound("Items").contains("SetAside"),
+        check(
+                !loaded.getUpdateTag(registries).getCompound("Items").contains("SetAside"),
                 "Client update tag exposed set-aside entries");
         helper.succeed();
     }
@@ -260,20 +271,29 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag inventory = storage.serializeNBT(registries);
         ListTag retries = new ListTag();
         for (int slot : new int[] {1, 0, StorageStackBE.SLOTS}) {
-            CompoundTag entry = (CompoundTag) new ItemStack(Items.DIAMOND, 2)
-                    .save(registries, new CompoundTag());
+            CompoundTag entry =
+                    (CompoundTag)
+                            new ItemStack(Items.DIAMOND, 2).save(registries, new CompoundTag());
             entry.putInt("Slot", slot);
             retries.add(entry);
         }
         inventory.put("SetAside", retries.copy());
-        checkEquals(new StackItemStorage.LoadResult(0, 2), storage.deserializeNBT(registries, inventory),
+        checkEquals(
+                new StackItemStorage.LoadResult(0, 2),
+                storage.deserializeNBT(registries, inventory),
                 "Recovery counted a restored entry as a failed retry");
         CompoundTag saved = new CompoundTag();
         NbtUtils.addCurrentDataVersion(saved);
         saved.put("Items", inventory);
         loaded.loadWithComponents(saved, registries);
-        checkEquals(Items.STONE, loaded.getItems().getStackInSlot(0).getItem(), "Occupied slot replaced");
-        checkEquals(Items.DIAMOND, loaded.getItems().getStackInSlot(1).getItem(), "Retry did not recover");
+        checkEquals(
+                Items.STONE,
+                loaded.getItems().getStackInSlot(0).getItem(),
+                "Occupied slot replaced");
+        checkEquals(
+                Items.DIAMOND,
+                loaded.getItems().getStackInSlot(1).getItem(),
+                "Retry did not recover");
         checkEquals(2, loaded.getItems().getStackInSlot(1).getCount(), "Recovered count");
         CompoundTag persisted = loaded.saveWithoutMetadata(registries);
         ListTag remaining = persisted.getCompound("Items").getList("SetAside", Tag.TAG_COMPOUND);
@@ -281,7 +301,10 @@ public final class CapabilityAndPersistenceChecks {
         checkEquals(retries.getCompound(1), remaining.getCompound(0), "Occupied retry changed");
         checkEquals(retries.getCompound(2), remaining.getCompound(1), "Out-of-range retry changed");
         loaded.loadWithComponents(persisted, registries);
-        checkEquals(2, GameTestScaffold.count(loaded.getItems(), Items.DIAMOND), "Reload duplicated recovered item");
+        checkEquals(
+                2,
+                GameTestScaffold.count(loaded.getItems(), Items.DIAMOND),
+                "Reload duplicated recovered item");
         helper.succeed();
     }
 
@@ -290,8 +313,8 @@ public final class CapabilityAndPersistenceChecks {
      * item format, and the block is marked for saving in that format. To reproduce in-game: in a
      * 1.21.1 world, {@code /give @s stone[fire_resistant={}] 5}, deposit it into a Storage Stack,
      * and quit; open the world with this version and extract the stone. It is still there, and is
-     * still fire resistant through the {@code damage_resistant} component that replaced
-     * {@code fire_resistant} in 1.21.2.
+     * still fire resistant through the {@code damage_resistant} component that replaced {@code
+     * fire_resistant} in 1.21.2.
      */
     public static void unversionedSaveUpgradesItemsOnLoad(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
@@ -320,10 +343,12 @@ public final class CapabilityAndPersistenceChecks {
         ItemStack restored = loaded.getItems().getStackInSlot(4);
         checkEquals(Items.STONE, restored.getItem(), "Upgraded Storage item");
         checkEquals(5, restored.getCount(), "Upgraded Storage count");
-        check(restored.has(DataComponents.DAMAGE_RESISTANT),
+        check(
+                restored.has(DataComponents.DAMAGE_RESISTANT),
                 "The 1.21.1 fire_resistant component was not upgraded to damage_resistant");
         checkEquals(3, loaded.getRotation(), "Migrated Storage block-state rotation");
-        check(!loaded.saveWithoutMetadata(registries).contains("Rotation"),
+        check(
+                !loaded.saveWithoutMetadata(registries).contains("Rotation"),
                 "Migrated Storage rewrote legacy Rotation");
         check(chunk.isUnsaved(), "Upgrading saved contents did not mark the block for saving");
         helper.succeed();
@@ -335,42 +360,48 @@ public final class CapabilityAndPersistenceChecks {
      * place the structure with a clockwise quarter turn; the visible grid turns with the build.
      */
     public static void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
-        StorageStackBlock storageBlock =
-                (StorageStackBlock) CommonRegistry.storageStackBlock();
-        SinglesStackBlock singlesBlock =
-                (SinglesStackBlock) CommonRegistry.singlesStackBlock();
-        BlockState storageState = storageBlock.rotate(
-                storageBlock.defaultBlockState(), Rotation.CLOCKWISE_90);
-        BlockState singlesState = singlesBlock.rotate(
-                singlesBlock.defaultBlockState(), Rotation.CLOCKWISE_90);
+        StorageStackBlock storageBlock = (StorageStackBlock) CommonRegistry.storageStackBlock();
+        SinglesStackBlock singlesBlock = (SinglesStackBlock) CommonRegistry.singlesStackBlock();
+        BlockState storageState =
+                storageBlock.rotate(storageBlock.defaultBlockState(), Rotation.CLOCKWISE_90);
+        BlockState singlesState =
+                singlesBlock.rotate(singlesBlock.defaultBlockState(), Rotation.CLOCKWISE_90);
 
-        checkEquals(Direction.EAST, storageState.getValue(StackBlock.HORIZONTAL_FACING),
+        checkEquals(
+                Direction.EAST,
+                storageState.getValue(StackBlock.HORIZONTAL_FACING),
                 "Rotated Storage facing");
-        checkEquals(Direction.EAST, singlesState.getValue(StackBlock.HORIZONTAL_FACING),
+        checkEquals(
+                Direction.EAST,
+                singlesState.getValue(StackBlock.HORIZONTAL_FACING),
                 "Rotated Singles facing");
 
         BlockPos storagePos = helper.absolutePos(ORIGIN);
         BlockPos singlesPos = helper.absolutePos(ORIGIN.east(3));
-        check(helper.getLevel().setBlock(storagePos, storageState, Block.UPDATE_ALL),
+        check(
+                helper.getLevel().setBlock(storagePos, storageState, Block.UPDATE_ALL),
                 "Could not place rotated Storage");
-        check(helper.getLevel().setBlock(singlesPos, singlesState, Block.UPDATE_ALL),
+        check(
+                helper.getLevel().setBlock(singlesPos, singlesState, Block.UPDATE_ALL),
                 "Could not place rotated Singles");
         StorageStackBE storage = (StorageStackBE) helper.getLevel().getBlockEntity(storagePos);
         SinglesStackBE singles = (SinglesStackBE) helper.getLevel().getBlockEntity(singlesPos);
-        check(storage != null && storage.getRotation() == 3,
+        check(
+                storage != null && storage.getRotation() == 3,
                 "Storage geometry did not read the rotated facing");
-        check(singles != null && singles.getRotation() == 3,
+        check(
+                singles != null && singles.getRotation() == 3,
                 "Singles geometry did not read the rotated facing");
         helper.succeed();
     }
 
     /**
-     * Singles and Bar targeting, outlines, and collision follow occupied contents.
-     * To reproduce in-game: use /setblock to place an empty Singles or Bar block, then deposit and
-     * extract items in different bottom-layer positions. The outline follows the occupied positions;
-     * aim through empty space at an occupied cell in another stack behind it to target that stack.
-     * Empty blocks have no outline, collision, or camera fog. Mobs avoid both types.
-     * Exact shape and path-type assertions require the GameTest.
+     * Singles and Bar targeting, outlines, and collision follow occupied contents. To reproduce
+     * in-game: use /setblock to place an empty Singles or Bar block, then deposit and extract items
+     * in different bottom-layer positions. The outline follows the occupied positions; aim through
+     * empty space at an occupied cell in another stack behind it to target that stack. Empty blocks
+     * have no outline, collision, or camera fog. Mobs avoid both types. Exact shape and path-type
+     * assertions require the GameTest.
      */
     public static void cachedShapesInvalidateWhenContentsChange(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -386,10 +417,20 @@ public final class CapabilityAndPersistenceChecks {
             ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
             try {
                 var block = (ShapedStackBlock) be.getBlockState().getBlock();
-                BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(be.getBlockPos()),
-                        Direction.UP, be.getBlockPos(), false);
-                checkEquals(InteractionResult.CONSUME, block.useWithoutItem(
-                        be.getBlockState(), helper.getLevel(), be.getBlockPos(), player, hit),
+                BlockHitResult hit =
+                        new BlockHitResult(
+                                Vec3.atCenterOf(be.getBlockPos()),
+                                Direction.UP,
+                                be.getBlockPos(),
+                                false);
+                checkEquals(
+                        InteractionResult.CONSUME,
+                        block.useWithoutItem(
+                                be.getBlockState(),
+                                helper.getLevel(),
+                                be.getBlockPos(),
+                                player,
+                                hit),
                         "Empty block-use was not consumed");
                 check(player.getMainHandItem().isEmpty(), "Empty block extracted an item");
             } finally {
@@ -400,36 +441,45 @@ public final class CapabilityAndPersistenceChecks {
         singles.getItems().insertItem(0, new ItemStack(Items.APPLE), false);
         bar.getItems().insertItem(0, new ItemStack(barItem), false);
 
-        check(!singles.getCachedShape().isEmpty(),
-                "Singles shape cache did not reflect insertion");
-        check(!bar.getCachedShape().isEmpty(),
-                "Bar shape cache did not reflect insertion");
+        check(!singles.getCachedShape().isEmpty(), "Singles shape cache did not reflect insertion");
+        check(!bar.getCachedShape().isEmpty(), "Bar shape cache did not reflect insertion");
         assertBlockShapes(helper, singles, singles.getCachedShape());
         assertBlockShapes(helper, bar, bar.getCachedShape());
         singles.getItems().extractItem(0, 1, false);
         bar.getItems().extractItem(0, 1, false);
-        check(singles.getCachedShape().isEmpty(),
-                "Singles shape cache did not reflect extraction");
-        check(bar.getCachedShape().isEmpty(),
-                "Bar shape cache did not reflect extraction");
+        check(singles.getCachedShape().isEmpty(), "Singles shape cache did not reflect extraction");
+        check(bar.getCachedShape().isEmpty(), "Bar shape cache did not reflect extraction");
         assertBlockShapes(helper, singles, Shapes.empty());
         assertBlockShapes(helper, bar, Shapes.empty());
         helper.succeed();
     }
 
-    private static void assertBlockShapes(GameTestHelper helper, StackBlockEntity be, VoxelShape occupied) {
+    private static void assertBlockShapes(
+            GameTestHelper helper, StackBlockEntity be, VoxelShape occupied) {
         var block = (ShapedStackBlock) be.getBlockState().getBlock();
         BlockState state = be.getBlockState();
         BlockPos pos = be.getBlockPos();
         var level = helper.getLevel();
         var context = CollisionContext.empty();
-        check(!Shapes.joinIsNotEmpty(occupied, block.getShape(state, level, pos, context), BooleanOp.NOT_SAME),
+        check(
+                !Shapes.joinIsNotEmpty(
+                        occupied, block.getShape(state, level, pos, context), BooleanOp.NOT_SAME),
                 "Block targeting differs from occupied shape");
-        check(!Shapes.joinIsNotEmpty(occupied, block.getCollisionShape(state, level, pos, context), BooleanOp.NOT_SAME),
+        check(
+                !Shapes.joinIsNotEmpty(
+                        occupied,
+                        block.getCollisionShape(state, level, pos, context),
+                        BooleanOp.NOT_SAME),
                 "Block collision differs from occupied shape");
-        check(!Shapes.joinIsNotEmpty(Shapes.block(), block.getInteractionShape(state, level, pos), BooleanOp.NOT_SAME),
+        check(
+                !Shapes.joinIsNotEmpty(
+                        Shapes.block(),
+                        block.getInteractionShape(state, level, pos),
+                        BooleanOp.NOT_SAME),
                 "Interaction shape is not a full block");
-        check(block.getVisualShape(state, level, pos, context).isEmpty(), "Visual shape is not empty");
+        check(
+                block.getVisualShape(state, level, pos, context).isEmpty(),
+                "Visual shape is not empty");
         for (PathComputationType type : PathComputationType.values()) {
             check(!block.isPathfindable(state, type), "Stack permits pathfinding: " + type);
         }
@@ -437,10 +487,13 @@ public final class CapabilityAndPersistenceChecks {
 
     private static void copyFacing(
             GameTestHelper helper, StackBlockEntity source, StackBlockEntity target) {
-        BlockState targetState = target.getBlockState().setValue(
-                StackBlock.HORIZONTAL_FACING,
-                source.getBlockState().getValue(StackBlock.HORIZONTAL_FACING));
-        check(helper.getLevel().setBlock(target.getBlockPos(), targetState, Block.UPDATE_ALL),
+        BlockState targetState =
+                target.getBlockState()
+                        .setValue(
+                                StackBlock.HORIZONTAL_FACING,
+                                source.getBlockState().getValue(StackBlock.HORIZONTAL_FACING));
+        check(
+                helper.getLevel().setBlock(target.getBlockPos(), targetState, Block.UPDATE_ALL),
                 "Could not copy stack facing");
     }
 }

@@ -3,11 +3,12 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.network.ModNetworking;
+
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.GameShuttingDownEvent;
@@ -26,12 +27,11 @@ public final class ClientSetup {
         modBus.addListener(ClientSetup::onRegisterRenderers);
         modBus.addListener(ClientSetup::onRegisterKeys);
         modBus.addListener(ClientSetup::onRegisterReloadListeners);
-        NeoForge.EVENT_BUS.addListener(
-                (ClientPlayerNetworkEvent.LoggingOut evt) -> {
-                    ClientGestures.resetSync();
-                    ClientRenderPacketSink.clear();
-                    AutoRenderProfiles.saveCache();
-                });
+        NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut evt) -> {
+            ClientGestures.resetSync();
+            ClientRenderPacketSink.clear();
+            AutoRenderProfiles.saveCache();
+        });
         NeoForge.EVENT_BUS.addListener(
                 (GameShuttingDownEvent evt) -> AutoRenderProfiles.saveCache());
     }
@@ -49,10 +49,12 @@ public final class ClientSetup {
     private static void onRegisterReloadListeners(AddClientReloadListenersEvent evt) {
         evt.addListener(ItemRenderOverrides.RELOAD_LISTENER_ID, new ItemRenderOverrides());
         evt.addListener(BarTextureStore.RELOAD_LISTENER_ID, new BarTextureStore());
-        evt.addListener(CubeRenderHelper.RENDER_CACHE_RELOAD_LISTENER_ID,
-                (ResourceManagerReloadListener) manager -> {
-                    AutoRenderProfiles.onResourceReload();
-                    CubeRenderHelper.onResourceReload();
-                });
+        evt.addListener(
+                CubeRenderHelper.RENDER_CACHE_RELOAD_LISTENER_ID,
+                (ResourceManagerReloadListener)
+                        manager -> {
+                            AutoRenderProfiles.onResourceReload();
+                            CubeRenderHelper.onResourceReload();
+                        });
     }
 }

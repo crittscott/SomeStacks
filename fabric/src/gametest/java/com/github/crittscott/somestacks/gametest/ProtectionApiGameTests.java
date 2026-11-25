@@ -1,8 +1,10 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.mojang.authlib.GameProfile;
+
 import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.common.protection.api.ProtectionProvider;
+
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -15,21 +17,28 @@ import net.minecraft.world.phys.AABB;
 /** Provider-backed checks loaded only in development runs with Common Protection API installed. */
 public final class ProtectionApiGameTests implements FabricGameTest {
     static {
-        CommonProtection.register(ResourceLocation.fromNamespaceAndPath("somestacks", "test_protection"),
+        CommonProtection.register(
+                ResourceLocation.fromNamespaceAndPath("somestacks", "test_protection"),
                 new ProtectionProvider() {
                     @Override
-                    public boolean isProtected(Level level, BlockPos pos) { return false; }
+                    public boolean isProtected(Level level, BlockPos pos) {
+                        return false;
+                    }
 
                     @Override
-                    public boolean isAreaProtected(Level level, AABB area) { return false; }
+                    public boolean isAreaProtected(Level level, AABB area) {
+                        return false;
+                    }
 
                     @Override
-                    public boolean canPlaceBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
+                    public boolean canPlaceBlock(
+                            Level level, BlockPos pos, GameProfile profile, Player player) {
                         return ProtectionGameTests.consult(level, pos, player);
                     }
 
                     @Override
-                    public boolean canInteractBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
+                    public boolean canInteractBlock(
+                            Level level, BlockPos pos, GameProfile profile, Player player) {
                         return ProtectionGameTests.consult(level, pos, player);
                     }
                 });

@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
+
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -31,7 +32,8 @@ public final class ClientSetup {
             ClientRenderPacketSink.clear();
             AutoRenderProfiles.saveCache();
         });
-        MinecraftForge.EVENT_BUS.addListener((GameShuttingDownEvent evt) -> AutoRenderProfiles.saveCache());
+        MinecraftForge.EVENT_BUS.addListener(
+                (GameShuttingDownEvent evt) -> AutoRenderProfiles.saveCache());
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers evt) {
@@ -47,9 +49,11 @@ public final class ClientSetup {
     private static void onRegisterReloadListeners(RegisterClientReloadListenersEvent evt) {
         evt.registerReloadListener(new ItemRenderOverrides());
         evt.registerReloadListener(new BarTextureStore());
-        evt.registerReloadListener((ResourceManagerReloadListener) manager -> {
-            AutoRenderProfiles.onResourceReload();
-            CubeRenderHelper.onResourceReload();
-        });
+        evt.registerReloadListener(
+                (ResourceManagerReloadListener)
+                        manager -> {
+                            AutoRenderProfiles.onResourceReload();
+                            CubeRenderHelper.onResourceReload();
+                        });
     }
 }

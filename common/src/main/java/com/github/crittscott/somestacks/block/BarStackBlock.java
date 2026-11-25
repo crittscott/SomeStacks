@@ -58,7 +58,8 @@ public class BarStackBlock extends ShapedStackBlock {
 
     /** Invalidates cached columns and schedules publication after this block joins a run. */
     @Override
-    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(
+            BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
         if (!oldState.is(this)) {
             BarColumn.invalidateAround(level, pos);
@@ -67,7 +68,8 @@ public class BarStackBlock extends ShapedStackBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(
+            BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             boolean cascading = false;
             BarDropBatch drops = new BarDropBatch();

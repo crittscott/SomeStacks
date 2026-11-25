@@ -1,8 +1,16 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
+
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -14,17 +22,6 @@ import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.Consumer;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedNear;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.heldAt;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
 
 /**
  * Bar support and collapse in a live level: item validity, grounding at the bottom of a column,
@@ -89,7 +86,8 @@ public final class BarColumnGameTests {
 
     /**
      * To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
-     * positions; unsupported positions refuse insertion while a supported empty position accepts it.
+     * positions; unsupported positions refuse insertion while a supported empty position accepts
+     * it.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void capabilityInsertionAnswersForThePositionItIsGiven(GameTestHelper helper) {
@@ -97,14 +95,14 @@ public final class BarColumnGameTests {
     }
 
     /**
-     * Validity gates insertion only, so a bar stored before a data pack
-     * reload narrowed the rule has to survive the backfill an automated extraction moves it through.
-     * A stick stands in for such a bar: a Bar Stack refuses one from a deposit, but may be holding
-     * contents the current ingot set no longer covers.
+     * Validity gates insertion only, so a bar stored before a data pack reload narrowed the rule
+     * has to survive the backfill an automated extraction moves it through. A stick stands in for
+     * such a bar: a Bar Stack refuses one from a deposit, but may be holding contents the current
+     * ingot set no longer covers.
      *
      * <p>To reproduce in-game: fill a Bar Stack, narrow the ingot rule so one stored bar is no
-     * longer accepted, then automate extraction below it. Backfill retains or drops that legacy
-     * bar without deleting or changing it.
+     * longer accepted, then automate extraction below it. Backfill retains or drops that legacy bar
+     * without deleting or changing it.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void backfillKeepsABarItWouldNoLongerAccept(GameTestHelper helper) {
@@ -126,7 +124,9 @@ public final class BarColumnGameTests {
 
         checkEquals(barItem, simulated.getItem(), "Simulated item");
         checkEquals(1, simulated.getCount(), "Simulated count");
-        checkEquals(barItem, bars.getItems().getStackInSlot(0).getItem(),
+        checkEquals(
+                barItem,
+                bars.getItems().getStackInSlot(0).getItem(),
                 "Simulation mutated contents");
         helper.succeed();
     }
@@ -178,9 +178,9 @@ public final class BarColumnGameTests {
      * Support depends on the seam's occupancy, which is empty whether or not the block remains;
      * protection controls only the world edit.
      *
-     * <p>To reproduce in-game: build a supported two-block Bar column, deny [SomeStacks]
-     * permission to remove the lower block, and extract its bottom support. The empty lower block
-     * remains, while the unsupported upper block comes down.
+     * <p>To reproduce in-game: build a supported two-block Bar column, deny [SomeStacks] permission
+     * to remove the lower block, and extract its bottom support. The empty lower block remains,
+     * while the unsupported upper block comes down.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
@@ -198,14 +198,17 @@ public final class BarColumnGameTests {
             slot = BarColumnChecks.firstSupportedBy(slot, layer * 8, (layer + 1) * 8);
             seedSlot(lower.getItems(), slot, new ItemStack(barItem));
         }
-        seedSlot(upper.getItems(), BarColumnChecks.firstSeamSupportedBy(slot - 56),
+        seedSlot(
+                upper.getItems(),
+                BarColumnChecks.firstSeamSupportedBy(slot - 56),
                 new ItemStack(barItem));
 
-        Consumer<BlockEvent.BreakEvent> denyLower = event -> {
-            if (event.getPos().equals(lowerPos)) {
-                event.setCanceled(true);
-            }
-        };
+        Consumer<BlockEvent.BreakEvent> denyLower =
+                event -> {
+                    if (event.getPos().equals(lowerPos)) {
+                        event.setCanceled(true);
+                    }
+                };
 
         MinecraftForge.EVENT_BUS.addListener(denyLower);
         try {
@@ -216,7 +219,8 @@ public final class BarColumnGameTests {
 
         helper.assertBlockPresent(ModRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
         check(lower.isEmpty(), "The kept block held on to its bars");
-        check(helper.getLevel().getBlockEntity(upperPos) == null,
+        check(
+                helper.getLevel().getBlockEntity(upperPos) == null,
                 "The block above a kept block was not brought down");
         helper.succeed();
     }

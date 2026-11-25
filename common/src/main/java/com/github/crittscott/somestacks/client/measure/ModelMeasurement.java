@@ -1,8 +1,9 @@
 package com.github.crittscott.somestacks.client.measure;
 
-import com.github.crittscott.somestacks.client.ItemCapture;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
+import com.github.crittscott.somestacks.client.ItemCapture;
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -20,11 +21,13 @@ public final class ModelMeasurement {
     /**
      * @param gui3d the resolved item model's own dimensionality signal
      * @param flatProjectionAvailable whether the shared 2-D renderer can draw the geometry that
-     *                                produced these bounds
+     *     produced these bounds
      */
     public record Result(
-            boolean gui3d, boolean flatProjectionAvailable,
-            @Nullable AABB bounds, @Nullable String failure) {}
+            boolean gui3d,
+            boolean flatProjectionAvailable,
+            @Nullable AABB bounds,
+            @Nullable String failure) {}
 
     /** Measures as the {@code 3d} path draws: the FIXED display context. */
     public static Result measure(ItemStack stack) {
@@ -39,7 +42,8 @@ public final class ModelMeasurement {
         return measure(stack, ItemDisplayContext.GUI, true);
     }
 
-    private static Result measure(ItemStack stack, ItemDisplayContext context, boolean counterRotate) {
+    private static Result measure(
+            ItemStack stack, ItemDisplayContext context, boolean counterRotate) {
         try {
             PoseStack pose = new PoseStack();
             if (counterRotate) {

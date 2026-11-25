@@ -1,16 +1,17 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.util.ItemOps;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 
@@ -92,12 +93,12 @@ public class StorageStackBlock extends StackBlock {
 
     /** Repairs the run-wide state and derived values affected when this block joins a pile. */
     @Override
-    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(
+            BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
         if (!oldState.is(this)) {
             StoragePile.invalidateAround(level, pos);
-            if (!level.isClientSide
-                    && level.getBlockEntity(pos) instanceof StorageStackBE placed) {
+            if (!level.isClientSide && level.getBlockEntity(pos) instanceof StorageStackBE placed) {
                 StoragePile.adoptNeighbourState(level, pos, placed);
                 StoragePile.markDirtyAt(level, pos);
             }
@@ -105,7 +106,8 @@ public class StorageStackBlock extends StackBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(
+            BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof StorageStackBE sbe) {

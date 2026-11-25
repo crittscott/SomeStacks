@@ -1,5 +1,10 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.putCowIn;
+
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.StackBlock;
@@ -13,6 +18,7 @@ import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StackMode;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -35,11 +41,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.putCowIn;
 
 /** Loader-neutral placement and player-deposit protection scenarios. */
 public final class ProtectionChecks {
@@ -69,12 +70,15 @@ public final class ProtectionChecks {
         BlockPos valid = helper.absolutePos(ORIGIN);
         BlockPos invalid = new BlockPos(valid.getX(), level.getMinY() - 1, valid.getZ());
 
-        check(WorldEdits.placeChecked(
+        check(
+                WorldEdits.placeChecked(
                         player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
                 "Valid checked placement was rejected");
-        check(level.getBlockState(valid).is(Blocks.STONE),
+        check(
+                level.getBlockState(valid).is(Blocks.STONE),
                 "Valid checked placement did not change the world");
-        check(!WorldEdits.placeChecked(
+        check(
+                !WorldEdits.placeChecked(
                         player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
                 "Out-of-height checked placement was accepted");
         helper.succeed();
@@ -92,7 +96,8 @@ public final class ProtectionChecks {
         BlockPos target = helper.absolutePos(ORIGIN);
         putCowIn(helper, ORIGIN);
 
-        check(!WorldEdits.placeChecked(
+        check(
+                !WorldEdits.placeChecked(
                         player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
                 "Entity-obstructed checked placement was accepted");
         helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
@@ -100,9 +105,9 @@ public final class ProtectionChecks {
     }
 
     /**
-     * Creative deposits fill a stack without consuming the held items. To reproduce in-game:
-     * switch to Creative, hold the modifier, and deposit a full held stack into Storage. Storage
-     * receives the items while the hand retains its original count.
+     * Creative deposits fill a stack without consuming the held items. To reproduce in-game: switch
+     * to Creative, hold the modifier, and deposit a full held stack into Storage. Storage receives
+     * the items while the hand retains its original count.
      */
     public static void creativeDepositFillsTheStackWithoutSpendingTheHand(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -114,9 +119,10 @@ public final class ProtectionChecks {
         ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
         try {
             StackInteractions.handleExistingStack(
-                    player, InteractionHand.MAIN_HAND, centerHit(target),
-                    BlockType.STORAGE_STACK);
-            checkEquals(64, player.getMainHandItem().getCount(),
+                    player, InteractionHand.MAIN_HAND, centerHit(target), BlockType.STORAGE_STACK);
+            checkEquals(
+                    64,
+                    player.getMainHandItem().getCount(),
                     "A creative deposit spent the held stack");
         } finally {
             player.getAbilities().instabuild = false;
@@ -124,15 +130,17 @@ public final class ProtectionChecks {
             ServerGestureState.clear(player.getUUID());
         }
 
-        checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
+        checkEquals(
+                64,
+                GameTestScaffold.heldAt(helper, target, Items.DIRT),
                 "Creative deposit did not reach the stack");
         helper.succeed();
     }
 
     /**
      * Placing a stack into water waterlogs it instead of removing the fluid. To reproduce in-game:
-     * hold the modifier and place a new stack into a water source. The block appears waterlogged and
-     * the water remains present.
+     * hold the modifier and place a new stack into a water source. The block appears waterlogged
+     * and the water remains present.
      */
     public static void placementIntoWaterKeepsTheWater(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -148,7 +156,9 @@ public final class ProtectionChecks {
                     player,
                     InteractionHand.MAIN_HAND,
                     new BlockHitResult(
-                            new Vec3(support.getX() + 0.5, support.getY() + 1.0,
+                            new Vec3(
+                                    support.getX() + 0.5,
+                                    support.getY() + 1.0,
                                     support.getZ() + 0.5),
                             Direction.UP,
                             support,
@@ -161,38 +171,66 @@ public final class ProtectionChecks {
         }
 
         helper.assertBlockPresent(CommonRegistry.storageStackBlock(), ORIGIN);
-        check(level.getBlockState(target).getValue(StackBlock.WATERLOGGED),
+        check(
+                level.getBlockState(target).getValue(StackBlock.WATERLOGGED),
                 "A stack placed into water was not waterlogged");
-        check(level.getFluidState(target).getType() == Fluids.WATER,
+        check(
+                level.getFluidState(target).getType() == Fluids.WATER,
                 "A stack placed into water swallowed the water");
         helper.succeed();
     }
 
     /** Exercises neighboring and direct deposits under the loader's destination policy. */
     public static void checkAdjacentAndDirectDeposits(
-            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory,
             boolean neighborAllowed) {
         var singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         BlockPos target = singles.getBlockPos();
         BlockPos neighbor = target.west();
         helper.getLevel().setBlock(neighbor, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.STONE, 2));
-        player.setPos(neighbor.getX() - 2.0, target.getY() + 0.125 - player.getEyeHeight(),
+        player.setPos(
+                neighbor.getX() - 2.0,
+                target.getY() + 0.125 - player.getEyeHeight(),
                 target.getZ() + 0.125);
         ServerGestureState.set(player, StackMode.SINGLES_STACK, true);
         try {
-            check(StackInteractions.handleAdjacentClick(player, InteractionHand.MAIN_HAND,
-                    new BlockHitResult(new Vec3(target.getX(), target.getY() + 0.125,
-                            target.getZ() + 0.125), Direction.EAST, neighbor, false), true, true),
+            check(
+                    StackInteractions.handleAdjacentClick(
+                            player,
+                            InteractionHand.MAIN_HAND,
+                            new BlockHitResult(
+                                    new Vec3(
+                                            target.getX(),
+                                            target.getY() + 0.125,
+                                            target.getZ() + 0.125),
+                                    Direction.EAST,
+                                    neighbor,
+                                    false),
+                            true,
+                            true),
                     "Neighbor gesture was not consumed");
             checkEquals(neighborAllowed, !singles.isEmpty(), "Neighbor deposit policy");
-            checkEquals(neighborAllowed ? 1 : 2, player.getMainHandItem().getCount(), "Neighbor deposit hand");
+            checkEquals(
+                    neighborAllowed ? 1 : 2,
+                    player.getMainHandItem().getCount(),
+                    "Neighbor deposit hand");
             if (neighborAllowed) return;
             helper.getLevel().removeBlock(neighbor, false);
-            check(StackInteractions.handleExistingStack(player, InteractionHand.MAIN_HAND,
-                    new BlockHitResult(new Vec3(target.getX() + 0.125, target.getY() + 0.125,
-                            target.getZ() + 0.125), Direction.WEST, target, false),
-                    BlockType.SINGLES_STACK),
+            check(
+                    StackInteractions.handleExistingStack(
+                            player,
+                            InteractionHand.MAIN_HAND,
+                            new BlockHitResult(
+                                    new Vec3(
+                                            target.getX() + 0.125,
+                                            target.getY() + 0.125,
+                                            target.getZ() + 0.125),
+                                    Direction.WEST,
+                                    target,
+                                    false),
+                            BlockType.SINGLES_STACK),
                     "Direct deposit gesture was not consumed");
             check(!singles.isEmpty(), "Direct click failed to deposit");
             checkEquals(1, player.getMainHandItem().getCount(), "Direct deposit hand");
@@ -203,10 +241,10 @@ public final class ProtectionChecks {
     }
 
     /**
-     * Empty grounded cells remain depositable beside occupied cells in both stack types.
-     * To reproduce in-game: place a Singles or Bar Stack on stone, put an item in one bottom cell,
-     * then hold the modifier and aim down through two other empty bottom cells at the stone.
-     * Each deposit fills the aimed cell without changing the first item or adding an upper layer.
+     * Empty grounded cells remain depositable beside occupied cells in both stack types. To
+     * reproduce in-game: place a Singles or Bar Stack on stone, put an item in one bottom cell,
+     * then hold the modifier and aim down through two other empty bottom cells at the stone. Each
+     * deposit fills the aimed cell without changing the first item or adding an upper layer.
      */
     public static void adjacentDepositsFillGroundedCells(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -225,21 +263,38 @@ public final class ProtectionChecks {
             ServerGestureState.set(player, StackMode.SINGLES_STACK, true);
             try {
                 for (int slot = 1; slot <= 2; slot++) {
-                    var box = (isSingles
-                            ? SinglesCubeIdx.shapeFor(slot, 0)
-                            : BarCubeIdx.shapeFor(slot)).bounds();
+                    var box =
+                            (isSingles
+                                            ? SinglesCubeIdx.shapeFor(slot, 0)
+                                            : BarCubeIdx.shapeFor(slot))
+                                    .bounds();
                     double x = target.getX() + (box.minX + box.maxX) / 2;
                     double z = target.getZ() + (box.minZ + box.maxZ) / 2;
                     player.setPos(x, target.getY() + 2 - player.getEyeHeight(), z);
-                    check(StackInteractions.handleAdjacentClick(player, InteractionHand.MAIN_HAND,
-                            new BlockHitResult(new Vec3(x, target.getY(), z), Direction.UP,
-                                    support, false), true, true), "Grounded deposit was not consumed");
-                    check(!be.getItems().getStackInSlot(slot).isEmpty(), "Aimed grounded cell stayed empty");
-                    checkEquals(2 - slot, player.getMainHandItem().getCount(), "Grounded deposit hand");
+                    check(
+                            StackInteractions.handleAdjacentClick(
+                                    player,
+                                    InteractionHand.MAIN_HAND,
+                                    new BlockHitResult(
+                                            new Vec3(x, target.getY(), z),
+                                            Direction.UP,
+                                            support,
+                                            false),
+                                    true,
+                                    true),
+                            "Grounded deposit was not consumed");
+                    check(
+                            !be.getItems().getStackInSlot(slot).isEmpty(),
+                            "Aimed grounded cell stayed empty");
+                    checkEquals(
+                            2 - slot, player.getMainHandItem().getCount(), "Grounded deposit hand");
                 }
-                check(ItemStack.matches(item, be.getItems().getStackInSlot(0)),
+                check(
+                        ItemStack.matches(item, be.getItems().getStackInSlot(0)),
                         "Grounded deposits changed the first item");
-                checkEquals(3, GameTestScaffold.occupied(be.getItems()),
+                checkEquals(
+                        3,
+                        GameTestScaffold.occupied(be.getItems()),
                         "Grounded deposits filled unintended cells");
             } finally {
                 ServerGestureState.clear(player.getUUID());
@@ -251,8 +306,11 @@ public final class ProtectionChecks {
     /** Native removal observation whose returned action unregisters the hook. */
     @FunctionalInterface
     public interface RemovalObserver {
-        Runnable install(ServerLevel level, BlockPos pos, Consumer<Player> observed,
-                         Predicate<Player> allowed);
+        Runnable install(
+                ServerLevel level,
+                BlockPos pos,
+                Consumer<Player> observed,
+                Predicate<Player> allowed);
     }
 
     /**
@@ -260,14 +318,19 @@ public final class ProtectionChecks {
      * Bar. Cleanup carries the player and removes the empty block.
      */
     public static void playerBarExtractionUsesPlayerForCleanup(
-            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory,
             RemovalObserver observer) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
         bars.getItems().insertItem(0, new ItemStack(GameTestScaffold.firstBarItem()), false);
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
         AtomicReference<Player> actor = new AtomicReference<>();
-        Runnable unregister = observer.install(helper.getLevel(), bars.getBlockPos(), actor::set,
-                candidate -> !candidate.getUUID().equals(AutomationActor.PROFILE.getId()));
+        Runnable unregister =
+                observer.install(
+                        helper.getLevel(),
+                        bars.getBlockPos(),
+                        actor::set,
+                        candidate -> !candidate.getUUID().equals(AutomationActor.PROFILE.getId()));
         try {
             check(!bars.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
         } finally {
@@ -284,16 +347,23 @@ public final class ProtectionChecks {
      * the empty block remains until removal is allowed.
      */
     public static void mixedStorageSettlementUsesAutomationForCleanup(
-            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory,
             RemovalObserver observer) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         storage.getItems().insertItem(0, new ItemStack(Items.STONE, 2), false);
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
         AtomicReference<Player> actor = new AtomicReference<>();
-        Runnable unregister = observer.install(helper.getLevel(), storage.getBlockPos(), actor::set,
-                candidate -> !candidate.getUUID().equals(AutomationActor.PROFILE.getId()));
+        Runnable unregister =
+                observer.install(
+                        helper.getLevel(),
+                        storage.getBlockPos(),
+                        actor::set,
+                        candidate -> !candidate.getUUID().equals(AutomationActor.PROFILE.getId()));
         try {
-            checkEquals(1, storage.extractAt(0, 1, ItemStack.EMPTY, player).getCount(),
+            checkEquals(
+                    1,
+                    storage.extractAt(0, 1, ItemStack.EMPTY, player).getCount(),
                     "Player extraction count");
             StoragePile pile = storage.pile();
             check(pile != null, "Pile did not resolve");
@@ -316,8 +386,10 @@ public final class ProtectionChecks {
      * directly with a chest so no test-only replaceable block registration is needed.
      */
     public static void vetoedPlacementRestoresBlockEntity(
-            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
-            Runnable installVeto, Runnable removeVeto) {
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory,
+            Runnable installVeto,
+            Runnable removeVeto) {
         ServerLevel level = helper.getLevel();
         BlockPos pos = helper.absolutePos(ORIGIN);
         level.setBlock(pos, Blocks.CHEST.defaultBlockState(), Block.UPDATE_ALL);
@@ -325,8 +397,13 @@ public final class ProtectionChecks {
         chest.setItem(0, new ItemStack(Items.DIAMOND, 3));
         installVeto.run();
         try {
-            check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos,
-                    CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN),
+            check(
+                    !WorldEdits.placeChecked(
+                            playerFactory.apply(ItemStack.EMPTY),
+                            level,
+                            pos,
+                            CommonRegistry.storageStackBlock().defaultBlockState(),
+                            Direction.DOWN),
                     "Vetoed placement succeeded");
         } finally {
             removeVeto.run();
@@ -340,40 +417,67 @@ public final class ProtectionChecks {
 
     /**
      * To reproduce in-game: face an observer toward a denied placement position. A rejected
-     * placement produces no observer pulse; after permitting the same placement, the observer pulses.
+     * placement produces no observer pulse; after permitting the same placement, the observer
+     * pulses.
      */
     public static void placementPublicationAnswersToVeto(
-            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
-            Runnable installVeto, Runnable removeVeto) {
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory,
+            Runnable installVeto,
+            Runnable removeVeto) {
         ServerLevel level = helper.getLevel();
         BlockPos target = helper.absolutePos(ORIGIN);
         BlockPos observer = target.west();
-        level.setBlock(observer, Blocks.OBSERVER.defaultBlockState()
-                .setValue(ObserverBlock.FACING, Direction.EAST), Block.UPDATE_ALL);
-        helper.runAfterDelay(6, () -> {
-            installVeto.run();
-            try {
-                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target,
-                        CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN),
-                        "Vetoed placement succeeded");
-            } finally {
-                removeVeto.run();
-            }
-            helper.runAfterDelay(3, () -> {
-                check(!level.getBlockState(observer).getValue(ObserverBlock.POWERED),
-                        "Denied placement pulsed its observer");
-                check(WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target,
-                        CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN),
-                        "Accepted placement failed");
-                ((StorageStackBE) level.getBlockEntity(target)).getItems()
-                        .insertItem(0, new ItemStack(Items.STONE), false);
-                helper.runAfterDelay(3, () -> {
-                    check(level.getBlockState(observer).getValue(ObserverBlock.POWERED),
-                            "Accepted placement never published to its observer");
-                    helper.succeed();
+        level.setBlock(
+                observer,
+                Blocks.OBSERVER.defaultBlockState().setValue(ObserverBlock.FACING, Direction.EAST),
+                Block.UPDATE_ALL);
+        helper.runAfterDelay(
+                6,
+                () -> {
+                    installVeto.run();
+                    try {
+                        check(
+                                !WorldEdits.placeChecked(
+                                        playerFactory.apply(ItemStack.EMPTY),
+                                        level,
+                                        target,
+                                        CommonRegistry.storageStackBlock().defaultBlockState(),
+                                        Direction.DOWN),
+                                "Vetoed placement succeeded");
+                    } finally {
+                        removeVeto.run();
+                    }
+                    helper.runAfterDelay(
+                            3,
+                            () -> {
+                                check(
+                                        !level.getBlockState(observer)
+                                                .getValue(ObserverBlock.POWERED),
+                                        "Denied placement pulsed its observer");
+                                check(
+                                        WorldEdits.placeChecked(
+                                                playerFactory.apply(ItemStack.EMPTY),
+                                                level,
+                                                target,
+                                                CommonRegistry.storageStackBlock()
+                                                        .defaultBlockState(),
+                                                Direction.DOWN),
+                                        "Accepted placement failed");
+                                ((StorageStackBE) level.getBlockEntity(target))
+                                        .getItems()
+                                        .insertItem(0, new ItemStack(Items.STONE), false);
+                                helper.runAfterDelay(
+                                        3,
+                                        () -> {
+                                            check(
+                                                    level.getBlockState(observer)
+                                                            .getValue(ObserverBlock.POWERED),
+                                                    "Accepted placement never published to its observer");
+                                            helper.succeed();
+                                        });
+                            });
                 });
-            });
-        });
     }
 
     private static BlockHitResult centerHit(BlockPos pos) {

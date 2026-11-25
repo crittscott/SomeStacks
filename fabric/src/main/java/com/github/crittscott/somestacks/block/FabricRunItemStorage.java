@@ -18,19 +18,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Fabric Transfer API view over a complete Storage pile, Singles column, or Bar column.
- * Slot changes are staged in the Fabric transaction and applied through the shared run mutations
- * only after its outer commit, so an aborted transaction never edits the world. Singles and Bar
- * accept one extraction position per transaction because each extraction remaps later positions.
+ * Fabric Transfer API view over a complete Storage pile, Singles column, or Bar column. Slot
+ * changes are staged in the Fabric transaction and applied through the shared run mutations only
+ * after its outer commit, so an aborted transaction never edits the world. Singles and Bar accept
+ * one extraction position per transaction because each extraction remaps later positions.
  */
 public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorage.State>
         implements SlottedStorage<ItemVariant> {
     private final StackBlockEntity blockEntity;
     private final List<RunSlot> slotViews = new ArrayList<>();
+
     /** First live value observed for each touched slot, in the order its final diff must replay. */
     private LinkedHashMap<Integer, ItemStack> originals = new LinkedHashMap<>();
+
     /** Latest transaction-visible value for each touched slot. */
     private Map<Integer, ItemStack> staged = new HashMap<>();
+
     /** The one Singles or Bar position whose structural extraction this transaction may stage. */
     private int structuralExtractionSlot = -1;
 
@@ -100,7 +103,8 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         if (blockEntity.isRemoved()) return this;
         StackRunItemAccess access = blockEntity.itemRun();
         if (access instanceof StackRun<?> run) {
-            StackBlockEntity base = (StackBlockEntity) blockEntity.getLevel().getBlockEntity(run.basePos());
+            StackBlockEntity base =
+                    (StackBlockEntity) blockEntity.getLevel().getBlockEntity(run.basePos());
             return FabricItemStorage.of(base);
         }
         return this;
@@ -228,8 +232,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
     record State(
             LinkedHashMap<Integer, ItemStack> originals,
             LinkedHashMap<Integer, ItemStack> staged,
-            int structuralExtractionSlot) {
-    }
+            int structuralExtractionSlot) {}
 
     private final class RunSlot implements SingleSlotStorage<ItemVariant> {
         private final int slot;
@@ -243,11 +246,15 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
             FabricRunItemStorage ledger = ledger();
             if (ledger != FabricRunItemStorage.this) {
                 return slot < ledger.getSlotCount()
-                        ? ledger.getSlot(slot).insert(resource, maxAmount, transaction) : 0;
+                        ? ledger.getSlot(slot).insert(resource, maxAmount, transaction)
+                        : 0;
             }
             StoragePreconditions.notBlankNotNegative(resource, maxAmount);
-            if (maxAmount == 0 || RunEdit.isInProgress() || isStructural()
-                    && structuralExtractionSlot >= 0 && structuralExtractionSlot != slot) {
+            if (maxAmount == 0
+                    || RunEdit.isInProgress()
+                    || isStructural()
+                            && structuralExtractionSlot >= 0
+                            && structuralExtractionSlot != slot) {
                 return 0;
             }
 
@@ -278,11 +285,15 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
             FabricRunItemStorage ledger = ledger();
             if (ledger != FabricRunItemStorage.this) {
                 return slot < ledger.getSlotCount()
-                        ? ledger.getSlot(slot).extract(resource, maxAmount, transaction) : 0;
+                        ? ledger.getSlot(slot).extract(resource, maxAmount, transaction)
+                        : 0;
             }
             StoragePreconditions.notBlankNotNegative(resource, maxAmount);
-            if (maxAmount == 0 || RunEdit.isInProgress() || isStructural()
-                    && structuralExtractionSlot >= 0 && structuralExtractionSlot != slot) {
+            if (maxAmount == 0
+                    || RunEdit.isInProgress()
+                    || isStructural()
+                            && structuralExtractionSlot >= 0
+                            && structuralExtractionSlot != slot) {
                 return 0;
             }
 

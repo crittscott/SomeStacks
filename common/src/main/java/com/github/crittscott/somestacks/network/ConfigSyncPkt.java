@@ -2,7 +2,9 @@ package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
+
 import io.netty.handler.codec.DecoderException;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -25,10 +27,12 @@ public record ConfigSyncPkt(
         int totalGenMods,
         int totalDisabledMods,
         List<String> genMods,
-        List<String> disabledMods) implements CustomPacketPayload {
+        List<String> disabledMods)
+        implements CustomPacketPayload {
 
-    public static final Type<ConfigSyncPkt> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "config_sync"));
+    public static final Type<ConfigSyncPkt> TYPE =
+            new Type<>(
+                    ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "config_sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ConfigSyncPkt> STREAM_CODEC =
             StreamCodec.ofMember(ConfigSyncPkt::encode, ConfigSyncPkt::decode);
 
@@ -37,12 +41,17 @@ public record ConfigSyncPkt(
     private static final int MAX_TOTAL_NAMESPACES = 4_096;
     private static final int MAX_NAMESPACE_LENGTH = 256;
     private static final int MAX_ENCODED_NAMESPACE_BYTES = MAX_NAMESPACE_LENGTH + 2;
-    private static final int MAX_NAMESPACE_BYTES = 2 * MAX_TOTAL_NAMESPACES * MAX_ENCODED_NAMESPACE_BYTES;
-    public static final int MAX_GENERATION_CHUNKS = (MAX_NAMESPACE_BYTES
-            + MAX_PACKET_BYTES - PACKET_OVERHEAD_BYTES - MAX_ENCODED_NAMESPACE_BYTES - 1)
-            / (MAX_PACKET_BYTES - PACKET_OVERHEAD_BYTES - MAX_ENCODED_NAMESPACE_BYTES);
-    public static final int MAX_GENERATION_BYTES = MAX_NAMESPACE_BYTES
-            + MAX_GENERATION_CHUNKS * PACKET_OVERHEAD_BYTES;
+    private static final int MAX_NAMESPACE_BYTES =
+            2 * MAX_TOTAL_NAMESPACES * MAX_ENCODED_NAMESPACE_BYTES;
+    public static final int MAX_GENERATION_CHUNKS =
+            (MAX_NAMESPACE_BYTES
+                            + MAX_PACKET_BYTES
+                            - PACKET_OVERHEAD_BYTES
+                            - MAX_ENCODED_NAMESPACE_BYTES
+                            - 1)
+                    / (MAX_PACKET_BYTES - PACKET_OVERHEAD_BYTES - MAX_ENCODED_NAMESPACE_BYTES);
+    public static final int MAX_GENERATION_BYTES =
+            MAX_NAMESPACE_BYTES + MAX_GENERATION_CHUNKS * PACKET_OVERHEAD_BYTES;
 
     private static volatile List<ConfigSyncPkt> currentPackets = List.of();
     private static int nextGeneration;
@@ -50,9 +59,13 @@ public record ConfigSyncPkt(
     public ConfigSyncPkt {
         genMods = List.copyOf(genMods);
         disabledMods = List.copyOf(disabledMods);
-        if (generation <= 0 || totalGenMods < 0 || totalGenMods > MAX_TOTAL_NAMESPACES
-                || totalDisabledMods < 0 || totalDisabledMods > MAX_TOTAL_NAMESPACES
-                || genMods.size() > totalGenMods || disabledMods.size() > totalDisabledMods) {
+        if (generation <= 0
+                || totalGenMods < 0
+                || totalGenMods > MAX_TOTAL_NAMESPACES
+                || totalDisabledMods < 0
+                || totalDisabledMods > MAX_TOTAL_NAMESPACES
+                || genMods.size() > totalGenMods
+                || disabledMods.size() > totalDisabledMods) {
             throw new DecoderException("Invalid config synchronization totals");
         }
         validateNamespaces(genMods);
@@ -68,23 +81,24 @@ public record ConfigSyncPkt(
     }
 
     /**
-     * Replaces the immutable cached sequence with a new generation after world policy is loaded
-     * or changed. Call before sending login or reload synchronization; this does not send packets.
+     * Replaces the immutable cached sequence with a new generation after world policy is loaded or
+     * changed. Call before sending login or reload synchronization; this does not send packets.
      */
     public static synchronized void rebuildCurrent() {
         nextGeneration = nextGeneration == Integer.MAX_VALUE ? 1 : nextGeneration + 1;
 
         List<String> genMods = boundedNamespaces(ServerConfig.GEN_MODS.get(), "gallery mod");
-        List<String> disabledMods = boundedNamespaces(
-                ServerConfig.DISABLE_MODS.get(), "disabled mod");
+        List<String> disabledMods =
+                boundedNamespaces(ServerConfig.DISABLE_MODS.get(), "disabled mod");
 
-        currentPackets = buildPackets(
-                nextGeneration,
-                ServerConfig.enableStorageStackBlock(),
-                ServerConfig.enableSinglesStackBlock(),
-                ServerConfig.enableBarStackBlock(),
-                genMods,
-                disabledMods);
+        currentPackets =
+                buildPackets(
+                        nextGeneration,
+                        ServerConfig.enableStorageStackBlock(),
+                        ServerConfig.enableSinglesStackBlock(),
+                        ServerConfig.enableBarStackBlock(),
+                        genMods,
+                        disabledMods);
     }
 
     /** The packet sequence most recently built at server start or by {@code /ss reload}. */
@@ -103,14 +117,17 @@ public record ConfigSyncPkt(
                     || namespace.length() > MAX_NAMESPACE_LENGTH) {
                 result.remove(namespace);
                 SomeStacksCommon.LOGGER.warn(
-                        "Ignoring invalid {} namespace '{}' in client synchronization", label, entry);
+                        "Ignoring invalid {} namespace '{}' in client synchronization",
+                        label,
+                        entry);
                 continue;
             }
             if (result.size() == MAX_TOTAL_NAMESPACES) {
                 SomeStacksCommon.LOGGER.warn(
                         "The {} list exceeds the synchronization limit of {}; remaining entries "
                                 + "will not be sent",
-                        label, MAX_TOTAL_NAMESPACES);
+                        label,
+                        MAX_TOTAL_NAMESPACES);
                 break;
             }
         }
@@ -152,17 +169,18 @@ public record ConfigSyncPkt(
         List<ConfigSyncPkt> packets = new ArrayList<>(chunks.size());
         for (int i = 0; i < chunks.size(); i++) {
             Chunk current = chunks.get(i);
-            packets.add(new ConfigSyncPkt(
-                    generation,
-                    i == 0,
-                    i == chunks.size() - 1,
-                    enableStack,
-                    enableSingles,
-                    enableBar,
-                    genMods.size(),
-                    disabledMods.size(),
-                    current.genMods,
-                    current.disabledMods));
+            packets.add(
+                    new ConfigSyncPkt(
+                            generation,
+                            i == 0,
+                            i == chunks.size() - 1,
+                            enableStack,
+                            enableSingles,
+                            enableBar,
+                            genMods.size(),
+                            disabledMods.size(),
+                            current.genMods,
+                            current.disabledMods));
         }
         return List.copyOf(packets);
     }
@@ -195,16 +213,21 @@ public record ConfigSyncPkt(
         boolean enableSingles = buf.readBoolean();
         boolean enableBar = buf.readBoolean();
         int totalGenMods = readBoundedCount(buf, MAX_TOTAL_NAMESPACES, "gallery mod total");
-        int totalDisabledMods = readBoundedCount(
-                buf, MAX_TOTAL_NAMESPACES, "disabled mod total");
+        int totalDisabledMods = readBoundedCount(buf, MAX_TOTAL_NAMESPACES, "disabled mod total");
 
         List<String> genMods = readNamespaces(buf, totalGenMods, "gallery mod chunk");
-        List<String> disabledMods = readNamespaces(
-                buf, totalDisabledMods, "disabled mod chunk");
+        List<String> disabledMods = readNamespaces(buf, totalDisabledMods, "disabled mod chunk");
         return new ConfigSyncPkt(
-                generation, first, last, enableStack, enableSingles, enableBar,
-                totalGenMods, totalDisabledMods,
-                genMods, disabledMods);
+                generation,
+                first,
+                last,
+                enableStack,
+                enableSingles,
+                enableBar,
+                totalGenMods,
+                totalDisabledMods,
+                genMods,
+                disabledMods);
     }
 
     /** Conservative encoded size, including bounded metadata overhead. */
@@ -221,7 +244,8 @@ public record ConfigSyncPkt(
 
     private static void validateNamespaces(List<String> namespaces) {
         for (String namespace : namespaces) {
-            if (namespace.isEmpty() || namespace.length() > MAX_NAMESPACE_LENGTH
+            if (namespace.isEmpty()
+                    || namespace.length() > MAX_NAMESPACE_LENGTH
                     || ResourceLocation.tryBuild(namespace, "validation") == null) {
                 throw new DecoderException("Invalid synchronized namespace");
             }

@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.mojang.serialization.Dynamic;
+
 import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -21,20 +22,20 @@ import net.minecraft.util.datafix.fixes.References;
  * not know, so the item stacks these block entities hold are run through the DataFixerUpper here.
  *
  * <p>Every save carries a {@code DataVersion}. A tag without one was written by Some Stacks for
- * Minecraft 1.21.1, which did not record it. The immediately preceding release also stored an
- * outer block's {@code Rotation} in block-entity data; that field is consumed into block state on
- * load and is never written again.
+ * Minecraft 1.21.1, which did not record it. The immediately preceding release also stored an outer
+ * block's {@code Rotation} in block-entity data; that field is consumed into block state on load
+ * and is never written again.
  */
 public final class StackDataMigration {
     /** Data version of Minecraft 1.21.1, assumed for tags saved without one. */
     private static final int UNVERSIONED_DATA_VERSION = 3955;
+
     private static final String LEGACY_TAG_ROTATION = "Rotation";
 
     private static long sessionUpgradeCount;
     private static int sessionTargetVersion;
 
-    private StackDataMigration() {
-    }
+    private StackDataMigration() {}
 
     /** Starts migration accounting for a server session. */
     public static synchronized void beginSession() {
@@ -45,8 +46,10 @@ public final class StackDataMigration {
     /** Logs the completed migration count, if this server session upgraded any block data. */
     public static synchronized void endSession() {
         if (sessionUpgradeCount > 0) {
-            SomeStacksCommon.LOGGER.info("Upgraded {} Some Stacks block(s) to data version {}",
-                    sessionUpgradeCount, sessionTargetVersion);
+            SomeStacksCommon.LOGGER.info(
+                    "Upgraded {} Some Stacks block(s) to data version {}",
+                    sessionUpgradeCount,
+                    sessionTargetVersion);
         }
         sessionUpgradeCount = 0;
         sessionTargetVersion = 0;
@@ -69,8 +72,16 @@ public final class StackDataMigration {
         }
         if (tag.contains(StackBlockEntity.TAG_ITEMS, Tag.TAG_COMPOUND)) {
             CompoundTag storage = tag.getCompound(StackBlockEntity.TAG_ITEMS);
-            upgradeItemList(storage.getList(StackItemStorage.TAG_ITEMS, Tag.TAG_COMPOUND), registries, saved, current);
-            upgradeItemList(storage.getList(StackItemStorage.TAG_SET_ASIDE, Tag.TAG_COMPOUND), registries, saved, current);
+            upgradeItemList(
+                    storage.getList(StackItemStorage.TAG_ITEMS, Tag.TAG_COMPOUND),
+                    registries,
+                    saved,
+                    current);
+            upgradeItemList(
+                    storage.getList(StackItemStorage.TAG_SET_ASIDE, Tag.TAG_COMPOUND),
+                    registries,
+                    saved,
+                    current);
         }
         stampVersion(tag);
         recordUpgrade(saved, current);
@@ -96,13 +107,15 @@ public final class StackDataMigration {
         sessionTargetVersion = to;
     }
 
-    private static void upgradeItemList(ListTag list, HolderLookup.Provider registries, int from, int to) {
+    private static void upgradeItemList(
+            ListTag list, HolderLookup.Provider registries, int from, int to) {
         RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, registries);
         for (int i = 0; i < list.size(); i++) {
             CompoundTag itemTag = list.getCompound(i);
             int slot = itemTag.getInt(StackItemStorage.TAG_SLOT);
-            Dynamic<Tag> fixed = DataFixers.getDataFixer().update(
-                    References.ITEM_STACK, new Dynamic<>(ops, itemTag), from, to);
+            Dynamic<Tag> fixed =
+                    DataFixers.getDataFixer()
+                            .update(References.ITEM_STACK, new Dynamic<>(ops, itemTag), from, to);
             CompoundTag fixedTag = (CompoundTag) fixed.getValue();
             fixedTag.putInt(StackItemStorage.TAG_SLOT, slot);
             list.set(i, fixedTag);

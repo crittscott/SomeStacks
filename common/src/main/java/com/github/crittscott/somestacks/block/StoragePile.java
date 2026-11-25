@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import com.github.crittscott.somestacks.util.StackSort;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -14,13 +15,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 
-import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 /**
  * A maximal contiguous vertical run of Storage Stacks, treated as one inventory.
@@ -28,8 +29,8 @@ import java.util.Map;
  * <p>Every operation on a Storage Stack resolves the pile it belongs to and acts on the whole
  * column: deposits fill from the base upward whatever block or slot they were aimed at, the
  * capability exposes every block's slots as one flat range, and settling consolidates, sorts and
- * packs the entire height down. The base block's {@code permanent} flag is the pile's, and
- * settling propagates it, so a pile that is split or joined returns to a consistent state.
+ * packs the entire height down. The base block's {@code permanent} flag is the pile's, and settling
+ * propagates it, so a pile that is split or joined returns to a consistent state.
  *
  * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
  * current tick, and placement or removal invalidates every affected cache immediately.
@@ -40,9 +41,9 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /**
-     * Resolves the pile containing {@code pos}, or {@code null} when that position holds no
-     * Storage Stack. Client-side levels never resolve a pile: the pile is server state, and
-     * reading its bounds would consult the server config.
+     * Resolves the pile containing {@code pos}, or {@code null} when that position holds no Storage
+     * Stack. Client-side levels never resolve a pile: the pile is server state, and reading its
+     * bounds would consult the server config.
      */
     @Nullable
     public static StoragePile at(Level level, BlockPos pos) {
@@ -57,8 +58,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
 
     /**
      * Walks the world for the run containing {@code pos}. Every caller reaches this through the
-     * cache {@link StorageStackBE#pile()} keeps, because a capability read resolves the run once per
-     * slot and a machine reading the whole handler does that hundreds of times a tick.
+     * cache {@link StorageStackBE#pile()} keeps, because a capability read resolves the run once
+     * per slot and a machine reading the whole handler does that hundreds of times a tick.
      */
     static StoragePile resolve(ServerLevel level, BlockPos pos) {
         return new StoragePile(level, resolveBlocks(level, pos, StorageStackBE.class));
@@ -85,19 +86,19 @@ public final class StoragePile extends StackRun<StorageStackBE> {
 
     /**
      * Whether a Storage Stack may be created at {@code pos}: the contiguous column it would form,
-     * counting the runs both below and above it, must fit the configured maximum. Testing the
-     * whole resulting column rather than one neighboring pile is what stops a block placed into
-     * the gap between two piles from joining them into an over-tall one.
+     * counting the runs both below and above it, must fit the configured maximum. Testing the whole
+     * resulting column rather than one neighboring pile is what stops a block placed into the gap
+     * between two piles from joining them into an over-tall one.
      */
     public static boolean columnHasRoomFor(Level level, BlockPos pos) {
         return StackRun.columnHasRoomFor(level, pos, CommonRegistry.storageStackBlock());
     }
 
     /**
-     * Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it
-     * from the block below when there is one and otherwise from the block above. Placing a block
-     * beneath a permanent pile makes it the new base, so without this the pile would silently
-     * become temporary.
+     * Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it from
+     * the block below when there is one and otherwise from the block above. Placing a block beneath
+     * a permanent pile makes it the new base, so without this the pile would silently become
+     * temporary.
      */
     public static void adoptNeighbourState(Level level, BlockPos pos, StorageStackBE placed) {
         StorageStackBE neighbour = null;
@@ -138,8 +139,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /**
-     * Extracts up to {@code amount} items from one pile slot and schedules the settle that packs the
-     * rest down over it.
+     * Extracts up to {@code amount} items from one pile slot and schedules the settle that packs
+     * the rest down over it.
      *
      * @param flatSlot the pile slot to extract, numbered from the bottom block upward
      * @param amount the requested maximum
@@ -160,7 +161,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         if (flatSlot < 0 || flatSlot >= totalSlots()) {
             return ItemStack.EMPTY;
         }
-        ItemStack extracted = handlerOf(flatSlot).extractItem(flatSlot % StorageStackBE.SLOTS, amount, false);
+        ItemStack extracted =
+                handlerOf(flatSlot).extractItem(flatSlot % StorageStackBE.SLOTS, amount, false);
         if (!extracted.isEmpty()) {
             markDirtyBy(null);
         }
@@ -174,8 +176,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * column while items remain and the configured height allows it.
      *
      * @param placer the player responsible for any block this deposit creates, or null for
-     *               automation, whose growth is attributed to the automation actor and checked
-     *               against the same protections
+     *     automation, whose growth is attributed to the automation actor and checked against the
+     *     same protections
      * @return how many items were taken from {@code fromHand}, which is shrunk by that amount
      */
     public int deposit(ItemStack fromHand, @Nullable ServerPlayer placer) {
@@ -205,8 +207,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /**
-     * Puts what it can of {@code stack} into the one slot at {@code flatSlot}, growing the pile when
-     * that slot lies in the block above it.
+     * Puts what it can of {@code stack} into the one slot at {@code flatSlot}, growing the pile
+     * when that slot lies in the block above it.
      *
      * <p>A pile is genuinely a bag, so unlike the two structures its automated insertion is an
      * ordinary positional one: the slot named takes what a slot takes, and the settle scheduled
@@ -240,12 +242,14 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             sbe.beginBatch();
         }
         try {
-            // Growth hands back a block with a batch already open, which the close below pairs with.
+            // Growth hands back a block with a batch already open, which the close below pairs
+            // with.
             if (flatSlot >= totalSlots() && !grow(null)) {
                 return 0;
             }
             ItemStack offer = stack.copy();
-            ItemStack rejected = handlerOf(flatSlot).insertItem(flatSlot % StorageStackBE.SLOTS, offer, false);
+            ItemStack rejected =
+                    handlerOf(flatSlot).insertItem(flatSlot % StorageStackBE.SLOTS, offer, false);
             moved = stack.getCount() - rejected.getCount();
         } finally {
             for (StorageStackBE sbe : blocks) {
@@ -304,11 +308,15 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         return moved;
     }
 
-    /** Moves up to {@code amount} from {@code from} into one slot, shrinking {@code from} by what it took. */
+    /**
+     * Moves up to {@code amount} from {@code from} into one slot, shrinking {@code from} by what it
+     * took.
+     */
     private int fillSlot(int flatSlot, ItemStack from, int amount) {
         ItemStack offer = from.copy();
         offer.setCount(amount);
-        ItemStack rejected = handlerOf(flatSlot).insertItem(flatSlot % StorageStackBE.SLOTS, offer, false);
+        ItemStack rejected =
+                handlerOf(flatSlot).insertItem(flatSlot % StorageStackBE.SLOTS, offer, false);
         int used = amount - rejected.getCount();
         from.shrink(used);
         return used;
@@ -325,7 +333,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * automation actor, which is never exempt.
      */
     private boolean canGrow(@Nullable ServerPlayer placer) {
-        if (blocks.size() >= ServerConfig.maxPileHeight() || !ServerConfig.enableStorageStackBlock()) {
+        if (blocks.size() >= ServerConfig.maxPileHeight()
+                || !ServerConfig.enableStorageStackBlock()) {
             return false;
         }
         BlockPos above = topPos().above();
@@ -341,7 +350,9 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         return placer != null ? placer : WorldEdits.automationActor(serverLevel);
     }
 
-    /** Adds one block on top. The placement hook inherits its mode; growth uses the base rotation. */
+    /**
+     * Adds one block on top. The placement hook inherits its mode; growth uses the base rotation.
+     */
     private boolean grow(@Nullable ServerPlayer placer) {
         if (!canGrow(placer)) {
             return false;
@@ -349,8 +360,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
 
         BlockPos above = topPos().above();
         ServerPlayer editor = editor(level, placer);
-        BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.storageStackBlock(), level, above);
+        BlockState newStack =
+                StackPlacement.stateFor(CommonRegistry.storageStackBlock(), level, above);
         if (!WorldEdits.placeChecked(
                 editor, level, above, newStack, Direction.DOWN, Shapes.block())) {
             return false;
@@ -380,7 +391,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             ItemStack stack = getSlot(slot);
             if (!stack.isEmpty()) {
                 groups.computeIfAbsent(StackKey.of(stack), ignored -> new SettlementGroup(stack))
-                        .count += stack.getCount();
+                                .count +=
+                        stack.getCount();
             }
         }
         List<SettlementGroup> ordered = new ArrayList<>(groups.values());
@@ -442,9 +454,10 @@ public final class StoragePile extends StackRun<StorageStackBE> {
 
         int removedDownTo = blocks.size();
         for (int i = blocks.size() - 1; i >= keep; i--) {
-            boolean removed = actor == null
-                    ? WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())
-                    : WorldEdits.removeChecked(actor, level, blocks.get(i).getBlockPos());
+            boolean removed =
+                    actor == null
+                            ? WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())
+                            : WorldEdits.removeChecked(actor, level, blocks.get(i).getBlockPos());
             if (!removed) {
                 break;
             }

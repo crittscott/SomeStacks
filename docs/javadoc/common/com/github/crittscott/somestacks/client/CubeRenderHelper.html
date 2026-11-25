@@ -91,18 +91,18 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">CubeRenderHelper</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Draws one stored item inside one cell according to its render profile. The Storage
- and Singles renderers position a cell and delegate here; everything about how the item itself is
- presented lives in this class.
+<div class="block">Draws one stored item inside one cell according to its render profile. The Storage and Singles
+ renderers position a cell and delegate here; everything about how the item itself is presented
+ lives in this class.
 
  <p>The <code>3d</code>, <code>gui</code>, and <code>block</code> modes hand off to Minecraft's own renderers.
  The <code>2d</code> mode is the one implemented here: flat item art projected onto the visible faces
  of a small background cube, which is what makes a wall of stored items readable at a distance.
 
- <p>Work is done when something changes. Each distinct stack's profile, item model, and
- <code>2d</code> plates are shared by every grid showing it while retained in a bounded cache, until profiles or
- resources change or the entry is evicted, so a model that changes with time, such as a compass, shows its state from
- when it was prepared.</div>
+ <p>Work is done when something changes. Each distinct stack's profile, item model, and <code>2d</code>
+ plates are shared by every grid showing it while retained in a bounded cache, until profiles or
+ resources change or the entry is evicted, so a model that changes with time, such as a compass,
+ shows its state from when it was prepared.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

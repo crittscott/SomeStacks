@@ -97,12 +97,12 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></span></div>
 <div class="block">A fixed-size, NBT-persisted <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util"><code>SlotAccess</code></a> implementation. It gives all three loaders the
- item-handler insert/extract semantics and NBT shape
- (<code>{Items:[{Slot, ...stack}], SetAside:[...]}</code>) used by the block entities.
+ item-handler insert/extract semantics and NBT shape (<code>{Items:[{Slot, ...stack}],
+ SetAside:[...]}</code>) used by the block entities.
 
  <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
- aside rather than dropped: it is kept verbatim under <code>SetAside</code>, saved back with the
- block, and retried on every load, so contents from a temporarily missing mod return when it does.
+ aside rather than dropped: it is kept verbatim under <code>SetAside</code>, saved back with the block,
+ and retried on every load, so contents from a temporarily missing mod return when it does.
 
  <p>Subclasses override <a href="#onContentsChanged(int)"><code>onContentsChanged(int)</code></a>, <a href="#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>isItemValid(int, ItemStack)</code></a>, and
  <a href="#getSlotLimit(int)"><code>getSlotLimit(int)</code></a> to specialize notification, admission, and capacity.</div>
@@ -188,8 +188,8 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
  int&nbsp;amount,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was
- removed — <code>ItemStack.EMPTY</code> if the slot was empty.</div>
+<div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was removed —
+ <code>ItemStack.EMPTY</code> if the slot was empty.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlotLimit(int)" class="member-name-link">getSlotLimit</a><wbr>(int&nbsp;slot)</code></div>
@@ -211,8 +211,7 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>SlotAccess.isItemValid(int, net.minecraft.world.item.ItemStack)</code></a> and
- <a href="SlotAccess.html#getSlotLimit(int)"><code>SlotAccess.getSlotLimit(int)</code></a> allow.</div>
+<div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>SlotAccess.isItemValid(int, net.minecraft.world.item.ItemStack)</code></a> and <a href="SlotAccess.html#getSlotLimit(int)"><code>SlotAccess.getSlotLimit(int)</code></a> allow.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid</a><wbr>(int&nbsp;slot,
@@ -364,11 +363,9 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="SlotAccess.html#insertItem(int,net.minecraft.world.item.ItemStack,boolean)">SlotAccess</a></code></span></div>
-<div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>SlotAccess.isItemValid(int, net.minecraft.world.item.ItemStack)</code></a> and
- <a href="SlotAccess.html#getSlotLimit(int)"><code>SlotAccess.getSlotLimit(int)</code></a> allow. Returns the remainder that was not accepted —
- <code>ItemStack.EMPTY</code> if all of it was — and never mutates <code>stack</code> itself. When
- <code>simulate</code> is <code>true</code>, the slot is left unchanged and only the would-be
- remainder is computed.</div>
+<div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>SlotAccess.isItemValid(int, net.minecraft.world.item.ItemStack)</code></a> and <a href="SlotAccess.html#getSlotLimit(int)"><code>SlotAccess.getSlotLimit(int)</code></a> allow. Returns the remainder that was not accepted — <code>ItemStack.EMPTY</code>
+ if all of it was — and never mutates <code>stack</code> itself. When <code>simulate</code> is <code>
+ true</code>, the slot is left unchanged and only the would-be remainder is computed.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="SlotAccess.html#insertItem(int,net.minecraft.world.item.ItemStack,boolean)">insertItem</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
@@ -383,9 +380,9 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
  int&nbsp;amount,
  boolean&nbsp;simulate)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="SlotAccess.html#extractItem(int,int,boolean)">SlotAccess</a></code></span></div>
-<div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was
- removed — <code>ItemStack.EMPTY</code> if the slot was empty. When <code>simulate</code> is
- <code>true</code>, the slot is left unchanged and only the would-be result is computed.</div>
+<div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was removed —
+ <code>ItemStack.EMPTY</code> if the slot was empty. When <code>simulate</code> is <code>true</code>, the
+ slot is left unchanged and only the would-be result is computed.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="SlotAccess.html#extractItem(int,int,boolean)">extractItem</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
@@ -436,8 +433,8 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 <h3>deserializeNBT</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></span>&nbsp;<span class="element-name">deserializeNBT</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
-<div class="block">Loads slot contents from NBT, setting aside every item tag that cannot be placed. The tag must
- already be in the running game's format. Ordinary entries take precedence over retries;
+<div class="block">Loads slot contents from NBT, setting aside every item tag that cannot be placed. The tag
+ must already be in the running game's format. Ordinary entries take precedence over retries;
  loading bypasses admission and does not call contents-change hooks. The caller reports
  returned retention counts once it knows the world location.</div>
 </section>

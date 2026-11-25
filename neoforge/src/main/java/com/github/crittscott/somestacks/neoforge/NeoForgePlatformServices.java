@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.neoforge;
 import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.server.NeoForgeEditAuthority;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLPaths;
@@ -21,7 +22,8 @@ public final class NeoForgePlatformServices implements PlatformServices.Backend 
 
     @Override
     public String modVersion(String namespace) {
-        return ModList.get().getModContainerById(namespace)
+        return ModList.get()
+                .getModContainerById(namespace)
                 .map(container -> container.getModInfo().getVersion().toString())
                 .orElse("unknown");
     }

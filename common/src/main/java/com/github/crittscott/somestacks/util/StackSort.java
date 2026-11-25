@@ -5,15 +5,16 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-
 /** Comparator used to lay out the contents of a settled Storage pile. */
 public final class StackSort {
-    private StackSort(){}
+    private StackSort() {}
 
     /** Computes the identity's sortable fields once for a settlement group. */
     public static SortKey key(ItemStack stack) {
         DataComponentPatch patch = stack.getComponentsPatch();
-        return new SortKey(BuiltInRegistries.ITEM.getKey(stack.getItem()), stack.getDamageValue(),
+        return new SortKey(
+                BuiltInRegistries.ITEM.getKey(stack.getItem()),
+                stack.getDamageValue(),
                 patch.isEmpty() ? null : patch.toString());
     }
 

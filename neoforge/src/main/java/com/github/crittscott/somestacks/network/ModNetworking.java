@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -16,10 +17,10 @@ import java.util.function.Consumer;
  * The mod's payloads and their handler registration. Every packet class is shared; this binds the
  * shared {@code TYPE}/{@code STREAM_CODEC} pair to NeoForge's payload system.
  *
- * <p>The server-to-client payload is delivered to {@link #clientReceiver}, which the
- * physical client installs from {@code ClientSetup}; the dedicated server never touches a client
- * rendering class. NeoForge rejects peers whose registrar version does not match the shared
- * protocol version or which omit a required payload.
+ * <p>The server-to-client payload is delivered to {@link #clientReceiver}, which the physical
+ * client installs from {@code ClientSetup}; the dedicated server never touches a client rendering
+ * class. NeoForge rejects peers whose registrar version does not match the shared protocol version
+ * or which omit a required payload.
  */
 public final class ModNetworking {
     private ModNetworking() {}
@@ -32,13 +33,16 @@ public final class ModNetworking {
     }
 
     public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar(
-                Integer.toString(SomeStacksCommon.PROTOCOL_VERSION));
+        PayloadRegistrar registrar =
+                event.registrar(Integer.toString(SomeStacksCommon.PROTOCOL_VERSION));
 
-        registrar.playToServer(GestureStatePkt.TYPE, GestureStatePkt.STREAM_CODEC,
+        registrar.playToServer(
+                GestureStatePkt.TYPE,
+                GestureStatePkt.STREAM_CODEC,
                 toServer(GestureStatePkt::handleServer));
 
-        registrar.playToClient(ConfigSyncPkt.TYPE, ConfigSyncPkt.STREAM_CODEC, ModNetworking::toClient);
+        registrar.playToClient(
+                ConfigSyncPkt.TYPE, ConfigSyncPkt.STREAM_CODEC, ModNetworking::toClient);
     }
 
     private static <T extends CustomPacketPayload> IPayloadHandler<T> toServer(
@@ -47,7 +51,7 @@ public final class ModNetworking {
     }
 
     private static void toClient(ConfigSyncPkt payload, IPayloadContext context) {
-        Objects.requireNonNull(clientReceiver,
-                "Client packet receiver has not been installed").accept(payload);
+        Objects.requireNonNull(clientReceiver, "Client packet receiver has not been installed")
+                .accept(payload);
     }
 }

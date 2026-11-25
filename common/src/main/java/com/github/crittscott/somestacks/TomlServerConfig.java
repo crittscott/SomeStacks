@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -11,9 +12,17 @@ public final class TomlServerConfig implements ServerConfig.Backend {
     private Path file;
 
     /** Explicit-file constructor for loader-neutral configuration fixtures. */
-    public TomlServerConfig() { this.configDirectory = null; }
-    public TomlServerConfig(Path configDirectory) { this.configDirectory = configDirectory; }
-    public Path path() { return file; }
+    public TomlServerConfig() {
+        this.configDirectory = null;
+    }
+
+    public TomlServerConfig(Path configDirectory) {
+        this.configDirectory = configDirectory;
+    }
+
+    public Path path() {
+        return file;
+    }
 
     public ServerConfig.Settings load(Path path) {
         file = path;
@@ -27,7 +36,8 @@ public final class TomlServerConfig implements ServerConfig.Backend {
         Path json = world.resolve(SomeStacksCommon.MODID + "-server.json");
         ServerConfigMigration.convertJson(json, override, ServerConfig.defaults());
         if (Files.exists(json) && !Files.exists(override)) {
-            throw new IllegalStateException("Repair the JSON server policy before migration: " + json);
+            throw new IllegalStateException(
+                    "Repair the JSON server policy before migration: " + json);
         }
         Path global = configDirectory.resolve(SomeStacksCommon.MODID + "-server.toml");
         new TomlPolicyFile(global).read(ServerConfig.defaults());
@@ -37,8 +47,12 @@ public final class TomlServerConfig implements ServerConfig.Backend {
     }
 
     @Override
-    public ServerConfig.Settings reload() { return new TomlPolicyFile(file).read(ServerConfig.defaults()); }
+    public ServerConfig.Settings reload() {
+        return new TomlPolicyFile(file).read(ServerConfig.defaults());
+    }
 
     @Override
-    public boolean save(ServerConfig.Settings settings) { return new TomlPolicyFile(file).write(settings); }
+    public boolean save(ServerConfig.Settings settings) {
+        return new TomlPolicyFile(file).write(settings);
+    }
 }

@@ -1,5 +1,13 @@
 package com.github.crittscott.somestacks.client;
 
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_ITEM;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_MODE;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_MODID;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_SCALE;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_X;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_Y;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_Z;
+
 import com.github.crittscott.somestacks.command.ClientRenderCommandSyntax;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
@@ -8,6 +16,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -24,23 +33,17 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_ITEM;
-import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_MODE;
-import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_MODID;
-import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_SCALE;
-import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_X;
-import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_Y;
-import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_Z;
-
 /** Client-only render-authoring commands; no server packet can invoke these operations. */
 public final class ClientRenderCommands {
     private ClientRenderCommands() {}
 
     public interface Feedback<S> {
         void success(S source, Component message);
+
         void failure(S source, Component message);
     }
 
+    // spotless:off
     public static <S> void register(CommandDispatcher<S> dispatcher, Feedback<S> feedback) {
         ClientRenderCommandSyntax.register(dispatcher, action -> ctx -> switch (action) {
             case ITEM_DEFAULT -> setItem(ctx, feedback, 1.0f, RenderOffset.ZERO);
@@ -63,12 +66,14 @@ public final class ClientRenderCommands {
                 BuiltInRegistries.ITEM.keySet().stream().map(ResourceLocation::toString), builder),
                 (ctx, builder) -> SharedSuggestionProvider.suggest(installedNamespaces(), builder));
     }
+    // spotless:on
 
     private static <S> int setItem(
             CommandContext<S> ctx, Feedback<S> feedback, float scale, RenderOffset offset) {
         ResourceLocation itemId = ctx.getArgument(ARG_ITEM, ResourceLocation.class);
         if (!BuiltInRegistries.ITEM.containsKey(itemId)) {
-            feedback.failure(ctx.getSource(),
+            feedback.failure(
+                    ctx.getSource(),
                     Component.translatable("somestacks.command.unknown_item", itemId));
             return 0;
         }
@@ -76,46 +81,62 @@ public final class ClientRenderCommands {
         String modeString = StringArgumentType.getString(ctx, ARG_MODE);
         RenderMode mode = RenderMode.fromString(modeString);
         if (mode == null) {
-            feedback.failure(ctx.getSource(), Component.translatable(
-                    "somestacks.command.unknown_render_mode", modeString,
-                    Arrays.stream(RenderMode.values()).map(RenderMode::getId).collect(Collectors.joining(", "))));
+            feedback.failure(
+                    ctx.getSource(),
+                    Component.translatable(
+                            "somestacks.command.unknown_render_mode",
+                            modeString,
+                            Arrays.stream(RenderMode.values())
+                                    .map(RenderMode::getId)
+                                    .collect(Collectors.joining(", "))));
             return 0;
         }
 
-        ItemRenderOverrides.putUser(
-                itemId, new ItemRenderConfig(mode, scale, offset));
-        feedback.success(ctx.getSource(), Component.translatable(
-                "somestacks.command.override_set", itemId.toString(), modeString, scale,
-                offset.x(), offset.y(), offset.z()));
+        ItemRenderOverrides.putUser(itemId, new ItemRenderConfig(mode, scale, offset));
+        feedback.success(
+                ctx.getSource(),
+                Component.translatable(
+                        "somestacks.command.override_set",
+                        itemId.toString(),
+                        modeString,
+                        scale,
+                        offset.x(),
+                        offset.y(),
+                        offset.z()));
         return 1;
     }
 
     private static <S> int resetItem(CommandContext<S> ctx, Feedback<S> feedback) {
         ResourceLocation itemId = ctx.getArgument(ARG_ITEM, ResourceLocation.class);
         if (!BuiltInRegistries.ITEM.containsKey(itemId)) {
-            feedback.failure(ctx.getSource(),
+            feedback.failure(
+                    ctx.getSource(),
                     Component.translatable("somestacks.command.unknown_item", itemId));
             return 0;
         }
 
         ItemRenderOverrides.removeUser(itemId);
-        feedback.success(ctx.getSource(), Component.translatable(
-                "somestacks.command.override_reset", itemId.toString()));
+        feedback.success(
+                ctx.getSource(),
+                Component.translatable("somestacks.command.override_reset", itemId.toString()));
         return 1;
     }
 
     private static <S> int dumpSingle(CommandContext<S> ctx, Feedback<S> feedback) {
-        String namespace = StringArgumentType.getString(ctx, ARG_MODID)
-                .toLowerCase(Locale.ROOT);
+        String namespace = StringArgumentType.getString(ctx, ARG_MODID).toLowerCase(Locale.ROOT);
         if (ClientRenderToolState.isDisabled(namespace)) {
-            feedback.failure(ctx.getSource(), Component.translatable(
-                    "somestacks.command.mod_disabled", namespace));
+            feedback.failure(
+                    ctx.getSource(),
+                    Component.translatable("somestacks.command.mod_disabled", namespace));
             return 0;
         }
         if (!installedNamespaces().contains(namespace)) {
-            feedback.failure(ctx.getSource(), Component.translatable(
-                    "somestacks.command.mod_unusable", namespace,
-                    Component.translatable("somestacks.command.gallery.items")));
+            feedback.failure(
+                    ctx.getSource(),
+                    Component.translatable(
+                            "somestacks.command.mod_unusable",
+                            namespace,
+                            Component.translatable("somestacks.command.gallery.items")));
             return 0;
         }
         return dump(ctx, feedback, List.of(namespace), List.of(), List.of());
@@ -132,8 +153,9 @@ public final class ClientRenderCommands {
             return false;
         });
         if (namespaces.isEmpty()) {
-            feedback.failure(ctx.getSource(), Component.translatable(
-                    "somestacks.command.all_mods_disabled"));
+            feedback.failure(
+                    ctx.getSource(),
+                    Component.translatable("somestacks.command.all_mods_disabled"));
             return 0;
         }
         return dump(ctx, feedback, namespaces, disabled, List.of());
@@ -155,15 +177,18 @@ public final class ClientRenderCommands {
             }
         }
         if (namespaces.isEmpty()) {
-            feedback.failure(ctx.getSource(), ClientRenderToolState.genMods().isEmpty()
-                    ? Component.translatable(
-                            "somestacks.command.gen_mods_empty",
-                            Component.translatable("somestacks.command.label.gen_mods"))
-                    : Component.translatable(
-                            "somestacks.command.gen_mods_unusable",
-                            Component.translatable("somestacks.command.label.gen_mods"),
-                            Component.translatable("somestacks.command.gallery.items"),
-                            disabled.size(), unusable.size()));
+            feedback.failure(
+                    ctx.getSource(),
+                    ClientRenderToolState.genMods().isEmpty()
+                            ? Component.translatable(
+                                    "somestacks.command.gen_mods_empty",
+                                    Component.translatable("somestacks.command.label.gen_mods"))
+                            : Component.translatable(
+                                    "somestacks.command.gen_mods_unusable",
+                                    Component.translatable("somestacks.command.label.gen_mods"),
+                                    Component.translatable("somestacks.command.gallery.items"),
+                                    disabled.size(),
+                                    unusable.size()));
             return 0;
         }
         Collections.sort(namespaces);
@@ -176,13 +201,18 @@ public final class ClientRenderCommands {
             List<String> namespaces,
             List<String> disabled,
             List<String> unusable) {
-        MutableComponent message = Component.translatable(
-                "somestacks.command.dumping",
-                Component.translatable("somestacks.command.subject.mods", namespaces.size()));
+        MutableComponent message =
+                Component.translatable(
+                        "somestacks.command.dumping",
+                        Component.translatable(
+                                "somestacks.command.subject.mods", namespaces.size()));
         appendSkips(message, disabled, Component.translatable("somestacks.command.skip.disabled"));
-        appendSkips(message, unusable, Component.translatable(
-                "somestacks.command.skip.not_loaded",
-                Component.translatable("somestacks.command.gallery.items")));
+        appendSkips(
+                message,
+                unusable,
+                Component.translatable(
+                        "somestacks.command.skip.not_loaded",
+                        Component.translatable("somestacks.command.gallery.items")));
         feedback.success(ctx.getSource(), message);
         ItemRenderOverrides.handleDumpRequest(namespaces);
         return 1;
@@ -191,9 +221,12 @@ public final class ClientRenderCommands {
     private static void appendSkips(
             MutableComponent message, List<String> entries, Component reason) {
         if (!entries.isEmpty()) {
-            message.append(Component.translatable(
-                    "somestacks.command.skipped", entries.size(), reason,
-                    ComponentUtils.formatList(entries, Component::literal)));
+            message.append(
+                    Component.translatable(
+                            "somestacks.command.skipped",
+                            entries.size(),
+                            reason,
+                            ComponentUtils.formatList(entries, Component::literal)));
         }
     }
 

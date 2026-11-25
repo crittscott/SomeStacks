@@ -8,9 +8,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,8 +20,10 @@ import javax.annotation.Nullable;
 /** Fabric protection queries and native block-break lifecycle for player-attributed edits. */
 public final class FabricEditAuthority implements EditAuthority {
     @Nullable
-    private final FabricProtectionQueries protectionQueries = FabricLoader.getInstance()
-            .isModLoaded("common-protection-api") ? new CommonProtectionQueries() : null;
+    private final FabricProtectionQueries protectionQueries =
+            FabricLoader.getInstance().isModLoaded("common-protection-api")
+                    ? new CommonProtectionQueries()
+                    : null;
 
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
@@ -33,9 +35,14 @@ public final class FabricEditAuthority implements EditAuthority {
         if (protectionQueries != null && !protectionQueries.mayUseAdjacent(player, pos)) {
             return false;
         }
-        return UseBlockCallback.EVENT.invoker().interact(
-                player, player.serverLevel(), InteractionHand.MAIN_HAND,
-                WorldEdits.adjacentHit(player, pos)) == InteractionResult.PASS;
+        return UseBlockCallback.EVENT
+                        .invoker()
+                        .interact(
+                                player,
+                                player.serverLevel(),
+                                InteractionHand.MAIN_HAND,
+                                WorldEdits.adjacentHit(player, pos))
+                == InteractionResult.PASS;
     }
 
     @Override
@@ -44,20 +51,29 @@ public final class FabricEditAuthority implements EditAuthority {
     }
 
     @Override
-    public boolean place(Player placer, ServerLevel level, BlockPos pos,
-                         BlockState state, Direction placedAgainst) {
-        return mayPlace(placer, level, pos)
-                && level.setBlock(pos, state, Block.UPDATE_ALL);
+    public boolean place(
+            Player placer,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
+            Direction placedAgainst) {
+        return mayPlace(placer, level, pos) && level.setBlock(pos, state, Block.UPDATE_ALL);
     }
 
     @Override
     public boolean vetoesRemoval(
-            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            ServerPlayer actor,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
             @Nullable BlockEntity blockEntity) {
-        boolean allowed = PlayerBlockBreakEvents.BEFORE.invoker()
-                .beforeBlockBreak(level, actor, pos, state, blockEntity);
+        boolean allowed =
+                PlayerBlockBreakEvents.BEFORE
+                        .invoker()
+                        .beforeBlockBreak(level, actor, pos, state, blockEntity);
         if (!allowed) {
-            PlayerBlockBreakEvents.CANCELED.invoker()
+            PlayerBlockBreakEvents.CANCELED
+                    .invoker()
                     .onBlockBreakCanceled(level, actor, pos, state, blockEntity);
         }
         return !allowed;
@@ -65,9 +81,13 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public void afterRemoval(
-            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            ServerPlayer actor,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
             @Nullable BlockEntity blockEntity) {
-        PlayerBlockBreakEvents.AFTER.invoker()
+        PlayerBlockBreakEvents.AFTER
+                .invoker()
                 .afterBlockBreak(level, actor, pos, state, blockEntity);
     }
 }

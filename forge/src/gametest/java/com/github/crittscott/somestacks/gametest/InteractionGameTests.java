@@ -2,15 +2,13 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.server.StackInteractionEvents;
+
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.gametest.GameTestHolder;
 
-
-/**
- * Forge delegates for loader-neutral interaction and validation checks.
- */
+/** Forge delegates for loader-neutral interaction and validation checks. */
 @GameTestHolder(SomeStacks.MODID)
 public final class InteractionGameTests {
     private InteractionGameTests() {}
@@ -37,7 +35,8 @@ public final class InteractionGameTests {
     /** See {@link InteractionChecks#interactionReadsOnlyTheMainHand}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void interactionReadsOnlyTheMainHand(GameTestHelper helper) {
-        InteractionChecks.interactionReadsOnlyTheMainHand(helper, GameTestSupport.playerFactory(helper));
+        InteractionChecks.interactionReadsOnlyTheMainHand(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link InteractionChecks#rotationValidatesHeldItemAndBlockType}. */
@@ -51,9 +50,12 @@ public final class InteractionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void sneakingRotationsReachTheLoaderHook(GameTestHelper helper) {
         InteractionChecks.sneakingRotationsReachTheLoaderHook(
-                helper, GameTestSupport.playerFactory(helper), (player, hit) -> {
-                    var event = new PlayerInteractEvent.RightClickBlock(
-                            player, InteractionChecks.HAND, hit.getBlockPos(), hit);
+                helper,
+                GameTestSupport.playerFactory(helper),
+                (player, hit) -> {
+                    var event =
+                            new PlayerInteractEvent.RightClickBlock(
+                                    player, InteractionChecks.HAND, hit.getBlockPos(), hit);
                     StackInteractionEvents.onRightClickBlock(event);
                     return event.isCanceled();
                 });
@@ -61,8 +63,7 @@ public final class InteractionGameTests {
 
     /** See {@link InteractionChecks#vanillaInteractionReachesDepositExtractAndPlacement}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void vanillaInteractionReachesDepositExtractAndPlacement(
-            GameTestHelper helper) {
+    public static void vanillaInteractionReachesDepositExtractAndPlacement(GameTestHelper helper) {
         InteractionChecks.vanillaInteractionReachesDepositExtractAndPlacement(
                 helper, GameTestSupport.playerFactory(helper));
     }
@@ -76,16 +77,14 @@ public final class InteractionGameTests {
 
     /** See {@link InteractionChecks#permanenceRequiresEmptyHandAndHonorsProtection}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void permanenceRequiresEmptyHandAndHonorsProtection(
-            GameTestHelper helper) {
+    public static void permanenceRequiresEmptyHandAndHonorsProtection(GameTestHelper helper) {
         InteractionChecks.permanenceRequiresEmptyHandAndHonorsProtection(
                 helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link InteractionChecks#rotationSoundThrottleSuppressesSameTickAndClears}. */
     @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
-    public static void rotationSoundThrottleSuppressesSameTickAndClears(
-            GameTestHelper helper) {
+    public static void rotationSoundThrottleSuppressesSameTickAndClears(GameTestHelper helper) {
         InteractionChecks.rotationSoundThrottleSuppressesSameTickAndClears(
                 helper, GameTestSupport.playerFactory(helper));
     }
@@ -120,7 +119,8 @@ public final class InteractionGameTests {
     /** See {@link InteractionChecks#extractionEventsFollowBlockSurvival}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractionEventsFollowBlockSurvival(GameTestHelper helper) {
-        InteractionChecks.extractionEventsFollowBlockSurvival(helper, GameTestSupport.playerFactory(helper));
+        InteractionChecks.extractionEventsFollowBlockSurvival(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link SynchronizationChecks#configDecoderEnforcesPacketBudget}. */
@@ -156,19 +156,22 @@ public final class InteractionGameTests {
     /** See {@link ClientGestureChecks#blockRulesRespectPrecedenceAndHands}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void blockRulesRespectPrecedenceAndHands(GameTestHelper helper) {
-        ClientGestureChecks.blockRulesRespectPrecedenceAndHands(helper, GameTestSupport.playerFactory(helper));
+        ClientGestureChecks.blockRulesRespectPrecedenceAndHands(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link ClientGestureChecks#fullTopFacesFallThroughToPlacement}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void fullTopFacesFallThroughToPlacement(GameTestHelper helper) {
-        ClientGestureChecks.fullTopFacesFallThroughToPlacement(helper, GameTestSupport.playerFactory(helper));
+        ClientGestureChecks.fullTopFacesFallThroughToPlacement(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link ClientGestureChecks#airRulesAndDisabledModeCycling}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void airRulesAndDisabledModeCycling(GameTestHelper helper) {
-        ClientGestureChecks.airRulesAndDisabledModeCycling(helper, GameTestSupport.playerFactory(helper));
+        ClientGestureChecks.airRulesAndDisabledModeCycling(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link ClientGestureChecks#gestureSyncSendsChangesAndResets}. */
@@ -176,5 +179,4 @@ public final class InteractionGameTests {
     public static void gestureSyncSendsChangesAndResets(GameTestHelper helper) {
         ClientGestureChecks.gestureSyncSendsChangesAndResets(helper);
     }
-
 }

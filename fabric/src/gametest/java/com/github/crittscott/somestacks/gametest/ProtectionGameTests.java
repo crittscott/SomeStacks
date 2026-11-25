@@ -1,11 +1,16 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.WorldEdits;
+
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -34,19 +39,13 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-
 /**
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
  * destination consultation, actor-preserving cleanup, and growth checks in simulation and commit.
  */
 public final class ProtectionGameTests implements FabricGameTest {
-    static final Map<TestTarget, PlacementProbe> PLACEMENT_PROBES =
-            new ConcurrentHashMap<>();
-    private static final Map<TestTarget, RemovalProbe> REMOVAL_PROBES =
-            new ConcurrentHashMap<>();
+    static final Map<TestTarget, PlacementProbe> PLACEMENT_PROBES = new ConcurrentHashMap<>();
+    private static final Map<TestTarget, RemovalProbe> REMOVAL_PROBES = new ConcurrentHashMap<>();
     private static final Map<TestTarget, InteractionResult> ADJACENT_USE_RESULTS =
             new ConcurrentHashMap<>();
 
@@ -54,9 +53,12 @@ public final class ProtectionGameTests implements FabricGameTest {
         UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
             PlacementProbe probe = PLACEMENT_PROBES.get(new TestTarget(level, hit.getBlockPos()));
             if (probe != null) probe.syntheticClick().set(true);
-            InteractionResult result = ADJACENT_USE_RESULTS.get(new TestTarget(level, hit.getBlockPos()));
+            InteractionResult result =
+                    ADJACENT_USE_RESULTS.get(new TestTarget(level, hit.getBlockPos()));
             if (result != null) {
-                check(WorldEdits.isConsultingAdjacent(), "Destination callback lacks its gesture guard");
+                check(
+                        WorldEdits.isConsultingAdjacent(),
+                        "Destination callback lacks its gesture guard");
                 return result;
             }
             return InteractionResult.PASS;
@@ -82,7 +84,8 @@ public final class ProtectionGameTests implements FabricGameTest {
 
     /**
      * To reproduce in-game: deny [SomeStacks] placement in a Common Protection API claim, then
-     * insert into a full Storage pile through automation. Growth accepts nothing and keeps the input.
+     * insert into a full Storage pile through automation. Growth accepts nothing and keeps the
+     * input.
      */
     public void automationGrowthConsultsProtectionWithoutSyntheticClick(GameTestHelper helper) {
         StorageStackBE base = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -91,15 +94,28 @@ public final class ProtectionGameTests implements FabricGameTest {
         }
         BlockPos target = base.getBlockPos().above();
         TestTarget key = new TestTarget(helper.getLevel(), target);
-        PlacementProbe probe = new PlacementProbe(InteractionResult.FAIL,
-                new AtomicBoolean(), new AtomicBoolean(), new AtomicReference<>(), new AtomicBoolean());
+        PlacementProbe probe =
+                new PlacementProbe(
+                        InteractionResult.FAIL,
+                        new AtomicBoolean(),
+                        new AtomicBoolean(),
+                        new AtomicReference<>(),
+                        new AtomicBoolean());
         PLACEMENT_PROBES.put(key, probe);
         try {
             ItemStack offered = new ItemStack(Items.STONE, 4);
-            checkEquals(4, FabricGameTestSupport.insertAt(FabricGameTestSupport.storage(base),
-                    StorageStackBE.SLOTS, offered, false).getCount(), "Denied growth remainder");
+            checkEquals(
+                    4,
+                    FabricGameTestSupport.insertAt(
+                                    FabricGameTestSupport.storage(base),
+                                    StorageStackBE.SLOTS,
+                                    offered,
+                                    false)
+                            .getCount(),
+                    "Denied growth remainder");
             check(probe.invoked().get(), "Automation skipped the placement query");
-            check(probe.actor().get() == WorldEdits.automationActor(helper.getLevel()),
+            check(
+                    probe.actor().get() == WorldEdits.automationActor(helper.getLevel()),
                     "Protection query lost the automation actor");
             check(probe.sawAir().get(), "Automation queried protection after placement");
             check(!probe.syntheticClick().get(), "Automation fabricated a block-use callback");
@@ -122,7 +138,8 @@ public final class ProtectionGameTests implements FabricGameTest {
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automationUsesFabricFakePlayer(GameTestHelper helper) {
-        check(WorldEdits.automationActor(helper.getLevel()) instanceof FakePlayer,
+        check(
+                WorldEdits.automationActor(helper.getLevel()) instanceof FakePlayer,
                 "Fabric automation actor was not a Fabric API FakePlayer");
         helper.succeed();
     }
@@ -136,13 +153,22 @@ public final class ProtectionGameTests implements FabricGameTest {
         ServerPlayer player = FakePlayer.get(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         TestTarget key = new TestTarget(level, target);
-        PlacementProbe probe = new PlacementProbe(
-                InteractionResult.FAIL, new AtomicBoolean(), new AtomicBoolean(),
-                new AtomicReference<>(), new AtomicBoolean());
+        PlacementProbe probe =
+                new PlacementProbe(
+                        InteractionResult.FAIL,
+                        new AtomicBoolean(),
+                        new AtomicBoolean(),
+                        new AtomicReference<>(),
+                        new AtomicBoolean());
         PLACEMENT_PROBES.put(key, probe);
         try {
-            check(!WorldEdits.placeChecked(
-                            player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+            check(
+                    !WorldEdits.placeChecked(
+                            player,
+                            level,
+                            target,
+                            Blocks.STONE.defaultBlockState(),
+                            Direction.DOWN),
                     "A handled destination consultation permitted placement");
         } finally {
             PLACEMENT_PROBES.remove(key);
@@ -195,7 +221,8 @@ public final class ProtectionGameTests implements FabricGameTest {
         AtomicReference<Player> observedActor = new AtomicReference<>();
         REMOVAL_PROBES.put(key, new RemovalProbe(true, observedActor));
         try {
-            check(!storage.extractAt(0, 64, ItemStack.EMPTY, player).isEmpty(),
+            check(
+                    !storage.extractAt(0, 64, ItemStack.EMPTY, player).isEmpty(),
                     "Player extraction returned nothing");
             StoragePile pile = storage.pile();
             check(pile != null, "Pile did not resolve before settlement");
@@ -243,21 +270,27 @@ public final class ProtectionGameTests implements FabricGameTest {
     }
 
     /**
-     * A Common Protection API denial vetoes an adjacent-stack consultation. To reproduce in-game: deny
-     * item use at a claimed destination, then hold the modifier and right-click the neighboring
-     * block toward it. No item is deposited and no stack is placed in the denied position.
+     * A Common Protection API denial vetoes an adjacent-stack consultation. To reproduce in-game:
+     * deny item use at a claimed destination, then hold the modifier and right-click the
+     * neighboring block toward it. No item is deposited and no stack is placed in the denied
+     * position.
      */
     public void adjacentConsultationHonorsProtectionQuery(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         ServerPlayer player = FakePlayer.get(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         TestTarget key = new TestTarget(level, target);
-        PlacementProbe probe = new PlacementProbe(
-                InteractionResult.FAIL, new AtomicBoolean(), new AtomicBoolean(),
-                new AtomicReference<>(), new AtomicBoolean());
+        PlacementProbe probe =
+                new PlacementProbe(
+                        InteractionResult.FAIL,
+                        new AtomicBoolean(),
+                        new AtomicBoolean(),
+                        new AtomicReference<>(),
+                        new AtomicBoolean());
         PLACEMENT_PROBES.put(key, probe);
         try {
-            check(!WorldEdits.mayUseAdjacent(player, target),
+            check(
+                    !WorldEdits.mayUseAdjacent(player, target),
                     "Protection query did not veto the adjacent stack consultation");
         } finally {
             PLACEMENT_PROBES.remove(key);
@@ -287,7 +320,8 @@ public final class ProtectionGameTests implements FabricGameTest {
             GameTestScaffold.seedSlot(lower.getItems(), slot, new ItemStack(barItem));
         }
         GameTestScaffold.seedSlot(
-                upper.getItems(), BarColumnChecks.firstSeamSupportedBy(slot - 56),
+                upper.getItems(),
+                BarColumnChecks.firstSeamSupportedBy(slot - 56),
                 new ItemStack(barItem));
 
         TestTarget key = new TestTarget(helper.getLevel(), lower.getBlockPos());
@@ -300,7 +334,8 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         helper.assertBlockPresent(CommonRegistry.barStackBlock(), ORIGIN);
         check(lower.isEmpty(), "The kept block held on to its bars");
-        check(helper.getLevel().getBlockEntity(upperPos) == null,
+        check(
+                helper.getLevel().getBlockEntity(upperPos) == null,
                 "The block above a kept block was not brought down");
         helper.succeed();
     }
@@ -336,20 +371,22 @@ public final class ProtectionGameTests implements FabricGameTest {
     /** See {@link ProtectionChecks#adjacentDepositsFillGroundedCells}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void adjacentDepositsFillGroundedCells(GameTestHelper helper) {
-        ProtectionChecks.adjacentDepositsFillGroundedCells(helper, FabricGameTestSupport.playerFactory(helper));
+        ProtectionChecks.adjacentDepositsFillGroundedCells(
+                helper, FabricGameTestSupport.playerFactory(helper));
         helper.succeed();
     }
 
     /**
      * Destination block-use callbacks can refuse neighboring deposits with or without Common
-     * Protection API. To reproduce in-game: deny block use at a stack with a protection mod,
-     * then modifier-click its support through an empty cell. No item moves.
+     * Protection API. To reproduce in-game: deny block use at a stack with a protection mod, then
+     * modifier-click its support through an empty cell. No item moves.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void adjacentDepositsHonorBlockUseCallbacks(GameTestHelper helper) {
         TestTarget key = new TestTarget(helper.getLevel(), helper.absolutePos(ORIGIN));
         try {
-            for (InteractionResult result : List.of(InteractionResult.FAIL, InteractionResult.SUCCESS)) {
+            for (InteractionResult result :
+                    List.of(InteractionResult.FAIL, InteractionResult.SUCCESS)) {
                 ADJACENT_USE_RESULTS.put(key, result);
                 helper.getLevel().removeBlock(key.pos(), false);
                 ProtectionChecks.checkAdjacentAndDirectDeposits(
@@ -365,8 +402,11 @@ public final class ProtectionGameTests implements FabricGameTest {
     record TestTarget(Level level, BlockPos pos) {}
 
     record PlacementProbe(
-            InteractionResult result, AtomicBoolean invoked, AtomicBoolean sawAir,
-            AtomicReference<Player> actor, AtomicBoolean syntheticClick) {}
+            InteractionResult result,
+            AtomicBoolean invoked,
+            AtomicBoolean sawAir,
+            AtomicReference<Player> actor,
+            AtomicBoolean syntheticClick) {}
 
     private record RemovalProbe(Predicate<Player> allowed, Consumer<Player> actor) {
         RemovalProbe(boolean allowed, AtomicReference<Player> actor) {
@@ -378,18 +418,22 @@ public final class ProtectionGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void playerBarExtractionUsesPlayerForCleanup(GameTestHelper helper) {
         ProtectionChecks.playerBarExtractionUsesPlayerForCleanup(
-                helper, FabricGameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+                helper,
+                FabricGameTestSupport.playerFactory(helper),
+                ProtectionGameTests::observeRemoval);
     }
 
     /** See {@link ProtectionChecks#mixedStorageSettlementUsesAutomationForCleanup}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
         ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(
-                helper, FabricGameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+                helper,
+                FabricGameTestSupport.playerFactory(helper),
+                ProtectionGameTests::observeRemoval);
     }
 
-    private static Runnable observeRemoval(ServerLevel level, BlockPos pos,
-            Consumer<Player> observed, Predicate<Player> allowed) {
+    private static Runnable observeRemoval(
+            ServerLevel level, BlockPos pos, Consumer<Player> observed, Predicate<Player> allowed) {
         TestTarget key = new TestTarget(level, pos);
         REMOVAL_PROBES.put(key, new RemovalProbe(allowed, observed));
         return () -> REMOVAL_PROBES.remove(key);
@@ -398,9 +442,12 @@ public final class ProtectionGameTests implements FabricGameTest {
     // Growth under protection
     //
     // A storage insertion aimed at a slot past what the run holds is the one that grows it, and it
-    // checks the position above the run before promising the caller anything, so a simulation and the
-    // commit that follows agree about a position growth cannot have. The three tests below stage that
-    // with the world border. Spawn protection, the other half of the same predicate, cannot be staged
+    // checks the position above the run before promising the caller anything, so a simulation and
+    // the
+    // commit that follows agree about a position growth cannot have. The three tests below stage
+    // that
+    // with the world border. Spawn protection, the other half of the same predicate, cannot be
+    // staged
     // here: it is implemented on DedicatedServer, and the server running these tests is not one.
 
     /**
@@ -417,25 +464,34 @@ public final class ProtectionGameTests implements FabricGameTest {
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
         int headroom = StorageStackBE.SLOTS;
-        check(FabricGameTestSupport.insertAt(storage, headroom, offered, true).isEmpty(),
+        check(
+                FabricGameTestSupport.insertAt(storage, headroom, offered, true).isEmpty(),
                 "A full pile with free headroom did not credit growth");
 
-        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
-            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
-                    "Committed remainder");
-        });
+        GameTestScaffold.outsideWorldBorder(
+                helper,
+                ORIGIN.above(),
+                () -> {
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(storage, headroom, offered, true)
+                                    .getCount(),
+                            "Simulated remainder");
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(storage, headroom, offered, false)
+                                    .getCount(),
+                            "Committed remainder");
+                });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.storageStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
     /**
-     * To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
-     * through item automation; it accepts nothing and creates no block.
+     * To reproduce in-game: protect the space above a full Singles column from SomeStacks and
+     * insert through item automation; it accepts nothing and creates no block.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
@@ -448,19 +504,29 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         // A cell takes one item, so a credited growth leaves three of the four behind.
         int headroom = SinglesStackBE.SLOTS;
-        checkEquals(3, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
+        checkEquals(
+                3,
+                FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
-            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
-                    "Committed remainder");
-        });
+        GameTestScaffold.outsideWorldBorder(
+                helper,
+                ORIGIN.above(),
+                () -> {
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(storage, headroom, offered, true)
+                                    .getCount(),
+                            "Simulated remainder");
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(storage, headroom, offered, false)
+                                    .getCount(),
+                            "Committed remainder");
+                });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.singlesStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -480,19 +546,29 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         // A position takes one bar, so a credited growth leaves three of the four behind.
         int headroom = BarStackBE.SLOTS;
-        checkEquals(3, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
+        checkEquals(
+                3,
+                FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
-            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
-                    "Committed remainder");
-        });
+        GameTestScaffold.outsideWorldBorder(
+                helper,
+                ORIGIN.above(),
+                () -> {
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(storage, headroom, offered, true)
+                                    .getCount(),
+                            "Simulated remainder");
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(storage, headroom, offered, false)
+                                    .getCount(),
+                            "Committed remainder");
+                });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.barStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -514,19 +590,22 @@ public final class ProtectionGameTests implements FabricGameTest {
         GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = StorageStackBE.SLOTS;
-        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.storageStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
     /**
-     * To reproduce in-game: stand in the growth space above a full Singles column and insert through
-     * item automation; it accepts nothing and does not grow into the entity.
+     * To reproduce in-game: stand in the growth space above a full Singles column and insert
+     * through item automation; it accepts nothing and does not grow into the entity.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
@@ -540,13 +619,16 @@ public final class ProtectionGameTests implements FabricGameTest {
         GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = SinglesStackBE.SLOTS;
-        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.singlesStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -566,20 +648,26 @@ public final class ProtectionGameTests implements FabricGameTest {
         GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = BarStackBE.SLOTS;
-        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.barStackBlock(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
+
     /** See {@link InteractionChecks#deniedCleanupEmitsOnlyBlockChange}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void deniedCleanupEmitsOnlyBlockChange(GameTestHelper helper) {
-        InteractionChecks.deniedCleanupEmitsOnlyBlockChange(helper,
-                FabricGameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+        InteractionChecks.deniedCleanupEmitsOnlyBlockChange(
+                helper,
+                FabricGameTestSupport.playerFactory(helper),
+                ProtectionGameTests::observeRemoval);
     }
 
     /**
@@ -588,17 +676,24 @@ public final class ProtectionGameTests implements FabricGameTest {
      */
     public void allowedAdjacentDepositUsesProtectionQuery(GameTestHelper helper) {
         TestTarget key = new TestTarget(helper.getLevel(), helper.absolutePos(ORIGIN));
-        PlacementProbe probe = new PlacementProbe(InteractionResult.PASS,
-                new AtomicBoolean(), new AtomicBoolean(), new AtomicReference<>(), new AtomicBoolean());
+        PlacementProbe probe =
+                new PlacementProbe(
+                        InteractionResult.PASS,
+                        new AtomicBoolean(),
+                        new AtomicBoolean(),
+                        new AtomicReference<>(),
+                        new AtomicBoolean());
         PLACEMENT_PROBES.put(key, probe);
         try {
-            ProtectionChecks.checkAdjacentAndDirectDeposits(helper, FabricGameTestSupport.playerFactory(helper), true);
+            ProtectionChecks.checkAdjacentAndDirectDeposits(
+                    helper, FabricGameTestSupport.playerFactory(helper), true);
             check(probe.invoked().get(), "Neighbor deposit skipped protection");
-            check(probe.syntheticClick().get(), "Neighbor deposit skipped destination block-use callbacks");
+            check(
+                    probe.syntheticClick().get(),
+                    "Neighbor deposit skipped destination block-use callbacks");
         } finally {
             PLACEMENT_PROBES.remove(key);
         }
         helper.succeed();
     }
-
 }

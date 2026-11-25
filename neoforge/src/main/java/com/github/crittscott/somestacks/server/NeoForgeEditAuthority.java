@@ -4,21 +4,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+
+import java.util.ArrayList;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 /**
  * NeoForge's {@link EditAuthority}: the level's fake player stands in for automation, and claim,
@@ -28,8 +29,12 @@ import java.util.ArrayList;
 public final class NeoForgeEditAuthority implements EditAuthority {
     @Override
     public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
-        var event = new PlayerInteractEvent.RightClickBlock(
-                player, InteractionHand.MAIN_HAND, pos, WorldEdits.adjacentHit(player, pos));
+        var event =
+                new PlayerInteractEvent.RightClickBlock(
+                        player,
+                        InteractionHand.MAIN_HAND,
+                        pos,
+                        WorldEdits.adjacentHit(player, pos));
         NeoForge.EVENT_BUS.post(event);
         return !event.isCanceled()
                 && event.getUseBlock() != TriState.FALSE
@@ -45,8 +50,12 @@ public final class NeoForgeEditAuthority implements EditAuthority {
     private boolean placing;
 
     @Override
-    public boolean place(Player placer, ServerLevel level, BlockPos pos,
-                         BlockState state, Direction placedAgainst) {
+    public boolean place(
+            Player placer,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
+            Direction placedAgainst) {
         if (placing || level.captureBlockSnapshots || level.restoringBlockSnapshots) {
             return false;
         }
@@ -60,12 +69,15 @@ public final class NeoForgeEditAuthority implements EditAuthority {
                 placed = level.setBlock(pos, state, Block.UPDATE_ALL);
             } finally {
                 level.captureBlockSnapshots = false;
-                snapshots.addAll(level.capturedBlockSnapshots.subList(
-                        firstSnapshot, level.capturedBlockSnapshots.size()));
-                level.capturedBlockSnapshots.subList(
-                        firstSnapshot, level.capturedBlockSnapshots.size()).clear();
+                snapshots.addAll(
+                        level.capturedBlockSnapshots.subList(
+                                firstSnapshot, level.capturedBlockSnapshots.size()));
+                level.capturedBlockSnapshots
+                        .subList(firstSnapshot, level.capturedBlockSnapshots.size())
+                        .clear();
             }
-            if (!placed || snapshots.isEmpty()
+            if (!placed
+                    || snapshots.isEmpty()
                     || EventHooks.onBlockPlace(placer, snapshots.get(0), placedAgainst)) {
                 level.restoringBlockSnapshots = true;
                 try {
@@ -82,8 +94,13 @@ public final class NeoForgeEditAuthority implements EditAuthority {
                 BlockState previous = snapshot.getState();
                 BlockState current = level.getBlockState(snapshot.getPos());
                 current.onPlace(level, snapshot.getPos(), previous, false);
-                level.markAndNotifyBlock(snapshot.getPos(), level.getChunkAt(snapshot.getPos()),
-                        previous, current, snapshot.getFlags(), UPDATE_RECURSION_LIMIT);
+                level.markAndNotifyBlock(
+                        snapshot.getPos(),
+                        level.getChunkAt(snapshot.getPos()),
+                        previous,
+                        current,
+                        snapshot.getFlags(),
+                        UPDATE_RECURSION_LIMIT);
             }
             return true;
         } finally {
@@ -93,7 +110,10 @@ public final class NeoForgeEditAuthority implements EditAuthority {
 
     @Override
     public boolean vetoesRemoval(
-            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            ServerPlayer actor,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
             @Nullable BlockEntity blockEntity) {
         BlockEvent.BreakEvent evt = new BlockEvent.BreakEvent(level, pos, state, actor);
         return NeoForge.EVENT_BUS.post(evt).isCanceled();

@@ -18,13 +18,24 @@ public final class ServerConfig {
 
     /** Persistence and lifecycle supplied by the selected loader. */
     public interface Backend {
-        /** Loads validated policy for this world after loader installation and before world activity. */
+        /**
+         * Loads validated policy for this world after loader installation and before world
+         * activity.
+         */
         Settings loadFor(MinecraftServer server);
-        /** Returns validated policy from disk or the loader's published values; parsing fallback is backend-owned. */
+
+        /**
+         * Returns validated policy from disk or the loader's published values; parsing fallback is
+         * backend-owned.
+         */
         Settings reload();
-        /** Persists the supplied policy; returns whether saving succeeded, without applying it here. */
+
+        /**
+         * Persists the supplied policy; returns whether saving succeeded, without applying it here.
+         */
         boolean save(Settings settings);
     }
+
     public static final int DEFAULT_MAX_PILE_HEIGHT = 8;
     public static final int MAX_PILE_HEIGHT = 64;
     public static final int DEFAULT_GALLERY_PLACEMENTS_PER_TICK = 64;
@@ -33,9 +44,10 @@ public final class ServerConfig {
      * Items barred by default. Each crashes the client when its plain {@link
      * net.minecraft.world.item.ItemStack} is drawn, as a gallery creates it and as extracting it
      * drops or hands it to the player:
+     *
      * <ul>
-     *   <li>{@code evilcraft:broom_part} (EvilCraft 1.2.62): its model throws
-     *       {@code UnsupportedOperationException}.</li>
+     *   <li>{@code evilcraft:broom_part} (EvilCraft 1.2.62): its model throws {@code
+     *       UnsupportedOperationException}.
      * </ul>
      */
     public static final List<String> DEFAULT_DISABLE_ITEMS = List.of("evilcraft:broom_part");
@@ -49,47 +61,78 @@ public final class ServerConfig {
     private static volatile Set<ResourceLocation> disabledItems = Set.of();
 
     /** Installs loader persistence before loadFor; does not load or apply policy. */
-    public static void install(Backend implementation) { backend = implementation; }
+    public static void install(Backend implementation) {
+        backend = implementation;
+    }
+
     /** Installed loader persistence, or null before installation. */
-    public static Backend backend() { return backend; }
+    public static Backend backend() {
+        return backend;
+    }
+
     /** Current immutable in-memory policy. */
-    public static Settings settings() { return settings; }
-    /** Validates namespace lists and rebuilds admission sets; does not save or synchronize clients. */
+    public static Settings settings() {
+        return settings;
+    }
+
+    /**
+     * Validates namespace lists and rebuilds admission sets; does not save or synchronize clients.
+     */
     public static void apply(Settings policy) {
         List<String> mods = prepareNamespaces(policy.disableMods(), "disable_mods");
         List<String> generated = prepareNamespaces(policy.genMods(), "gen_mods");
-        settings = new Settings(policy.maxPileHeight(), policy.enableStorageStackBlock(),
-                policy.enableSinglesStackBlock(), policy.enableBarStackBlock(), mods, policy.disableItems(),
-                policy.renderGalleryPlacementsPerTick(), policy.galleryEnabled(),
-                policy.galleryPermissionLevel(), generated, policy.genItems());
+        settings =
+                new Settings(
+                        policy.maxPileHeight(),
+                        policy.enableStorageStackBlock(),
+                        policy.enableSinglesStackBlock(),
+                        policy.enableBarStackBlock(),
+                        mods,
+                        policy.disableItems(),
+                        policy.renderGalleryPlacementsPerTick(),
+                        policy.galleryEnabled(),
+                        policy.galleryPermissionLevel(),
+                        generated,
+                        policy.genItems());
         bakeServerLists();
     }
+
     /** Loads and applies this world's policy using the installed backend before world activity. */
     public static void loadFor(MinecraftServer server) {
         apply(defaults());
         try {
             apply(backend.loadFor(server));
         } catch (IllegalArgumentException rejected) {
-            SomeStacksCommon.LOGGER.warn("Keeping default server policy: {}", rejected.getMessage());
+            SomeStacksCommon.LOGGER.warn(
+                    "Keeping default server policy: {}", rejected.getMessage());
         }
     }
-    /** Refreshes policy without saving or sending packets; rejected namespaces preserve active policy. */
+
+    /**
+     * Refreshes policy without saving or sending packets; rejected namespaces preserve active
+     * policy.
+     */
     public static boolean reload() {
         if (backend == null) return false;
         try {
             apply(backend.reload());
             return true;
         } catch (IllegalArgumentException rejected) {
-            SomeStacksCommon.LOGGER.warn("Keeping previous server policy: {}", rejected.getMessage());
+            SomeStacksCommon.LOGGER.warn(
+                    "Keeping previous server policy: {}", rejected.getMessage());
             return false;
         }
     }
+
     /** Saves current policy without changing it; false when no backend exists or saving fails. */
-    public static boolean save() { return backend != null && backend.save(settings); }
+    public static boolean save() {
+        return backend != null && backend.save(settings);
+    }
 
     /**
-     * Immutable policy values. Lists are defensively copied; backends and other callers
-     * must validate numeric ranges and list entries before application. This record does not validate them.
+     * Immutable policy values. Lists are defensively copied; backends and other callers must
+     * validate numeric ranges and list entries before application. This record does not validate
+     * them.
      */
     public record Settings(
             int maxPileHeight,
@@ -130,33 +173,68 @@ public final class ServerConfig {
     public static final class ListSetting {
         private final String name;
         private final Function<Settings, List<String>> getter;
+
         private ListSetting(String name, Function<Settings, List<String>> getter) {
             this.name = name;
             this.getter = getter;
         }
-        public List<String> get() { return getter.apply(settings); }
+
+        public List<String> get() {
+            return getter.apply(settings);
+        }
+
         private void set(List<String> value) {
-            apply(new Settings(settings.maxPileHeight(), settings.enableStorageStackBlock(),
-                    settings.enableSinglesStackBlock(), settings.enableBarStackBlock(),
-                    name.equals("disable_mods") ? value : settings.disableMods(),
-                    name.equals("disable_items") ? value : settings.disableItems(),
-                    settings.renderGalleryPlacementsPerTick(), settings.galleryEnabled(),
-                    settings.galleryPermissionLevel(),
-                    name.equals("gen_mods") ? value : settings.genMods(),
-                    name.equals("gen_items") ? value : settings.genItems()));
+            apply(
+                    new Settings(
+                            settings.maxPileHeight(),
+                            settings.enableStorageStackBlock(),
+                            settings.enableSinglesStackBlock(),
+                            settings.enableBarStackBlock(),
+                            name.equals("disable_mods") ? value : settings.disableMods(),
+                            name.equals("disable_items") ? value : settings.disableItems(),
+                            settings.renderGalleryPlacementsPerTick(),
+                            settings.galleryEnabled(),
+                            settings.galleryPermissionLevel(),
+                            name.equals("gen_mods") ? value : settings.genMods(),
+                            name.equals("gen_items") ? value : settings.genItems()));
         }
     }
-    public static final ListSetting DISABLE_MODS = new ListSetting("disable_mods", Settings::disableMods);
-    public static final ListSetting DISABLE_ITEMS = new ListSetting("disable_items", Settings::disableItems);
+
+    public static final ListSetting DISABLE_MODS =
+            new ListSetting("disable_mods", Settings::disableMods);
+    public static final ListSetting DISABLE_ITEMS =
+            new ListSetting("disable_items", Settings::disableItems);
     public static final ListSetting GEN_MODS = new ListSetting("gen_mods", Settings::genMods);
     public static final ListSetting GEN_ITEMS = new ListSetting("gen_items", Settings::genItems);
-    public static int maxPileHeight() { return settings.maxPileHeight(); }
-    public static boolean enableStorageStackBlock() { return settings.enableStorageStackBlock(); }
-    public static boolean enableSinglesStackBlock() { return settings.enableSinglesStackBlock(); }
-    public static boolean enableBarStackBlock() { return settings.enableBarStackBlock(); }
-    public static int renderGalleryPlacementsPerTick() { return settings.renderGalleryPlacementsPerTick(); }
-    public static boolean galleryEnabled() { return settings.galleryEnabled(); }
-    public static int galleryRequiredPermissionLevel() { return settings.galleryPermissionLevel(); }
+
+    public static int maxPileHeight() {
+        return settings.maxPileHeight();
+    }
+
+    public static boolean enableStorageStackBlock() {
+        return settings.enableStorageStackBlock();
+    }
+
+    public static boolean enableSinglesStackBlock() {
+        return settings.enableSinglesStackBlock();
+    }
+
+    public static boolean enableBarStackBlock() {
+        return settings.enableBarStackBlock();
+    }
+
+    public static int renderGalleryPlacementsPerTick() {
+        return settings.renderGalleryPlacementsPerTick();
+    }
+
+    public static boolean galleryEnabled() {
+        return settings.galleryEnabled();
+    }
+
+    public static int galleryRequiredPermissionLevel() {
+        return settings.galleryPermissionLevel();
+    }
+
     public static void bakeServerLists() {
         Set<String> mods = new HashSet<>();
         for (String entry : DISABLE_MODS.get()) {
@@ -168,9 +246,11 @@ public final class ServerConfig {
 
         Set<ResourceLocation> items = new HashSet<>();
         for (String entry : DISABLE_ITEMS.get()) {
-            ResourceLocation itemId = ResourceLocation.tryParse(entry.trim().toLowerCase(Locale.ROOT));
+            ResourceLocation itemId =
+                    ResourceLocation.tryParse(entry.trim().toLowerCase(Locale.ROOT));
             if (itemId == null) {
-                SomeStacksCommon.LOGGER.warn("Ignoring malformed item id \"{}\" in disable_items", entry);
+                SomeStacksCommon.LOGGER.warn(
+                        "Ignoring malformed item id \"{}\" in disable_items", entry);
                 continue;
             }
             items.add(itemId);
@@ -178,7 +258,6 @@ public final class ServerConfig {
 
         disabledMods = Set.copyOf(mods);
         disabledItems = Set.copyOf(items);
-
     }
 
     /** Validates namespace syntax using the platform's public identifier parser. */
@@ -192,7 +271,8 @@ public final class ServerConfig {
             String namespace = entry.trim().toLowerCase(Locale.ROOT);
             if (namespace.isEmpty()) continue;
             if (!isValidNamespace(namespace)) {
-                SomeStacksCommon.LOGGER.warn("Ignoring malformed namespace '{}' in {}", entry, label);
+                SomeStacksCommon.LOGGER.warn(
+                        "Ignoring malformed namespace '{}' in {}", entry, label);
                 continue;
             }
             if (namespace.length() > MAX_NAMESPACE_LENGTH) {
@@ -256,5 +336,4 @@ public final class ServerConfig {
     public static boolean isItemDisabled(ResourceLocation itemId) {
         return disabledItems.contains(itemId);
     }
-
 }
