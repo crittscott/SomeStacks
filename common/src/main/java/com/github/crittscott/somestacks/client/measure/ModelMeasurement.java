@@ -1,9 +1,10 @@
 package com.github.crittscott.somestacks.client.measure;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.client.ItemCapture;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
+import com.github.crittscott.somestacks.client.ItemCapture;
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -20,11 +21,10 @@ public final class ModelMeasurement {
 
     /**
      * @param flatProjectionAvailable whether the shared 2-D renderer can draw the geometry that
-     *                                produced these bounds
+     *     produced these bounds
      */
     public record Result(
-            boolean flatProjectionAvailable,
-            @Nullable AABB bounds, @Nullable String failure) {}
+            boolean flatProjectionAvailable, @Nullable AABB bounds, @Nullable String failure) {}
 
     /** Measures as the {@code 3d} path draws: the FIXED display context. */
     public static Result measure(ItemStack stack) {
@@ -39,7 +39,8 @@ public final class ModelMeasurement {
         return measure(stack, ItemDisplayContext.GUI, true);
     }
 
-    private static Result measure(ItemStack stack, ItemDisplayContext context, boolean counterRotate) {
+    private static Result measure(
+            ItemStack stack, ItemDisplayContext context, boolean counterRotate) {
         try {
             PoseStack pose = new PoseStack();
             if (counterRotate) {
@@ -59,8 +60,11 @@ public final class ModelMeasurement {
         } catch (Exception e) {
             // Callers cache the fallback profile until the next resource reload, so this logs once
             // per item and display context in each resource cycle.
-            SomeStacksCommon.LOGGER.warn("Could not measure {} in {} display; using the default 3-D profile",
-                    BuiltInRegistries.ITEM.getKey(stack.getItem()), context.getSerializedName(), e);
+            SomeStacksCommon.LOGGER.warn(
+                    "Could not measure {} in {} display; using the default 3-D profile",
+                    BuiltInRegistries.ITEM.getKey(stack.getItem()),
+                    context.getSerializedName(),
+                    e);
             return new Result(false, null, "measurement threw: " + e);
         }
     }

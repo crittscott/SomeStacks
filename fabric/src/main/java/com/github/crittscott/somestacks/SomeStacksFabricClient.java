@@ -9,9 +9,10 @@ import com.github.crittscott.somestacks.network.FabricClientNetworking;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.network.chat.Component;
 
@@ -25,18 +26,15 @@ public final class SomeStacksFabricClient implements ClientModInitializer {
         FabricClientEvents.init();
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             ClientRenderCommands.register(
-                    dispatcher, new ClientRenderCommands.Feedback<FabricClientCommandSource>() {
+                    dispatcher,
+                    new ClientRenderCommands.Feedback<FabricClientCommandSource>() {
                         @Override
-                        public void success(
-                                FabricClientCommandSource source,
-                                Component message) {
+                        public void success(FabricClientCommandSource source, Component message) {
                             source.sendFeedback(message);
                         }
 
                         @Override
-                        public void failure(
-                                FabricClientCommandSource source,
-                                Component message) {
+                        public void failure(FabricClientCommandSource source, Component message) {
                             source.sendError(message);
                         }
                     });
@@ -51,11 +49,17 @@ public final class SomeStacksFabricClient implements ClientModInitializer {
      * the client. Literal children win over this argument, so it catches only the server forms and
      * reports them unknown, which hands the command to vanilla's ordinary send.
      */
-    private static void registerServerPassThrough(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        dispatcher.register(ClientCommands.literal(ClientRenderCommandSyntax.ROOT)
-                .then(ClientCommands.argument("server_command", StringArgumentType.greedyString())
-                        .executes(ctx -> {
-                            throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand().create();
-                        })));
+    private static void registerServerPassThrough(
+            CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        dispatcher.register(
+                ClientCommands.literal(ClientRenderCommandSyntax.ROOT)
+                        .then(
+                                ClientCommands.argument(
+                                                "server_command", StringArgumentType.greedyString())
+                                        .executes(ctx -> {
+                                            throw CommandSyntaxException.BUILT_IN_EXCEPTIONS
+                                                    .dispatcherUnknownCommand()
+                                                    .create();
+                                        })));
     }
 }

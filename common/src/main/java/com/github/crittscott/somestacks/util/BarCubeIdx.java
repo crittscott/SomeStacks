@@ -1,22 +1,23 @@
 package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 
 import javax.annotation.Nullable;
-import java.util.function.IntPredicate;
 
 /**
  * Geometry and slot indexing shared by Bar Stack rendering, collision, ray targeting, and support.
  *
  * <p>A block contains eight layers of eight bars. Even layers run east-west, two bars across and
- * four deep; odd layers run north-south, four across and two deep. Slots are indexed from the bottom
- * layer upward and row by row within each layer.
+ * four deep; odd layers run north-south, four across and two deep. Slots are indexed from the
+ * bottom layer upward and row by row within each layer.
  *
  * <p>A bar is supported when its footprint overlaps a bar in the layer below. This makes support
  * cross between the alternating orientations instead of following fixed columns. At a block
@@ -25,7 +26,7 @@ import java.util.function.IntPredicate;
  * <p>Bars do not rotate with the block; their orientation belongs to the layer.
  */
 public final class BarCubeIdx {
-    private BarCubeIdx(){}
+    private BarCubeIdx() {}
 
     // Bar geometry is expressed in model pixels (1/16 of a block).
     private static final double BAR_HEIGHT = 2.0;
@@ -64,6 +65,7 @@ public final class BarCubeIdx {
     private static final int LAYERS = STARTS_Y.length;
 
     private static final int TOP_LAYER_Y = LAYERS - 1;
+
     /** First local slot in the top layer, shared by live and staged seam occupancy. */
     public static final int TOP_LAYER_START = TOP_LAYER_Y * LAYER_SIZE;
 
@@ -98,13 +100,15 @@ public final class BarCubeIdx {
             int[] xyz = xyzFromIndex(index);
             AABB footprint = getBarFootprint(xyz[0], xyz[1], xyz[2]);
             int belowStart = (xyz[1] == 0 ? TOP_LAYER_Y : xyz[1] - 1) * LAYER_SIZE;
-            SUPPORTERS[index] = IntStream.range(belowStart, belowStart + LAYER_SIZE)
-                    .filter(below -> {
-                        int[] belowXYZ = xyzFromIndex(below);
-                        return footprintsOverlap(footprint,
-                                getBarFootprint(belowXYZ[0], belowXYZ[1], belowXYZ[2]));
-                    })
-                    .toArray();
+            SUPPORTERS[index] =
+                    IntStream.range(belowStart, belowStart + LAYER_SIZE)
+                            .filter(below -> {
+                                int[] belowXYZ = xyzFromIndex(below);
+                                return footprintsOverlap(
+                                        footprint,
+                                        getBarFootprint(belowXYZ[0], belowXYZ[1], belowXYZ[2]));
+                            })
+                            .toArray();
         }
     }
 
@@ -147,16 +151,19 @@ public final class BarCubeIdx {
     }
 
     /** Evaluates live or proposed local occupancy using the same seam rule. */
-    public static boolean isGrounded(int index, IntPredicate occupied, @Nullable boolean[] seamBelow) {
+    public static boolean isGrounded(
+            int index, IntPredicate occupied, @Nullable boolean[] seamBelow) {
         return isSupported(index, occupied, seamBelow == null ? null : slot -> seamBelow[slot]);
     }
 
     /** Footprint support from local slots and the lower block's top layer. */
-    public static boolean isSupported(int index, IntPredicate occupied, @Nullable IntPredicate seamBelow) {
+    public static boolean isSupported(
+            int index, IntPredicate occupied, @Nullable IntPredicate seamBelow) {
         boolean bottom = index < LAYER_SIZE;
         if (bottom && seamBelow == null) return true;
         for (int supporter : SUPPORTERS[index]) {
-            if (bottom ? seamBelow.test(supporter - TOP_LAYER_START) : occupied.test(supporter)) return true;
+            if (bottom ? seamBelow.test(supporter - TOP_LAYER_START) : occupied.test(supporter))
+                return true;
         }
         return false;
     }
@@ -184,9 +191,9 @@ public final class BarCubeIdx {
     }
 
     /**
-     * Finds the deposit target for a Bar Stack that does not yet exist and therefore has no occupied
-     * slots. Placement uses this to validate the initial deposit and its resulting collision shape
-     * before adding the block to the world.
+     * Finds the deposit target for a Bar Stack that does not yet exist and therefore has no
+     * occupied slots. Placement uses this to validate the initial deposit and its resulting
+     * collision shape before adding the block to the world.
      */
     public static int traceAllPositions(ViewRay ray, BlockPos blockPos) {
         return traceAllPositions(ray, blockPos, null);
@@ -194,13 +201,13 @@ public final class BarCubeIdx {
 
     /**
      * Finds the slot a deposit targets: the last empty slot along the view ray before the first
-     * occupied one, or the farthest intersected slot if the ray meets no occupied bar. A null handler
-     * describes a prospective, entirely empty block.
+     * occupied one, or the farthest intersected slot if the ray meets no occupied bar. A null
+     * handler describes a prospective, entirely empty block.
      */
-    public static int traceAllPositions(ViewRay ray, BlockPos blockPos,
-                                        @Nullable SlotAccess handler) {
-        return ray.lastEmptyBeforeOccupied(BarStackBE.SLOTS, handler,
-                slot -> getBarBox(slot, blockPos));
+    public static int traceAllPositions(
+            ViewRay ray, BlockPos blockPos, @Nullable SlotAccess handler) {
+        return ray.lastEmptyBeforeOccupied(
+                BarStackBE.SLOTS, handler, slot -> getBarBox(slot, blockPos));
     }
 
     /** Returns the nearest occupied bar intersected by the view ray, or {@code -1} on a miss. */
@@ -208,7 +215,9 @@ public final class BarCubeIdx {
         return ray.nearestOccupied(be.getItems(), slot -> getBarBox(slot, blockPos));
     }
 
-    /** Converts a slot index to its within-layer X and Z indexes and its bottom-based layer index. */
+    /**
+     * Converts a slot index to its within-layer X and Z indexes and its bottom-based layer index.
+     */
     public static int[] xyzFromIndex(int idx) {
         int y = idx / LAYER_SIZE;
         int withinLayer = idx % LAYER_SIZE;
@@ -217,7 +226,7 @@ public final class BarCubeIdx {
         int barsAlongX = isEWLayer(y) ? EW_STARTS_X.length : NS_STARTS_X.length;
         int z = withinLayer / barsAlongX;
         int x = withinLayer % barsAlongX;
-        return new int[]{x, y, z};
+        return new int[] {x, y, z};
     }
 
     /** Returns the bar's Z span in model pixels for layer {@code y}. */
@@ -225,7 +234,10 @@ public final class BarCubeIdx {
         return isEWLayer(y) ? EW_DEPTH : NS_DEPTH;
     }
 
-    /** Returns a bar's constant Y span in model pixels; {@code y} keeps all span helpers layer-indexed. */
+    /**
+     * Returns a bar's constant Y span in model pixels; {@code y} keeps all span helpers
+     * layer-indexed.
+     */
     public static double barHeight(int y) {
         return BAR_HEIGHT;
     }
@@ -241,8 +253,7 @@ public final class BarCubeIdx {
     }
 
     private static boolean footprintsOverlap(AABB a, AABB b) {
-        return !(a.maxX <= b.minX || a.minX >= b.maxX ||
-                a.maxZ <= b.minZ || a.minZ >= b.maxZ);
+        return !(a.maxX <= b.minX || a.minX >= b.maxX || a.maxZ <= b.minZ || a.minZ >= b.maxZ);
     }
 
     private static boolean isEWLayer(int y) {
@@ -285,5 +296,4 @@ public final class BarCubeIdx {
         }
         return occupancy;
     }
-
 }

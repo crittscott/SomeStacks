@@ -2,19 +2,21 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
-import com.github.crittscott.somestacks.util.StackMode;
-import com.github.crittscott.somestacks.util.StackGesture;
 import com.github.crittscott.somestacks.util.BlockType;
-import net.minecraft.world.InteractionHand;
+import com.github.crittscott.somestacks.util.StackGesture;
+import com.github.crittscott.somestacks.util.StackMode;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.HitResult;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import javax.annotation.Nullable;
 
 /** Shared client gesture state and its loader-specific state-sync sender. */
 public final class ClientGestures {
@@ -32,7 +34,8 @@ public final class ClientGestures {
 
     /** Replaces the loader sender and returns its predecessor; null detaches the sender. */
     @Nullable
-    public static Consumer<CustomPacketPayload> setSender(@Nullable Consumer<CustomPacketPayload> sender) {
+    public static Consumer<CustomPacketPayload> setSender(
+            @Nullable Consumer<CustomPacketPayload> sender) {
         Consumer<CustomPacketPayload> previous = ClientGestures.sender;
         ClientGestures.sender = sender;
         return previous;
@@ -46,9 +49,11 @@ public final class ClientGestures {
     public static void cycleMode() {
         StackMode startMode = stackMode;
         do {
-            stackMode = StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
+            stackMode =
+                    StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
             if (stackMode == StackMode.TOGGLE_PERMANENT) break;
-            if (stackMode.isBlockType() && ClientServerSettings.isBlockTypeEnabled(stackMode.toBlockType())) break;
+            if (stackMode.isBlockType()
+                    && ClientServerSettings.isBlockTypeEnabled(stackMode.toBlockType())) break;
             if (stackMode == startMode) break;
         } while (true);
     }
@@ -76,11 +81,21 @@ public final class ClientGestures {
     }
 
     /** Recognizes client intent and performs the client-owned air-cycle action. */
-    public static StackGesture processClick(Player player, InteractionHand hand,
-                                            @Nullable BlockType clicked, boolean hittingBlock,
-                                            boolean modifier) {
-        StackGesture gesture = StackGesture.classify(clicked, stackMode, modifier,
-                player.isShiftKeyDown(), player.getMainHandItem(), hittingBlock, hand);
+    public static StackGesture processClick(
+            Player player,
+            InteractionHand hand,
+            @Nullable BlockType clicked,
+            boolean hittingBlock,
+            boolean modifier) {
+        StackGesture gesture =
+                StackGesture.classify(
+                        clicked,
+                        stackMode,
+                        modifier,
+                        player.isShiftKeyDown(),
+                        player.getMainHandItem(),
+                        hittingBlock,
+                        hand);
         if (gesture == StackGesture.CYCLE_MODE) {
             cycleMode();
             syncState(true);

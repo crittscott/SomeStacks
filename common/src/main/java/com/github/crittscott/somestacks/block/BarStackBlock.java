@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-
 import com.github.crittscott.somestacks.util.BlockType;
 
 import net.minecraft.core.BlockPos;
@@ -37,5 +36,4 @@ public class BarStackBlock extends ShapedStackBlock {
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return CommonRegistry.barStackBe().create(pos, state);
     }
-
 }

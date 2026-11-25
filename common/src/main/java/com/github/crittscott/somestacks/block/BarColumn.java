@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -29,8 +30,8 @@ import javax.annotation.Nullable;
  *       first. A caller walking the positions in order therefore fills the column layer by layer
  *       from the bottom, because each placement stands before the next position is offered.
  *   <li>Extraction takes the requested bar and moves the column's topmost bar into the hole. The
- *       topmost bar holds nothing up, and a slot vacated by extraction keeps the support it had,
- *       so the result always stands. When the hole is in a top layer the backfill restores that
+ *       topmost bar holds nothing up, and a slot vacated by extraction keeps the support it had, so
+ *       the result always stands. When the hole is in a top layer the backfill restores that
  *       layer's occupancy exactly, leaving the seam under the block above untouched.
  * </ul>
  *
@@ -81,11 +82,11 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * Publishes the comparator output of every run a structural change at {@code pos} could have
      * altered. Adding a block lengthens a column, which changes the fill every one of its blocks
      * reports; removing one splits a column into two runs whose values differ from the original
-     * run. The upper run has a new bottom block that has published nothing, so it
-     * notifies on its first look.
+     * run. The upper run has a new bottom block that has published nothing, so it notifies on its
+     * first look.
      *
-     * <p>Call after {@link #invalidateAround}, and after any collapse the change starts, so the runs
-     * are walked fresh and the value published is the one they settle on.
+     * <p>Call after {@link #invalidateAround}, and after any collapse the change starts, so the
+     * runs are walked fresh and the value published is the one they settle on.
      */
     static void publishAround(Level level, BlockPos pos) {
         StackRun.publishAround(level, pos, BarColumn::at);
@@ -121,9 +122,9 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * above it.
      *
      * <p>Answering for the position it was given rather than for the column is what makes the
-     * handler's slot range mean something: a caller that walks the range and sums what each position
-     * accepts gets the column's real capacity; reporting whole-column capacity at every position
-     * would multiply it.
+     * handler's slot range mean something: a caller that walks the range and sums what each
+     * position accepts gets the column's real capacity; reporting whole-column capacity at every
+     * position would multiply it.
      *
      * <p>A caller walking the range in ascending order still fills the column, because each
      * placement stands before the next position is offered: a filled layer supports the layer above
@@ -144,8 +145,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
 
         ItemStack one = stack.copy();
         one.setCount(1);
-        return handlerOf(flatSlot).insertItem(
-                flatSlot % BarStackBE.SLOTS, one).isEmpty() ? 1 : 0;
+        return handlerOf(flatSlot).insertItem(flatSlot % BarStackBE.SLOTS, one).isEmpty() ? 1 : 0;
     }
 
     /**
@@ -169,26 +169,39 @@ public final class BarColumn extends StackRun<BarStackBE> {
         int blockIndex = flatSlot / BarStackBE.SLOTS;
         int slot = flatSlot % BarStackBE.SLOTS;
         int blockStart = blockIndex * BarStackBE.SLOTS;
-        boolean supported = BarCubeIdx.isSupported(slot,
-                local -> !contents.apply(blockStart + local).isEmpty(),
-                blockIndex == 0 ? null : seam -> !contents.apply(
-                        blockStart - BarStackBE.SLOTS + BarCubeIdx.TOP_LAYER_START + seam).isEmpty());
-        return supported && (blockIndex < blocks.size() || canGrow(BarCubeIdx.shapeFor(slot))) ? 1 : 0;
+        boolean supported =
+                BarCubeIdx.isSupported(
+                        slot,
+                        local -> !contents.apply(blockStart + local).isEmpty(),
+                        blockIndex == 0
+                                ? null
+                                : seam ->
+                                        !contents.apply(
+                                                        blockStart
+                                                                - BarStackBE.SLOTS
+                                                                + BarCubeIdx.TOP_LAYER_START
+                                                                + seam)
+                                                .isEmpty());
+        return supported && (blockIndex < blocks.size() || canGrow(BarCubeIdx.shapeFor(slot)))
+                ? 1
+                : 0;
     }
 
     /**
      * Whether growth is permitted and the space above the column could take a block: height,
      * enablement, build height, replaceability, and every protection check available without side
      * effects. Simulating and committing share this predicate, so a simulated insertion cannot
-     * promise a block the insertion itself would refuse. Growth carries no player, so protection
-     * is checked against the level's automation actor, which is never exempt from spawn protection.
+     * promise a block the insertion itself would refuse. Growth carries no player, so protection is
+     * checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
         return canGrowBlock(ServerConfig.enableBarStackBlock(), null)
                 && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
     }
 
-    /** Adds one block on top, attributing the automated placement to the level's automation actor. */
+    /**
+     * Adds one block on top, attributing the automated placement to the level's automation actor.
+     */
     private boolean grow(int slot) {
         VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
         if (!canGrow(finalCollision)) {
@@ -205,8 +218,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * Nothing is dropped and nothing is left unsupported.
      *
      * <p>The backfilled bar is written into the hole rather than inserted. Validity gates what a
-     * deposit may add rather than what the column may carry, so a bar stored before a
-     * data pack reload narrowed the ingot set still moves.
+     * deposit may add rather than what the column may carry, so a bar stored before a data pack
+     * reload narrowed the ingot set still moves.
      *
      * @param flatSlot the position to extract, numbered from the bottom block upward
      * @param amount the requested maximum; any positive value can extract the position's one bar

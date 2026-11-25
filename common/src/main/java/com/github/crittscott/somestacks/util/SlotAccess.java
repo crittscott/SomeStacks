@@ -5,19 +5,18 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 
 /**
- * A read-only view of numbered local item slots for geometry, rendering, drops, and inventory reads.
- * Mutations belong to StackItemStorage; loader-native automation adapts whole runs.
+ * A read-only view of numbered local item slots for geometry, rendering, drops, and inventory
+ * reads. Mutations belong to StackItemStorage; loader-native automation adapts whole runs.
  */
 public interface SlotAccess {
     /** The number of slots, indexed {@code [0, getSlots())}. */
     int getSlots();
 
     /**
-     * The stack in {@code slot}, or {@link ItemStack#EMPTY} if the slot is empty; never null. This is
-     * the live stored stack, not a copy: changing it bypasses change notification, so callers must
-     * not modify it and must copy it before keeping or editing it.
+     * The stack in {@code slot}, or {@link ItemStack#EMPTY} if the slot is empty; never null. This
+     * is the live stored stack, not a copy: changing it bypasses change notification, so callers
+     * must not modify it and must copy it before keeping or editing it.
      */
     @Nonnull
     ItemStack getStackInSlot(int slot);
-
 }

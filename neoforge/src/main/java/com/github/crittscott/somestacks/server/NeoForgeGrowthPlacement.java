@@ -11,19 +11,26 @@ import net.neoforged.neoforge.event.EventHooks;
 import java.util.ArrayList;
 import java.util.List;
 
-/** A placement accepted by protection, with world publication deferred to a transfer root commit. */
+/**
+ * A placement accepted by protection, with world publication deferred to a transfer root commit.
+ */
 public record NeoForgeGrowthPlacement(ServerLevel level, BlockPos pos, BlockState state) {
     private static final int UPDATE_RECURSION_LIMIT = 512;
 
     /** Consults the native placement event against a tentative block, then restores it silently. */
-    public static NeoForgeGrowthPlacement prepare(ServerLevel level, BlockPos pos, BlockState state) {
-        if (level.captureBlockSnapshots || level.restoringBlockSnapshots || !WorldEdits.mayPlace(null, level, pos)) {
+    public static NeoForgeGrowthPlacement prepare(
+            ServerLevel level, BlockPos pos, BlockState state) {
+        if (level.captureBlockSnapshots
+                || level.restoringBlockSnapshots
+                || !WorldEdits.mayPlace(null, level, pos)) {
             return null;
         }
         List<BlockSnapshot> snapshots = new ArrayList<>();
         try {
-            if (!capture(level, pos, state, snapshots, true) || snapshots.isEmpty()
-                    || EventHooks.onBlockPlace(WorldEdits.automationActor(level), snapshots.get(0), Direction.DOWN)) {
+            if (!capture(level, pos, state, snapshots, true)
+                    || snapshots.isEmpty()
+                    || EventHooks.onBlockPlace(
+                            WorldEdits.automationActor(level), snapshots.get(0), Direction.DOWN)) {
                 return null;
             }
             return new NeoForgeGrowthPlacement(level, pos.immutable(), level.getBlockState(pos));
@@ -32,12 +39,15 @@ public record NeoForgeGrowthPlacement(ServerLevel level, BlockPos pos, BlockStat
         }
     }
 
-    /** Installs the accepted block without sending updates; the caller fills it before publication. */
+    /**
+     * Installs the accepted block without sending updates; the caller fills it before publication.
+     */
     public List<BlockSnapshot> install() {
         List<BlockSnapshot> snapshots = new ArrayList<>();
         if (!capture(level, pos, state, snapshots, true)) {
             restore(level, snapshots);
-            throw new IllegalStateException("Accepted automation growth could not be installed at " + pos);
+            throw new IllegalStateException(
+                    "Accepted automation growth could not be installed at " + pos);
         }
         return snapshots;
     }
@@ -53,18 +63,27 @@ public record NeoForgeGrowthPlacement(ServerLevel level, BlockPos pos, BlockStat
             BlockState previous = snapshot.getState();
             BlockState current = level.getBlockState(snapshot.getPos());
             current.onPlace(level, snapshot.getPos(), previous, false);
-            level.markAndNotifyBlock(snapshot.getPos(), level.getChunkAt(snapshot.getPos()),
-                    previous, current, Block.UPDATE_ALL, UPDATE_RECURSION_LIMIT);
+            level.markAndNotifyBlock(
+                    snapshot.getPos(),
+                    level.getChunkAt(snapshot.getPos()),
+                    previous,
+                    current,
+                    Block.UPDATE_ALL,
+                    UPDATE_RECURSION_LIMIT);
         }
     }
 
-    static boolean capture(ServerLevel level, BlockPos pos, BlockState state,
-                           List<BlockSnapshot> snapshots) {
+    static boolean capture(
+            ServerLevel level, BlockPos pos, BlockState state, List<BlockSnapshot> snapshots) {
         return capture(level, pos, state, snapshots, false);
     }
 
-    private static boolean capture(ServerLevel level, BlockPos pos, BlockState state,
-                                   List<BlockSnapshot> snapshots, boolean tentative) {
+    private static boolean capture(
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
+            List<BlockSnapshot> snapshots,
+            boolean tentative) {
         int first = level.capturedBlockSnapshots.size();
         level.captureBlockSnapshots = true;
         try {
@@ -73,8 +92,12 @@ public record NeoForgeGrowthPlacement(ServerLevel level, BlockPos pos, BlockStat
             return level.setBlock(pos, state, flags);
         } finally {
             level.captureBlockSnapshots = false;
-            snapshots.addAll(level.capturedBlockSnapshots.subList(first, level.capturedBlockSnapshots.size()));
-            level.capturedBlockSnapshots.subList(first, level.capturedBlockSnapshots.size()).clear();
+            snapshots.addAll(
+                    level.capturedBlockSnapshots.subList(
+                            first, level.capturedBlockSnapshots.size()));
+            level.capturedBlockSnapshots
+                    .subList(first, level.capturedBlockSnapshots.size())
+                    .clear();
         }
     }
 
@@ -85,13 +108,17 @@ public record NeoForgeGrowthPlacement(ServerLevel level, BlockPos pos, BlockStat
         try {
             for (int i = snapshots.size() - 1; i >= 0; i--) {
                 BlockSnapshot snapshot = snapshots.get(i);
-                level.setBlock(snapshot.getPos(), snapshot.getState(),
+                level.setBlock(
+                        snapshot.getPos(),
+                        snapshot.getState(),
                         Block.UPDATE_SKIP_ALL_SIDEEFFECTS | Block.UPDATE_SKIP_ON_PLACE);
                 snapshot.restoreBlockEntity(level, snapshot.getPos());
             }
         } finally {
             level.captureBlockSnapshots = false;
-            level.capturedBlockSnapshots.subList(first, level.capturedBlockSnapshots.size()).clear();
+            level.capturedBlockSnapshots
+                    .subList(first, level.capturedBlockSnapshots.size())
+                    .clear();
             level.restoringBlockSnapshots = false;
         }
     }

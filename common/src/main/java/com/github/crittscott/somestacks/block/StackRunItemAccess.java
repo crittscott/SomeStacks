@@ -14,9 +14,9 @@ public interface StackRunItemAccess {
     int advertisedSlots();
 
     /**
-     * The current stack in a run position, or empty for headroom or an invalid position. The
-     * result is the live stored stack, not a copy: callers must not modify it, and must copy it
-     * before keeping or editing it.
+     * The current stack in a run position, or empty for headroom or an invalid position. The result
+     * is the live stored stack, not a copy: callers must not modify it, and must copy it before
+     * keeping or editing it.
      */
     ItemStack getSlot(int slot);
 
@@ -28,10 +28,10 @@ public interface StackRunItemAccess {
     int insertAt(int slot, ItemStack stack, boolean simulate);
 
     /**
-     * Returns how many items the named advertised position would accept if every run position
-     * held what {@code contents} reports for it, including support from the positions beneath.
-     * Loader transactions pass their staged view; growth checks still read the live world.
-     * {@code insertAt(slot, stack, true)} answers this for the run's own contents.
+     * Returns how many items the named advertised position would accept if every run position held
+     * what {@code contents} reports for it, including support from the positions beneath. Loader
+     * transactions pass their staged view; growth checks still read the live world. {@code
+     * insertAt(slot, stack, true)} answers this for the run's own contents.
      */
     int acceptsAt(int slot, ItemStack stack, IntFunction<ItemStack> contents);
 

@@ -1,19 +1,5 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StackRunItemAccess;
-import com.github.crittscott.somestacks.block.StoragePile;
-import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
@@ -26,6 +12,21 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBa
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
+
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.StackRunItemAccess;
+import com.github.crittscott.somestacks.block.StoragePile;
+import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 /** Loader-neutral automation semantics exercised directly through {@link StackRunItemAccess}. */
 public final class AutomationChecks {
@@ -44,8 +45,8 @@ public final class AutomationChecks {
         checkEquals(8, run.insertAt(20, offered, false), "Committed insertion");
         checkEquals(8, offered.getCount(), "Automation mutated caller input");
         checkEquals(8, storage.getItems().getStackInSlot(20).getCount(), "Named slot count");
-        checkEquals(0, run.insertAt(20, new ItemStack(Items.DIRT, 8), true),
-                "Incompatible insertion");
+        checkEquals(
+                0, run.insertAt(20, new ItemStack(Items.DIRT, 8), true), "Incompatible insertion");
 
         StoragePile pile = storage.pile();
         check(pile != null, "Pile did not resolve");
@@ -70,9 +71,11 @@ public final class AutomationChecks {
         ItemStack offered = new ItemStack(Items.STONE, 4);
         int headroom = StorageStackBE.SLOTS;
 
-        checkEquals(0, storage.itemRun().insertAt(headroom, offered, true),
-                "Simulated accepted count");
-        checkEquals(0, storage.itemRun().insertAt(headroom, offered, false),
+        checkEquals(
+                0, storage.itemRun().insertAt(headroom, offered, true), "Simulated accepted count");
+        checkEquals(
+                0,
+                storage.itemRun().insertAt(headroom, offered, false),
                 "Committed accepted count");
         checkEquals(4, offered.getCount(), "Automation mutated caller input");
         check(helper.getLevel().getBlockState(above).is(Blocks.STONE), "Obstruction changed");
@@ -95,8 +98,7 @@ public final class AutomationChecks {
         checkEquals(0, occupied(singles.getItems()), "Simulation changed occupancy");
         checkEquals(1, run.insertAt(0, offered, false), "Committed grounded insertion");
         checkEquals(3, offered.getCount(), "Automation mutated caller input");
-        checkEquals(Items.STICK, singles.getItems().getStackInSlot(0).getItem(),
-                "Named cell item");
+        checkEquals(Items.STICK, singles.getItems().getStackInSlot(0).getItem(), "Named cell item");
         helper.succeed();
     }
 
@@ -111,7 +113,9 @@ public final class AutomationChecks {
         checkEquals(3, insertWalkingSlots(singles.itemRun(), offered), "Accepted item count");
         checkEquals(3, offered.getCount(), "Automation mutated caller input");
         for (int cell = 0; cell < 3; cell++) {
-            checkEquals(Items.STICK, singles.getItems().getStackInSlot(cell).getItem(),
+            checkEquals(
+                    Items.STICK,
+                    singles.getItems().getStackInSlot(cell).getItem(),
                     "Lowest cell " + cell);
         }
         helper.succeed();
@@ -130,11 +134,15 @@ public final class AutomationChecks {
 
         ItemStack simulated = singles.itemRun().extract(bottom, 64, true);
         checkEquals(Items.STICK, simulated.getItem(), "Simulated extracted item");
-        checkEquals(Items.STICK, singles.getItems().getStackInSlot(bottom).getItem(),
+        checkEquals(
+                Items.STICK,
+                singles.getItems().getStackInSlot(bottom).getItem(),
                 "Simulation mutated contents");
         ItemStack extracted = singles.itemRun().extract(bottom, 64, false);
         checkEquals(1, extracted.getCount(), "Extracted count");
-        checkEquals(Items.PAPER, singles.getItems().getStackInSlot(bottom).getItem(),
+        checkEquals(
+                Items.PAPER,
+                singles.getItems().getStackInSlot(bottom).getItem(),
                 "Column did not shift");
         helper.succeed();
     }
@@ -146,7 +154,9 @@ public final class AutomationChecks {
     public static void barAutomationBackfillsWithoutDropping(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
-        checkEquals(10, insertWalkingSlots(bars.itemRun(), new ItemStack(barItem, 10)),
+        checkEquals(
+                10,
+                insertWalkingSlots(bars.itemRun(), new ItemStack(barItem, 10)),
                 "Inserted bar count");
 
         ItemStack extracted = bars.itemRun().extract(0, 64, false);
@@ -184,7 +194,8 @@ public final class AutomationChecks {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
         BlockPos pos = bars.getBlockPos();
-        check(!BarStackBE.isValidBarItem(new ItemStack(Items.STICK)),
+        check(
+                !BarStackBE.isValidBarItem(new ItemStack(Items.STICK)),
                 "Test needs an item Bar refuses");
         bars.getItems().insertItem(0, new ItemStack(barItem));
         seedSlot(bars.getItems(), 1, new ItemStack(Items.STICK));

@@ -18,12 +18,17 @@ public final class RunTransferLedger {
         return pending != null ? pending : run == null ? ItemStack.EMPTY : run.getSlot(slot);
     }
 
-    public boolean allowsInsertion() { return structuralExtractionSlot < 0; }
+    public boolean allowsInsertion() {
+        return structuralExtractionSlot < 0;
+    }
 
     public boolean mayExtract(int slot) {
         if (structuralExtractionSlot >= 0 && structuralExtractionSlot != slot) return false;
-        return staged.entrySet().stream().noneMatch(entry -> entry.getKey() != slot
-                && !ItemStack.matches(entry.getValue(), originals.get(entry.getKey())));
+        return staged.entrySet().stream()
+                .noneMatch(entry ->
+                        entry.getKey() != slot
+                                && !ItemStack.matches(
+                                        entry.getValue(), originals.get(entry.getKey())));
     }
 
     public void stage(int slot, ItemStack result, StackRunItemAccess run) {
@@ -31,11 +36,13 @@ public final class RunTransferLedger {
         staged.put(slot, result);
     }
 
-    public void noteStructuralExtraction(int slot) { structuralExtractionSlot = slot; }
+    public void noteStructuralExtraction(int slot) {
+        structuralExtractionSlot = slot;
+    }
 
     public boolean growsBeyond(int slots) {
-        return staged.entrySet().stream().anyMatch(entry -> entry.getKey() >= slots
-                && !entry.getValue().isEmpty());
+        return staged.entrySet().stream()
+                .anyMatch(entry -> entry.getKey() >= slots && !entry.getValue().isEmpty());
     }
 
     public State snapshot() {
@@ -58,20 +65,30 @@ public final class RunTransferLedger {
         for (var entry : before.entrySet()) {
             ItemStack old = entry.getValue();
             ItemStack result = after.get(entry.getKey());
-            int removed = ItemStack.isSameItemSameComponents(old, result)
-                    ? old.getCount() - result.getCount() : old.getCount();
-            if (removed > 0 && run.get().extract(entry.getKey(), removed, false).getCount() != removed) {
-                throw new IllegalStateException("Committed extraction changed capacity at "
-                        + where + " slot " + entry.getKey());
+            int removed =
+                    ItemStack.isSameItemSameComponents(old, result)
+                            ? old.getCount() - result.getCount()
+                            : old.getCount();
+            if (removed > 0
+                    && run.get().extract(entry.getKey(), removed, false).getCount() != removed) {
+                throw new IllegalStateException(
+                        "Committed extraction changed capacity at "
+                                + where
+                                + " slot "
+                                + entry.getKey());
             }
         }
         for (int slot : before.keySet().stream().sorted().toList()) {
             ItemStack old = before.get(slot);
             ItemStack result = after.get(slot);
-            int added = ItemStack.isSameItemSameComponents(old, result)
-                    ? result.getCount() - old.getCount() : result.getCount();
-            if (added > 0 && run.get().insertAt(slot, result.copyWithCount(added), false) != added) {
-                throw new IllegalStateException("Committed insertion changed capacity at " + where + " slot " + slot);
+            int added =
+                    ItemStack.isSameItemSameComponents(old, result)
+                            ? result.getCount() - old.getCount()
+                            : result.getCount();
+            if (added > 0
+                    && run.get().insertAt(slot, result.copyWithCount(added), false) != added) {
+                throw new IllegalStateException(
+                        "Committed insertion changed capacity at " + where + " slot " + slot);
             }
         }
     }
@@ -82,6 +99,8 @@ public final class RunTransferLedger {
         return result;
     }
 
-    public record State(LinkedHashMap<Integer, ItemStack> originals,
-                        LinkedHashMap<Integer, ItemStack> staged, int structuralExtractionSlot) {}
+    public record State(
+            LinkedHashMap<Integer, ItemStack> originals,
+            LinkedHashMap<Integer, ItemStack> staged,
+            int structuralExtractionSlot) {}
 }
