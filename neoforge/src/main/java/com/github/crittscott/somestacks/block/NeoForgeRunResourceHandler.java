@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.NeoForgeRegistry;
 import com.github.crittscott.somestacks.server.NeoForgeGrowthPlacement;
-import com.github.crittscott.somestacks.block.StackBlock;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -12,14 +12,14 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-
 /**
  * Whole-run NeoForge transfer view. Only the ledger changes during a transaction; nested aborts
  * restore it and the root commit applies net slot changes through the common movement rules.
  * Positional runs permit one structural extraction position, without other pending positions,
  * because gravity and backfill remap the slots at commit.
  */
-public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRunResourceHandler.State>
+public final class NeoForgeRunResourceHandler
+        extends SnapshotJournal<NeoForgeRunResourceHandler.State>
         implements ResourceHandler<ItemResource> {
     private final StackBlockEntity blockEntity;
     private final RunTransferLedger changes = new RunTransferLedger();
@@ -32,7 +32,9 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
     }
 
     private StackRun<?> run() {
-        return !blockEntity.isRemoved() && blockEntity.itemRun() instanceof StackRun<?> run ? run : null;
+        return !blockEntity.isRemoved() && blockEntity.itemRun() instanceof StackRun<?> run
+                ? run
+                : null;
     }
 
     /** Sided lookups and different blocks in a run all address one native journal. */
@@ -69,7 +71,9 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
 
     @Override
     public boolean isValid(int index, ItemResource resource) {
-        return index >= 0 && index < size() && !resource.isEmpty()
+        return index >= 0
+                && index < size()
+                && !resource.isEmpty()
                 && blockEntity.isStoredItemValid(resource.toStack());
     }
 
@@ -78,7 +82,8 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
         if (index < 0 || index >= size()) return 0;
         if (resource.isEmpty()) return blockEntity.localSlotLimit();
         return isValid(index, resource)
-                ? Math.min(blockEntity.localSlotLimit(), resource.getMaxStackSize()) : 0;
+                ? Math.min(blockEntity.localSlotLimit(), resource.getMaxStackSize())
+                : 0;
     }
 
     private boolean structural() {
@@ -86,18 +91,22 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
     }
 
     @Override
-    public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+    public int insert(
+            int index, ItemResource resource, int amount, TransactionContext transaction) {
         TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
         NeoForgeRunResourceHandler ledger = ledger();
         if (ledger != this) return ledger.insert(index, resource, amount, transaction);
-        if (amount == 0 || RunEdit.isInProgress() || !isValid(index, resource)
+        if (amount == 0
+                || RunEdit.isInProgress()
+                || !isValid(index, resource)
                 || !changes.allowsInsertion()) return 0;
         ItemStack current = current(index);
         if (!current.isEmpty() && !resource.matches(current)) return 0;
         int inserted = Math.min(amount, getCapacityAsInt(index, resource) - current.getCount());
         if (inserted <= 0) return 0;
         StackRun<?> run = run();
-        inserted = Math.min(inserted, run.acceptsAt(index, resource.toStack(inserted), this::current));
+        inserted =
+                Math.min(inserted, run.acceptsAt(index, resource.toStack(inserted), this::current));
         if (inserted <= 0) return 0;
 
         if (index >= run.totalSlots()) {
@@ -108,8 +117,12 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
                 if (!RunEdit.begin()) return 0;
                 NeoForgeGrowthPlacement prepared;
                 try {
-                    prepared = NeoForgeGrowthPlacement.prepare(level, pos,
-                            StackBlock.placementState(blockEntity.getBlockState().getBlock(), level, pos));
+                    prepared =
+                            NeoForgeGrowthPlacement.prepare(
+                                    level,
+                                    pos,
+                                    StackBlock.placementState(
+                                            blockEntity.getBlockState().getBlock(), level, pos));
                 } finally {
                     RunEdit.end();
                 }
@@ -152,7 +165,8 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
     }
 
     @Override
-    public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
+    public int extract(
+            int index, ItemResource resource, int amount, TransactionContext transaction) {
         TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
         NeoForgeRunResourceHandler ledger = ledger();
         if (ledger != this) return ledger.extract(index, resource, amount, transaction);
@@ -174,7 +188,9 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
     }
 
     @Override
-    protected State createSnapshot() { return new State(changes.snapshot(), growth); }
+    protected State createSnapshot() {
+        return new State(changes.snapshot(), growth);
+    }
 
     @Override
     protected void revertToSnapshot(State snapshot) {

@@ -88,10 +88,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">SinglesColumnChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Singles support and gravity in a live level that does not touch loader-native automation
-directly: grounding at the bottom of a column, a cell resting on the one below it, visual
-columns lining up across differently rotated blocks, and extraction shifting a column down while
-carrying each item's rotation with it. Loader-automation-facing tests stay in each loader's
-own <code>SinglesColumnGameTests</code>.</div>
+directly: grounding at the bottom of a column, a cell resting on the one below it, visual columns
+lining up across differently rotated blocks, and extraction shifting a column down while carrying
+each item's rotation with it. Loader-automation-facing tests stay in each loader's own <code>
+SinglesColumnGameTests</code>.</div>
 </div>
 </section>
 <section class="summary">
@@ -127,8 +127,8 @@ the same contents as a larger share of a smaller column.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReservesZeroForAnEmptyColumn(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReservesZeroForAnEmptyColumn</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The comparator range reserves 0 for an empty column, as a vanilla container's does, and a cell
-holds one item, so full means every cell of every block occupied.</div>
+<div class="block">The comparator range reserves 0 for an empty column, as a vanilla container's does, and a
+cell holds one item, so full means every cell of every block occupied.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#depositTraceStopsAtLastEmptyBeforeOccupiedCell(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">depositTraceStopsAtLastEmptyBeforeOccupiedCell</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -289,10 +289,10 @@ then extract the bottom item. The gap remains and the upper item descends only o
 <h3>extractionDrawsAcrossDifferentlyRotatedBlockBoundary</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionDrawsAcrossDifferentlyRotatedBlockBoundary</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Extraction draws from the visually aligned column across a differently rotated block seam.
-To reproduce in-game: rotate two stacked Singles blocks differently, put items across one
-visual seam column, rotate the upper item, and extract the lower item. The upper item crosses
-the seam with its item rotation intact and its emptied block disappears.</div>
+<div class="block">Extraction draws from the visually aligned column across a differently rotated block seam. To
+reproduce in-game: rotate two stacked Singles blocks differently, put items across one visual
+seam column, rotate the upper item, and extract the lower item. The upper item crosses the
+seam with its item rotation intact and its emptied block disappears.</div>
 </div>
 </section>
 </li>
@@ -335,11 +335,11 @@ upper item stays in the upper block.</div>
 <h3>comparatorReservesZeroForAnEmptyColumn</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReservesZeroForAnEmptyColumn</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">The comparator range reserves 0 for an empty column, as a vanilla container's does, and a cell
-holds one item, so full means every cell of every block occupied.
+<div class="block">The comparator range reserves 0 for an empty column, as a vanilla container's does, and a
+cell holds one item, so full means every cell of every block occupied.
 
-<p>To reproduce in-game: compare an empty Singles column, the same column with one item, and a
-full column. Their comparator outputs are 0, at least 1, and 15 respectively.</div>
+<p>To reproduce in-game: compare an empty Singles column, the same column with one item, and
+a full column. Their comparator outputs are 0, at least 1, and 15 respectively.</div>
 </div>
 </section>
 </li>
@@ -349,8 +349,8 @@ full column. Their comparator outputs are 0, at least 1, and 15 respectively.</d
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReadsTheWholeColumnFromEveryBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Every block in a Singles column reports the same whole-column fill. To reproduce in-game:
-make a two-block column with one block's cells full and the other empty, then place comparators
-against both blocks. Both report the half-full value.</div>
+make a two-block column with one block's cells full and the other empty, then place
+comparators against both blocks. Both report the half-full value.</div>
 </div>
 </section>
 </li>
@@ -362,8 +362,9 @@ against both blocks. Both report the half-full value.</div>
 <div class="block">The fill is measured against the column's current height, so a run that loses a block reports
 the same contents as a larger share of a smaller column.
 
-<p>To reproduce in-game: fill the lower half of a two-block Singles column, read its comparator,
-then remove the empty upper block. The lower block's output rises from half full to full.</div>
+<p>To reproduce in-game: fill the lower half of a two-block Singles column, read its
+comparator, then remove the empty upper block. The lower block's output rises from half full
+to full.</div>
 </div>
 </section>
 </li>

@@ -105,8 +105,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Geometry and slot indexing shared by Bar Stack rendering, collision, ray targeting, and support.
 
 <p>A block contains eight layers of eight bars. Even layers run east-west, two bars across and
-four deep; odd layers run north-south, four across and two deep. Slots are indexed from the bottom
-layer upward and row by row within each layer.
+four deep; odd layers run north-south, four across and two deep. Slots are indexed from the
+bottom layer upward and row by row within each layer.
 
 <p>A bar is supported when its footprint overlaps a bar in the layer below. This makes support
 cross between the alternating orientations instead of following fixed columns. At a block
@@ -163,7 +163,8 @@ boundary, callers supply the lower block's top-layer occupancy as the supporting
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barHeight(int)" class="member-name-link">barHeight</a><wbr>(int&nbsp;y)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns a bar's constant Y span in model pixels; <code>y</code> keeps all span helpers layer-indexed.</div>
+<div class="block">Returns a bar's constant Y span in model pixels; <code>y</code> keeps all span helpers
+layer-indexed.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barWidth(int)" class="member-name-link">barWidth</a><wbr>(int&nbsp;y)</code></div>
@@ -255,8 +256,8 @@ layer beneath, which for the bottom layer is the top layer of the Bar Stack belo
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Finds the deposit target for a Bar Stack that does not yet exist and therefore has no occupied
-slots.</div>
+<div class="block">Finds the deposit target for a Bar Stack that does not yet exist and therefore has no
+occupied slots.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
@@ -427,9 +428,9 @@ boundary and uses the same footprint test as support within a block.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">traceAllPositions</span><wbr><span class="parameters">(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos)</span></div>
-<div class="block">Finds the deposit target for a Bar Stack that does not yet exist and therefore has no occupied
-slots. Placement uses this to validate the initial deposit and its resulting collision shape
-before adding the block to the world.</div>
+<div class="block">Finds the deposit target for a Bar Stack that does not yet exist and therefore has no
+occupied slots. Placement uses this to validate the initial deposit and its resulting
+collision shape before adding the block to the world.</div>
 </div>
 </section>
 </li>
@@ -442,8 +443,8 @@ before adding the block to the world.</div>
  @Nullable
  <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</span></div>
 <div class="block">Finds the slot a deposit targets: the last empty slot along the view ray before the first
-occupied one, or the farthest intersected slot if the ray meets no occupied bar. A null handler
-describes a prospective, entirely empty block.</div>
+occupied one, or the farthest intersected slot if the ray meets no occupied bar. A null
+handler describes a prospective, entirely empty block.</div>
 </div>
 </section>
 </li>
@@ -481,7 +482,8 @@ describes a prospective, entirely empty block.</div>
 <h3>barHeight</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">barHeight</span><wbr><span class="parameters">(int&nbsp;y)</span></div>
-<div class="block">Returns a bar's constant Y span in model pixels; <code>y</code> keeps all span helpers layer-indexed.</div>
+<div class="block">Returns a bar's constant Y span in model pixels; <code>y</code> keeps all span helpers
+layer-indexed.</div>
 </div>
 </section>
 </li>

@@ -1,10 +1,11 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.util.SlotAccess;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -41,8 +42,13 @@ final class BarDropBatch {
                     ItemStack drop = group.model.copy();
                     drop.setCount(Math.min(remaining, drop.getMaxStackSize()));
                     BlockPos pos = position.getKey();
-                    ItemEntity entity = new ItemEntity(level,
-                            pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, drop);
+                    ItemEntity entity =
+                            new ItemEntity(
+                                    level,
+                                    pos.getX() + 0.5,
+                                    pos.getY() + 0.5,
+                                    pos.getZ() + 0.5,
+                                    drop);
                     entity.setDefaultPickUpDelay();
                     level.addFreshEntity(entity);
                     remaining -= drop.getCount();

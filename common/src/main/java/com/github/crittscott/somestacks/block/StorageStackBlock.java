@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-
 import com.github.crittscott.somestacks.util.BlockType;
 
 import net.minecraft.core.BlockPos;

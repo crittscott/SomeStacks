@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.util.StackMode;
+
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;
@@ -32,7 +33,8 @@ public final class ServerGestureState {
     public static boolean claimSound(ServerPlayer player) {
         State state = get(player);
         long now = player.level().getGameTime();
-        if (state.lastSoundTick() != null && now - state.lastSoundTick() < SOUND_INTERVAL_TICKS) return false;
+        if (state.lastSoundTick() != null && now - state.lastSoundTick() < SOUND_INTERVAL_TICKS)
+            return false;
         states.put(player.getUUID(), new State(state.mode(), state.modifierDown(), now));
         return true;
     }
@@ -42,5 +44,6 @@ public final class ServerGestureState {
         if (state != null) states.put(id, new State(state.mode(), state.modifierDown(), null));
     }
 
-    public record State(StackMode mode, boolean modifierDown, @javax.annotation.Nullable Long lastSoundTick) {}
+    public record State(
+            StackMode mode, boolean modifierDown, @javax.annotation.Nullable Long lastSoundTick) {}
 }

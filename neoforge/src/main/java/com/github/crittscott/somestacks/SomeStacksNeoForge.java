@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks;
 import com.github.crittscott.somestacks.block.NeoForgeItemHandlers;
 import com.github.crittscott.somestacks.client.NeoForgeClientSetup;
 import com.github.crittscott.somestacks.network.NeoForgeNetworking;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -29,8 +30,8 @@ public class SomeStacksNeoForge {
         PlatformServices.install(new NeoForgePlatformServices());
         NeoForgeServerConfig config = NeoForgeServerConfig.INSTANCE;
         // Named explicitly: worlds from the preceding release keep their somestacks-server.toml.
-        container.registerConfig(ModConfig.Type.SYNCED, config.spec,
-                SomeStacksCommon.MODID + "-server.toml");
+        container.registerConfig(
+                ModConfig.Type.SYNCED, config.spec, SomeStacksCommon.MODID + "-server.toml");
         ServerConfig.install(config);
         modBus.addListener(config::onLoading);
         modBus.addListener(config::onReloading);
@@ -50,7 +51,8 @@ public class SomeStacksNeoForge {
         }
 
         SomeStacksCommon.LOGGER.info(
-                "Some Stacks v{} initialized for NeoForge", PlatformServices.modVersion(SomeStacksCommon.MODID));
+                "Some Stacks v{} initialized for NeoForge",
+                PlatformServices.modVersion(SomeStacksCommon.MODID));
     }
 
     private void onServerAboutToStart(ServerAboutToStartEvent event) {

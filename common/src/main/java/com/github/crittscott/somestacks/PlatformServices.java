@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.server.EditAuthority;
+
 import net.minecraft.server.level.ServerPlayer;
 
 import java.nio.file.Path;
@@ -11,9 +12,12 @@ public final class PlatformServices {
     /** All required services supplied together by the selected loader. */
     public interface Backend {
         Path configFolder();
+
         String modVersion(String namespace);
+
         /** Sends an explicit snapshot, or returns false when the loader owns native config sync. */
         boolean sendConfig(ServerPlayer player, ConfigSyncPkt packet);
+
         EditAuthority editAuthority();
     }
 

@@ -2,17 +2,18 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.client.NeoForgeClientEvents;
 import com.github.crittscott.somestacks.client.NeoForgeKeyMappings;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.commands.Commands;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.common.extensions.IBlockEntityExtension;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
-import net.minecraft.util.TriState;
+import net.neoforged.neoforge.common.extensions.IBlockEntityExtension;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 /** NeoForge development-client registration for {@link ClientCallbackChecks#run}. */
@@ -21,6 +22,7 @@ public final class ClientCallbackGameTests {
     private ClientCallbackGameTests() {}
 
     /** Registers the local /ssclienttest smoke command in a client running the test mod. */
+    // spotless:off
     @SubscribeEvent
     public static void register(RegisterClientCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("ssclienttest").executes(ctx ->
@@ -38,4 +40,5 @@ public final class ClientCallbackGameTests {
                     else nativeEntity.onDataPacket(null, input);
                 })));
     }
+    // spotless:on
 }

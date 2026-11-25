@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.util;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.StackBlock;
+
 import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
