@@ -35,16 +35,17 @@ public final class CubeGrid {
                     int index = indexFromXYZ(x, y, z);
                     for (int rotation = 0; rotation < rotatedIndices.length; rotation++) {
                         int[] visual = rotateXYZ(x, y, z, rotation);
-                        rotatedIndices[rotation][index] = indexFromXYZ(visual[0], visual[1], visual[2]);
+                        rotatedIndices[rotation][index] =
+                                indexFromXYZ(visual[0], visual[1], visual[2]);
                     }
                     double minX = starts[x] / 16.0;
                     double minY = starts[y] / 16.0;
                     double minZ = starts[z] / 16.0;
                     double size = cellPixels / 16.0;
-                    localBoxes[index] = new AABB(
-                            minX, minY, minZ, minX + size, minY + size, minZ + size);
-                    localShapes[index] = Shapes.box(
-                            minX, minY, minZ, minX + size, minY + size, minZ + size);
+                    localBoxes[index] =
+                            new AABB(minX, minY, minZ, minX + size, minY + size, minZ + size);
+                    localShapes[index] =
+                            Shapes.box(minX, minY, minZ, minX + size, minY + size, minZ + size);
                 }
             }
         }
@@ -56,23 +57,23 @@ public final class CubeGrid {
         int remainder = index % layerSize;
         int z = remainder / edge;
         int x = remainder % edge;
-        return new int[]{x, y, z};
+        return new int[] {x, y, z};
     }
 
     /** Rotates grid coordinates counterclockwise in quarter turns when viewed from above. */
     public int[] rotateXYZ(int x, int y, int z, int rotation) {
         return switch (rotationIndex(rotation)) {
-            case 0 -> new int[]{x, y, z};
-            case 1 -> new int[]{z, y, maxCoord - x};
-            case 2 -> new int[]{maxCoord - x, y, maxCoord - z};
-            case 3 -> new int[]{maxCoord - z, y, x};
+            case 0 -> new int[] {x, y, z};
+            case 1 -> new int[] {z, y, maxCoord - x};
+            case 2 -> new int[] {maxCoord - x, y, maxCoord - z};
+            case 3 -> new int[] {maxCoord - z, y, x};
             default -> throw new IllegalStateException();
         };
     }
 
     public AABB worldBox(int storageIndex, int rotation, BlockPos blockPos) {
-        return localBox(storageIndex, rotation).move(
-                blockPos.getX(), blockPos.getY(), blockPos.getZ());
+        return localBox(storageIndex, rotation)
+                .move(blockPos.getX(), blockPos.getY(), blockPos.getZ());
     }
 
     /** Maps a stored cell to its visual index without allocating coordinates. */

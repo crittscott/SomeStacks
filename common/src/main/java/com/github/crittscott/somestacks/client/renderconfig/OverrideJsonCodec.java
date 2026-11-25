@@ -4,10 +4,13 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import net.minecraft.resources.ResourceLocation;
+
 import java.util.Map;
 import java.util.TreeMap;
+
 import javax.annotation.Nullable;
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * Parses and serializes the item render override schema shared by bundled resources, the client
@@ -23,14 +26,14 @@ public final class OverrideJsonCodec {
 
     private OverrideJsonCodec() {}
 
-    /**
-     * Inclusive scale bounds shared by authored overrides and automatic measurement.
-     */
+    /** Inclusive scale bounds shared by authored overrides and automatic measurement. */
     public static final float MIN_SCALE = 0.01f;
+
     public static final float MAX_SCALE = 20.0f;
 
     /** Inclusive offset bounds in cell widths. */
     public static final float MIN_OFFSET = -1.0f;
+
     public static final float MAX_OFFSET = 1.0f;
 
     /** Whether a value is finite and within the inclusive bounds. */
@@ -39,19 +42,24 @@ public final class OverrideJsonCodec {
     }
 
     /** Parses every valid item entry, logging and skipping malformed entries or fields. */
-    public static Map<ResourceLocation, ItemRenderConfig> parse(JsonObject root, String sourceName) {
+    public static Map<ResourceLocation, ItemRenderConfig> parse(
+            JsonObject root, String sourceName) {
         Map<ResourceLocation, ItemRenderConfig> map = new TreeMap<>();
 
         for (Map.Entry<String, JsonElement> entry : root.entrySet()) {
             try {
                 ResourceLocation itemId = new ResourceLocation(entry.getKey());
-                ItemRenderConfig config = parseEntry(entry.getKey(), entry.getValue().getAsJsonObject(), sourceName);
+                ItemRenderConfig config =
+                        parseEntry(entry.getKey(), entry.getValue().getAsJsonObject(), sourceName);
                 if (config != null) {
                     map.put(itemId, config);
                 }
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Skipping override entry '{}' in {}: {}",
-                        entry.getKey(), sourceName, e.getMessage());
+                SomeStacksCommon.LOGGER.warn(
+                        "Skipping override entry '{}' in {}: {}",
+                        entry.getKey(),
+                        sourceName,
+                        e.getMessage());
             }
         }
 
@@ -70,10 +78,18 @@ public final class OverrideJsonCodec {
                 String modeString = json.get(FIELD_MODE).getAsString();
                 mode = RenderMode.fromString(modeString);
                 if (mode == null) {
-                    SomeStacksCommon.LOGGER.warn("Invalid render mode '{}' for item '{}' in {}", modeString, itemKey, sourceName);
+                    SomeStacksCommon.LOGGER.warn(
+                            "Invalid render mode '{}' for item '{}' in {}",
+                            modeString,
+                            itemKey,
+                            sourceName);
                 }
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to parse mode for item '{}' in {}: {}", itemKey, sourceName, e.getMessage());
+                SomeStacksCommon.LOGGER.warn(
+                        "Failed to parse mode for item '{}' in {}: {}",
+                        itemKey,
+                        sourceName,
+                        e.getMessage());
             }
         }
 
@@ -81,12 +97,21 @@ public final class OverrideJsonCodec {
             try {
                 scale = json.get(FIELD_SCALE).getAsFloat();
                 if (!inRange(scale, MIN_SCALE, MAX_SCALE)) {
-                    SomeStacksCommon.LOGGER.warn("Invalid scale {} for item '{}' in {}, must be between {} and {}",
-                            scale, itemKey, sourceName, MIN_SCALE, MAX_SCALE);
+                    SomeStacksCommon.LOGGER.warn(
+                            "Invalid scale {} for item '{}' in {}, must be between {} and {}",
+                            scale,
+                            itemKey,
+                            sourceName,
+                            MIN_SCALE,
+                            MAX_SCALE);
                     scale = null;
                 }
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to parse scale for item '{}' in {}: {}", itemKey, sourceName, e.getMessage());
+                SomeStacksCommon.LOGGER.warn(
+                        "Failed to parse scale for item '{}' in {}: {}",
+                        itemKey,
+                        sourceName,
+                        e.getMessage());
             }
         }
 
@@ -94,24 +119,35 @@ public final class OverrideJsonCodec {
             try {
                 JsonArray offsetArray = json.getAsJsonArray(FIELD_OFFSET);
                 if (offsetArray.size() != 3) {
-                    SomeStacksCommon.LOGGER.warn("Invalid offset array size for item '{}' in {}, expected 3 elements", itemKey, sourceName);
+                    SomeStacksCommon.LOGGER.warn(
+                            "Invalid offset array size for item '{}' in {}, expected 3 elements",
+                            itemKey,
+                            sourceName);
                 } else {
-                    RenderOffset parsed = new RenderOffset(
-                            offsetArray.get(0).getAsFloat(),
-                            offsetArray.get(1).getAsFloat(),
-                            offsetArray.get(2).getAsFloat()
-                    );
+                    RenderOffset parsed =
+                            new RenderOffset(
+                                    offsetArray.get(0).getAsFloat(),
+                                    offsetArray.get(1).getAsFloat(),
+                                    offsetArray.get(2).getAsFloat());
                     if (inRange(parsed.x(), MIN_OFFSET, MAX_OFFSET)
                             && inRange(parsed.y(), MIN_OFFSET, MAX_OFFSET)
                             && inRange(parsed.z(), MIN_OFFSET, MAX_OFFSET)) {
                         offset = parsed;
                     } else {
-                        SomeStacksCommon.LOGGER.warn("Out of range offset for item '{}' in {}, each component must be between {} and {}; ignoring it",
-                                itemKey, sourceName, MIN_OFFSET, MAX_OFFSET);
+                        SomeStacksCommon.LOGGER.warn(
+                                "Out of range offset for item '{}' in {}, each component must be between {} and {}; ignoring it",
+                                itemKey,
+                                sourceName,
+                                MIN_OFFSET,
+                                MAX_OFFSET);
                     }
                 }
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to parse offset for item '{}' in {}: {}", itemKey, sourceName, e.getMessage());
+                SomeStacksCommon.LOGGER.warn(
+                        "Failed to parse offset for item '{}' in {}: {}",
+                        itemKey,
+                        sourceName,
+                        e.getMessage());
             }
         }
 
@@ -124,7 +160,8 @@ public final class OverrideJsonCodec {
     /** Serializes entries sorted by item id for stable files. */
     public static JsonObject toJson(Map<ResourceLocation, ItemRenderConfig> map) {
         JsonObject root = new JsonObject();
-        new TreeMap<>(map).forEach((itemId, config) -> root.add(itemId.toString(), entryToJson(config)));
+        new TreeMap<>(map)
+                .forEach((itemId, config) -> root.add(itemId.toString(), entryToJson(config)));
         return root;
     }
 

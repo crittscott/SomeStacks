@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
+
 import net.minecraft.commands.Commands;
 import net.minecraft.resources.ResourceLocation;
 
@@ -47,9 +48,12 @@ public final class ServerConfig {
     public static final int DEFAULT_GALLERY_PERMISSION_LEVEL = Commands.LEVEL_ADMINS;
     public static final int MAX_PILE_HEIGHT_LIMIT = 64;
     public static final int GALLERY_PERMISSION_LEVEL_MAX = Commands.LEVEL_OWNERS;
+
     /** Bounds for each namespace list, shared by policy publication and the wire decoder. */
     public static final int MAX_NAMESPACE_ENTRIES = 256;
+
     public static final int MAX_NAMESPACE_LENGTH = 256;
+
     /** Items whose models are known to crash clients when drawn. */
     public static final List<String> DEFAULT_DISABLE_ITEMS = List.of("evilcraft:broom_part");
 
@@ -74,10 +78,14 @@ public final class ServerConfig {
             List<String> genMods,
             List<String> genItems) {
         public Settings {
-            maxPileHeight = Math.max(MIN_PILE_HEIGHT, Math.min(MAX_PILE_HEIGHT_LIMIT, maxPileHeight));
-            renderGalleryPlacementsPerTick = Math.max(MIN_PLACEMENTS_PER_TICK, renderGalleryPlacementsPerTick);
-            galleryPermissionLevel = Math.max(MIN_GALLERY_PERMISSION_LEVEL,
-                    Math.min(GALLERY_PERMISSION_LEVEL_MAX, galleryPermissionLevel));
+            maxPileHeight =
+                    Math.max(MIN_PILE_HEIGHT, Math.min(MAX_PILE_HEIGHT_LIMIT, maxPileHeight));
+            renderGalleryPlacementsPerTick =
+                    Math.max(MIN_PLACEMENTS_PER_TICK, renderGalleryPlacementsPerTick);
+            galleryPermissionLevel =
+                    Math.max(
+                            MIN_GALLERY_PERMISSION_LEVEL,
+                            Math.min(GALLERY_PERMISSION_LEVEL_MAX, galleryPermissionLevel));
             disableMods = List.copyOf(disableMods);
             disableItems = List.copyOf(disableItems);
             genMods = List.copyOf(genMods);
@@ -117,7 +125,10 @@ public final class ServerConfig {
 
     /** The named lists edited by /ss; each edit replaces the complete policy snapshot. */
     public enum ListSetting {
-        DISABLE_MODS, DISABLE_ITEMS, GEN_MODS, GEN_ITEMS;
+        DISABLE_MODS,
+        DISABLE_ITEMS,
+        GEN_MODS,
+        GEN_ITEMS;
 
         public List<String> get() {
             Settings current = settings;
@@ -166,8 +177,10 @@ public final class ServerConfig {
      * Starts a world with its loader's policy reader and command-save boundary, and publishes the
      * policy read now.
      */
-    public static void start(Supplier<Settings> readPolicy, Consumer<Settings> savePolicy,
-                             Runnable synchronizeClients) {
+    public static void start(
+            Supplier<Settings> readPolicy,
+            Consumer<Settings> savePolicy,
+            Runnable synchronizeClients) {
         reader = Objects.requireNonNull(readPolicy, "Policy reader");
         saver = Objects.requireNonNull(savePolicy, "Policy saver");
         syncClients = Objects.requireNonNull(synchronizeClients, "Policy synchronization");
@@ -191,15 +204,21 @@ public final class ServerConfig {
     public static boolean publish(Settings replacement) {
         Objects.requireNonNull(replacement, "Server policy");
         try {
-            replacement = replacement.withList(ListSetting.DISABLE_MODS,
-                    prepareNamespaces(replacement.disableMods(), Keys.DISABLE_MODS));
-            replacement = replacement.withList(ListSetting.GEN_MODS,
-                    prepareNamespaces(replacement.genMods(), Keys.GEN_MODS));
+            replacement =
+                    replacement.withList(
+                            ListSetting.DISABLE_MODS,
+                            prepareNamespaces(replacement.disableMods(), Keys.DISABLE_MODS));
+            replacement =
+                    replacement.withList(
+                            ListSetting.GEN_MODS,
+                            prepareNamespaces(replacement.genMods(), Keys.GEN_MODS));
         } catch (IllegalArgumentException rejected) {
-            SomeStacksCommon.LOGGER.warn("Keeping previous server policy: {}", rejected.getMessage());
+            SomeStacksCommon.LOGGER.warn(
+                    "Keeping previous server policy: {}", rejected.getMessage());
             return false;
         }
-        boolean syncedFieldsChanged = !ConfigSyncPkt.snapshot(settings).equals(ConfigSyncPkt.snapshot(replacement));
+        boolean syncedFieldsChanged =
+                !ConfigSyncPkt.snapshot(settings).equals(ConfigSyncPkt.snapshot(replacement));
         settings = replacement;
         bakeServerLists();
         if (syncedFieldsChanged && syncClients != null) {
@@ -214,17 +233,21 @@ public final class ServerConfig {
             String namespace = entry.trim().toLowerCase(Locale.ROOT);
             if (namespace.isEmpty()) continue;
             if (!isValidNamespace(namespace)) {
-                SomeStacksCommon.LOGGER.warn("Ignoring malformed namespace '{}' in {}", entry, label);
+                SomeStacksCommon.LOGGER.warn(
+                        "Ignoring malformed namespace '{}' in {}", entry, label);
                 continue;
             }
             if (namespace.length() > MAX_NAMESPACE_LENGTH) {
-                throw new IllegalArgumentException(label + " contains a namespace longer than "
-                        + MAX_NAMESPACE_LENGTH + " characters");
+                throw new IllegalArgumentException(
+                        label
+                                + " contains a namespace longer than "
+                                + MAX_NAMESPACE_LENGTH
+                                + " characters");
             }
             result.add(namespace);
             if (result.size() > MAX_NAMESPACE_ENTRIES) {
-                throw new IllegalArgumentException(label + " exceeds " + MAX_NAMESPACE_ENTRIES
-                        + " namespaces");
+                throw new IllegalArgumentException(
+                        label + " exceeds " + MAX_NAMESPACE_ENTRIES + " namespaces");
             }
         }
         return List.copyOf(result);
@@ -255,15 +278,17 @@ public final class ServerConfig {
     // --- Baking ---
 
     /**
-     * Builds admission sets from prepared namespaces and free-form item ids. Malformed item ids
-     * are reported here rather than reparsed on every deposit.
+     * Builds admission sets from prepared namespaces and free-form item ids. Malformed item ids are
+     * reported here rather than reparsed on every deposit.
      */
     public static void bakeServerLists() {
         Set<ResourceLocation> items = new HashSet<>();
         for (String entry : ListSetting.DISABLE_ITEMS.get()) {
-            ResourceLocation itemId = ResourceLocation.tryParse(entry.trim().toLowerCase(Locale.ROOT));
+            ResourceLocation itemId =
+                    ResourceLocation.tryParse(entry.trim().toLowerCase(Locale.ROOT));
             if (itemId == null) {
-                SomeStacksCommon.LOGGER.warn("Ignoring malformed item id \"{}\" in disable_items", entry);
+                SomeStacksCommon.LOGGER.warn(
+                        "Ignoring malformed item id \"{}\" in disable_items", entry);
                 continue;
             }
             items.add(itemId);
@@ -278,9 +303,14 @@ public final class ServerConfig {
         Settings current = settings;
         SomeStacksCommon.LOGGER.info(
                 "Server policy active: Storage={}, Singles={}, Bar={}; maximum pile height={}; disabled mods={}, disabled items={}, gallery mods={}, gallery items={}",
-                current.enableStorageStackBlock(), current.enableSinglesStackBlock(), current.enableBarStackBlock(),
-                current.maxPileHeight(), disabledMods.size(), disabledItems.size(),
-                current.genMods().size(), current.genItems().size());
+                current.enableStorageStackBlock(),
+                current.enableSinglesStackBlock(),
+                current.enableBarStackBlock(),
+                current.maxPileHeight(),
+                disabledMods.size(),
+                disabledItems.size(),
+                current.genMods().size(),
+                current.genItems().size());
     }
 
     /**

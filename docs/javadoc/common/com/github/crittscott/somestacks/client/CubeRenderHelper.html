@@ -77,9 +77,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">CubeRenderHelper</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Draws one stored item inside one cell according to its render profile. The Storage
- and Singles renderers position a cell and delegate here; everything about how the item itself is
- presented lives in this class.
+<div class="block">Draws one stored item inside one cell according to its render profile. The Storage and Singles
+ renderers position a cell and delegate here; everything about how the item itself is presented
+ lives in this class.
 
  <p>The <code>3d</code>, <code>gui</code>, and <code>block</code> modes hand off to Minecraft's own renderers.
  The <code>2d</code> mode is the one implemented here: flat item art projected onto the visible faces
@@ -151,9 +151,7 @@ loadScripts(document, 'script');</script>
  net.minecraft.client.renderer.block.BlockRenderDispatcher&nbsp;blockRenderer,
  net.minecraft.world.level.Level&nbsp;level)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Draws <code>stack</code> inside the current cell, in whichever presentation
- <a href="ItemRenderOverrides.html#resolve(net.minecraft.world.item.ItemStack)"><code>ItemRenderOverrides.resolve(net.minecraft.world.item.ItemStack)</code></a> selects for it, or draws nothing if <code>stack</code> is
- empty.</div>
+<div class="block">Draws <code>stack</code> inside the current cell, in whichever presentation <a href="ItemRenderOverrides.html#resolve(net.minecraft.world.item.ItemStack)"><code>ItemRenderOverrides.resolve(net.minecraft.world.item.ItemStack)</code></a> selects for it, or draws nothing if <code>stack</code> is empty.</div>
 </div>
 </div>
 </div>
@@ -264,10 +262,9 @@ loadScripts(document, 'script');</script>
  int&nbsp;light,
  net.minecraft.client.renderer.block.BlockRenderDispatcher&nbsp;blockRenderer,
  net.minecraft.world.level.Level&nbsp;level)</span></div>
-<div class="block">Draws <code>stack</code> inside the current cell, in whichever presentation
- <a href="ItemRenderOverrides.html#resolve(net.minecraft.world.item.ItemStack)"><code>ItemRenderOverrides.resolve(net.minecraft.world.item.ItemStack)</code></a> selects for it, or draws nothing if <code>stack</code> is
- empty. <code>pose</code> must already be positioned at the cell being drawn; this method only
- pushes/pops the transforms needed for the item's own presentation within it.</div>
+<div class="block">Draws <code>stack</code> inside the current cell, in whichever presentation <a href="ItemRenderOverrides.html#resolve(net.minecraft.world.item.ItemStack)"><code>ItemRenderOverrides.resolve(net.minecraft.world.item.ItemStack)</code></a> selects for it, or draws nothing if <code>stack</code> is empty.
+ <code>pose</code> must already be positioned at the cell being drawn; this method only pushes/pops
+ the transforms needed for the item's own presentation within it.</div>
 </section>
 </li>
 <li>

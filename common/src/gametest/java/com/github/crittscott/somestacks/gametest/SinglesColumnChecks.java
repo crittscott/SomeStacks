@@ -1,20 +1,5 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.util.BlockType;
-import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.ViewRay;
-import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Block;
-import com.github.crittscott.somestacks.block.SinglesColumn;
-import com.github.crittscott.somestacks.block.SinglesStackBlock;
-import net.minecraft.world.phys.Vec3;
-
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
@@ -25,12 +10,28 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSi
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalAt;
 
+import com.github.crittscott.somestacks.block.SinglesColumn;
+import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.SinglesStackBlock;
+import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
+
 /**
  * Singles support and gravity in a live level that does not touch loader-native automation
- * directly: grounding at the bottom of a column, a cell resting on the one below it, visual
- * columns lining up across differently rotated blocks, and extraction shifting a column down while
- * carrying each item's rotation with it. Capability/Transfer-API-facing tests stay in each loader's
- * own {@code SinglesColumnGameTests}.
+ * directly: grounding at the bottom of a column, a cell resting on the one below it, visual columns
+ * lining up across differently rotated blocks, and extraction shifting a column down while carrying
+ * each item's rotation with it. Capability/Transfer-API-facing tests stay in each loader's own
+ * {@code SinglesColumnGameTests}.
  */
 public final class SinglesColumnChecks {
     private SinglesColumnChecks() {}
@@ -38,11 +39,12 @@ public final class SinglesColumnChecks {
     /**
      * To reproduce: build three occupied Singles blocks, rotate the upper block and some of its
      * items, and put comparators beside the ends. Break the middle block. Only its local contents
-     * drop; upper items keep their positions and rotations, and both surviving runs update fill
-     * and light. The fixture drains placement ticks, then inserts an upper glowstone in the same
-     * tick as removal to test pending publication at the new upper base without invoking gravity.
+     * drop; upper items keep their positions and rotations, and both surviving runs update fill and
+     * light. The fixture drains placement ticks, then inserts an upper glowstone in the same tick
+     * as removal to test pending publication at the new upper base without invoking gravity.
      */
-    public static void middleRemovalPreservesAndPublishesBothSurvivingColumns(GameTestHelper helper) {
+    public static void middleRemovalPreservesAndPublishesBothSurvivingColumns(
+            GameTestHelper helper) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
         SinglesStackBE middle = placeSingles(helper, ORIGIN.above());
         SinglesStackBE upper = placeSingles(helper, ORIGIN.above(2));
@@ -55,50 +57,118 @@ public final class SinglesColumnChecks {
         }
         BlockPos lowerComparator = GameTestScaffold.placeComparator(helper, ORIGIN);
         BlockPos upperComparator = GameTestScaffold.placeComparator(helper, ORIGIN.above(2));
-        helper.runAfterDelay(6, () -> {
-            check(!helper.getLevel().getBlockTicks().hasScheduledTick(upper.getBlockPos(),
-                    upper.getBlockState().getBlock()), "Fixture retained an upper placement tick");
-            SinglesColumn cached = lower.column();
-            check(cached != null && cached == upper.column(), "Ends did not share the initial cache");
-            checkEquals(3, cached.height(), "Initial height");
-            upper.getItems().setStackInSlot(4, new ItemStack(Items.GLOWSTONE));
-            upper.setCubeRotation(4, 1);
-            checkEquals(0, upper.getBlockState().getValue(SinglesStackBlock.LIGHT_LEVEL),
-                    "Upper edit published before the split");
-            check(helper.getLevel().setBlock(middle.getBlockPos(), Blocks.AIR.defaultBlockState(),
-                    Block.UPDATE_ALL), "Middle removal failed");
-            checkEquals(1, droppedNear(helper, middle.getBlockPos(), Items.DIAMOND), "Middle drop count");
-            checkEquals(0L, GameTestScaffold.droppedInColumn(helper, lower.getBlockPos(), upper.getBlockPos())
-                    .stream().filter(entity -> !entity.getItem().is(Items.DIAMOND)).count(),
-                    "A surviving block dropped contents");
-            helper.runAfterDelay(6, () -> {
-                SinglesColumn below = lower.column();
-                SinglesColumn above = upper.column();
-                check(below != null && above != null && below != above, "Split columns not independent");
-                checkEquals(lower.getBlockPos(), below.basePos(), "Lower base");
-                checkEquals(upper.getBlockPos(), above.basePos(), "Upper base");
-                checkEquals(1, below.height(), "Lower height");
-                checkEquals(1, above.height(), "Upper height");
-                checkEquals(1, GameTestScaffold.occupied(lower.getItems()), "Lower contents");
-                checkEquals(5, GameTestScaffold.occupied(upper.getItems()), "Upper contents");
-                checkEquals(2, upper.getRotation(), "Upper block rotation");
-                for (int slot = 0; slot < 4; slot++) {
-                    checkEquals(Items.PAPER, upper.getItems().getStackInSlot(slot).getItem(), "Upper paper position");
-                    checkEquals(3 - slot, upper.getCubeRotation(slot), "Upper item rotation");
-                }
-                checkEquals(Items.GLOWSTONE, upper.getItems().getStackInSlot(4).getItem(), "Pending upper item");
-                checkEquals(1, upper.getCubeRotation(4), "Pending upper rotation");
-                checkEquals(1, GameTestScaffold.count(lower.getItems(), Items.GLOWSTONE), "Lower conservation");
-                checkEquals(1, GameTestScaffold.count(upper.getItems(), Items.GLOWSTONE), "Upper glowstone conservation");
-                checkEquals(4, GameTestScaffold.count(upper.getItems(), Items.PAPER), "Upper paper conservation");
-                checkEquals(1, droppedNear(helper, middle.getBlockPos(), Items.DIAMOND), "Final middle drops");
-                checkEquals(3, lower.getBlockState().getValue(SinglesStackBlock.LIGHT_LEVEL), "Lower light");
-                checkEquals(3, upper.getBlockState().getValue(SinglesStackBlock.LIGHT_LEVEL), "Upper light");
-                checkEquals(1, GameTestScaffold.comparatorOutput(helper, lowerComparator), "Lower comparator");
-                checkEquals(2, GameTestScaffold.comparatorOutput(helper, upperComparator), "Upper comparator");
-                helper.succeed();
-            });
-        });
+        helper.runAfterDelay(
+                6,
+                () -> {
+                    check(
+                            !helper.getLevel()
+                                    .getBlockTicks()
+                                    .hasScheduledTick(
+                                            upper.getBlockPos(), upper.getBlockState().getBlock()),
+                            "Fixture retained an upper placement tick");
+                    SinglesColumn cached = lower.column();
+                    check(
+                            cached != null && cached == upper.column(),
+                            "Ends did not share the initial cache");
+                    checkEquals(3, cached.height(), "Initial height");
+                    upper.getItems().setStackInSlot(4, new ItemStack(Items.GLOWSTONE));
+                    upper.setCubeRotation(4, 1);
+                    checkEquals(
+                            0,
+                            upper.getBlockState().getValue(SinglesStackBlock.LIGHT_LEVEL),
+                            "Upper edit published before the split");
+                    check(
+                            helper.getLevel()
+                                    .setBlock(
+                                            middle.getBlockPos(),
+                                            Blocks.AIR.defaultBlockState(),
+                                            Block.UPDATE_ALL),
+                            "Middle removal failed");
+                    checkEquals(
+                            1,
+                            droppedNear(helper, middle.getBlockPos(), Items.DIAMOND),
+                            "Middle drop count");
+                    checkEquals(
+                            0L,
+                            GameTestScaffold.droppedInColumn(
+                                            helper, lower.getBlockPos(), upper.getBlockPos())
+                                    .stream()
+                                    .filter(entity -> !entity.getItem().is(Items.DIAMOND))
+                                    .count(),
+                            "A surviving block dropped contents");
+                    helper.runAfterDelay(
+                            6,
+                            () -> {
+                                SinglesColumn below = lower.column();
+                                SinglesColumn above = upper.column();
+                                check(
+                                        below != null && above != null && below != above,
+                                        "Split columns not independent");
+                                checkEquals(lower.getBlockPos(), below.basePos(), "Lower base");
+                                checkEquals(upper.getBlockPos(), above.basePos(), "Upper base");
+                                checkEquals(1, below.height(), "Lower height");
+                                checkEquals(1, above.height(), "Upper height");
+                                checkEquals(
+                                        1,
+                                        GameTestScaffold.occupied(lower.getItems()),
+                                        "Lower contents");
+                                checkEquals(
+                                        5,
+                                        GameTestScaffold.occupied(upper.getItems()),
+                                        "Upper contents");
+                                checkEquals(2, upper.getRotation(), "Upper block rotation");
+                                for (int slot = 0; slot < 4; slot++) {
+                                    checkEquals(
+                                            Items.PAPER,
+                                            upper.getItems().getStackInSlot(slot).getItem(),
+                                            "Upper paper position");
+                                    checkEquals(
+                                            3 - slot,
+                                            upper.getCubeRotation(slot),
+                                            "Upper item rotation");
+                                }
+                                checkEquals(
+                                        Items.GLOWSTONE,
+                                        upper.getItems().getStackInSlot(4).getItem(),
+                                        "Pending upper item");
+                                checkEquals(1, upper.getCubeRotation(4), "Pending upper rotation");
+                                checkEquals(
+                                        1,
+                                        GameTestScaffold.count(lower.getItems(), Items.GLOWSTONE),
+                                        "Lower conservation");
+                                checkEquals(
+                                        1,
+                                        GameTestScaffold.count(upper.getItems(), Items.GLOWSTONE),
+                                        "Upper glowstone conservation");
+                                checkEquals(
+                                        4,
+                                        GameTestScaffold.count(upper.getItems(), Items.PAPER),
+                                        "Upper paper conservation");
+                                checkEquals(
+                                        1,
+                                        droppedNear(helper, middle.getBlockPos(), Items.DIAMOND),
+                                        "Final middle drops");
+                                checkEquals(
+                                        3,
+                                        lower.getBlockState()
+                                                .getValue(SinglesStackBlock.LIGHT_LEVEL),
+                                        "Lower light");
+                                checkEquals(
+                                        3,
+                                        upper.getBlockState()
+                                                .getValue(SinglesStackBlock.LIGHT_LEVEL),
+                                        "Upper light");
+                                checkEquals(
+                                        1,
+                                        GameTestScaffold.comparatorOutput(helper, lowerComparator),
+                                        "Lower comparator");
+                                checkEquals(
+                                        2,
+                                        GameTestScaffold.comparatorOutput(helper, upperComparator),
+                                        "Upper comparator");
+                                helper.succeed();
+                            });
+                });
     }
 
     /**
@@ -108,7 +178,8 @@ public final class SinglesColumnChecks {
      */
     public static void standaloneBottomIsGroundedAndFloatingCellIsRejected(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        check(BlockType.SINGLES_STACK.admits(new ItemStack(Items.STICK), null),
+        check(
+                BlockType.SINGLES_STACK.admits(new ItemStack(Items.STICK), null),
                 "Stick is not valid for Singles tests");
 
         ItemStack grounded = new ItemStack(Items.STICK, 2);
@@ -131,9 +202,9 @@ public final class SinglesColumnChecks {
         int bottom = SinglesCubeIdx.indexFromColumn(column, 0);
         int secondLayer = SinglesCubeIdx.indexFromColumn(column, 1);
 
-        check(singles.depositAt(bottom, new ItemStack(Items.STICK)),
-                "Bottom deposit failed");
-        check(singles.depositAt(secondLayer, new ItemStack(Items.PAPER)),
+        check(singles.depositAt(bottom, new ItemStack(Items.STICK)), "Bottom deposit failed");
+        check(
+                singles.depositAt(secondLayer, new ItemStack(Items.PAPER)),
                 "Supported upper deposit failed");
         helper.succeed();
     }
@@ -163,8 +234,7 @@ public final class SinglesColumnChecks {
         lower.getItems().insertItem(lowerTop, new ItemStack(Items.STICK), false);
         ItemStack offered = new ItemStack(Items.PAPER);
 
-        check(upper.depositAt(upperBottom, offered),
-                "Visual seam did not support the upper block");
+        check(upper.depositAt(upperBottom, offered), "Visual seam did not support the upper block");
         checkEquals(0, offered.getCount(), "Upper deposit remainder");
         helper.succeed();
     }
@@ -190,18 +260,20 @@ public final class SinglesColumnChecks {
         ItemStack extracted = singles.extractAt(bottom);
 
         checkEquals(Items.STICK, extracted.getItem(), "Extracted item");
-        checkEquals(Items.PAPER, singles.getItems().getStackInSlot(bottom).getItem(),
+        checkEquals(
+                Items.PAPER,
+                singles.getItems().getStackInSlot(bottom).getItem(),
                 "Middle item did not shift to bottom");
-        checkEquals(1, singles.getCubeRotation(bottom),
-                "Middle item rotation did not move");
-        checkEquals(Items.APPLE, singles.getItems().getStackInSlot(middle).getItem(),
+        checkEquals(1, singles.getCubeRotation(bottom), "Middle item rotation did not move");
+        checkEquals(
+                Items.APPLE,
+                singles.getItems().getStackInSlot(middle).getItem(),
                 "Top item did not shift to middle");
-        checkEquals(3, singles.getCubeRotation(middle),
-                "Top item rotation did not move");
-        check(singles.getItems().getStackInSlot(top).isEmpty(),
+        checkEquals(3, singles.getCubeRotation(middle), "Top item rotation did not move");
+        check(
+                singles.getItems().getStackInSlot(top).isEmpty(),
                 "Top source cell remained occupied");
-        checkEquals(0, singles.getCubeRotation(top),
-                "Vacated cell retained a rotation");
+        checkEquals(0, singles.getCubeRotation(top), "Vacated cell retained a rotation");
         helper.succeed();
     }
 
@@ -219,7 +291,8 @@ public final class SinglesColumnChecks {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BlockPos pos = singles.getBlockPos();
         Item legacy = firstBarItem();
-        check(!BlockType.SINGLES_STACK.admits(new ItemStack(legacy), null),
+        check(
+                !BlockType.SINGLES_STACK.admits(new ItemStack(legacy), null),
                 "Test needs an item a Singles Stack refuses");
         int bottom = SinglesCubeIdx.indexFromColumn(0, 0);
         int second = SinglesCubeIdx.indexFromColumn(0, 1);
@@ -251,7 +324,8 @@ public final class SinglesColumnChecks {
         BlockPos lowerPos = lower.getBlockPos();
         BlockPos upperPos = upper.getBlockPos();
         Item legacy = firstBarItem();
-        check(!BlockType.SINGLES_STACK.admits(new ItemStack(legacy), null),
+        check(
+                !BlockType.SINGLES_STACK.admits(new ItemStack(legacy), null),
                 "Test needs an item a Singles Stack refuses");
         int bottom = SinglesCubeIdx.indexFromColumn(0, 0);
         lower.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);
@@ -260,9 +334,10 @@ public final class SinglesColumnChecks {
         ItemStack extracted = lower.extractAt(bottom);
 
         checkEquals(Items.APPLE, extracted.getItem(), "Extracted item");
-        int accounted = heldAt(helper, lowerPos, legacy)
-                + heldAt(helper, upperPos, legacy)
-                + droppedNear(helper, lowerPos, legacy);
+        int accounted =
+                heldAt(helper, lowerPos, legacy)
+                        + heldAt(helper, upperPos, legacy)
+                        + droppedNear(helper, lowerPos, legacy);
         checkEquals(1, accounted, "Refused item after being drawn down across the seam");
         helper.succeed();
     }
@@ -289,9 +364,12 @@ public final class SinglesColumnChecks {
 
         singles.extractAt(bottom);
 
-        check(singles.getItems().getStackInSlot(bottom).isEmpty(),
+        check(
+                singles.getItems().getStackInSlot(bottom).isEmpty(),
                 "Existing gap was compacted away");
-        checkEquals(Items.PAPER, singles.getItems().getStackInSlot(second).getItem(),
+        checkEquals(
+                Items.PAPER,
+                singles.getItems().getStackInSlot(second).getItem(),
                 "Upper item did not shift exactly one layer");
         helper.succeed();
     }
@@ -311,10 +389,8 @@ public final class SinglesColumnChecks {
         lower.setRotation(1);
         upper.setRotation(2);
         int visualColumn = 9;
-        int lowerColumn =
-                SinglesCubeIdx.storageColumnFromVisual(visualColumn, lower.getRotation());
-        int upperColumn =
-                SinglesCubeIdx.storageColumnFromVisual(visualColumn, upper.getRotation());
+        int lowerColumn = SinglesCubeIdx.storageColumnFromVisual(visualColumn, lower.getRotation());
+        int upperColumn = SinglesCubeIdx.storageColumnFromVisual(visualColumn, upper.getRotation());
         int lowerTop = SinglesCubeIdx.indexFromColumn(lowerColumn, 3);
         int upperBottom = SinglesCubeIdx.indexFromColumn(upperColumn, 0);
         lower.getItems().insertItem(lowerTop, new ItemStack(Items.STICK), false);
@@ -323,11 +399,13 @@ public final class SinglesColumnChecks {
 
         lower.extractAt(lowerTop);
 
-        checkEquals(Items.PAPER, lower.getItems().getStackInSlot(lowerTop).getItem(),
+        checkEquals(
+                Items.PAPER,
+                lower.getItems().getStackInSlot(lowerTop).getItem(),
                 "Item did not cross the visual block seam");
-        checkEquals(3, lower.getCubeRotation(lowerTop),
-                "Cross-seam item rotation changed");
-        check(helper.getLevel().getBlockEntity(upper.getBlockPos()) == null,
+        checkEquals(3, lower.getCubeRotation(lowerTop), "Cross-seam item rotation changed");
+        check(
+                helper.getLevel().getBlockEntity(upper.getBlockPos()) == null,
                 "Emptied top block remained");
         helper.succeed();
     }
@@ -345,11 +423,9 @@ public final class SinglesColumnChecks {
         singles.getItems().insertItem(8, new ItemStack(Items.STICK), false);
         BlockPos blockPos = singles.getBlockPos();
 
-        int result = SinglesCubeIdx.traceAllPositions(
-                traceThroughBlock(blockPos),
-                blockPos,
-                singles.getItems(),
-                0);
+        int result =
+                SinglesCubeIdx.traceAllPositions(
+                        traceThroughBlock(blockPos), blockPos, singles.getItems(), 0);
 
         checkEquals(4, result, "Trace deposit index");
         helper.succeed();
@@ -366,24 +442,23 @@ public final class SinglesColumnChecks {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BlockPos blockPos = singles.getBlockPos();
 
-        int result = SinglesCubeIdx.traceAllPositions(
-                traceThroughBlock(blockPos),
-                blockPos,
-                singles.getItems(),
-                0);
+        int result =
+                SinglesCubeIdx.traceAllPositions(
+                        traceThroughBlock(blockPos), blockPos, singles.getItems(), 0);
 
         checkEquals(12, result, "Trace deposit index");
         helper.succeed();
     }
 
     /**
-     * A ray entering the block's lowest north-west cell head on and running clear through it, so the
-     * cells it meets are the column the trace is being asked about.
+     * A ray entering the block's lowest north-west cell head on and running clear through it, so
+     * the cells it meets are the column the trace is being asked about.
      */
     private static ViewRay traceThroughBlock(BlockPos blockPos) {
         double x = blockPos.getX() + 0.125;
         double y = blockPos.getY() + 0.125;
-        return new ViewRay(new Vec3(x, y, blockPos.getZ() - 1.0), new Vec3(x, y, blockPos.getZ() + 2.0));
+        return new ViewRay(
+                new Vec3(x, y, blockPos.getZ() - 1.0), new Vec3(x, y, blockPos.getZ() + 2.0));
     }
 
     /**
@@ -400,8 +475,7 @@ public final class SinglesColumnChecks {
         checkEquals(0, signalAt(helper, ORIGIN), "Empty column signal");
 
         singles.getItems().insertItem(0, new ItemStack(Items.STONE, 1), false);
-        checkEquals(1, signalAt(helper, ORIGIN),
-                "Signal for a single item in a whole column");
+        checkEquals(1, signalAt(helper, ORIGIN), "Signal for a single item in a whole column");
 
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
             singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);

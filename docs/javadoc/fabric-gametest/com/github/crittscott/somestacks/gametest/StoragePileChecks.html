@@ -189,15 +189,15 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">middleRemovalSettlesAndPublishesBothSurvivingPiles</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce: create a permanent three-block Storage pile and use /data merge block to seed
  sparse glowstone contents in its end blocks and diamonds in its middle block. Place
- comparators beside both ends and break the middle before another inventory mutation.
- Seed two full glowstone stacks below, seven diamonds in the middle, and two single glowstone
- items above. Only seven diamonds drop. The lower pile packs to two slots (signal 2, light 6);
- the upper pile merges to one slot (signal 1, light 3).
- The fixture first drains placement ticks, then seeds sparse local slots and makes a pending
- upper edit in the removal tick, so it specifically checks rescheduling at the new upper base.
- That same-tick pending-publication assertion is internal; ordinary deposits pack from the
- base and cannot create this sparse starting layout. Fixture contents carry a per-run tag
- so drops from other tests or earlier runs are excluded.</div>
+ comparators beside both ends and break the middle before another inventory mutation. Seed two
+ full glowstone stacks below, seven diamonds in the middle, and two single glowstone items
+ above. Only seven diamonds drop. The lower pile packs to two slots (signal 2, light 6); the
+ upper pile merges to one slot (signal 1, light 3). The fixture first drains placement ticks,
+ then seeds sparse local slots and makes a pending upper edit in the removal tick, so it
+ specifically checks rescheduling at the new upper base. That same-tick pending-publication
+ assertion is internal; ordinary deposits pack from the base and cannot create this sparse
+ starting layout. Fixture contents carry a per-run tag so drops from other tests or earlier
+ runs are excluded.</div>
 </section>
 </li>
 <li>
@@ -260,10 +260,10 @@ loadScripts(document, 'script');</script>
  of 64, 6, and 10, then the pickaxes in ascending damage order.
 
  <p>For a visible check, /give stone with those tags and deposit the same totals into Storage.
- Also deposit dirt, untagged stone, and wooden pickaxes with different damage. After settlement,
- matching tags merge into legal stacks, distinct tags stay separate, and occupied cells pack
- toward the base in that order. The test's initial gaps require direct fixture writes; source
- counts and independent output NBT are internal ownership checks.</div>
+ Also deposit dirt, untagged stone, and wooden pickaxes with different damage. After
+ settlement, matching tags merge into legal stacks, distinct tags stay separate, and occupied
+ cells pack toward the base in that order. The test's initial gaps require direct fixture
+ writes; source counts and independent output NBT are internal ownership checks.</div>
 </section>
 </li>
 <li>
@@ -283,8 +283,8 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce: place two Storage piles with one item each. Select Toggle Permanent, hold V,
  and empty-hand right-click one pile. Release V and extract the last item from each. After
  settlement, the temporary pile disappears while the permanent pile remains empty. The
- automated fixture starts with empty blocks, invokes settlement directly, and checks that
- the removed pile reports zero fill and signal and accepts a cleanup request without a base.</div>
+ automated fixture starts with empty blocks, invokes settlement directly, and checks that the
+ removed pile reports zero fill and signal and accepts a cleanup request without a base.</div>
 </section>
 </li>
 <li>

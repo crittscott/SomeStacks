@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.network.ModNetworking;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -34,27 +35,33 @@ public final class ClientEvents {
      */
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
-        ClientRenderCommands.register(event.getDispatcher(), new ClientRenderCommands.Feedback<>() {
-            @Override
-            public void success(CommandSourceStack source, Component message) {
-                source.sendSuccess(() -> message, false);
-            }
+        ClientRenderCommands.register(
+                event.getDispatcher(),
+                new ClientRenderCommands.Feedback<>() {
+                    @Override
+                    public void success(CommandSourceStack source, Component message) {
+                        source.sendSuccess(() -> message, false);
+                    }
 
-            @Override
-            public void failure(CommandSourceStack source, Component message) {
-                source.sendFailure(message);
-            }
-        });
+                    @Override
+                    public void failure(CommandSourceStack source, Component message) {
+                        source.sendFailure(message);
+                    }
+                });
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty evt) {
         if (!evt.getLevel().isClientSide()) return;
 
-        InteractionContext ctx = InteractionContext.forAirClick(
-                evt.getEntity(), evt.getLevel(), evt.getHand(),
-                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown())
-                .withHittingBlock(isHittingBlock());
+        InteractionContext ctx =
+                InteractionContext.forAirClick(
+                                evt.getEntity(),
+                                evt.getLevel(),
+                                evt.getHand(),
+                                ClientGestures.currentMode(),
+                                KeyMappings.STACK_MODE_KEY.isDown())
+                        .withHittingBlock(isHittingBlock());
         InteractionRuleRegistry.processEmptyHandRules(ctx);
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
     }
@@ -64,10 +71,14 @@ public final class ClientEvents {
         if (!evt.getLevel().isClientSide()) return;
         if (evt.isCanceled()) return;
 
-        InteractionContext ctx = InteractionContext.forAirClick(
-                evt.getEntity(), evt.getLevel(), evt.getHand(),
-                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown())
-                .withHittingBlock(isHittingBlock());
+        InteractionContext ctx =
+                InteractionContext.forAirClick(
+                                evt.getEntity(),
+                                evt.getLevel(),
+                                evt.getHand(),
+                                ClientGestures.currentMode(),
+                                KeyMappings.STACK_MODE_KEY.isDown())
+                        .withHittingBlock(isHittingBlock());
         InteractionRuleRegistry.processItemRules(ctx);
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
 
@@ -87,9 +98,15 @@ public final class ClientEvents {
         if (evt.isCanceled()) return;
         if (evt.getFace() == null) return;
 
-        InteractionContext ctx = InteractionContext.forBlockClick(
-                evt.getEntity(), evt.getLevel(), evt.getHand(), evt.getPos(), evt.getFace(),
-                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
+        InteractionContext ctx =
+                InteractionContext.forBlockClick(
+                        evt.getEntity(),
+                        evt.getLevel(),
+                        evt.getHand(),
+                        evt.getPos(),
+                        evt.getFace(),
+                        ClientGestures.currentMode(),
+                        KeyMappings.STACK_MODE_KEY.isDown());
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processBlockRules(ctx);
 

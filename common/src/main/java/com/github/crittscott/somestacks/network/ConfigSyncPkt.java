@@ -1,7 +1,9 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.ServerConfig;
+
 import io.netty.handler.codec.DecoderException;
+
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.ArrayList;
@@ -18,8 +20,12 @@ public record ConfigSyncPkt(
         List<String> disabledMods) {
 
     // Valid namespaces are ASCII: at most two length bytes and MAX_NAMESPACE_LENGTH bytes each.
-    public static final int MAX_PACKET_BYTES = 3 + 2 * (2 + ServerConfig.MAX_NAMESPACE_ENTRIES
-            * (2 + ServerConfig.MAX_NAMESPACE_LENGTH));
+    public static final int MAX_PACKET_BYTES =
+            3
+                    + 2
+                            * (2
+                                    + ServerConfig.MAX_NAMESPACE_ENTRIES
+                                            * (2 + ServerConfig.MAX_NAMESPACE_LENGTH));
 
     public ConfigSyncPkt {
         genMods = List.copyOf(genMods);
@@ -28,17 +34,23 @@ public record ConfigSyncPkt(
 
     /** Copies already prepared policy without changing it or emitting per-login diagnostics. */
     public static ConfigSyncPkt snapshot(ServerConfig.Settings settings) {
-        return new ConfigSyncPkt(settings.enableStorageStackBlock(), settings.enableSinglesStackBlock(),
-                settings.enableBarStackBlock(), settings.genMods(), settings.disableMods());
+        return new ConfigSyncPkt(
+                settings.enableStorageStackBlock(),
+                settings.enableSinglesStackBlock(),
+                settings.enableBarStackBlock(),
+                settings.genMods(),
+                settings.disableMods());
     }
 
     public static void encode(ConfigSyncPkt packet, FriendlyByteBuf buf) {
         buf.writeBoolean(packet.enableStack);
         buf.writeBoolean(packet.enableSingles);
         buf.writeBoolean(packet.enableBar);
-        buf.writeCollection(packet.genMods,
+        buf.writeCollection(
+                packet.genMods,
                 (out, namespace) -> out.writeUtf(namespace, ServerConfig.MAX_NAMESPACE_LENGTH));
-        buf.writeCollection(packet.disabledMods,
+        buf.writeCollection(
+                packet.disabledMods,
                 (out, namespace) -> out.writeUtf(namespace, ServerConfig.MAX_NAMESPACE_LENGTH));
     }
 
@@ -67,8 +79,7 @@ public record ConfigSyncPkt(
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < count; i++) {
             String namespace = buf.readUtf(ServerConfig.MAX_NAMESPACE_LENGTH);
-            if (!ServerConfig.isValidNamespace(namespace)
-                    || !seen.add(namespace)) {
+            if (!ServerConfig.isValidNamespace(namespace) || !seen.add(namespace)) {
                 throw new DecoderException("Invalid or duplicate synchronized namespace");
             }
             namespaces.add(namespace);

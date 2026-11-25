@@ -6,12 +6,13 @@ import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.ViewRay;
+
 import net.minecraft.core.Direction;
 
 /**
- * Consumes a modifier-plus-item click classified as a deposit into the clicked stack.
- * A full or unsupported top-face target declines to the generic placement rule, which also
- * consumes local use. The server independently chooses the destination and performs the edit.
+ * Consumes a modifier-plus-item click classified as a deposit into the clicked stack. A full or
+ * unsupported top-face target declines to the generic placement rule, which also consumes local
+ * use. The server independently chooses the destination and performs the edit.
  */
 public final class DepositIntoClickedStackRule implements InteractionRule {
     @Override
@@ -35,21 +36,30 @@ public final class DepositIntoClickedStackRule implements InteractionRule {
 
         if (be instanceof SinglesStackBE ssbe) {
             StackItemStorage handler = ssbe.getItems();
-            int index = SinglesCubeIdx.traceAllPositions(ray, ctx.getClickedPos(), handler, ssbe.getRotation());
-            boolean[] seam = ctx.getLevel().getBlockEntity(ctx.getClickedPos().below()) instanceof SinglesStackBE below
-                    ? SinglesCubeIdx.topLayerOccupancy(below.getItems(), below.getRotation())
-                    : null;
-            return index >= 0 && handler.getStackInSlot(index).isEmpty()
+            int index =
+                    SinglesCubeIdx.traceAllPositions(
+                            ray, ctx.getClickedPos(), handler, ssbe.getRotation());
+            boolean[] seam =
+                    ctx.getLevel().getBlockEntity(ctx.getClickedPos().below())
+                                    instanceof SinglesStackBE below
+                            ? SinglesCubeIdx.topLayerOccupancy(
+                                    below.getItems(), below.getRotation())
+                            : null;
+            return index >= 0
+                    && handler.getStackInSlot(index).isEmpty()
                     && SinglesCubeIdx.isGrounded(index, handler, ssbe.getRotation(), seam);
         }
 
         if (be instanceof BarStackBE barbe) {
             StackItemStorage handler = barbe.getItems();
             int index = BarCubeIdx.traceAllPositions(ray, ctx.getClickedPos(), handler);
-            boolean[] seam = ctx.getLevel().getBlockEntity(ctx.getClickedPos().below()) instanceof BarStackBE below
-                    ? BarCubeIdx.topLayerOccupancy(below.getItems())
-                    : null;
-            return index >= 0 && handler.getStackInSlot(index).isEmpty()
+            boolean[] seam =
+                    ctx.getLevel().getBlockEntity(ctx.getClickedPos().below())
+                                    instanceof BarStackBE below
+                            ? BarCubeIdx.topLayerOccupancy(below.getItems())
+                            : null;
+            return index >= 0
+                    && handler.getStackInSlot(index).isEmpty()
                     && BarCubeIdx.isGrounded(index, handler, seam);
         }
 

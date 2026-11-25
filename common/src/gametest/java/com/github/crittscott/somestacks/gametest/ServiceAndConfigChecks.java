@@ -1,11 +1,15 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+
 import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.server.StackSounds;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,17 +18,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-
 /** Shared lifecycle and policy checks using the installed loader services. */
 public final class ServiceAndConfigChecks {
     private ServiceAndConfigChecks() {}
 
-    /** To reproduce in-game: reconnect and rotate a stack; a previous session's rotation-sound pacing must not silence the new session. */
-    public static void installedServicesAndLogoutResetPacing(GameTestHelper helper, ServerPlayer player) {
+    /**
+     * To reproduce in-game: reconnect and rotate a stack; a previous session's rotation-sound
+     * pacing must not silence the new session.
+     */
+    public static void installedServicesAndLogoutResetPacing(
+            GameTestHelper helper, ServerPlayer player) {
         check(PlatformServices.configFolder() != null, "Missing loader config path");
-        check(!PlatformServices.modVersion(SomeStacksCommon.MODID).equals("unknown"),
+        check(
+                !PlatformServices.modVersion(SomeStacksCommon.MODID).equals("unknown"),
                 "Missing loader mod version");
         check(PlatformServices.editAuthority() != null, "Missing edit authority");
         ServerLifecycle.logout(player.getUUID());
@@ -42,24 +48,38 @@ public final class ServiceAndConfigChecks {
     /**
      * Synthetic raw policy inputs obey the same numeric ranges before either loader publishes them.
      * To check valid boundaries in-game, set pile height to 1 or 64, gallery permission to 0 or 4,
-     * and gallery speed to 1 in the world config, then reload and use the affected features. Invalid
-     * file values also pass through loader-specific parsing/correction; this fixture isolates the
-     * shared policy constructor and does not change the running world's policy.
+     * and gallery speed to 1 in the world config, then reload and use the affected features.
+     * Invalid file values also pass through loader-specific parsing/correction; this fixture
+     * isolates the shared policy constructor and does not change the running world's policy.
      */
     public static void numericPolicyRangesAreShared(GameTestHelper helper) {
-        TomlPolicyChecks.verify(helper.getLevel().getServer().getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT).resolve("serverconfig"), ServerConfig.Settings.defaults());
+        TomlPolicyChecks.verify(
+                helper.getLevel()
+                        .getServer()
+                        .getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT)
+                        .resolve("serverconfig"),
+                ServerConfig.Settings.defaults());
         ServerConfig.Settings defaults = ServerConfig.Settings.defaults();
         // Input height/speed/permission, followed by their expected normalized values.
         int[][] cases = {
-                {Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, 1, 1, 0},
-                {Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, 64, Integer.MAX_VALUE, 4},
-                {5, 17, 2, 5, 17, 2}
+            {Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, 1, 1, 0},
+            {Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, 64, Integer.MAX_VALUE, 4},
+            {5, 17, 2, 5, 17, 2}
         };
         for (int[] values : cases) {
-            ServerConfig.Settings policy = new ServerConfig.Settings(values[0],
-                    defaults.enableStorageStackBlock(), defaults.enableSinglesStackBlock(),
-                    defaults.enableBarStackBlock(), defaults.disableMods(), defaults.disableItems(),
-                    values[1], defaults.galleryEnabled(), values[2], defaults.genMods(), defaults.genItems());
+            ServerConfig.Settings policy =
+                    new ServerConfig.Settings(
+                            values[0],
+                            defaults.enableStorageStackBlock(),
+                            defaults.enableSinglesStackBlock(),
+                            defaults.enableBarStackBlock(),
+                            defaults.disableMods(),
+                            defaults.disableItems(),
+                            values[1],
+                            defaults.galleryEnabled(),
+                            values[2],
+                            defaults.genMods(),
+                            defaults.genItems());
             checkEquals(values[3], policy.maxPileHeight(), "Pile height range");
             checkEquals(values[4], policy.renderGalleryPlacementsPerTick(), "Gallery speed range");
             checkEquals(values[5], policy.galleryPermissionLevel(), "Gallery permission range");
@@ -67,7 +87,10 @@ public final class ServiceAndConfigChecks {
         helper.succeed();
     }
 
-    /** To reproduce in-game: add then remove a namespace through /ss deny mod; policy and admission change immediately while other settings remain unchanged. */
+    /**
+     * To reproduce in-game: add then remove a namespace through /ss deny mod; policy and admission
+     * change immediately while other settings remain unchanged.
+     */
     public static void listEditsPublishImmutablePolicy(GameTestHelper helper) {
         ServerConfig.Settings before = ServerConfig.settings();
         String marker = "somestacks_gametest_policy";
@@ -79,7 +102,8 @@ public final class ServiceAndConfigChecks {
             check(after != before, "Policy list edit reused mutable settings");
             check(!before.disableMods().contains(marker), "Previous policy snapshot changed");
             check(after.disableMods().contains(marker), "New policy omitted edit");
-            check(ServerConfig.isModDisabled(marker.toUpperCase(Locale.ROOT)),
+            check(
+                    ServerConfig.isModDisabled(marker.toUpperCase(Locale.ROOT)),
                     "Admission cache did not follow edit");
             try {
                 ServerConfig.ListSetting.DISABLE_MODS.get().add("unexpected");
@@ -98,30 +122,48 @@ public final class ServiceAndConfigChecks {
 
     /**
      * To reproduce in-game: while the server runs, add a mod id to render_gallery.gen_mods in the
-     * active somestacks-server.toml, then run
-     * /ss reload. The reply counts online players, and /ss gen mod list shows the
-     * new entry. The fixture writes the stored policy through the loader's saver without
-     * publishing it, and restores both the file and the published policy afterward.
+     * active somestacks-server.toml, then run /ss reload. The reply counts online players, and /ss
+     * gen mod list shows the new entry. The fixture writes the stored policy through the loader's
+     * saver without publishing it, and restores both the file and the published policy afterward.
      */
     public static void reloadCommandPublishesStoredPolicy(GameTestHelper helper) {
         PolicyParityChecks.verify(helper);
         MinecraftServer server = helper.getLevel().getServer();
         ServerConfig.Settings before = ServerConfig.settings();
-        String marker = "somestacks_gametest_reload_" + UUID.randomUUID().toString().replace("-", "");
-        ServerConfig.Settings stored = new ServerConfig.Settings(before.maxPileHeight(),
-                before.enableStorageStackBlock(), before.enableSinglesStackBlock(), before.enableBarStackBlock(),
-                before.disableMods(), before.disableItems(), before.renderGalleryPlacementsPerTick(),
-                before.galleryEnabled(), before.galleryPermissionLevel(), List.of(marker), before.genItems());
+        String marker =
+                "somestacks_gametest_reload_" + UUID.randomUUID().toString().replace("-", "");
+        ServerConfig.Settings stored =
+                new ServerConfig.Settings(
+                        before.maxPileHeight(),
+                        before.enableStorageStackBlock(),
+                        before.enableSinglesStackBlock(),
+                        before.enableBarStackBlock(),
+                        before.disableMods(),
+                        before.disableItems(),
+                        before.renderGalleryPlacementsPerTick(),
+                        before.galleryEnabled(),
+                        before.galleryPermissionLevel(),
+                        List.of(marker),
+                        before.genItems());
         try {
             ServerConfig.publish(stored);
             ServerConfig.save();
             ServerConfig.publish(before);
-            check(!ServerConfig.ListSetting.GEN_MODS.get().contains(marker), "Fixture published the stored policy");
+            check(
+                    !ServerConfig.ListSetting.GEN_MODS.get().contains(marker),
+                    "Fixture published the stored policy");
 
-            int result = server.getCommands().getDispatcher().execute("ss reload",
-                    server.createCommandSourceStack().withSuppressedOutput());
+            int result =
+                    server.getCommands()
+                            .getDispatcher()
+                            .execute(
+                                    "ss reload",
+                                    server.createCommandSourceStack().withSuppressedOutput());
 
-            checkEquals(List.of(marker), ServerConfig.ListSetting.GEN_MODS.get(), "Reload did not publish stored policy");
+            checkEquals(
+                    List.of(marker),
+                    ServerConfig.ListSetting.GEN_MODS.get(),
+                    "Reload did not publish stored policy");
             checkEquals(1, result, "Successful reload did not return command success");
         } catch (CommandSyntaxException exception) {
             throw new AssertionError("Reload command failed", exception);

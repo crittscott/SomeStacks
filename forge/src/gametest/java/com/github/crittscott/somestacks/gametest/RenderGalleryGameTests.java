@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.SomeStacks;
+
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,8 +21,7 @@ public final class RenderGalleryGameTests {
     /**
      * Loader entry point for {@link
      * RenderGalleryChecks#queuedStorageGalleryBuildsFloorRowsAndCompletionTotals}; see that method
-     * for
-     * the scenario, manual check, and any internal-only assertions.
+     * for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 100)
     public static void queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(
@@ -30,10 +30,14 @@ public final class RenderGalleryGameTests {
         RenderGalleryChecks.queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(helper, player);
     }
 
-    /** See {@link RenderGalleryChecks#commandsEnforcePolicyAndGalleryPermissions} for permissions and manual checks. */
+    /**
+     * See {@link RenderGalleryChecks#commandsEnforcePolicyAndGalleryPermissions} for permissions
+     * and manual checks.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE, batch = "somestacks_commands")
     public static void commandsEnforcePolicyAndGalleryPermissions(GameTestHelper helper) {
-        RenderGalleryChecks.commandsEnforcePolicyAndGalleryPermissions(helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
+        RenderGalleryChecks.commandsEnforcePolicyAndGalleryPermissions(
+                helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
     }
 
     /** See {@link RenderGalleryChecks#galleryItemsAreInIdOrderWithoutDeniedItems}. */

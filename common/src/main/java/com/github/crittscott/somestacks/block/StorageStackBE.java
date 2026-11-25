@@ -1,9 +1,10 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -21,8 +22,9 @@ import javax.annotation.Nullable;
  * run. Everything here that reaches past this block's own slots resolves the pile first.
  *
  * <p>Capability exposure ({@code ForgeCapabilities.ITEM_HANDLER} or its Fabric equivalent) is
- * loader-specific and lives outside this class. Automation adapts {@link StackBlockEntity#itemRun()}
- * for whole-pile access; {@link #getItems()} exposes only this block's local slots.
+ * loader-specific and lives outside this class. Automation adapts {@link
+ * StackBlockEntity#itemRun()} for whole-pile access; {@link #getItems()} exposes only this block's
+ * local slots.
  */
 public class StorageStackBE extends StackBlockEntity {
     /** Slots in one block. The pile's flat slot range is this times its height. */
@@ -31,12 +33,16 @@ public class StorageStackBE extends StackBlockEntity {
     private static final String TAG_PERMANENT = "Permanent";
 
     private boolean permanent = false;
-    @Nullable
-    private ServerPlayer pendingCleanupActor;
+    @Nullable private ServerPlayer pendingCleanupActor;
     private boolean pendingCleanupUsesAutomation;
 
     public StorageStackBE(BlockPos pos, BlockState state) {
-        super(CommonRegistry.STORAGE_STACK_BE.get(), pos, state, SLOTS, StorageStackBlock.LIGHT_LEVEL);
+        super(
+                CommonRegistry.STORAGE_STACK_BE.get(),
+                pos,
+                state,
+                SLOTS,
+                StorageStackBlock.LIGHT_LEVEL);
     }
 
     /**
@@ -101,7 +107,7 @@ public class StorageStackBE extends StackBlockEntity {
 
     /**
      * @param placer the player responsible for any block this deposit creates, or null for
-     *               automation. See {@link StoragePile#deposit}.
+     *     automation. See {@link StoragePile#deposit}.
      */
     public int deposit(ItemStack fromHand, @Nullable ServerPlayer placer) {
         StoragePile pile = pile();
@@ -112,8 +118,8 @@ public class StorageStackBE extends StackBlockEntity {
      * Takes from one of this block's own slots, the cell the player targeted, and schedules the
      * settle that packs the rest of the pile down over the gap.
      */
-    public ItemStack extractAt(int index, int maxCount, @Nullable ItemStack playerHand,
-                               @Nullable ServerPlayer actor) {
+    public ItemStack extractAt(
+            int index, int maxCount, @Nullable ItemStack playerHand, @Nullable ServerPlayer actor) {
         if (index < 0 || index >= items.getSlots()) {
             return ItemStack.EMPTY;
         }
@@ -149,7 +155,8 @@ public class StorageStackBE extends StackBlockEntity {
         if (current.isEmpty() && desired.isEmpty()) {
             return;
         }
-        if (current.getCount() == desired.getCount() && ItemStack.isSameItemSameTags(current, desired)) {
+        if (current.getCount() == desired.getCount()
+                && ItemStack.isSameItemSameTags(current, desired)) {
             return;
         }
         items.setStackInSlot(slot, desired);

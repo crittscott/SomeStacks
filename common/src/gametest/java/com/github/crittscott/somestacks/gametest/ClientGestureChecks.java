@@ -1,5 +1,13 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+
 import com.github.crittscott.somestacks.client.ClientGestures;
 import com.github.crittscott.somestacks.client.ClientServerSettings;
 import com.github.crittscott.somestacks.client.interaction.DepositIntoAdjacentStackRule;
@@ -15,6 +23,7 @@ import com.github.crittscott.somestacks.client.interaction.TogglePermanentRule;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.util.StackMode;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -31,26 +40,27 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
-
-/** Client decision and state checks with explicit hit classification, runnable without a client singleton. */
+/**
+ * Client decision and state checks with explicit hit classification, runnable without a client
+ * singleton.
+ */
 public final class ClientGestureChecks {
     private ClientGestureChecks() {}
 
-    private record Click(int target, Item held, boolean shift, boolean modifier, StackMode mode,
-                         Class<? extends InteractionRule> winner) {}
+    private record Click(
+            int target,
+            Item held,
+            boolean shift,
+            boolean modifier,
+            StackMode mode,
+            Class<? extends InteractionRule> winner) {}
 
     /**
-     * Only the first matching rule consumes local block use; the server acts only for the main hand. To reproduce in-game: try plain
-     * extraction, modified deposit, Shift torch rotation, and empty-hand permanence on each stack
-     * type, then repeat with an off-hand item and on an ordinary block. Unclaimed clicks retain
-     * ordinary use. Toggle Permanent reserves modified clicks against deposit and placement.
+     * Only the first matching rule consumes local block use; the server acts only for the main
+     * hand. To reproduce in-game: try plain extraction, modified deposit, Shift torch rotation, and
+     * empty-hand permanence on each stack type, then repeat with an off-hand item and on an
+     * ordinary block. Unclaimed clicks retain ordinary use. Toggle Permanent reserves modified
+     * clicks against deposit and placement.
      */
     public static void blockRulesRespectPrecedenceAndHands(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -59,29 +69,80 @@ public final class ClientGestureChecks {
         var bars = placeBar(helper, ORIGIN.east(6));
         BlockPos ordinary = helper.absolutePos(ORIGIN.south(3));
         helper.getLevel().setBlock(ordinary, Blocks.STONE.defaultBlockState(), 3);
-        BlockPos[] targets = {storage.getBlockPos(), singles.getBlockPos(), bars.getBlockPos(), ordinary};
+        BlockPos[] targets = {
+            storage.getBlockPos(), singles.getBlockPos(), bars.getBlockPos(), ordinary
+        };
         List<Click> cases = new ArrayList<>();
         for (int target = 0; target < 4; target++) {
             for (Item held : new Item[] {Items.AIR, Items.APPLE}) {
-                cases.add(new Click(target, held, false, false, StackMode.STORAGE_STACK,
-                        target < 3 ? ExtractionRule.class : null));
+                cases.add(
+                        new Click(
+                                target,
+                                held,
+                                false,
+                                false,
+                                StackMode.STORAGE_STACK,
+                                target < 3 ? ExtractionRule.class : null));
                 cases.add(new Click(target, held, true, false, StackMode.STORAGE_STACK, null));
-                cases.add(new Click(target, held, false, true, StackMode.STORAGE_STACK,
-                        held == Items.AIR ? null : target < 3 ? DepositIntoClickedStackRule.class : PlaceAdjacentGenericRule.class));
-                cases.add(new Click(target, held, false, true, StackMode.TOGGLE_PERMANENT,
-                        held == Items.AIR && target == 0 ? TogglePermanentRule.class : null));
+                cases.add(
+                        new Click(
+                                target,
+                                held,
+                                false,
+                                true,
+                                StackMode.STORAGE_STACK,
+                                held == Items.AIR
+                                        ? null
+                                        : target < 3
+                                                ? DepositIntoClickedStackRule.class
+                                                : PlaceAdjacentGenericRule.class));
+                cases.add(
+                        new Click(
+                                target,
+                                held,
+                                false,
+                                true,
+                                StackMode.TOGGLE_PERMANENT,
+                                held == Items.AIR && target == 0
+                                        ? TogglePermanentRule.class
+                                        : null));
                 cases.add(new Click(target, held, true, true, StackMode.STORAGE_STACK, null));
             }
             for (boolean modifier : new boolean[] {false, true}) {
-                cases.add(new Click(target, Items.REDSTONE_TORCH, true, modifier, StackMode.STORAGE_STACK,
-                        target < 2 ? RotateBlockWithRedstoneTorchRule.class : null));
-                cases.add(new Click(target, Items.SOUL_TORCH, true, modifier, StackMode.STORAGE_STACK,
-                        target == 1 ? RotateItemWithSoulTorchRule.class : null));
+                cases.add(
+                        new Click(
+                                target,
+                                Items.REDSTONE_TORCH,
+                                true,
+                                modifier,
+                                StackMode.STORAGE_STACK,
+                                target < 2 ? RotateBlockWithRedstoneTorchRule.class : null));
+                cases.add(
+                        new Click(
+                                target,
+                                Items.SOUL_TORCH,
+                                true,
+                                modifier,
+                                StackMode.STORAGE_STACK,
+                                target == 1 ? RotateItemWithSoulTorchRule.class : null));
             }
         }
-        cases.add(new Click(0, Items.AIR, true, true, StackMode.TOGGLE_PERMANENT, TogglePermanentRule.class));
-        cases.add(new Click(0, Items.REDSTONE_TORCH, true, true, StackMode.TOGGLE_PERMANENT,
-                RotateBlockWithRedstoneTorchRule.class));
+        cases.add(
+                new Click(
+                        0,
+                        Items.AIR,
+                        true,
+                        true,
+                        StackMode.TOGGLE_PERMANENT,
+                        TogglePermanentRule.class));
+        cases.add(
+                new Click(
+                        0,
+                        Items.REDSTONE_TORCH,
+                        true,
+                        true,
+                        StackMode.TOGGLE_PERMANENT,
+                        RotateBlockWithRedstoneTorchRule.class));
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
         ItemStack originalOffhand = player.getOffhandItem().copy();
         boolean originalShift = player.isShiftKeyDown();
@@ -91,19 +152,36 @@ public final class ClientGestureChecks {
                 player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(click.held()));
                 player.setShiftKeyDown(click.shift());
                 for (InteractionHand hand : InteractionHand.values()) {
-                    InteractionContext ctx = InteractionContext.forBlockClick(player, helper.getLevel(), hand,
-                            targets[click.target()], Direction.NORTH, click.mode(), click.modifier());
+                    InteractionContext ctx =
+                            InteractionContext.forBlockClick(
+                                    player,
+                                    helper.getLevel(),
+                                    hand,
+                                    targets[click.target()],
+                                    Direction.NORTH,
+                                    click.mode(),
+                                    click.modifier());
                     InteractionRule winner = InteractionRuleRegistry.processBlockRules(ctx);
                     Class<?> expected = click.winner();
-                    checkEquals(expected, winner == null ? null : winner.getClass(), "Winner for " + click + " / " + hand);
-                    checkEquals(expected != null, ctx.shouldCancel(), "Cancellation for " + click + " / " + hand);
+                    checkEquals(
+                            expected,
+                            winner == null ? null : winner.getClass(),
+                            "Winner for " + click + " / " + hand);
+                    checkEquals(
+                            expected != null,
+                            ctx.shouldCancel(),
+                            "Cancellation for " + click + " / " + hand);
                 }
             }
             // Clicked-stack deposit must precede adjacent-stack deposit when both targets qualify.
             placeSingles(helper, ORIGIN.north());
             player.setShiftKeyDown(false);
             player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.APPLE));
-            assertWinner(player, storage.getBlockPos(), Direction.NORTH, DepositIntoClickedStackRule.class);
+            assertWinner(
+                    player,
+                    storage.getBlockPos(),
+                    Direction.NORTH,
+                    DepositIntoClickedStackRule.class);
             placeSingles(helper, ORIGIN.south(3).north());
             assertWinner(player, ordinary, Direction.NORTH, DepositIntoAdjacentStackRule.class);
         } finally {
@@ -135,19 +213,36 @@ public final class ClientGestureChecks {
             for (var be : List.of(storage, singles, bars)) {
                 Item item = be == bars ? firstBarItem() : Items.APPLE;
                 player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item));
-                player.setPos(be.getBlockPos().getX() + 0.125, be.getBlockPos().getY() + 2, be.getBlockPos().getZ() + 0.125);
+                player.setPos(
+                        be.getBlockPos().getX() + 0.125,
+                        be.getBlockPos().getY() + 2,
+                        be.getBlockPos().getZ() + 0.125);
                 player.setXRot(90);
                 player.setYRot(0);
                 if (be != storage) {
-                    assertWinner(player, be.getBlockPos(), Direction.UP, DepositIntoClickedStackRule.class);
+                    assertWinner(
+                            player,
+                            be.getBlockPos(),
+                            Direction.UP,
+                            DepositIntoClickedStackRule.class);
                     be.getItems().setStackInSlot(0, new ItemStack(item));
-                    assertWinner(player, be.getBlockPos(), Direction.UP, DepositIntoClickedStackRule.class);
+                    assertWinner(
+                            player,
+                            be.getBlockPos(),
+                            Direction.UP,
+                            DepositIntoClickedStackRule.class);
                 }
                 for (int slot = 0; slot < be.getItems().getSlots(); slot++) {
-                    be.getItems().setStackInSlot(slot, new ItemStack(item, be.automationSlotLimit()));
+                    be.getItems()
+                            .setStackInSlot(slot, new ItemStack(item, be.automationSlotLimit()));
                 }
-                assertWinner(player, be.getBlockPos(), Direction.UP,
-                        be == storage ? DepositIntoClickedStackRule.class : PlaceAdjacentGenericRule.class);
+                assertWinner(
+                        player,
+                        be.getBlockPos(),
+                        Direction.UP,
+                        be == storage
+                                ? DepositIntoClickedStackRule.class
+                                : PlaceAdjacentGenericRule.class);
             }
         } finally {
             player.setShiftKeyDown(originalShift);
@@ -159,17 +254,28 @@ public final class ClientGestureChecks {
         helper.succeed();
     }
 
-    private static void assertWinner(ServerPlayer player, BlockPos pos, Direction face, Class<?> expected) {
-        var ctx = InteractionContext.forBlockClick(player, player.level(), InteractionHand.MAIN_HAND,
-                pos, face, StackMode.STORAGE_STACK, true);
+    private static void assertWinner(
+            ServerPlayer player, BlockPos pos, Direction face, Class<?> expected) {
+        var ctx =
+                InteractionContext.forBlockClick(
+                        player,
+                        player.level(),
+                        InteractionHand.MAIN_HAND,
+                        pos,
+                        face,
+                        StackMode.STORAGE_STACK,
+                        true);
         var winner = InteractionRuleRegistry.processBlockRules(ctx);
-        checkEquals(expected, winner == null ? null : winner.getClass(), "Deposit/placement precedence");
+        checkEquals(
+                expected,
+                winner == null ? null : winner.getClass(),
+                "Deposit/placement precedence");
         check(ctx.shouldCancel(), "Claimed click not consumed");
     }
 
     /**
-     * Only changed mode/modifier state is sent; reconnect reset forces the next state packet.
-     * To reproduce in-game: cycle mode and use modified/unmodified gestures, reconnect, and use the
+     * Only changed mode/modifier state is sent; reconnect reset forces the next state packet. To
+     * reproduce in-game: cycle mode and use modified/unmodified gestures, reconnect, and use the
      * same mode again. The server interprets the first new click correctly. Packet suppression
      * itself requires observing the sender, as this test does.
      */
@@ -187,17 +293,23 @@ public final class ClientGestureChecks {
             ClientGestures.syncState(true);
             ClientGestures.syncState(true);
             ClientGestures.syncState(false);
-            checkEquals(List.of(new GestureStatePkt(StackMode.STORAGE_STACK, false),
-                    new GestureStatePkt(StackMode.STORAGE_STACK, true),
-                    new GestureStatePkt(StackMode.SINGLES_STACK, true),
-                    new GestureStatePkt(StackMode.SINGLES_STACK, true),
-                    new GestureStatePkt(StackMode.SINGLES_STACK, false)), scope.sent, "Changed-only/reset packets");
+            checkEquals(
+                    List.of(
+                            new GestureStatePkt(StackMode.STORAGE_STACK, false),
+                            new GestureStatePkt(StackMode.STORAGE_STACK, true),
+                            new GestureStatePkt(StackMode.SINGLES_STACK, true),
+                            new GestureStatePkt(StackMode.SINGLES_STACK, true),
+                            new GestureStatePkt(StackMode.SINGLES_STACK, false)),
+                    scope.sent,
+                    "Changed-only/reset packets");
         }
         helper.succeed();
     }
 
     private static void selectMode(StackMode mode) {
-        for (int i = 0; i < StackMode.values().length && ClientGestures.currentMode() != mode; i++) {
+        for (int i = 0;
+                i < StackMode.values().length && ClientGestures.currentMode() != mode;
+                i++) {
             ClientGestures.cycleMode();
         }
         checkEquals(mode, ClientGestures.currentMode(), "Could not select enabled mode");
@@ -216,8 +328,13 @@ public final class ClientGestureChecks {
         }
 
         private void enableAllTypes() {
-            ClientServerSettings.apply(new ConfigSyncPkt(
-                    true, true, true, previousSettings.genMods(), previousSettings.disabledMods()));
+            ClientServerSettings.apply(
+                    new ConfigSyncPkt(
+                            true,
+                            true,
+                            true,
+                            previousSettings.genMods(),
+                            previousSettings.disabledMods()));
         }
 
         @Override

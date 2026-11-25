@@ -1,9 +1,18 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -18,32 +27,30 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
-
 /** Fabric-native transaction behavior exercised through the complete Transfer API storage. */
 public final class FabricTransferGameTests implements FabricGameTest {
     /**
-     * No in-game reproduction applies: Fabric automation stages an insertion without publishing
-     * it to the block entity, then publishes the complete edit when the transaction commits.
+     * No in-game reproduction applies: Fabric automation stages an insertion without publishing it
+     * to the block entity, then publishes the complete edit when the transaction commits.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void stagedInsertionIsInvisibleUntilCommit(GameTestHelper helper) {
         StorageStackBE blockEntity = placeStorage(helper, ORIGIN);
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.capability(blockEntity);
         try (Transaction transaction = Transaction.openOuter()) {
-            checkEquals(4L, storage.insert(
-                    ItemVariant.of(Items.STONE), 4, transaction), "Staged insertion");
-            checkEquals(0, GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
+            checkEquals(
+                    4L,
+                    storage.insert(ItemVariant.of(Items.STONE), 4, transaction),
+                    "Staged insertion");
+            checkEquals(
+                    0,
+                    GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
                     "Uncommitted insertion reached the world");
             transaction.commit();
         }
-        checkEquals(4, GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
+        checkEquals(
+                4,
+                GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
                 "Committed insertion did not reach the world");
         helper.succeed();
     }
@@ -66,9 +73,13 @@ public final class FabricTransferGameTests implements FabricGameTest {
                 nested.commit();
             }
         }
-        checkEquals(0, FabricGameTestSupport.count(storage, Items.STONE),
+        checkEquals(
+                0,
+                FabricGameTestSupport.count(storage, Items.STONE),
                 "Aborted outer transaction kept stone");
-        checkEquals(0, FabricGameTestSupport.count(storage, Items.DIRT),
+        checkEquals(
+                0,
+                FabricGameTestSupport.count(storage, Items.DIRT),
                 "Aborted outer transaction kept nested dirt");
 
         try (Transaction outer = Transaction.openOuter()) {
@@ -78,17 +89,17 @@ public final class FabricTransferGameTests implements FabricGameTest {
             }
             outer.commit();
         }
-        checkEquals(12, FabricGameTestSupport.count(storage, Items.STONE),
-                "Committed stone count");
-        checkEquals(0, FabricGameTestSupport.count(storage, Items.DIRT),
-                "Aborted nested dirt count");
+        checkEquals(12, FabricGameTestSupport.count(storage, Items.STONE), "Committed stone count");
+        checkEquals(
+                0, FabricGameTestSupport.count(storage, Items.DIRT), "Aborted nested dirt count");
 
         try (Transaction transaction = Transaction.openOuter()) {
-            checkEquals(5L, storage.extract(stone, 5, transaction),
-                    "Whole-storage extraction");
+            checkEquals(5L, storage.extract(stone, 5, transaction), "Whole-storage extraction");
             transaction.commit();
         }
-        checkEquals(7, FabricGameTestSupport.count(storage, Items.STONE),
+        checkEquals(
+                7,
+                FabricGameTestSupport.count(storage, Items.STONE),
                 "Count after whole-storage extraction");
         helper.succeed();
     }
@@ -107,15 +118,22 @@ public final class FabricTransferGameTests implements FabricGameTest {
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.capability(singles);
 
         try (Transaction transaction = Transaction.openOuter()) {
-            checkEquals(1L, storage.getSlot(firstSlot).extract(
-                    ItemVariant.of(Items.STICK), 1, transaction), "First extraction");
-            checkEquals(0L, storage.getSlot(secondSlot).extract(
-                    ItemVariant.of(Items.PAPER), 1, transaction), "Second extraction");
+            checkEquals(
+                    1L,
+                    storage.getSlot(firstSlot).extract(ItemVariant.of(Items.STICK), 1, transaction),
+                    "First extraction");
+            checkEquals(
+                    0L,
+                    storage.getSlot(secondSlot)
+                            .extract(ItemVariant.of(Items.PAPER), 1, transaction),
+                    "Second extraction");
             transaction.commit();
         }
 
         checkEquals(1, occupied(singles.getItems()), "Occupancy after structural extraction");
-        checkEquals(Items.PAPER, singles.getItems().getStackInSlot(secondSlot).getItem(),
+        checkEquals(
+                Items.PAPER,
+                singles.getItems().getStackInSlot(secondSlot).getItem(),
                 "Refused second position changed");
         helper.succeed();
     }
@@ -130,21 +148,37 @@ public final class FabricTransferGameTests implements FabricGameTest {
         StorageStackBE top = placeStorage(helper, ORIGIN.above());
         base.getItems().insertItem(0, new ItemStack(Items.STONE, 4), false);
         SlottedStorage<ItemVariant> first = FabricGameTestSupport.capability(base);
-        SlottedStorage<ItemVariant> second = (SlottedStorage<ItemVariant>) ItemStorage.SIDED.find(
-                helper.getLevel(), base.getBlockPos(), base.getBlockState(), base, Direction.DOWN);
+        SlottedStorage<ItemVariant> second =
+                (SlottedStorage<ItemVariant>)
+                        ItemStorage.SIDED.find(
+                                helper.getLevel(),
+                                base.getBlockPos(),
+                                base.getBlockState(),
+                                base,
+                                Direction.DOWN);
         SlottedStorage<ItemVariant> above = FabricGameTestSupport.capability(top);
         check(first == second, "Sided lookup did not retain the adapter");
         check(first != above, "Different blocks did not retain their own adapters");
         for (Direction side : Direction.values()) {
-            check(first == ItemStorage.SIDED.find(helper.getLevel(), base.getBlockPos(),
-                    base.getBlockState(), base, side), "Side did not retain Storage adapter");
+            check(
+                    first
+                            == ItemStorage.SIDED.find(
+                                    helper.getLevel(),
+                                    base.getBlockPos(),
+                                    base.getBlockState(),
+                                    base,
+                                    side),
+                    "Side did not retain Storage adapter");
         }
         ItemVariant stone = ItemVariant.of(Items.STONE);
         try (Transaction outer = Transaction.openOuter()) {
             checkEquals(3L, first.getSlot(0).extract(stone, 3, outer), "First staged extraction");
             checkEquals(1L, above.getSlot(0).getAmount(), "Upper adapter staged amount");
             checkEquals(stone, above.getSlot(0).getResource(), "Upper adapter staged resource");
-            checkEquals(4, base.getItems().getStackInSlot(0).getCount(), "Staging edited live contents");
+            checkEquals(
+                    4,
+                    base.getItems().getStackInSlot(0).getCount(),
+                    "Staging edited live contents");
             try (Transaction nested = Transaction.openNested(outer)) {
                 checkEquals(1L, above.getSlot(0).extract(stone, 3, nested), "Shared remainder");
             }
@@ -152,8 +186,10 @@ public final class FabricTransferGameTests implements FabricGameTest {
         }
         checkEquals(4L, first.getSlot(0).getAmount(), "Outer abort remainder");
         try (Transaction outer = Transaction.openOuter()) {
-            checkEquals(3L, first.getSlot(0).extract(stone, 3, outer), "Committed first extraction");
-            checkEquals(1L, above.getSlot(0).extract(stone, 3, outer), "Committed shared remainder");
+            checkEquals(
+                    3L, first.getSlot(0).extract(stone, 3, outer), "Committed first extraction");
+            checkEquals(
+                    1L, above.getSlot(0).extract(stone, 3, outer), "Committed shared remainder");
             outer.commit();
         }
         checkEquals(0L, first.getSlot(0).getAmount(), "Extraction committed twice");
@@ -173,10 +209,16 @@ public final class FabricTransferGameTests implements FabricGameTest {
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void structuralRestrictionsAreSharedAcrossBlocksAndRollBack(GameTestHelper helper) {
-        checkStructuralLedger(helper, placeSingles(helper, ORIGIN),
-                placeSingles(helper, ORIGIN.above()), Items.STICK);
-        checkStructuralLedger(helper, placeBar(helper, ORIGIN.east(3)),
-                placeBar(helper, ORIGIN.east(3).above()), Items.IRON_INGOT);
+        checkStructuralLedger(
+                helper,
+                placeSingles(helper, ORIGIN),
+                placeSingles(helper, ORIGIN.above()),
+                Items.STICK);
+        checkStructuralLedger(
+                helper,
+                placeBar(helper, ORIGIN.east(3)),
+                placeBar(helper, ORIGIN.east(3).above()),
+                Items.IRON_INGOT);
         helper.succeed();
     }
 
@@ -193,10 +235,20 @@ public final class FabricTransferGameTests implements FabricGameTest {
         SlottedStorage<ItemVariant> below = FabricGameTestSupport.capability(base);
         SlottedStorage<ItemVariant> above = FabricGameTestSupport.capability(top);
         try (Transaction transaction = Transaction.openOuter()) {
-            checkEquals(5L, above.insert(ItemVariant.of(Items.STONE), 5, transaction), "Whole-run insertion");
-            checkEquals(64L, below.getSlot(StorageStackBE.SLOTS).getAmount(), "Upper partial was not filled first");
-            checkEquals(1L, below.getSlot(0).getAmount(), "Remainder did not use first empty position");
-            checkEquals(60, top.getItems().getStackInSlot(0).getCount(), "Staging mutated live partial");
+            checkEquals(
+                    5L,
+                    above.insert(ItemVariant.of(Items.STONE), 5, transaction),
+                    "Whole-run insertion");
+            checkEquals(
+                    64L,
+                    below.getSlot(StorageStackBE.SLOTS).getAmount(),
+                    "Upper partial was not filled first");
+            checkEquals(
+                    1L, below.getSlot(0).getAmount(), "Remainder did not use first empty position");
+            checkEquals(
+                    60,
+                    top.getItems().getStackInSlot(0).getCount(),
+                    "Staging mutated live partial");
             transaction.commit();
         }
         checkEquals(64, top.getItems().getStackInSlot(0).getCount(), "Committed upper stack");
@@ -217,11 +269,16 @@ public final class FabricTransferGameTests implements FabricGameTest {
         top.getItems().setStackInSlot(0, new ItemStack(Items.DIRT, 3));
         var view = FabricGameTestSupport.capability(top).getSlot(0);
         checkEquals(ItemVariant.of(Items.STONE), view.getResource(), "Initial base resource");
-        helper.getLevel().setBlock(base.getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-        checkEquals(ItemVariant.of(Items.DIRT), view.getResource(), "Retained view kept removed base");
+        helper.getLevel()
+                .setBlock(base.getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        checkEquals(
+                ItemVariant.of(Items.DIRT), view.getResource(), "Retained view kept removed base");
         checkEquals(3L, view.getAmount(), "Retained view amount after split");
         try (Transaction transaction = Transaction.openOuter()) {
-            checkEquals(1L, view.extract(ItemVariant.of(Items.DIRT), 1, transaction), "Retained view extraction");
+            checkEquals(
+                    1L,
+                    view.extract(ItemVariant.of(Items.DIRT), 1, transaction),
+                    "Retained view extraction");
             transaction.commit();
         }
         checkEquals(2, top.getItems().getStackInSlot(0).getCount(), "Extraction used wrong ledger");
@@ -231,7 +288,8 @@ public final class FabricTransferGameTests implements FabricGameTest {
     /**
      * To reproduce: fill a Storage block, obstruct its growth, and let a machine attempt insertion.
      * Clear the obstruction and repeat; it can grow immediately. The fixture makes both whole-run
-     * Transfer calls within one tick, with the failed attempt aborted and the successful one committed.
+     * Transfer calls within one tick, with the failed attempt aborted and the successful one
+     * committed.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void wholeRunGrowthRefreshesBetweenCallsInTheSameTick(GameTestHelper helper) {
@@ -240,62 +298,100 @@ public final class FabricTransferGameTests implements FabricGameTest {
             base.getItems().setStackInSlot(slot, new ItemStack(Items.STONE, 64));
         }
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.capability(base);
-        helper.getLevel().setBlock(base.getBlockPos().above(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+        helper.getLevel()
+                .setBlock(
+                        base.getBlockPos().above(),
+                        Blocks.STONE.defaultBlockState(),
+                        Block.UPDATE_ALL);
         try (Transaction transaction = Transaction.openOuter()) {
-            checkEquals(0L, storage.insert(ItemVariant.of(Items.STONE), 1, transaction), "Blocked sweep accepted growth");
+            checkEquals(
+                    0L,
+                    storage.insert(ItemVariant.of(Items.STONE), 1, transaction),
+                    "Blocked sweep accepted growth");
         }
-        helper.getLevel().setBlock(base.getBlockPos().above(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        helper.getLevel()
+                .setBlock(
+                        base.getBlockPos().above(),
+                        Blocks.AIR.defaultBlockState(),
+                        Block.UPDATE_ALL);
         try (Transaction transaction = Transaction.openOuter()) {
-            checkEquals(1L, storage.insert(ItemVariant.of(Items.STONE), 1, transaction), "Fresh sweep retained obstruction");
+            checkEquals(
+                    1L,
+                    storage.insert(ItemVariant.of(Items.STONE), 1, transaction),
+                    "Fresh sweep retained obstruction");
             transaction.commit();
         }
-        checkEquals(1, base.itemRun().getSlot(StorageStackBE.SLOTS).getCount(), "Growth did not commit");
+        checkEquals(
+                1,
+                base.itemRun().getSlot(StorageStackBE.SLOTS).getCount(),
+                "Growth did not commit");
         helper.succeed();
     }
 
-    private static void checkStructuralLedger(GameTestHelper helper, StackBlockEntity base,
-                                              StackBlockEntity top, Item item) {
+    private static void checkStructuralLedger(
+            GameTestHelper helper, StackBlockEntity base, StackBlockEntity top, Item item) {
         base.getItems().insertItem(0, new ItemStack(item), false);
         base.getItems().insertItem(1, new ItemStack(item), false);
         SlottedStorage<ItemVariant> first = FabricGameTestSupport.capability(base);
         SlottedStorage<ItemVariant> above = FabricGameTestSupport.capability(top);
         for (Direction side : Direction.values()) {
-            check(first == ItemStorage.SIDED.find(helper.getLevel(), base.getBlockPos(),
-                    base.getBlockState(), base, side), "Side did not retain structural adapter");
+            check(
+                    first
+                            == ItemStorage.SIDED.find(
+                                    helper.getLevel(),
+                                    base.getBlockPos(),
+                                    base.getBlockState(),
+                                    base,
+                                    side),
+                    "Side did not retain structural adapter");
         }
         ItemVariant resource = ItemVariant.of(item);
         try (Transaction outer = Transaction.openOuter()) {
             try (Transaction nested = Transaction.openNested(outer)) {
-                checkEquals(1L, above.getSlot(0).extract(resource, 1, nested),
+                checkEquals(
+                        1L,
+                        above.getSlot(0).extract(resource, 1, nested),
                         "Nested structural extraction");
-                checkEquals(0L, first.getSlot(1).extract(resource, 1, nested),
+                checkEquals(
+                        0L,
+                        first.getSlot(1).extract(resource, 1, nested),
                         "Second structural position accepted through base");
                 checkEquals(0L, first.getSlot(0).getAmount(), "Base did not see staged extraction");
             }
             checkEquals(1L, first.getSlot(0).getAmount(), "Nested abort did not restore item");
-            checkEquals(1L, first.getSlot(1).extract(resource, 1, outer),
+            checkEquals(
+                    1L,
+                    first.getSlot(1).extract(resource, 1, outer),
                     "Nested abort did not release structural restriction");
-            checkEquals(0L, above.getSlot(0).extract(resource, 1, outer),
+            checkEquals(
+                    0L,
+                    above.getSlot(0).extract(resource, 1, outer),
                     "Second structural position accepted through top");
         }
         checkEquals(2, occupied(base.getItems()), "Outer abort changed live structural contents");
         try (Transaction outer = Transaction.openOuter()) {
             try (Transaction nested = Transaction.openNested(outer)) {
-                checkEquals(1L, above.getSlot(0).extract(resource, 1, nested),
+                checkEquals(
+                        1L,
+                        above.getSlot(0).extract(resource, 1, nested),
                         "Nested committed structural extraction");
                 nested.commit();
             }
-            checkEquals(0L, first.getSlot(1).extract(resource, 1, outer),
+            checkEquals(
+                    0L,
+                    first.getSlot(1).extract(resource, 1, outer),
                     "Nested commit lost structural restriction");
         }
-        checkEquals(2, occupied(base.getItems()), "Outer abort retained nested committed extraction");
+        checkEquals(
+                2, occupied(base.getItems()), "Outer abort retained nested committed extraction");
         try (Transaction outer = Transaction.openOuter()) {
-            checkEquals(1L, first.getSlot(1).extract(resource, 1, outer),
+            checkEquals(
+                    1L,
+                    first.getSlot(1).extract(resource, 1, outer),
                     "Outer abort did not release structural restriction");
             outer.commit();
         }
         checkEquals(1, occupied(base.getItems()), "Structural extraction did not commit once");
         checkEquals(item, base.getItems().getStackInSlot(0).getItem(), "Other position changed");
     }
-
 }

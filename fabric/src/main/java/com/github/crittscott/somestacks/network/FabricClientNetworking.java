@@ -1,7 +1,8 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.client.ClientServerSettings;
 import com.github.crittscott.somestacks.client.ClientGestures;
+import com.github.crittscott.somestacks.client.ClientServerSettings;
+
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -23,18 +24,20 @@ public final class FabricClientNetworking {
     private FabricClientNetworking() {}
 
     public static void init() {
-        ClientGestures.setSender(packet -> send(
-                FabricNetworking.GESTURE_STATE, packet, GestureStatePkt::encode));
+        ClientGestures.setSender(
+                packet -> send(FabricNetworking.GESTURE_STATE, packet, GestureStatePkt::encode));
 
         ClientLoginConnectionEvents.INIT.register((handler, client) -> handshakeAccepted = false);
-        ClientLoginConnectionEvents.DISCONNECT.register((handler, client) -> handshakeAccepted = false);
-        ClientLoginNetworking.registerGlobalReceiver(FabricNetworking.HANDSHAKE,
+        ClientLoginConnectionEvents.DISCONNECT.register(
+                (handler, client) -> handshakeAccepted = false);
+        ClientLoginNetworking.registerGlobalReceiver(
+                FabricNetworking.HANDSHAKE,
                 (client, handler, buf, listenerAdder) -> {
                     handshakeAccepted = FabricNetworking.matchesProtocol(buf);
                     return CompletableFuture.completedFuture(FabricNetworking.protocolPayload());
                 });
-        registerClient(FabricNetworking.CONFIG_SYNC, ConfigSyncPkt::decode,
-                ClientServerSettings::apply);
+        registerClient(
+                FabricNetworking.CONFIG_SYNC, ConfigSyncPkt::decode, ClientServerSettings::apply);
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             ClientGestures.resetSync();
@@ -43,16 +46,16 @@ public final class FabricClientNetworking {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             ClientGestures.resetSync();
             if (!handshakeAccepted) {
-                handler.getConnection().disconnect(
-                        Component.translatable("somestacks.disconnect.protocol"));
+                handler.getConnection()
+                        .disconnect(Component.translatable("somestacks.disconnect.protocol"));
             }
         });
     }
 
     private static <T> void registerClient(
-            ResourceLocation channel, Function<FriendlyByteBuf, T> decoder,
-            Consumer<T> handler) {
-        ClientPlayNetworking.registerGlobalReceiver(channel,
+            ResourceLocation channel, Function<FriendlyByteBuf, T> decoder, Consumer<T> handler) {
+        ClientPlayNetworking.registerGlobalReceiver(
+                channel,
                 (client, networkHandler, buf, responseSender) -> {
                     T packet = decoder.apply(buf);
                     client.execute(() -> handler.accept(packet));

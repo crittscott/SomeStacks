@@ -23,11 +23,10 @@ public final class ClientRenderPlatform {
                 BakedModel model, ItemStack stack, ItemDisplayContext context);
 
         /**
-         * The tint for layer {@code tintIndex} of {@code stack}, resolved through the loader's
-         * item color registry the way a vanilla tinted item model would be colored.
+         * The tint for layer {@code tintIndex} of {@code stack}, resolved through the loader's item
+         * color registry the way a vanilla tinted item model would be colored.
          */
         int itemColor(ItemStack stack, int tintIndex);
-
     }
 
     private static Backend backend;
@@ -37,15 +36,18 @@ public final class ClientRenderPlatform {
         ClientRenderPlatform.backend = backend;
     }
 
-    /** @see Backend#renderPasses */
+    /**
+     * @see Backend#renderPasses
+     */
     public static List<BakedModel> renderPasses(
             BakedModel model, ItemStack stack, ItemDisplayContext context) {
         return backend.renderPasses(model, stack, context);
     }
 
-    /** @see Backend#itemColor */
+    /**
+     * @see Backend#itemColor
+     */
     public static int itemColor(ItemStack stack, int tintIndex) {
         return backend.itemColor(stack, tintIndex);
     }
-
 }

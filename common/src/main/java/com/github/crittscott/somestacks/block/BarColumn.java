@@ -1,11 +1,12 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackPlacement;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -14,9 +15,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.BooleanSupplier;
+
+import javax.annotation.Nullable;
 
 /**
  * A maximal contiguous vertical run of Bar Stacks, addressed as one inventory by automation.
@@ -32,8 +34,8 @@ import java.util.function.BooleanSupplier;
  *       first. A caller walking the positions in order therefore fills the column layer by layer
  *       from the bottom, because each placement stands before the next position is offered.
  *   <li>Extraction takes the requested bar and moves the column's topmost bar into the hole. The
- *       topmost bar holds nothing up, and a slot vacated by extraction keeps the support it had,
- *       so the result always stands. When the hole is in a top layer the backfill restores that
+ *       topmost bar holds nothing up, and a slot vacated by extraction keeps the support it had, so
+ *       the result always stands. When the hole is in a top layer the backfill restores that
  *       layer's occupancy exactly, leaving the seam under the block above untouched.
  * </ul>
  *
@@ -65,8 +67,9 @@ public final class BarColumn extends StackRun<BarStackBE> {
     }
 
     /**
-     * Resolves the contiguous same-type run containing {@code pos} from the world, without consulting
-     * an entity cache. Callers obtain cached run access through {@link StackBlockEntity#itemRun()}.
+     * Resolves the contiguous same-type run containing {@code pos} from the world, without
+     * consulting an entity cache. Callers obtain cached run access through {@link
+     * StackBlockEntity#itemRun()}.
      */
     static BarColumn resolve(ServerLevel level, BlockPos pos) {
         BarColumn run = new BarColumn(level, resolveBlocks(level, pos, BarStackBE.class));
@@ -86,11 +89,11 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * Publishes the comparator output of every run a structural change at {@code pos} could have
      * altered. Adding a block lengthens a column, which changes the fill every one of its blocks
      * reports; removing one splits a column into two runs whose values differ from the original
-     * run. The upper run has a new bottom block that has published nothing, so it
-     * notifies on its first look.
+     * run. The upper run has a new bottom block that has published nothing, so it notifies on its
+     * first look.
      *
-     * <p>Call after {@link #invalidateAround}, and after any collapse the change starts, so the runs
-     * are walked fresh and the value published is the one they settle on.
+     * <p>Call after {@link #invalidateAround}, and after any collapse the change starts, so the
+     * runs are walked fresh and the value published is the one they settle on.
      */
     static void publishAround(Level level, BlockPos pos) {
         publishAround(level, pos, BarColumn::at);
@@ -127,14 +130,16 @@ public final class BarColumn extends StackRun<BarStackBE> {
     // Insertion
 
     /**
-     * Inserts one bar into only the named empty position with footprint support,
-     * leaving the caller's stack unchanged. Admission and support are checked before insertion.
+     * Inserts one bar into only the named empty position with footprint support, leaving the
+     * caller's stack unchanged. Admission and support are checked before insertion.
      *
-     * A slot in advertised headroom can grow the column only when height, enablement, space,
+     * <p>A slot in advertised headroom can grow the column only when height, enablement, space,
      * obstruction, and the loader's automation edit authority permit it.
      *
-     * @param simulate when true, evaluates current capacity and growth checks without storing or growing
-     * @return the accepted item count, or the count currently acceptable when simulating; zero on refusal
+     * @param simulate when true, evaluates current capacity and growth checks without storing or
+     *     growing
+     * @return the accepted item count, or the count currently acceptable when simulating; zero on
+     *     refusal
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
@@ -160,21 +165,24 @@ public final class BarColumn extends StackRun<BarStackBE> {
     public InsertionTest insertionTest() {
         BooleanSupplier growth = oncePerSweep(this::canGrowSpace);
         return (slot, stack) -> {
-            if (stack.isEmpty() || !BlockType.BAR_STACK.admits(stack, null)
-                    || slot < 0 || slot >= advertisedSlots()) return 0;
+            if (stack.isEmpty()
+                    || !BlockType.BAR_STACK.admits(stack, null)
+                    || slot < 0
+                    || slot >= advertisedSlots()) return 0;
             return positionAccepts(slot, growth) ? 1 : 0;
         };
     }
 
     /**
-     * Whether {@code flatSlot} could take a bar as the column stands: the position must be empty and
-     * its footprint must overlap an occupied bar in the layer beneath it, which for a bottom layer
-     * means the seam with the Bar Stack below, and for the bottom block of all means the world.
+     * Whether {@code flatSlot} could take a bar as the column stands: the position must be empty
+     * and its footprint must overlap an occupied bar in the layer beneath it, which for a bottom
+     * layer means the seam with the Bar Stack below, and for the bottom block of all means the
+     * world.
      *
      * <p>A position in the block above the column is checked against the block growth would put
-     * there — empty and standing on the column's current top layer — and against the side-effect-free
-     * checks in {@link #canGrow(VoxelShape)}. A simulation therefore cannot promise a position the
-     * commit would refuse.
+     * there — empty and standing on the column's current top layer — and against the
+     * side-effect-free checks in {@link #canGrow(VoxelShape)}. A simulation therefore cannot
+     * promise a position the commit would refuse.
      */
     private boolean positionAccepts(int flatSlot, @Nullable BooleanSupplier growth) {
         int blockIndex = flatSlot / BarStackBE.SLOTS;
@@ -191,14 +199,13 @@ public final class BarColumn extends StackRun<BarStackBE> {
             return seamSupports(blockIndex, slot);
         }
 
-        return slot < BarCubeIdx.LAYER_SIZE && seamSupports(blockIndex, slot)
+        return slot < BarCubeIdx.LAYER_SIZE
+                && seamSupports(blockIndex, slot)
                 && (growth == null ? canGrowSpace() : growth.getAsBoolean())
                 && WorldEdits.isUnobstructed(level, topPos().above(), BarCubeIdx.shapeFor(slot));
     }
 
-    /**
-     * Reads only overlapping bars in the top layer below. The bottom block stands on the world.
-     */
+    /** Reads only overlapping bars in the top layer below. The bottom block stands on the world. */
     private boolean seamSupports(int blockIndex, int slot) {
         if (blockIndex == 0) {
             return true;
@@ -210,8 +217,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * Whether growth is permitted and the space above the column could take a block: height,
      * enablement, build height, replaceability, and every protection check available without side
      * effects. Simulating and committing share this predicate, so a simulated insertion cannot
-     * promise a block the insertion itself would refuse. Growth carries no player, so protection
-     * is checked against the level's automation actor, which is never exempt from spawn protection.
+     * promise a block the insertion itself would refuse. Growth carries no player, so protection is
+     * checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
         return canGrowSpace() && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
@@ -229,7 +236,9 @@ public final class BarColumn extends StackRun<BarStackBE> {
         return WorldEdits.mayPlace(null, level, above);
     }
 
-    /** Adds one block on top, attributing the automated placement to the level's automation actor. */
+    /**
+     * Adds one block on top, attributing the automated placement to the level's automation actor.
+     */
     private boolean grow(int slot) {
         VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
         if (!canGrow(finalCollision)) {
@@ -237,8 +246,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
         }
 
         BlockPos above = topPos().above();
-        BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.BAR_STACK_BLOCK.get(), level, above);
+        BlockState newStack =
+                StackPlacement.stateFor(CommonRegistry.BAR_STACK_BLOCK.get(), level, above);
         if (!WorldEdits.placeChecked(
                 null, level, above, newStack, Direction.DOWN, finalCollision)) {
             return false;
@@ -256,8 +265,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * Nothing is dropped and nothing is left unsupported.
      *
      * <p>The backfilled bar is written into the hole rather than inserted. Validity gates what a
-     * deposit may add rather than what the column may carry, so a bar stored before a
-     * data pack reload narrowed the ingot tag still moves.
+     * deposit may add rather than what the column may carry, so a bar stored before a data pack
+     * reload narrowed the ingot tag still moves.
      */
     @Override
     public ItemStack extract(int flatSlot, int amount, boolean simulate) {

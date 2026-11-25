@@ -39,4 +39,3 @@ public record ViewRay(Vec3 eye, Vec3 end) {
         return new ViewRay(eye, eye.add(direction.scale(length)));
     }
 }
-

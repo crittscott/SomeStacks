@@ -9,6 +9,7 @@ import com.github.crittscott.somestacks.network.FabricClientNetworking;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -24,17 +25,19 @@ public final class SomeStacksFabricClient implements ClientModInitializer {
         FabricClientNetworking.init();
         FabricClientEvents.init();
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            ClientRenderCommands.register(dispatcher, new ClientRenderCommands.Feedback<>() {
-                @Override
-                public void success(FabricClientCommandSource source, Component message) {
-                    source.sendFeedback(message);
-                }
+            ClientRenderCommands.register(
+                    dispatcher,
+                    new ClientRenderCommands.Feedback<>() {
+                        @Override
+                        public void success(FabricClientCommandSource source, Component message) {
+                            source.sendFeedback(message);
+                        }
 
-                @Override
-                public void failure(FabricClientCommandSource source, Component message) {
-                    source.sendError(message);
-                }
-            });
+                        @Override
+                        public void failure(FabricClientCommandSource source, Component message) {
+                            source.sendError(message);
+                        }
+                    });
             registerServerPassThrough(dispatcher);
         });
     }
@@ -46,11 +49,17 @@ public final class SomeStacksFabricClient implements ClientModInitializer {
      * the client. Literal children win over this argument, so it catches only the server forms and
      * reports them unknown, which hands the command to vanilla's ordinary send.
      */
-    private static void registerServerPassThrough(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        dispatcher.register(ClientCommandManager.literal(SsCommand.ROOT)
-                .then(ClientCommandManager.argument("server_command", StringArgumentType.greedyString())
-                        .executes(ctx -> {
-                            throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand().create();
-                        })));
+    private static void registerServerPassThrough(
+            CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        dispatcher.register(
+                ClientCommandManager.literal(SsCommand.ROOT)
+                        .then(
+                                ClientCommandManager.argument(
+                                                "server_command", StringArgumentType.greedyString())
+                                        .executes(ctx -> {
+                                            throw CommandSyntaxException.BUILT_IN_EXCEPTIONS
+                                                    .dispatcherUnknownCommand()
+                                                    .create();
+                                        })));
     }
 }

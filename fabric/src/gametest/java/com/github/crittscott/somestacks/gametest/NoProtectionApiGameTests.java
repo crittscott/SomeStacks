@@ -1,6 +1,10 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+
 import com.github.crittscott.somestacks.server.WorldEdits;
+
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.core.BlockPos;
@@ -10,9 +14,6 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.shapes.CollisionContext;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 
 /** Checks the Fabric edit policy when Common Protection API is not installed. */
 public final class NoProtectionApiGameTests implements FabricGameTest {
@@ -25,11 +26,21 @@ public final class NoProtectionApiGameTests implements FabricGameTest {
     public void placementAndAdjacentDepositsWorkWithoutProtectionApi(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(ORIGIN);
         ServerPlayer player = FakePlayer.get(helper.getLevel());
-        check(WorldEdits.mayPlace(player, player.serverLevel(), pos), "Unprotected placement was denied");
+        check(
+                WorldEdits.mayPlace(player, player.serverLevel(), pos),
+                "Unprotected placement was denied");
         check(WorldEdits.mayUseAdjacent(player, pos), "Unprotected neighboring deposit was denied");
-        check(WorldEdits.placeChecked(
-                player, helper.getLevel(), pos, Blocks.STONE.defaultBlockState(), Direction.DOWN,
-                Blocks.STONE.defaultBlockState().getCollisionShape(helper.getLevel(), pos, CollisionContext.empty())),
+        check(
+                WorldEdits.placeChecked(
+                        player,
+                        helper.getLevel(),
+                        pos,
+                        Blocks.STONE.defaultBlockState(),
+                        Direction.DOWN,
+                        Blocks.STONE
+                                .defaultBlockState()
+                                .getCollisionShape(
+                                        helper.getLevel(), pos, CollisionContext.empty())),
                 "Unprotected placement failed");
         helper.assertBlockPresent(Blocks.STONE, ORIGIN);
         helper.succeed();

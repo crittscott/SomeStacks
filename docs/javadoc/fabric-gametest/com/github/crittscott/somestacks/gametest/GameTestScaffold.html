@@ -299,11 +299,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Puts <code>stack</code> straight into a slot, bypassing the validity test an insertion runs.
 
  <p>This is how a test reaches the state an <code>ss deny mod</code> edit or a data pack reload
- that changes the ingot tag leaves behind: contents a block holds and must keep handing back, which
- that same block would refuse from a deposit today. Validity gates insertion only, so the
- stored side of that rule has to be set up without going through insertion.
- <code>StorageStackBE.setSlotIfChanged(int, net.minecraft.world.item.ItemStack)</code> takes the same
- route for the same reason.</div>
+ that changes the ingot tag leaves behind: contents a block holds and must keep handing back,
+ which that same block would refuse from a deposit today. Validity gates insertion only, so
+ the stored side of that rule has to be set up without going through insertion. <code>StorageStackBE.setSlotIfChanged(int, net.minecraft.world.item.ItemStack)</code> takes the same route
+ for the same reason.</div>
 </section>
 </li>
 <li>
@@ -313,8 +312,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.BlockPos&nbsp;absolutePos,
  net.minecraft.world.item.Item&nbsp;item)</span></div>
 <div class="block">Items of <code>item</code> still held by the stack block at <code>absolutePos</code>. A position the
- block has removed itself from holds none, which is what a caller counting whether an operation
- conserved its contents wants to see.</div>
+ block has removed itself from holds none, which is what a caller counting whether an
+ operation conserved its contents wants to see.</div>
 </section>
 </li>
 <li>

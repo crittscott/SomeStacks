@@ -1,11 +1,19 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+
 import com.github.crittscott.somestacks.block.BarColumn;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesColumn;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -19,13 +27,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 
 /**
  * The automation surface and the saved state behind it: the whole-run storage exposed on every
@@ -83,25 +84,33 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
         int storageLevels = StoragePile.maxHeight() > 1 ? 2 : 1;
         int singlesLevels = SinglesColumn.maxHeight() > 1 ? 2 : 1;
         int barLevels = BarColumn.maxHeight() > 1 ? 2 : 1;
-        checkEquals(StorageStackBE.SLOTS * storageLevels,
+        checkEquals(
+                StorageStackBE.SLOTS * storageLevels,
                 FabricGameTestSupport.capability(storage).getSlotCount(),
                 "Storage advertised slots");
-        checkEquals(SinglesStackBE.SLOTS * singlesLevels,
+        checkEquals(
+                SinglesStackBE.SLOTS * singlesLevels,
                 FabricGameTestSupport.capability(singles).getSlotCount(),
                 "Singles advertised slots");
-        checkEquals(BarStackBE.SLOTS * barLevels,
+        checkEquals(
+                BarStackBE.SLOTS * barLevels,
                 FabricGameTestSupport.capability(bar).getSlotCount(),
                 "Bar advertised slots");
         helper.succeed();
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}. */
+    /**
+     * See {@link
+     * CapabilityAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}. */
+    /**
+     * See {@link CapabilityAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(helper);
@@ -113,7 +122,9 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
         CapabilityAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}. */
+    /**
+     * See {@link CapabilityAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(helper);
@@ -137,13 +148,18 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
         CapabilityAndPersistenceChecks.clientUpdatesRejectMalformedDataAtomically(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#clientSinglesUpdatesValidateRotationBeforeInventory}. */
+    /**
+     * See {@link
+     * CapabilityAndPersistenceChecks#clientSinglesUpdatesValidateRotationBeforeInventory}.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */
+    /**
+     * See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(helper);
@@ -178,17 +194,19 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
         ItemStack remainder = FabricGameTestSupport.insertAt(storage, 0, offered, true);
 
         checkEquals(5, offered.getCount(), "Simulation mutated its input");
-        checkEquals(0, FabricGameTestSupport.count(storage, Items.APPLE),
+        checkEquals(
+                0,
+                FabricGameTestSupport.count(storage, Items.APPLE),
                 "Simulation mutated the column");
-        checkEquals(4, remainder.getCount(),
-                "A cell takes one item, so one call should accept one");
+        checkEquals(
+                4, remainder.getCount(), "A cell takes one item, so one call should accept one");
         helper.succeed();
     }
 
     /**
      * Loader entry point for {@link
-     * StackFoundationChecks#nestedBatchesPublishOnlyAfterTheOuterBatch}; see that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * StackFoundationChecks#nestedBatchesPublishOnlyAfterTheOuterBatch}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void nestedBatchesPublishOnlyAfterTheOuterBatch(GameTestHelper helper) {
@@ -207,8 +225,8 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
 
     /**
      * Loader entry point for {@link
-     * StackFoundationChecks#loadedContentsRefreshComparatorFillAndShapes}; see that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * StackFoundationChecks#loadedContentsRefreshComparatorFillAndShapes}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void loadedContentsRefreshComparatorFillAndShapes(GameTestHelper helper) {
@@ -217,8 +235,8 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
 
     /**
      * Loader entry point for {@link
-     * StackFoundationChecks#runContractPreservesTypeSpecificMutations}; see that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * StackFoundationChecks#runContractPreservesTypeSpecificMutations}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void runContractPreservesTypeSpecificMutations(GameTestHelper helper) {
@@ -233,28 +251,31 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
 
     /**
      * Loader entry point for {@link ServiceAndConfigChecks#installedServicesAndLogoutResetPacing};
-     * see that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * see that method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void installedServicesAndLogoutResetPacing(GameTestHelper helper) {
-        ServiceAndConfigChecks.installedServicesAndLogoutResetPacing(helper, FakePlayer.get(helper.getLevel()));
+        ServiceAndConfigChecks.installedServicesAndLogoutResetPacing(
+                helper, FakePlayer.get(helper.getLevel()));
     }
 
     /**
      * Loader entry point for {@link ServiceAndConfigChecks#listEditsPublishImmutablePolicy}; see
-     * that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * that method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void listEditsPublishImmutablePolicy(GameTestHelper helper) {
         ServiceAndConfigChecks.listEditsPublishImmutablePolicy(helper);
     }
 
-    /** See {@link com.github.crittscott.somestacks.network.FabricHandshakeChecks#loginProtocolPayloadIsBounded}. */
+    /**
+     * See {@link
+     * com.github.crittscott.somestacks.network.FabricHandshakeChecks#loginProtocolPayloadIsBounded}.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void loginProtocolPayloadIsBounded(GameTestHelper helper) {
-        com.github.crittscott.somestacks.network.FabricHandshakeChecks.loginProtocolPayloadIsBounded(helper);
+        com.github.crittscott.somestacks.network.FabricHandshakeChecks
+                .loginProtocolPayloadIsBounded(helper);
     }
 
     /** See {@link NetworkPolicyChecks#publicationSyncsOnlyChangedClientPolicy}. */
@@ -267,7 +288,8 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
     /** See {@link NetworkPolicyChecks#admissionSeparatesPlayersAutomationAndTypes}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void admissionSeparatesPlayersAutomationAndTypes(GameTestHelper helper) {
-        NetworkPolicyChecks.admissionSeparatesPlayersAutomationAndTypes(helper, FakePlayer.get(helper.getLevel()));
+        NetworkPolicyChecks.admissionSeparatesPlayersAutomationAndTypes(
+                helper, FakePlayer.get(helper.getLevel()));
     }
 
     /** See {@link NetworkPolicyChecks#namespacePolicyIsPreparedAndBounded}. */

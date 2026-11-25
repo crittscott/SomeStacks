@@ -78,11 +78,12 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">StackItemStorage</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Fixed-size block-local storage with simulated insertion/extraction and NBT persistence.
- Automation addresses complete runs through the loader adapters, rather than exposing this inventory.
+ Automation addresses complete runs through the loader adapters, rather than exposing this
+ inventory.
 
- <p>Unreadable, out-of-range, or duplicate-slot item tags are retained verbatim under
- <code>SetAside</code>, saved with the block, and retried on each load. Loading and direct assignment
- bypass admission so stored items remain recoverable after policy changes.
+ <p>Unreadable, out-of-range, or duplicate-slot item tags are retained verbatim under <code>
+ SetAside</code>, saved with the block, and retried on each load. Loading and direct assignment bypass
+ admission so stored items remain recoverable after policy changes.
 
  <p>Subclasses supply slot limits, admission, and content-change notifications.</div>
 </section>
@@ -349,8 +350,8 @@ loadScripts(document, 'script');</script>
  @Nonnull
  net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
 <div class="block">Stores the supplied stack reference without copying or checking admission or stack limits,
- then calls <a href="#onContentsChanged(int)"><code>onContentsChanged(int)</code></a>. The caller transfers ownership and must not mutate
- the stack afterward. Slot indices must be within this inventory's fixed capacity.</div>
+ then calls <a href="#onContentsChanged(int)"><code>onContentsChanged(int)</code></a>. The caller transfers ownership and must not
+ mutate the stack afterward. Slot indices must be within this inventory's fixed capacity.</div>
 </section>
 </li>
 <li>
@@ -364,9 +365,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Inserts into one slot and returns the unaccepted remainder without mutating the offer.
  Simulation computes the remainder without changing contents.
 
- <p>A full insertion into an empty slot can retain the supplied stack reference. Callers
- must relinquish an accepted offer or supply a copy before further mutation. Successful
- committed insertions notify <a href="#onContentsChanged(int)"><code>onContentsChanged(int)</code></a>; simulations do not.</div>
+ <p>A full insertion into an empty slot can retain the supplied stack reference. Callers must
+ relinquish an accepted offer or supply a copy before further mutation. Successful committed
+ insertions notify <a href="#onContentsChanged(int)"><code>onContentsChanged(int)</code></a>; simulations do not.</div>
 </section>
 </li>
 <li>
@@ -415,8 +416,7 @@ loadScripts(document, 'script');</script>
 <h3>deserializeNBT</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></span>&nbsp;<span class="element-name">deserializeNBT</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
 <div class="block">Loads slot contents from NBT, setting aside every item tag that cannot be placed. Ordinary
- entries take precedence over retries; loading bypasses admission and does not call
- <a href="#onContentsChanged(int)"><code>onContentsChanged(int)</code></a>. The caller reports returned retention counts once it knows the
+ entries take precedence over retries; loading bypasses admission and does not call <a href="#onContentsChanged(int)"><code>onContentsChanged(int)</code></a>. The caller reports returned retention counts once it knows the
  world location, and refreshes derived fill, shapes, and run caches.</div>
 </section>
 </li>

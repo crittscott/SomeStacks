@@ -7,7 +7,8 @@ import java.util.List;
 
 /** Complete server policy snapshot, published and read on the client thread. */
 public final class ClientServerSettings {
-    private static ConfigSyncPkt snapshot = new ConfigSyncPkt(true, true, true, List.of(), List.of());
+    private static ConfigSyncPkt snapshot =
+            new ConfigSyncPkt(true, true, true, List.of(), List.of());
 
     private ClientServerSettings() {}
 

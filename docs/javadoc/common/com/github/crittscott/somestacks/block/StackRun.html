@@ -214,7 +214,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Inserts into a named position, or reports the accepted amount without mutation when simulated.</div>
+<div class="block">Inserts into a named position, or reports the accepted amount without mutation when
+ simulated.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="StackRun.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRun.InsertionTest</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#insertionTest()" class="member-name-link">insertionTest</a>()</code></div>
@@ -236,14 +237,16 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markDirty()" class="member-name-link">markDirty</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Coalesces server changes into one next-tick pass on the base; no immediate publication occurs.</div>
+<div class="block">Coalesces server changes into one next-tick pass on the base; no immediate publication
+ occurs.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;?&gt;&gt;<br>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">markDirtyAt</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level,<wbr>net.minecraft.core.BlockPos,<wbr>R&gt;&nbsp;resolver)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does nothing.</div>
+<div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does
+ nothing.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BooleanSupplier.html" title="class or interface in java.util.function" class="external-link">BooleanSupplier</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#oncePerSweep(java.util.function.BooleanSupplier)" class="member-name-link">oncePerSweep</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BooleanSupplier.html" title="class or interface in java.util.function" class="external-link">BooleanSupplier</a>&nbsp;check)</code></div>
@@ -255,7 +258,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level,<wbr>net.minecraft.core.BlockPos,<wbr>R&gt;&nbsp;resolver)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Publishes comparator changes for runs at and beside a structural edit after cache invalidation.</div>
+<div class="block">Publishes comparator changes for runs at and beside a structural edit after cache
+ invalidation.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#publishPending()" class="member-name-link">publishPending</a>()</code></div>
@@ -346,15 +350,16 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">insertAt</span><wbr><span class="parameters">(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</span></div>
-<div class="block">Inserts into a named position, or reports the accepted amount without mutation when simulated.</div>
+<div class="block">Inserts into a named position, or reports the accepted amount without mutation when
+ simulated.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="insertionTest()">
 <h3>insertionTest</h3>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="StackRun.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRun.InsertionTest</a></span>&nbsp;<span class="element-name">insertionTest</span>()</div>
-<div class="block">One read-only insertion sweep. Discard before world, inventory, policy, or permission changes;
- committed insertions always perform fresh validation.</div>
+<div class="block">One read-only insertion sweep. Discard before world, inventory, policy, or permission
+ changes; committed insertions always perform fresh validation.</div>
 </section>
 </li>
 <li>
@@ -405,7 +410,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="type-parameters">&lt;R extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;?&gt;&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markDirtyAt</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level,<wbr>net.minecraft.core.BlockPos,<wbr>R&gt;&nbsp;resolver)</span></div>
-<div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does nothing.</div>
+<div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does
+ nothing.</div>
 </section>
 </li>
 <li>
@@ -414,8 +420,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="type-parameters">&lt;R extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;?&gt;&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">publishAround</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level,<wbr>net.minecraft.core.BlockPos,<wbr>R&gt;&nbsp;resolver)</span></div>
-<div class="block">Publishes comparator changes for runs at and beside a structural edit after cache invalidation.
- Null resolutions are ignored; this does not publish inventories or settle Storage.</div>
+<div class="block">Publishes comparator changes for runs at and beside a structural edit after cache
+ invalidation. Null resolutions are ignored; this does not publish inventories or settle
+ Storage.</div>
 </section>
 </li>
 <li>
@@ -508,7 +515,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="markDirty()">
 <h3>markDirty</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markDirty</span>()</div>
-<div class="block">Coalesces server changes into one next-tick pass on the base; no immediate publication occurs.</div>
+<div class="block">Coalesces server changes into one next-tick pass on the base; no immediate publication
+ occurs.</div>
 </section>
 </li>
 <li>

@@ -1,7 +1,9 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+
 import io.netty.handler.codec.DecoderException;
+
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
@@ -27,11 +29,14 @@ public final class FabricNetworking {
     public static void initServer() {
         ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) ->
                 sender.sendPacket(HANDSHAKE, protocolPayload()));
-        ServerLoginNetworking.registerGlobalReceiver(HANDSHAKE,
+        ServerLoginNetworking.registerGlobalReceiver(
+                HANDSHAKE,
                 (server, handler, understood, buf, synchronizer, responseSender) -> {
                     if (!understood || !matchesProtocol(buf)) {
-                        handler.disconnect(Component.translatableWithFallback("somestacks.disconnect.protocol",
-                                "Some Stacks protocol mismatch: the mod is required on both client and server"));
+                        handler.disconnect(
+                                Component.translatableWithFallback(
+                                        "somestacks.disconnect.protocol",
+                                        "Some Stacks protocol mismatch: the mod is required on both client and server"));
                     }
                 });
         registerServer(GESTURE_STATE, GestureStatePkt::decode, GestureStatePkt::handleServer);
@@ -58,9 +63,11 @@ public final class FabricNetworking {
     }
 
     private static <T> void registerServer(
-            ResourceLocation channel, Function<FriendlyByteBuf, T> decoder,
+            ResourceLocation channel,
+            Function<FriendlyByteBuf, T> decoder,
             BiConsumer<T, ServerPlayer> handler) {
-        ServerPlayNetworking.registerGlobalReceiver(channel,
+        ServerPlayNetworking.registerGlobalReceiver(
+                channel,
                 (server, player, networkHandler, buf, responseSender) -> {
                     T packet = decoder.apply(buf);
                     server.execute(() -> handler.accept(packet, player));

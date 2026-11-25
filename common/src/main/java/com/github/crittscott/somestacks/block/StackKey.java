@@ -16,8 +16,6 @@ record StackKey(Item item, int damage, @Nullable CompoundTag tag) {
     static StackKey of(ItemStack stack) {
         CompoundTag tag = stack.getTag();
         return new StackKey(
-                stack.getItem(),
-                stack.getDamageValue(),
-                tag == null ? null : tag.copy());
+                stack.getItem(), stack.getDamageValue(), tag == null ? null : tag.copy());
     }
 }

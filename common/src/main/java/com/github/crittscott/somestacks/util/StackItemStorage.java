@@ -7,17 +7,19 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Arrays;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 
 /**
  * Fixed-size block-local storage with simulated insertion/extraction and NBT persistence.
- * Automation addresses complete runs through the loader adapters, rather than exposing this inventory.
+ * Automation addresses complete runs through the loader adapters, rather than exposing this
+ * inventory.
  *
- * <p>Unreadable, out-of-range, or duplicate-slot item tags are retained verbatim under
- * {@code SetAside}, saved with the block, and retried on each load. Loading and direct assignment
- * bypass admission so stored items remain recoverable after policy changes.
+ * <p>Unreadable, out-of-range, or duplicate-slot item tags are retained verbatim under {@code
+ * SetAside}, saved with the block, and retried on each load. Loading and direct assignment bypass
+ * admission so stored items remain recoverable after policy changes.
  *
  * <p>Subclasses supply slot limits, admission, and content-change notifications.
  */
@@ -62,8 +64,8 @@ public class StackItemStorage {
 
     /**
      * Stores the supplied stack reference without copying or checking admission or stack limits,
-     * then calls {@link #onContentsChanged(int)}. The caller transfers ownership and must not mutate
-     * the stack afterward. Slot indices must be within this inventory's fixed capacity.
+     * then calls {@link #onContentsChanged(int)}. The caller transfers ownership and must not
+     * mutate the stack afterward. Slot indices must be within this inventory's fixed capacity.
      */
     public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
         stacks[slot] = stack;
@@ -74,9 +76,9 @@ public class StackItemStorage {
      * Inserts into one slot and returns the unaccepted remainder without mutating the offer.
      * Simulation computes the remainder without changing contents.
      *
-     * <p>A full insertion into an empty slot can retain the supplied stack reference. Callers
-     * must relinquish an accepted offer or supply a copy before further mutation. Successful
-     * committed insertions notify {@link #onContentsChanged(int)}; simulations do not.
+     * <p>A full insertion into an empty slot can retain the supplied stack reference. Callers must
+     * relinquish an accepted offer or supply a copy before further mutation. Successful committed
+     * insertions notify {@link #onContentsChanged(int)}; simulations do not.
      */
     @Nonnull
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
@@ -156,8 +158,7 @@ public class StackItemStorage {
     }
 
     /** Called after a slot's contents change, including a direct {@link #setStackInSlot}. */
-    protected void onContentsChanged(int slot) {
-    }
+    protected void onContentsChanged(int slot) {}
 
     private static ItemStack copyWithSize(ItemStack stack, int size) {
         if (size <= 0) {
@@ -192,8 +193,8 @@ public class StackItemStorage {
 
     /**
      * Loads slot contents from NBT, setting aside every item tag that cannot be placed. Ordinary
-     * entries take precedence over retries; loading bypasses admission and does not call
-     * {@link #onContentsChanged(int)}. The caller reports returned retention counts once it knows the
+     * entries take precedence over retries; loading bypasses admission and does not call {@link
+     * #onContentsChanged(int)}. The caller reports returned retention counts once it knows the
      * world location, and refreshes derived fill, shapes, and run caches.
      */
     public LoadResult deserializeNBT(CompoundTag nbt) {
@@ -209,9 +210,10 @@ public class StackItemStorage {
         for (int i = 0; i < list.size(); i++) {
             CompoundTag itemTag = list.getCompound(i);
             int slot = itemTag.getInt(TAG_SLOT);
-            ItemStack parsed = slot >= 0 && slot < stacks.length && stacks[slot].isEmpty()
-                    ? parse(itemTag)
-                    : null;
+            ItemStack parsed =
+                    slot >= 0 && slot < stacks.length && stacks[slot].isEmpty()
+                            ? parse(itemTag)
+                            : null;
             if (parsed != null) {
                 stacks[slot] = parsed;
             } else {
@@ -236,7 +238,8 @@ public class StackItemStorage {
 
     /** Validates a client snapshot completely before replacing any local contents. */
     public boolean deserializeClientUpdate(CompoundTag nbt) {
-        if (nbt.contains(TAG_SET_ASIDE) || !(nbt.get(TAG_ITEMS) instanceof ListTag list)
+        if (nbt.contains(TAG_SET_ASIDE)
+                || !(nbt.get(TAG_ITEMS) instanceof ListTag list)
                 || list.size() > stacks.length
                 || (!list.isEmpty() && list.getElementType() != Tag.TAG_COMPOUND)) {
             return false;

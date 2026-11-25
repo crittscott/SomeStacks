@@ -84,12 +84,11 @@ loadScripts(document, 'script');</script>
 <div class="block">One Singles Stack: 64 single items drawn as a rotatable 4 x 4 x 4 grid.
 
  <p>A slot index is a cell, not a place in a bag, and every item must sit on one directly below it
- or on the seam with the Singles Stack beneath. A vertical run of these is a <a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block"><code>SinglesColumn</code></a>,
- which is what automation addresses; this class owns one block's cells, its shape, its layout
- rotation, and a rotation for each rendered item.
+ or on the seam with the Singles Stack beneath. A vertical run of these is a <a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block"><code>SinglesColumn</code></a>, which is what automation addresses; this class owns one block's cells, its shape,
+ its layout rotation, and a rotation for each rendered item.
 
- <p>Local slots are available through <a href="StackBlockEntity.html#getItems()"><code>StackBlockEntity.getItems()</code></a>; loader automation adapters expose
- the whole run through <a href="StackBlockEntity.html#itemRun()"><code>StackBlockEntity.itemRun()</code></a>.</div>
+ <p>Local slots are available through <a href="StackBlockEntity.html#getItems()"><code>StackBlockEntity.getItems()</code></a>; loader automation adapters expose the
+ whole run through <a href="StackBlockEntity.html#itemRun()"><code>StackBlockEntity.itemRun()</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -317,7 +316,8 @@ loadScripts(document, 'script');</script>
 <h3>getCachedShape</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.phys.shapes.VoxelShape</span>&nbsp;<span class="element-name">getCachedShape</span>()</div>
 <div class="block">Returns the occupied-cell shape, rebuilding it only after contents or rotation invalidates
- the cache. Shape queries occur frequently enough that they must not rebuild it unconditionally.</div>
+ the cache. Shape queries occur frequently enough that they must not rebuild it
+ unconditionally.</div>
 </section>
 </li>
 <li>
@@ -356,7 +356,7 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>actor</code> - the player responsible for any block the extraction empties away, or null for
-              automation</dd>
+     automation</dd>
 </dl>
 </section>
 </li>

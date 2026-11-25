@@ -4,8 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 
 /**
- * Consumes a modifier-plus-item click whose neighboring destination is Singles or Bar.
- * The server checks both positions and performs any deposit.
+ * Consumes a modifier-plus-item click whose neighboring destination is Singles or Bar. The server
+ * checks both positions and performs any deposit.
  */
 public final class DepositIntoAdjacentStackRule implements InteractionRule {
     @Override

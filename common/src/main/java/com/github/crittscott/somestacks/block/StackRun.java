@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -21,12 +22,15 @@ import java.util.function.BooleanSupplier;
  * distinct insertion, extraction, growth, settlement, and collapse rules.
  */
 public abstract class StackRun<BE extends StackBlockEntity> {
-    /** Inserts into a named position, or reports the accepted amount without mutation when simulated. */
+    /**
+     * Inserts into a named position, or reports the accepted amount without mutation when
+     * simulated.
+     */
     public abstract int insertAt(int slot, ItemStack stack, boolean simulate);
 
     /**
-     * One read-only insertion sweep. Discard before world, inventory, policy, or permission changes;
-     * committed insertions always perform fresh validation.
+     * One read-only insertion sweep. Discard before world, inventory, policy, or permission
+     * changes; committed insertions always perform fresh validation.
      */
     public abstract InsertionTest insertionTest();
 
@@ -112,7 +116,10 @@ public abstract class StackRun<BE extends StackBlockEntity> {
         }
     }
 
-    /** Resolves and schedules a run's deferred pass; a null resolution, including client use, does nothing. */
+    /**
+     * Resolves and schedules a run's deferred pass; a null resolution, including client use, does
+     * nothing.
+     */
     protected static <R extends StackRun<?>> void markDirtyAt(
             Level level, BlockPos pos, BiFunction<Level, BlockPos, R> resolver) {
         R run = resolver.apply(level, pos);
@@ -122,8 +129,9 @@ public abstract class StackRun<BE extends StackBlockEntity> {
     }
 
     /**
-     * Publishes comparator changes for runs at and beside a structural edit after cache invalidation.
-     * Null resolutions are ignored; this does not publish inventories or settle Storage.
+     * Publishes comparator changes for runs at and beside a structural edit after cache
+     * invalidation. Null resolutions are ignored; this does not publish inventories or settle
+     * Storage.
      */
     protected static <R extends StackRun<?>> void publishAround(
             Level level, BlockPos pos, BiFunction<Level, BlockPos, R> resolver) {
@@ -140,10 +148,14 @@ public abstract class StackRun<BE extends StackBlockEntity> {
         }
     }
 
-    /** Tests the height of the same-type run a block at pos would join, including both neighbors. */
+    /**
+     * Tests the height of the same-type run a block at pos would join, including both neighbors.
+     */
     protected static boolean columnHasRoomFor(Level level, BlockPos pos, Block block) {
-        return 1 + runLength(level, pos, Direction.DOWN, block)
-                + runLength(level, pos, Direction.UP, block) <= ServerConfig.maxPileHeight();
+        return 1
+                        + runLength(level, pos, Direction.DOWN, block)
+                        + runLength(level, pos, Direction.UP, block)
+                <= ServerConfig.maxPileHeight();
     }
 
     private static int runLength(Level level, BlockPos from, Direction direction, Block block) {
@@ -178,7 +190,8 @@ public abstract class StackRun<BE extends StackBlockEntity> {
 
     /** Positions visible to automation, including one block of headroom below the height limit. */
     public final int advertisedSlots() {
-        int levels = blocks.size() < ServerConfig.maxPileHeight() ? blocks.size() + 1 : blocks.size();
+        int levels =
+                blocks.size() < ServerConfig.maxPileHeight() ? blocks.size() + 1 : blocks.size();
         return slotsPerBlock * levels;
     }
 
@@ -190,7 +203,9 @@ public abstract class StackRun<BE extends StackBlockEntity> {
         return handlerOf(flatSlot).getStackInSlot(localSlot(flatSlot));
     }
 
-    /** Owning block for a validated stored flat slot; headroom and invalid indices are not accepted. */
+    /**
+     * Owning block for a validated stored flat slot; headroom and invalid indices are not accepted.
+     */
     protected final BE blockOf(int flatSlot) {
         return blocks.get(flatSlot / slotsPerBlock);
     }
@@ -214,13 +229,18 @@ public abstract class StackRun<BE extends StackBlockEntity> {
         return blocks.isEmpty() ? 0.0 : sum / totalSlots();
     }
 
-    /** Vanilla-style run-wide comparator strength: zero when empty, otherwise floor(fill * 14) + 1. */
+    /**
+     * Vanilla-style run-wide comparator strength: zero when empty, otherwise floor(fill * 14) + 1.
+     */
     public final int comparatorSignal() {
         double fill = fillLevel();
         return fill > 0.0 ? Mth.floor(fill * 14.0) + 1 : 0;
     }
 
-    /** Notifies every block's comparator neighbors only when the base's last published signal changes. */
+    /**
+     * Notifies every block's comparator neighbors only when the base's last published signal
+     * changes.
+     */
     final void publishComparatorSignal() {
         if (blocks.isEmpty()) {
             return;
@@ -234,7 +254,10 @@ public abstract class StackRun<BE extends StackBlockEntity> {
         }
     }
 
-    /** Coalesces server changes into one next-tick pass on the base; no immediate publication occurs. */
+    /**
+     * Coalesces server changes into one next-tick pass on the base; no immediate publication
+     * occurs.
+     */
     public final void markDirty() {
         if (blocks.isEmpty()) {
             return;

@@ -1,10 +1,11 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.BlockType;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -16,12 +17,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
+
+import javax.annotation.Nullable;
 
 /**
  * One Bar Stack: 64 bars laid in eight alternating layers of eight.
@@ -31,8 +33,8 @@ import java.util.Arrays;
  * is what automation addresses; this class owns one block's slots, its shape, and the player-facing
  * cascade that drops whatever an extracted bar was holding up.
  *
- * <p>Local slots are available through {@link #getItems()}; loader automation adapters expose
- * the whole run through {@link #itemRun()}.
+ * <p>Local slots are available through {@link #getItems()}; loader automation adapters expose the
+ * whole run through {@link #itemRun()}.
  */
 public class BarStackBE extends StackBlockEntity {
     /** Positions in one block. The column's flat range is this times its height. */
@@ -41,8 +43,8 @@ public class BarStackBE extends StackBlockEntity {
     private VoxelShape cachedShape = null;
 
     /**
-     * Set when a cascade is removing this block, so {@link BarStackBlock#onRemove} knows the
-     * column above is already being walked and does not start a second collapse of it.
+     * Set when a cascade is removing this block, so {@link BarStackBlock#onRemove} knows the column
+     * above is already being walked and does not start a second collapse of it.
      */
     private boolean removedByCascade = false;
 
@@ -130,11 +132,11 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     /**
-     * Takes one bar and cascades unsupported bars, preserving the actor through cleanup.
-     * Automation uses {@link BarColumn#extract}, which backfills instead.
+     * Takes one bar and cascades unsupported bars, preserving the actor through cleanup. Automation
+     * uses {@link BarColumn#extract}, which backfills instead.
      *
      * @param actor the player responsible for any block the cascade empties away, or null for
-     *              automation
+     *     automation
      */
     public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
         if (index < 0 || index >= SLOTS) {
@@ -164,9 +166,9 @@ public class BarStackBE extends StackBlockEntity {
 
     /**
      * Writes a bar the column already holds into an empty position, without the validity test an
-     * insertion runs. The caller owns the bar and the position it goes to; see
-     * {@link BarColumn#extract}, the one place a bar changes position in place, for why validity has
-     * no say in it.
+     * insertion runs. The caller owns the bar and the position it goes to; see {@link
+     * BarColumn#extract}, the one place a bar changes position in place, for why validity has no
+     * say in it.
      */
     void relocateInto(int index, ItemStack bar) {
         items.setStackInSlot(index, bar);
@@ -178,7 +180,8 @@ public class BarStackBE extends StackBlockEntity {
      */
     @Nullable
     private boolean[] seamBeneath() {
-        if (level != null && level.getBlockEntity(getBlockPos().below()) instanceof BarStackBE below) {
+        if (level != null
+                && level.getBlockEntity(getBlockPos().below()) instanceof BarStackBE below) {
             return BarCubeIdx.topLayerOccupancy(below.items);
         }
         return null;
@@ -193,9 +196,13 @@ public class BarStackBE extends StackBlockEntity {
      * @param topBefore start's top-layer occupancy before the triggering edit
      * @param actor the player removals are attributed to, or null for automation
      */
-    private static void cascadeFrom(ServerLevel columnLevel, BarStackBE start,
-                                    @Nullable boolean[] seamBelow, boolean[] topBefore,
-                                    BarDropBatch drops, @Nullable ServerPlayer actor) {
+    private static void cascadeFrom(
+            ServerLevel columnLevel,
+            BarStackBE start,
+            @Nullable boolean[] seamBelow,
+            boolean[] topBefore,
+            BarDropBatch drops,
+            @Nullable ServerPlayer actor) {
         BarStackBE be = start;
         boolean[] seam = seamBelow;
         boolean[] before = topBefore;
@@ -241,8 +248,8 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     /**
-     * A Bar Stack has gone from beneath {@code removed}, so the column above it has lost the seam it
-     * stood on. Carries an empty seam upward, which is the same thing a cascade hands on when it
+     * A Bar Stack has gone from beneath {@code removed}, so the column above it has lost the seam
+     * it stood on. Carries an empty seam upward, which is the same thing a cascade hands on when it
      * empties a block: nothing overlaps it, so the column comes down.
      *
      * <p>Server only, as the extraction route into the cascade is. A client reaches this while
@@ -256,8 +263,13 @@ public class BarStackBE extends StackBlockEntity {
             return;
         }
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {
-            cascadeFrom((ServerLevel) level, above, BarCubeIdx.emptySeam(),
-                    BarCubeIdx.topLayerOccupancy(above.items), drops, null);
+            cascadeFrom(
+                    (ServerLevel) level,
+                    above,
+                    BarCubeIdx.emptySeam(),
+                    BarCubeIdx.topLayerOccupancy(above.items),
+                    drops,
+                    null);
         }
     }
 

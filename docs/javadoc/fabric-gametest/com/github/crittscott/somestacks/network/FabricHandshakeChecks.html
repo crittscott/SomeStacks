@@ -121,9 +121,10 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loginProtocolPayloadIsBounded</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce in-game: connect matching Fabric builds, then try a client without Some Stacks
  and one with a different protocol version; only the matching build joins the server. From a
- matching client, also try a server without Some Stacks, then reconnect to the matching server;
- the missing handshake is rejected and does not affect the subsequent connection. The fixture
- checks the payload codec; connection event ordering needs this two-process manual check.</div>
+ matching client, also try a server without Some Stacks, then reconnect to the matching
+ server; the missing handshake is rejected and does not affect the subsequent connection. The
+ fixture checks the payload codec; connection event ordering needs this two-process manual
+ check.</div>
 </section>
 </li>
 </ul>

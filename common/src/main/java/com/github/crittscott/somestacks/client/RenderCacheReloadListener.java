@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
+
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 

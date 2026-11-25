@@ -185,8 +185,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageColumnFromVisual(int,int)" class="member-name-link">storageColumnFromVisual</a><wbr>(int&nbsp;visualColumn,
  int&nbsp;blockRotation)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The storage column a visual column occupies under a block rotation, the inverse of
- <a href="#visualColumnFromStorage(int,int)"><code>visualColumnFromStorage(int, int)</code></a>.</div>
+<div class="block">The storage column a visual column occupies under a block rotation, the inverse of <a href="#visualColumnFromStorage(int,int)"><code>visualColumnFromStorage(int, int)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedBy(int,int,com.github.crittscott.somestacks.util.StackItemStorage,int)" class="member-name-link">supportedBy</a><wbr>(int&nbsp;index,
@@ -345,9 +344,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">freshBlockSupports</span><wbr><span class="parameters">(int&nbsp;index,
  boolean[]&nbsp;seamBelow)</span></div>
 <div class="block">Whether a prospective Singles Stack could support an item at <code>index</code>. Since all of its
- slots are still empty, only the bottom layer can be supported. It is grounded when there is no
- Singles Stack below; otherwise its visual column must be occupied in <code>seamBelow</code>. New
- blocks are unrotated, so <code>index</code> is already in the visual frame.</div>
+ slots are still empty, only the bottom layer can be supported. It is grounded when there is
+ no Singles Stack below; otherwise its visual column must be occupied in <code>seamBelow</code>.
+ New blocks are unrotated, so <code>index</code> is already in the visual frame.</div>
 </section>
 </li>
 <li>
@@ -388,9 +387,8 @@ loadScripts(document, 'script');</script>
 <h3>storageColumnFromVisual</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">storageColumnFromVisual</span><wbr><span class="parameters">(int&nbsp;visualColumn,
  int&nbsp;blockRotation)</span></div>
-<div class="block">The storage column a visual column occupies under a block rotation, the inverse of
- <a href="#visualColumnFromStorage(int,int)"><code>visualColumnFromStorage(int, int)</code></a>. The four rotations form a cycle, so the inverse of
- <code>r</code> is <code>(4 - r) % 4</code>.</div>
+<div class="block">The storage column a visual column occupies under a block rotation, the inverse of <a href="#visualColumnFromStorage(int,int)"><code>visualColumnFromStorage(int, int)</code></a>. The four rotations form a cycle, so the inverse of <code>r</code> is
+ <code>(4 - r) % 4</code>.</div>
 </section>
 </li>
 <li>

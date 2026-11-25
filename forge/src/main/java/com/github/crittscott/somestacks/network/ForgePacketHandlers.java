@@ -1,12 +1,14 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.client.ClientServerSettings;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /** Forge thread and side adapters around loader-neutral packet codecs and behavior. */
 final class ForgePacketHandlers {
@@ -18,8 +20,9 @@ final class ForgePacketHandlers {
 
     static void handleConfigSync(ConfigSyncPkt msg, Supplier<NetworkEvent.Context> context) {
         NetworkEvent.Context ctx = context.get();
-        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-                () -> () -> ClientServerSettings.apply(msg)));
+        ctx.enqueueWork(() ->
+                DistExecutor.unsafeRunWhenOn(
+                        Dist.CLIENT, () -> () -> ClientServerSettings.apply(msg)));
         ctx.setPacketHandled(true);
     }
 

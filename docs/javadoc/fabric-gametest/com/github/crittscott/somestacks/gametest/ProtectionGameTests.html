@@ -178,7 +178,8 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#placementGrowthAndCleanupNotify(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementGrowthAndCleanupNotify</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty the top; each structural edit emits a vibration.</div>
+<div class="block">To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty
+ the top; each structural edit emits a vibration.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#placementIntoWaterKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementIntoWaterKeepsTheWater</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -259,7 +260,8 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <section class="detail" id="placementGrowthAndCleanupNotify(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>placementGrowthAndCleanupNotify</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementGrowthAndCleanupNotify</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty the top; each structural edit emits a vibration.</div>
+<div class="block">To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty
+ the top; each structural edit emits a vibration.</div>
 </section>
 </li>
 <li>
@@ -404,7 +406,10 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <section class="detail" id="automatedRemovalUsesNativeActorAndHonorsVeto(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>automatedRemovalUsesNativeActorAndHonorsVeto</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">automatedRemovalUsesNativeActorAndHonorsVeto</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce: deny automated cleanup through a protection mod, then allow it. The empty stack stays on veto; Fabric listeners receive BEFORE/CANCELED or BEFORE/AFTER with the [SomeStacks] fake player and original block entity. A nearby sculk sensor receives only the accepted destruction vibration.</div>
+<div class="block">To reproduce: deny automated cleanup through a protection mod, then allow it. The empty stack
+ stays on veto; Fabric listeners receive BEFORE/CANCELED or BEFORE/AFTER with the [SomeStacks]
+ fake player and original block entity. A nearby sculk sensor receives only the accepted
+ destruction vibration.</div>
 </section>
 </li>
 <li>
@@ -412,8 +417,8 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <h3>playerCleanupReachesBreakCallbacksAsThePlayer</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCleanupReachesBreakCallbacksAsThePlayer</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce: with a protection or logging mod listening to Fabric block breaks, extract the
- last bar from a Bar Stack. The removal reaches BEFORE and AFTER as the extracting player, with
- the original block state and block entity.</div>
+ last bar from a Bar Stack. The removal reaches BEFORE and AFTER as the extracting player,
+ with the original block state and block entity.</div>
 </section>
 </li>
 <li>

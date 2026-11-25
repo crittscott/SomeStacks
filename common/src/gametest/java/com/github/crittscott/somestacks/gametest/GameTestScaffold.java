@@ -1,11 +1,12 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -18,8 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.ComparatorBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ComparatorBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
@@ -41,11 +42,13 @@ public final class GameTestScaffold {
     private GameTestScaffold() {}
 
     public static StorageStackBE placeStorage(GameTestHelper helper, BlockPos relative) {
-        return place(helper, relative, CommonRegistry.STORAGE_STACK_BLOCK.get(), StorageStackBE.class);
+        return place(
+                helper, relative, CommonRegistry.STORAGE_STACK_BLOCK.get(), StorageStackBE.class);
     }
 
     public static SinglesStackBE placeSingles(GameTestHelper helper, BlockPos relative) {
-        return place(helper, relative, CommonRegistry.SINGLES_STACK_BLOCK.get(), SinglesStackBE.class);
+        return place(
+                helper, relative, CommonRegistry.SINGLES_STACK_BLOCK.get(), SinglesStackBE.class);
     }
 
     public static BarStackBE placeBar(GameTestHelper helper, BlockPos relative) {
@@ -53,16 +56,15 @@ public final class GameTestScaffold {
     }
 
     public static <T extends BlockEntity> T place(
-            GameTestHelper helper,
-            BlockPos relative,
-            Block block,
-            Class<T> type) {
+            GameTestHelper helper, BlockPos relative, Block block, Class<T> type) {
         ServerLevel level = helper.getLevel();
         BlockPos absolute = helper.absolutePos(relative);
-        check(level.setBlock(absolute, block.defaultBlockState(), Block.UPDATE_ALL),
+        check(
+                level.setBlock(absolute, block.defaultBlockState(), Block.UPDATE_ALL),
                 "Could not place " + block + " at " + relative);
         BlockEntity blockEntity = level.getBlockEntity(absolute);
-        check(type.isInstance(blockEntity),
+        check(
+                type.isInstance(blockEntity),
                 "Expected " + type.getSimpleName() + " at " + relative + ", found " + blockEntity);
         return type.cast(blockEntity);
     }
@@ -101,11 +103,11 @@ public final class GameTestScaffold {
      * Puts {@code stack} straight into a slot, bypassing the validity test an insertion runs.
      *
      * <p>This is how a test reaches the state an {@code ss deny mod} edit or a data pack reload
-     * that changes the ingot tag leaves behind: contents a block holds and must keep handing back, which
-     * that same block would refuse from a deposit today. Validity gates insertion only, so the
-     * stored side of that rule has to be set up without going through insertion.
-     * {@link com.github.crittscott.somestacks.block.StorageStackBE#setSlotIfChanged} takes the same
-     * route for the same reason.
+     * that changes the ingot tag leaves behind: contents a block holds and must keep handing back,
+     * which that same block would refuse from a deposit today. Validity gates insertion only, so
+     * the stored side of that rule has to be set up without going through insertion. {@link
+     * com.github.crittscott.somestacks.block.StorageStackBE#setSlotIfChanged} takes the same route
+     * for the same reason.
      */
     public static void seedSlot(StackItemStorage handler, int slot, ItemStack stack) {
         handler.setStackInSlot(slot, stack);
@@ -113,8 +115,8 @@ public final class GameTestScaffold {
 
     /**
      * Items of {@code item} still held by the stack block at {@code absolutePos}. A position the
-     * block has removed itself from holds none, which is what a caller counting whether an operation
-     * conserved its contents wants to see.
+     * block has removed itself from holds none, which is what a caller counting whether an
+     * operation conserved its contents wants to see.
      */
     public static int heldAt(GameTestHelper helper, BlockPos absolutePos, Item item) {
         BlockEntity blockEntity = helper.getLevel().getBlockEntity(absolutePos);
@@ -144,7 +146,8 @@ public final class GameTestScaffold {
 
     /** Items of {@code item} lying on the ground around {@code center}. */
     public static int droppedNear(GameTestHelper helper, BlockPos center, Item item) {
-        return helper.getLevel()
+        return helper
+                .getLevel()
                 .getEntitiesOfClass(ItemEntity.class, new AABB(center).inflate(2.0))
                 .stream()
                 .filter(entity -> entity.getItem().is(item))
@@ -154,16 +157,16 @@ public final class GameTestScaffold {
 
     /** Item entities around the vertical span from {@code bottom} through {@code top}. */
     public static List<ItemEntity> droppedInColumn(
-            GameTestHelper helper,
-            BlockPos bottom,
-            BlockPos top) {
-        AABB bounds = new AABB(
-                Math.min(bottom.getX(), top.getX()),
-                Math.min(bottom.getY(), top.getY()),
-                Math.min(bottom.getZ(), top.getZ()),
-                Math.max(bottom.getX(), top.getX()) + 1.0,
-                Math.max(bottom.getY(), top.getY()) + 1.0,
-                Math.max(bottom.getZ(), top.getZ()) + 1.0).inflate(2.0);
+            GameTestHelper helper, BlockPos bottom, BlockPos top) {
+        AABB bounds =
+                new AABB(
+                                Math.min(bottom.getX(), top.getX()),
+                                Math.min(bottom.getY(), top.getY()),
+                                Math.min(bottom.getZ(), top.getZ()),
+                                Math.max(bottom.getX(), top.getX()) + 1.0,
+                                Math.max(bottom.getY(), top.getY()) + 1.0,
+                                Math.max(bottom.getZ(), top.getZ()) + 1.0)
+                        .inflate(2.0);
         return helper.getLevel().getEntitiesOfClass(ItemEntity.class, bounds);
     }
 
@@ -177,10 +180,19 @@ public final class GameTestScaffold {
     /** Places a supported comparator east of a stack, facing away from its west-side input. */
     public static BlockPos placeComparator(GameTestHelper helper, BlockPos stackRelative) {
         BlockPos pos = helper.absolutePos(stackRelative.east());
-        check(helper.getLevel().setBlock(pos.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL),
+        check(
+                helper.getLevel()
+                        .setBlock(pos.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL),
                 "Could not place comparator support");
-        check(helper.getLevel().setBlock(pos, Blocks.COMPARATOR.defaultBlockState()
-                .setValue(HorizontalDirectionalBlock.FACING, Direction.WEST), Block.UPDATE_ALL),
+        check(
+                helper.getLevel()
+                        .setBlock(
+                                pos,
+                                Blocks.COMPARATOR
+                                        .defaultBlockState()
+                                        .setValue(
+                                                HorizontalDirectionalBlock.FACING, Direction.WEST),
+                                Block.UPDATE_ALL),
                 "Could not place comparator");
         return pos;
     }

@@ -77,7 +77,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ClientGestureChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Client decision and state checks with explicit hit classification, runnable without a client singleton.</div>
+<div class="block">Client decision and state checks with explicit hit classification, runnable without a client
+ singleton.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -96,7 +97,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#blockRulesRespectPrecedenceAndHands(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">blockRulesRespectPrecedenceAndHands</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Only the first matching rule consumes local block use; the server acts only for the main hand.</div>
+<div class="block">Only the first matching rule consumes local block use; the server acts only for the main
+ hand.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullTopFacesFallThroughToPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">fullTopFacesFallThroughToPlacement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
@@ -131,10 +133,11 @@ loadScripts(document, 'script');</script>
 <h3>blockRulesRespectPrecedenceAndHands</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">blockRulesRespectPrecedenceAndHands</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Only the first matching rule consumes local block use; the server acts only for the main hand. To reproduce in-game: try plain
- extraction, modified deposit, Shift torch rotation, and empty-hand permanence on each stack
- type, then repeat with an off-hand item and on an ordinary block. Unclaimed clicks retain
- ordinary use. Toggle Permanent reserves modified clicks against deposit and placement.</div>
+<div class="block">Only the first matching rule consumes local block use; the server acts only for the main
+ hand. To reproduce in-game: try plain extraction, modified deposit, Shift torch rotation, and
+ empty-hand permanence on each stack type, then repeat with an off-hand item and on an
+ ordinary block. Unclaimed clicks retain ordinary use. Toggle Permanent reserves modified
+ clicks against deposit and placement.</div>
 </section>
 </li>
 <li>
@@ -152,8 +155,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="gestureSyncSendsChangesAndResets(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>gestureSyncSendsChangesAndResets</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">gestureSyncSendsChangesAndResets</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Only changed mode/modifier state is sent; reconnect reset forces the next state packet.
- To reproduce in-game: cycle mode and use modified/unmodified gestures, reconnect, and use the
+<div class="block">Only changed mode/modifier state is sent; reconnect reset forces the next state packet. To
+ reproduce in-game: cycle mode and use modified/unmodified gestures, reconnect, and use the
  same mode again. The server interprets the first new click correctly. Packet suppression
  itself requires observing the sender, as this test does.</div>
 </section>

@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.PlatformServices;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -13,8 +14,8 @@ import javax.annotation.Nullable;
 
 /**
  * The loader-specific half of automated world edits: who performs them, and whether a claim or
- * logging mod vetoes one, and how the loader reports completion. {@link WorldEdits} owns the vanilla
- * mechanics and consults this boundary for protection and notifications.
+ * logging mod vetoes one, and how the loader reports completion. {@link WorldEdits} owns the
+ * vanilla mechanics and consults this boundary for protection and notifications.
  *
  * <p>The loader's entry point supplies this authority through {@link PlatformServices.Backend}
  * before any world logic can run.
@@ -32,17 +33,29 @@ public interface EditAuthority {
     }
 
     /** Places through loader-native protection, restoring denied state before publication. */
-    boolean place(Player placer, ServerLevel level, BlockPos pos,
-                  BlockState state, Direction placedAgainst);
+    boolean place(
+            Player placer,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
+            Direction placedAgainst);
 
     /** Whether a neighboring click may deposit into an existing destination stack. */
     boolean mayUseAdjacent(ServerPlayer player, BlockPos pos);
 
     /** Whether a claim, protection, or logging mod refuses this removal. */
-    boolean vetoesRemoval(ServerLevel level, ServerPlayer actor, BlockPos pos,
-                          BlockState state, @Nullable BlockEntity blockEntity);
+    boolean vetoesRemoval(
+            ServerLevel level,
+            ServerPlayer actor,
+            BlockPos pos,
+            BlockState state,
+            @Nullable BlockEntity blockEntity);
 
     /** Reports a successful removal with the actor, state, and entity captured before the edit. */
-    default void afterRemoval(ServerLevel level, ServerPlayer actor, BlockPos pos,
-                              BlockState state, @Nullable BlockEntity blockEntity) {}
+    default void afterRemoval(
+            ServerLevel level,
+            ServerPlayer actor,
+            BlockPos pos,
+            BlockState state,
+            @Nullable BlockEntity blockEntity) {}
 }

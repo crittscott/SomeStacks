@@ -2,8 +2,10 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.util.StackMode;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
@@ -47,9 +49,11 @@ public final class ClientGestures {
     public static void cycleMode() {
         StackMode startMode = stackMode;
         do {
-            stackMode = StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
+            stackMode =
+                    StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
             if (stackMode == StackMode.TOGGLE_PERMANENT) break;
-            if (stackMode.isBlockType() && ClientServerSettings.isBlockTypeEnabled(stackMode.toBlockType())) break;
+            if (stackMode.isBlockType()
+                    && ClientServerSettings.isBlockTypeEnabled(stackMode.toBlockType())) break;
             if (stackMode == startMode) break;
         } while (true);
     }

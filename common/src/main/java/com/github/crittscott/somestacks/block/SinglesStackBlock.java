@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -55,12 +56,15 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
      * Light this block emits, derived from the {@code BlockItem}s stored in it and kept in the
      * block state so lighting updates travel by the ordinary block-state path.
      */
-    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
+    public static final IntegerProperty LIGHT_LEVEL =
+            IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     /** The layout rotation, so structure rotation and mirroring turn the layout with the block. */
-    public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final DirectionProperty HORIZONTAL_FACING =
+            BlockStateProperties.HORIZONTAL_FACING;
+
     private static final VoxelShape FULL_BLOCK_SHAPE = Shapes.block();
 
     /** Shared mining, lighting, collision, and piston settings for this stack type. */
@@ -76,10 +80,11 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
 
     public SinglesStackBlock(Properties props) {
         super(props);
-        registerDefaultState(defaultBlockState()
-                .setValue(LIGHT_LEVEL, 0)
-                .setValue(WATERLOGGED, false)
-                .setValue(HORIZONTAL_FACING, Direction.NORTH));
+        registerDefaultState(
+                defaultBlockState()
+                        .setValue(LIGHT_LEVEL, 0)
+                        .setValue(WATERLOGGED, false)
+                        .setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override
@@ -89,7 +94,8 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
 
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
+        return state.setValue(
+                HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
     }
 
     @Override
@@ -105,8 +111,13 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
-                                  LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(
+            BlockState state,
+            Direction direction,
+            BlockState neighborState,
+            LevelAccessor level,
+            BlockPos pos,
+            BlockPos neighborPos) {
         if (state.getValue(WATERLOGGED)) {
             level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
@@ -125,7 +136,8 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
+    public VoxelShape getShape(
+            BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof SinglesStackBE ssbe) {
             return ssbe.getCachedShape();
@@ -134,7 +146,8 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
+    public VoxelShape getCollisionShape(
+            BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
         return getShape(state, level, pos, ctx);
     }
 
@@ -153,8 +166,8 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
      * player nor fogs the camera. The occupied cells remain solid through the collision shape.
      */
     @Override
-    public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos,
-                                     CollisionContext ctx) {
+    public VoxelShape getVisualShape(
+            BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
         return Shapes.empty();
     }
 
@@ -164,15 +177,22 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
      * empty Singles Stack as blocked as well.
      */
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos,
-                                  PathComputationType type) {
+    public boolean isPathfindable(
+            BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
         return false;
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            InteractionHand hand,
+            BlockHitResult hit) {
         if (!level.isClientSide) {
-            StackInteractions.handleExistingStack((ServerPlayer) player, hand, hit, BlockType.SINGLES_STACK);
+            StackInteractions.handleExistingStack(
+                    (ServerPlayer) player, hand, hit, BlockType.SINGLES_STACK);
         }
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
@@ -191,7 +211,8 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
 
     /** Invalidates cached columns and schedules publication after this block joins a run. */
     @Override
-    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(
+            BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
         if (!oldState.is(this)) {
             SinglesColumn.invalidateAround(level, pos);
@@ -200,7 +221,8 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(
+            BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof SinglesStackBE ssbe) {

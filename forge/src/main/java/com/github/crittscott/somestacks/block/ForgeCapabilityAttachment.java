@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.SomeStacks;
+
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,21 +20,21 @@ import javax.annotation.Nullable;
 
 /**
  * Attaches {@code ForgeCapabilities.ITEM_HANDLER} to the mod's block entities from outside them,
- * through the ordinary Forge capability-attachment event rather than an overridden
- * {@code getCapability}. This is what keeps the block entity classes themselves loader-neutral: the
- * common module's unpatched compile environment has no {@code getCapability} to override in the
- * first place.
+ * through the ordinary Forge capability-attachment event rather than an overridden {@code
+ * getCapability}. This is what keeps the block entity classes themselves loader-neutral: the common
+ * module's unpatched compile environment has no {@code getCapability} to override in the first
+ * place.
  *
  * <p>One {@link LazyOptional} is created per block entity and invalidated through the event's own
- * listener hook, the same lifecycle the block entity's own {@code invalidateCaps}/{@code reviveCaps}
- * would have driven if it owned the field itself.
+ * listener hook, the same lifecycle the block entity's own {@code invalidateCaps}/{@code
+ * reviveCaps} would have driven if it owned the field itself.
  */
 @Mod.EventBusSubscriber(modid = SomeStacks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ForgeCapabilityAttachment {
-    private static final ResourceLocation ITEM_HANDLER_ID = new ResourceLocation(SomeStacks.MODID, "item_handler");
+    private static final ResourceLocation ITEM_HANDLER_ID =
+            new ResourceLocation(SomeStacks.MODID, "item_handler");
 
-    private ForgeCapabilityAttachment() {
-    }
+    private ForgeCapabilityAttachment() {}
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
@@ -42,16 +43,22 @@ public final class ForgeCapabilityAttachment {
         }
     }
 
-    private static void attach(AttachCapabilitiesEvent<BlockEntity> event, NonNullSupplier<IItemHandler> handler) {
+    private static void attach(
+            AttachCapabilitiesEvent<BlockEntity> event, NonNullSupplier<IItemHandler> handler) {
         LazyOptional<IItemHandler> lazy = LazyOptional.of(handler);
 
-        event.addCapability(ITEM_HANDLER_ID, new ICapabilityProvider() {
-            @Nonnull
-            @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-                return cap == ForgeCapabilities.ITEM_HANDLER ? lazy.cast() : LazyOptional.empty();
-            }
-        });
+        event.addCapability(
+                ITEM_HANDLER_ID,
+                new ICapabilityProvider() {
+                    @Nonnull
+                    @Override
+                    public <T> LazyOptional<T> getCapability(
+                            @Nonnull Capability<T> cap, @Nullable Direction side) {
+                        return cap == ForgeCapabilities.ITEM_HANDLER
+                                ? lazy.cast()
+                                : LazyOptional.empty();
+                    }
+                });
         event.addListener(lazy::invalidate);
     }
 }

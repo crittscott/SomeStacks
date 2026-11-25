@@ -92,8 +92,8 @@ loadScripts(document, 'script');</script>
        first. A caller walking the positions in order therefore fills the column layer by layer
        from the bottom, because each placement stands before the next position is offered.
    <li>Extraction takes the requested bar and moves the column's topmost bar into the hole. The
-       topmost bar holds nothing up, and a slot vacated by extraction keeps the support it had,
-       so the result always stands. When the hole is in a top layer the backfill restores that
+       topmost bar holds nothing up, and a slot vacated by extraction keeps the support it had, so
+       the result always stands. When the hole is in a top layer the backfill restores that
        layer's occupancy exactly, leaving the seam under the block above untouched.
  </ul>
 
@@ -161,8 +161,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Inserts one bar into only the named empty position with footprint support,
- leaving the caller's stack unchanged.</div>
+<div class="block">Inserts one bar into only the named empty position with footprint support, leaving the
+ caller's stack unchanged.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackRun.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRun.InsertionTest</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertionTest()" class="member-name-link">insertionTest</a>()</code></div>
@@ -238,18 +238,20 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">insertAt</span><wbr><span class="parameters">(int&nbsp;flatSlot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</span></div>
-<div class="block">Inserts one bar into only the named empty position with footprint support,
- leaving the caller's stack unchanged. Admission and support are checked before insertion.
+<div class="block">Inserts one bar into only the named empty position with footprint support, leaving the
+ caller's stack unchanged. Admission and support are checked before insertion.
 
- A slot in advertised headroom can grow the column only when height, enablement, space,
+ <p>A slot in advertised headroom can grow the column only when height, enablement, space,
  obstruction, and the loader's automation edit authority permit it.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="StackRun.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)">insertAt</a></code>&nbsp;in class&nbsp;<code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&gt;</code></dd>
 <dt>Parameters:</dt>
-<dd><code>simulate</code> - when true, evaluates current capacity and growth checks without storing or growing</dd>
+<dd><code>simulate</code> - when true, evaluates current capacity and growth checks without storing or
+     growing</dd>
 <dt>Returns:</dt>
-<dd>the accepted item count, or the count currently acceptable when simulating; zero on refusal</dd>
+<dd>the accepted item count, or the count currently acceptable when simulating; zero on
+     refusal</dd>
 </dl>
 </section>
 </li>
@@ -258,8 +260,8 @@ loadScripts(document, 'script');</script>
 <h3>insertionTest</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackRun.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRun.InsertionTest</a></span>&nbsp;<span class="element-name">insertionTest</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="StackRun.html#insertionTest()">StackRun</a></code></span></div>
-<div class="block">One read-only insertion sweep. Discard before world, inventory, policy, or permission changes;
- committed insertions always perform fresh validation.</div>
+<div class="block">One read-only insertion sweep. Discard before world, inventory, policy, or permission
+ changes; committed insertions always perform fresh validation.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="StackRun.html#insertionTest()">insertionTest</a></code>&nbsp;in class&nbsp;<code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&gt;</code></dd>
@@ -276,8 +278,8 @@ loadScripts(document, 'script');</script>
  Nothing is dropped and nothing is left unsupported.
 
  <p>The backfilled bar is written into the hole rather than inserted. Validity gates what a
- deposit may add rather than what the column may carry, so a bar stored before a
- data pack reload narrowed the ingot tag still moves.</div>
+ deposit may add rather than what the column may carry, so a bar stored before a data pack
+ reload narrowed the ingot tag still moves.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="StackRun.html#extract(int,int,boolean)">extract</a></code>&nbsp;in class&nbsp;<code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&gt;</code></dd>

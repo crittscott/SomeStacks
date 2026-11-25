@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.SomeStacksCommon;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
@@ -23,20 +24,30 @@ public final class ModNetworking {
     public static SimpleChannel CHANNEL;
 
     public static void init() {
-        CHANNEL = NetworkRegistry.ChannelBuilder
-                .named(new ResourceLocation(SomeStacks.MODID, "main"))
-                .networkProtocolVersion(() -> PROTOCOL)
-                .clientAcceptedVersions(PROTOCOL::equals)
-                .serverAcceptedVersions(PROTOCOL::equals)
-                .simpleChannel();
+        CHANNEL =
+                NetworkRegistry.ChannelBuilder.named(new ResourceLocation(SomeStacks.MODID, "main"))
+                        .networkProtocolVersion(() -> PROTOCOL)
+                        .clientAcceptedVersions(PROTOCOL::equals)
+                        .serverAcceptedVersions(PROTOCOL::equals)
+                        .simpleChannel();
 
         Optional<NetworkDirection> toServer = Optional.of(NetworkDirection.PLAY_TO_SERVER);
         Optional<NetworkDirection> toClient = Optional.of(NetworkDirection.PLAY_TO_CLIENT);
 
         int id = 0;
-        CHANNEL.registerMessage(id++, GestureStatePkt.class, GestureStatePkt::encode,
-                GestureStatePkt::decode, ForgePacketHandlers::handleGestureState, toServer);
-        CHANNEL.registerMessage(id++, ConfigSyncPkt.class, ConfigSyncPkt::encode,
-                ConfigSyncPkt::decode, ForgePacketHandlers::handleConfigSync, toClient);
+        CHANNEL.registerMessage(
+                id++,
+                GestureStatePkt.class,
+                GestureStatePkt::encode,
+                GestureStatePkt::decode,
+                ForgePacketHandlers::handleGestureState,
+                toServer);
+        CHANNEL.registerMessage(
+                id++,
+                ConfigSyncPkt.class,
+                ConfigSyncPkt::encode,
+                ConfigSyncPkt::decode,
+                ForgePacketHandlers::handleConfigSync,
+                toClient);
     }
 }

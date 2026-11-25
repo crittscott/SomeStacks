@@ -4,10 +4,12 @@ import com.github.crittscott.somestacks.client.ClientGestures;
 import com.github.crittscott.somestacks.client.FabricKeyMappings;
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.HitResult;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,9 +37,13 @@ abstract class MinecraftMixin {
             return;
         }
 
-        InteractionContext context = InteractionContext.forAirClick(
-                player, player.level(), InteractionHand.MAIN_HAND,
-                ClientGestures.currentMode(), FabricKeyMappings.STACK_MODE_KEY.isDown());
+        InteractionContext context =
+                InteractionContext.forAirClick(
+                        player,
+                        player.level(),
+                        InteractionHand.MAIN_HAND,
+                        ClientGestures.currentMode(),
+                        FabricKeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processEmptyHandRules(context);
         ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
     }

@@ -1,10 +1,11 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -22,12 +23,12 @@ import javax.annotation.Nullable;
  * One Singles Stack: 64 single items drawn as a rotatable 4 x 4 x 4 grid.
  *
  * <p>A slot index is a cell, not a place in a bag, and every item must sit on one directly below it
- * or on the seam with the Singles Stack beneath. A vertical run of these is a {@link SinglesColumn},
- * which is what automation addresses; this class owns one block's cells, its shape, its layout
- * rotation, and a rotation for each rendered item.
+ * or on the seam with the Singles Stack beneath. A vertical run of these is a {@link
+ * SinglesColumn}, which is what automation addresses; this class owns one block's cells, its shape,
+ * its layout rotation, and a rotation for each rendered item.
  *
- * <p>Local slots are available through {@link #getItems()}; loader automation adapters expose
- * the whole run through {@link #itemRun()}.
+ * <p>Local slots are available through {@link #getItems()}; loader automation adapters expose the
+ * whole run through {@link #itemRun()}.
  */
 public class SinglesStackBE extends StackBlockEntity {
     /** Cells in one block. The column's flat range is this times its height. */
@@ -40,7 +41,12 @@ public class SinglesStackBE extends StackBlockEntity {
     private int[] cubeRotations = new int[SLOTS];
 
     public SinglesStackBE(BlockPos pos, BlockState state) {
-        super(CommonRegistry.SINGLES_STACK_BE.get(), pos, state, SLOTS, SinglesStackBlock.LIGHT_LEVEL);
+        super(
+                CommonRegistry.SINGLES_STACK_BE.get(),
+                pos,
+                state,
+                SLOTS,
+                SinglesStackBlock.LIGHT_LEVEL);
     }
 
     /**
@@ -53,7 +59,9 @@ public class SinglesStackBE extends StackBlockEntity {
         return (SinglesColumn) itemRun();
     }
 
-    /** The rendered rotation of one item, in quarter turns. Out-of-range indexes read as unrotated. */
+    /**
+     * The rendered rotation of one item, in quarter turns. Out-of-range indexes read as unrotated.
+     */
     public int getCubeRotation(int index) {
         if (index < 0 || index >= SLOTS) {
             return 0;
@@ -80,7 +88,11 @@ public class SinglesStackBE extends StackBlockEntity {
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                shape = Shapes.joinUnoptimized(shape, SinglesCubeIdx.GRID.localShape(i, blockRotation), BooleanOp.OR);
+                shape =
+                        Shapes.joinUnoptimized(
+                                shape,
+                                SinglesCubeIdx.GRID.localShape(i, blockRotation),
+                                BooleanOp.OR);
             }
         }
 
@@ -89,7 +101,8 @@ public class SinglesStackBE extends StackBlockEntity {
 
     /**
      * Returns the occupied-cell shape, rebuilding it only after contents or rotation invalidates
-     * the cache. Shape queries occur frequently enough that they must not rebuild it unconditionally.
+     * the cache. Shape queries occur frequently enough that they must not rebuild it
+     * unconditionally.
      */
     public VoxelShape getCachedShape() {
         int blockRotation = getRotation();
@@ -150,7 +163,7 @@ public class SinglesStackBE extends StackBlockEntity {
      * Player-facing extraction variant that preserves the actor through structural cleanup.
      *
      * @param actor the player responsible for any block the extraction empties away, or null for
-     *              automation
+     *     automation
      */
     public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
         if (index < 0 || index >= SLOTS) {
@@ -189,16 +202,17 @@ public class SinglesStackBE extends StackBlockEntity {
      * Stack.
      */
     private boolean[] seamBeneath() {
-        if (level != null && level.getBlockEntity(getBlockPos().below()) instanceof SinglesStackBE below) {
+        if (level != null
+                && level.getBlockEntity(getBlockPos().below()) instanceof SinglesStackBE below) {
             return SinglesCubeIdx.topLayerOccupancy(below.items, below.getRotation());
         }
         return null;
     }
 
     /**
-     * Moves occupied cells above {@code fromY} down exactly one layer in this local column, carrying
-     * item rotation and preserving gaps. The caller supplies a gap at {@code fromY}; stored items
-     * remain movable even when current admission rules would refuse them.
+     * Moves occupied cells above {@code fromY} down exactly one layer in this local column,
+     * carrying item rotation and preserving gaps. The caller supplies a gap at {@code fromY};
+     * stored items remain movable even when current admission rules would refuse them.
      */
     private void shiftColumnDown(int column, int fromY) {
         for (int checkY = fromY + 1; checkY < SinglesCubeIdx.LAYERS; checkY++) {
@@ -207,7 +221,8 @@ public class SinglesStackBE extends StackBlockEntity {
             if (!items.getStackInSlot(sourceIndex).isEmpty()) {
                 int targetIndex = SinglesCubeIdx.indexFromColumn(column, checkY - 1);
 
-                // The destination is vacant; direct assignment preserves stored items regardless of admission.
+                // The destination is vacant; direct assignment preserves stored items regardless of
+                // admission.
                 items.setStackInSlot(targetIndex, items.extractItem(sourceIndex, 1, false));
 
                 cubeRotations[targetIndex] = cubeRotations[sourceIndex];
@@ -228,21 +243,24 @@ public class SinglesStackBE extends StackBlockEntity {
             SinglesStackBE next = null;
             int nextColumn = -1;
 
-            if (columnLevel.getBlockEntity(be.getBlockPos().above()) instanceof SinglesStackBE above) {
+            if (columnLevel.getBlockEntity(be.getBlockPos().above())
+                    instanceof SinglesStackBE above) {
                 int visualColumn = SinglesCubeIdx.visualColumnFromStorage(col, be.getRotation());
-                int aboveColumn = SinglesCubeIdx.storageColumnFromVisual(visualColumn, above.getRotation());
+                int aboveColumn =
+                        SinglesCubeIdx.storageColumnFromVisual(visualColumn, above.getRotation());
 
                 int sourceIndex = SinglesCubeIdx.indexFromColumn(aboveColumn, 0);
 
                 if (!above.items.getStackInSlot(sourceIndex).isEmpty()) {
-                    int targetIndex = SinglesCubeIdx.indexFromColumn(col, SinglesCubeIdx.TOP_LAYER_Y);
+                    int targetIndex =
+                            SinglesCubeIdx.indexFromColumn(col, SinglesCubeIdx.TOP_LAYER_Y);
 
                     be.beginBatch();
                     above.beginBatch();
                     try {
                         // Gravity transfers stored contents without applying deposit admission.
-                        be.items.setStackInSlot(targetIndex,
-                                above.items.extractItem(sourceIndex, 1, false));
+                        be.items.setStackInSlot(
+                                targetIndex, above.items.extractItem(sourceIndex, 1, false));
                         // Block rotation turns a cell's position but never the item in it, so the
                         // stored rotation carries an item's facing across a change of frame as is.
                         be.cubeRotations[targetIndex] = above.cubeRotations[sourceIndex];
@@ -290,8 +308,8 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /** Stops at the first block that is not an empty Singles Stack, or that protection keeps. */
-    private static void removeEmptyBelow(ServerLevel columnLevel, BlockPos pos,
-                                         @Nullable ServerPlayer actor) {
+    private static void removeEmptyBelow(
+            ServerLevel columnLevel, BlockPos pos, @Nullable ServerPlayer actor) {
         BlockPos current = pos;
 
         while (columnLevel.getBlockEntity(current) instanceof SinglesStackBE be && be.isEmpty()) {
@@ -303,8 +321,8 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /**
-     * An empty cell carries no orientation, so the next item deposited into it cannot inherit
-     * the previous occupant's rotation.
+     * An empty cell carries no orientation, so the next item deposited into it cannot inherit the
+     * previous occupant's rotation.
      */
     private void clearEmptyCubeRotations() {
         for (int i = 0; i < cubeRotations.length; i++) {

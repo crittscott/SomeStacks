@@ -21,5 +21,4 @@ public final class FabricRenderPlatform implements ClientRenderPlatform.Backend 
         ItemColor provider = ColorProviderRegistry.ITEM.get(stack.getItem());
         return provider == null ? 0xFFFFFFFF : provider.getColor(stack, tintIndex);
     }
-
 }

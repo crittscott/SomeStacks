@@ -6,6 +6,7 @@ import com.github.crittscott.somestacks.client.renderconfig.RenderProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -38,12 +40,13 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.annotation.Nullable;
 
 /**
- * Draws one stored item inside one cell according to its render profile. The Storage
- * and Singles renderers position a cell and delegate here; everything about how the item itself is
- * presented lives in this class.
+ * Draws one stored item inside one cell according to its render profile. The Storage and Singles
+ * renderers position a cell and delegate here; everything about how the item itself is presented
+ * lives in this class.
  *
  * <p>The {@code 3d}, {@code gui}, and {@code block} modes hand off to Minecraft's own renderers.
  * The {@code 2d} mode is the one implemented here: flat item art projected onto the visible faces
@@ -52,7 +55,8 @@ import javax.annotation.Nullable;
 public final class CubeRenderHelper {
     private CubeRenderHelper() {}
 
-    public static final ResourceLocation STACK_CUBE_TEXTURE = new ResourceLocation(SomeStacksCommon.MODID, "block/stack_cube");
+    public static final ResourceLocation STACK_CUBE_TEXTURE =
+            new ResourceLocation(SomeStacksCommon.MODID, "block/stack_cube");
     public static final ResourceLocation STACK_CUBE_ERROR_TEXTURE =
             new ResourceLocation(SomeStacksCommon.MODID, "block/stack_cube_error");
 
@@ -61,12 +65,20 @@ public final class CubeRenderHelper {
 
     /** How far outside the cell face the projected art sits, clear of the background cube. */
     private static final float FACE_OFFSET = 0.001f;
-    /** How much of a quad's own depth survives the projection, keeping a multi-pass item's layers apart. */
+
+    /**
+     * How much of a quad's own depth survives the projection, keeping a multi-pass item's layers
+     * apart.
+     */
     private static final float FACE_DEPTH = 0.01f;
+
     /** Fraction of the face the art spans, leaving a one-pixel border. */
     private static final float ART_INSET = 0.875f;
 
-    /** Fraction of the cell the 2d background cube spans, leaving it visibly separated from its neighbors. */
+    /**
+     * Fraction of the cell the 2d background cube spans, leaving it visibly separated from its
+     * neighbors.
+     */
     private static final float CUBE_INSET = 0.9f;
 
     /**
@@ -89,8 +101,9 @@ public final class CubeRenderHelper {
     public static final float CELL_LOCAL_CENTRE = CELL_LOCAL_SIZE / 2.0f;
 
     /**
-     * Rotations mapping the baked model's +Z art plane onto each cube face. All are proper rotations,
-     * preserving the art's orientation. SOUTH already matches the source plane and needs none.
+     * Rotations mapping the baked model's +Z art plane onto each cube face. All are proper
+     * rotations, preserving the art's orientation. SOUTH already matches the source plane and needs
+     * none.
      */
     private static final Quaternionf[] FACE_ROTATIONS = new Quaternionf[DIRECTIONS.length];
 
@@ -104,12 +117,14 @@ public final class CubeRenderHelper {
         FACE_ROTATIONS[Direction.UP.ordinal()] = Axis.XP.rotationDegrees(-90.0f);
         FACE_ROTATIONS[Direction.DOWN.ordinal()] = Axis.XP.rotationDegrees(90.0f);
 
+        // spotless:off
         FACE_CORNERS[Direction.SOUTH.ordinal()] = new float[]{0,0,1, 1,0,1, 1,1,1, 0,1,1};
         FACE_CORNERS[Direction.NORTH.ordinal()] = new float[]{1,0,0, 0,0,0, 0,1,0, 1,1,0};
         FACE_CORNERS[Direction.EAST.ordinal()] = new float[]{1,0,1, 1,0,0, 1,1,0, 1,1,1};
         FACE_CORNERS[Direction.WEST.ordinal()] = new float[]{0,0,0, 0,0,1, 0,1,1, 0,1,0};
         FACE_CORNERS[Direction.UP.ordinal()] = new float[]{0,1,1, 1,1,1, 1,1,0, 0,1,0};
         FACE_CORNERS[Direction.DOWN.ordinal()] = new float[]{0,0,0, 1,0,0, 1,0,1, 0,0,1};
+        // spotless:on
     }
 
     /** Reseeded before every quad group, so one instance serves the whole render thread. */
@@ -125,27 +140,34 @@ public final class CubeRenderHelper {
     private static final Map<BakedModel, BakedQuad[]> PLATE_CACHE = new IdentityHashMap<>();
 
     /**
-     * Items whose block form threw when drawn. Cached so the attempt is made once per bake
-     * rather than once per frame for as long as the item is on screen: a renderer that throws
-     * partway through a quad leaves the shared buffer mid-quad, and repeating that every frame
-     * compounds it.
+     * Items whose block form threw when drawn. Cached so the attempt is made once per bake rather
+     * than once per frame for as long as the item is on screen: a renderer that throws partway
+     * through a quad leaves the shared buffer mid-quad, and repeating that every frame compounds
+     * it.
      */
-    private static final Set<Item> BLOCK_RENDER_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
+    private static final Set<Item> BLOCK_RENDER_FAILURES =
+            Collections.newSetFromMap(new IdentityHashMap<>());
 
     /**
      * Items whose model threw while its {@code 2d} art was gathered. Cached so the model is asked
      * once per bake; these draw the error cube until the next resource reload.
      */
-    private static final Set<Item> FLAT_CAPTURE_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
+    private static final Set<Item> FLAT_CAPTURE_FAILURES =
+            Collections.newSetFromMap(new IdentityHashMap<>());
 
     /**
-     * Draws {@code stack} inside the current cell, in whichever presentation
-     * {@link ItemRenderOverrides#resolve} selects for it, or draws nothing if {@code stack} is
-     * empty. {@code pose} must already be positioned at the cell being drawn; this method only
-     * pushes/pops the transforms needed for the item's own presentation within it.
+     * Draws {@code stack} inside the current cell, in whichever presentation {@link
+     * ItemRenderOverrides#resolve} selects for it, or draws nothing if {@code stack} is empty.
+     * {@code pose} must already be positioned at the cell being drawn; this method only pushes/pops
+     * the transforms needed for the item's own presentation within it.
      */
-    public static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
-                                        BlockRenderDispatcher blockRenderer, Level level) {
+    public static void renderItemInCube(
+            ItemStack stack,
+            PoseStack pose,
+            MultiBufferSource buffers,
+            int light,
+            BlockRenderDispatcher blockRenderer,
+            Level level) {
         RenderProfile profile = ItemRenderOverrides.resolve(stack);
         if (profile == null) {
             return;
@@ -156,38 +178,57 @@ public final class CubeRenderHelper {
         switch (profile.mode()) {
             case TWO_D -> render2DItem(stack, pose, buffers, light, level, scale, offset);
             case THREE_D -> render3DItem(stack, pose, buffers, light, level, scale, offset);
-            case BLOCK -> renderBlockItem(stack, pose, buffers, light, blockRenderer, level, scale, offset);
+            case BLOCK ->
+                    renderBlockItem(
+                            stack, pose, buffers, light, blockRenderer, level, scale, offset);
             case GUI -> renderGuiItem(stack, pose, buffers, light, level, scale, offset);
         }
     }
 
-    private static void render3DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                     float finalScale, RenderOffset offset) {
+    private static void render3DItem(
+            ItemStack stack,
+            PoseStack pose,
+            MultiBufferSource buffers,
+            int light,
+            Level level,
+            float finalScale,
+            RenderOffset offset) {
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
-        pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
+        pose.translate(
+                CELL_LOCAL_CENTRE / finalScale,
+                CELL_LOCAL_CENTRE / finalScale,
                 CELL_LOCAL_CENTRE / finalScale);
         pose.translate(offset.x() / finalScale, offset.y() / finalScale, offset.z() / finalScale);
 
-        Minecraft.getInstance().getItemRenderer().renderStatic(
-                stack,
-                ItemDisplayContext.FIXED,
-                light,
-                OverlayTexture.NO_OVERLAY,
-                pose,
-                buffers,
-                level,
-                0
-        );
+        Minecraft.getInstance()
+                .getItemRenderer()
+                .renderStatic(
+                        stack,
+                        ItemDisplayContext.FIXED,
+                        light,
+                        OverlayTexture.NO_OVERLAY,
+                        pose,
+                        buffers,
+                        level,
+                        0);
 
         pose.popPose();
     }
 
-    private static void renderGuiItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                      float finalScale, RenderOffset offset) {
+    private static void renderGuiItem(
+            ItemStack stack,
+            PoseStack pose,
+            MultiBufferSource buffers,
+            int light,
+            Level level,
+            float finalScale,
+            RenderOffset offset) {
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
-        pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
+        pose.translate(
+                CELL_LOCAL_CENTRE / finalScale,
+                CELL_LOCAL_CENTRE / finalScale,
                 CELL_LOCAL_CENTRE / finalScale);
         pose.translate(offset.x() / finalScale, offset.y() / finalScale, offset.z() / finalScale);
 
@@ -195,22 +236,29 @@ public final class CubeRenderHelper {
         pose.mulPose(Axis.YP.rotationDegrees(-45.0f));
         pose.mulPose(Axis.XP.rotationDegrees(-30.0f));
 
-        Minecraft.getInstance().getItemRenderer().renderStatic(
-                stack,
-                ItemDisplayContext.GUI,
-                light,
-                OverlayTexture.NO_OVERLAY,
-                pose,
-                buffers,
-                level,
-                0
-        );
+        Minecraft.getInstance()
+                .getItemRenderer()
+                .renderStatic(
+                        stack,
+                        ItemDisplayContext.GUI,
+                        light,
+                        OverlayTexture.NO_OVERLAY,
+                        pose,
+                        buffers,
+                        level,
+                        0);
 
         pose.popPose();
     }
 
-    private static void render2DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                     float scale, RenderOffset offset) {
+    private static void render2DItem(
+            ItemStack stack,
+            PoseStack pose,
+            MultiBufferSource buffers,
+            int light,
+            Level level,
+            float scale,
+            RenderOffset offset) {
         pose.pushPose();
         pose.scale(CELL_LOCAL_SIZE, CELL_LOCAL_SIZE, CELL_LOCAL_SIZE);
         pose.translate(0.5f, 0.5f, 0.5f);
@@ -218,7 +266,8 @@ public final class CubeRenderHelper {
         pose.translate(-0.5f, -0.5f, -0.5f);
         BakedQuad[][] art = captureFlatArt(stack, level);
         if (art == null) {
-            render2DItemCube(pose, buffers, stack, NO_ART, STACK_CUBE_ERROR_TEXTURE, light, scale, offset);
+            render2DItemCube(
+                    pose, buffers, stack, NO_ART, STACK_CUBE_ERROR_TEXTURE, light, scale, offset);
         } else {
             render2DItemCube(pose, buffers, stack, art, STACK_CUBE_TEXTURE, light, scale, offset);
         }
@@ -241,8 +290,10 @@ public final class CubeRenderHelper {
             return null;
         }
         try {
-            BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
-            List<BakedModel> passes = ClientRenderPlatform.renderPasses(model, stack, ItemDisplayContext.FIXED);
+            BakedModel model =
+                    Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
+            List<BakedModel> passes =
+                    ClientRenderPlatform.renderPasses(model, stack, ItemDisplayContext.FIXED);
             BakedQuad[][] art = new BakedQuad[passes.size()][];
             for (int i = 0; i < art.length; i++) {
                 art[i] = plates(passes.get(i));
@@ -250,15 +301,23 @@ public final class CubeRenderHelper {
             return art;
         } catch (RuntimeException e) {
             FLAT_CAPTURE_FAILURES.add(item);
-            SomeStacksCommon.LOGGER.warn("Item model threw while gathering 2d art for {}; drawing the error cube instead",
-                    BuiltInRegistries.ITEM.getKey(item), e);
+            SomeStacksCommon.LOGGER.warn(
+                    "Item model threw while gathering 2d art for {}; drawing the error cube instead",
+                    BuiltInRegistries.ITEM.getKey(item),
+                    e);
             return null;
         }
     }
 
-    private static void renderBlockItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
-                                        BlockRenderDispatcher blockRenderer, Level level,
-                                        float finalScale, RenderOffset offset) {
+    private static void renderBlockItem(
+            ItemStack stack,
+            PoseStack pose,
+            MultiBufferSource buffers,
+            int light,
+            BlockRenderDispatcher blockRenderer,
+            Level level,
+            float finalScale,
+            RenderOffset offset) {
         if (!(stack.getItem() instanceof BlockItem blockItem)) {
             // Block mode has no meaningful rendering path for a non-BlockItem.
             return;
@@ -278,21 +337,26 @@ public final class CubeRenderHelper {
 
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
-        pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
+        pose.translate(
+                CELL_LOCAL_CENTRE / finalScale,
+                CELL_LOCAL_CENTRE / finalScale,
                 CELL_LOCAL_CENTRE / finalScale);
         pose.translate(offset.x() / finalScale, offset.y() / finalScale, offset.z() / finalScale);
         pose.mulPose(Axis.YP.rotationDegrees(180));
         pose.translate(-0.5, -0.5, -0.5);
 
         try {
-            blockRenderer.renderSingleBlock(blockState, pose, buffers, light, OverlayTexture.NO_OVERLAY);
+            blockRenderer.renderSingleBlock(
+                    blockState, pose, buffers, light, OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
             // A third-party block model that cannot be baked or drawn on its own. The model path
             // works from the pose it is handed and never pushes, so the stack is where we left it.
             pose.popPose();
             if (BLOCK_RENDER_FAILURES.add(stack.getItem())) {
-                SomeStacksCommon.LOGGER.warn("Block rendering threw for {}; drawing it as 3d instead",
-                        BuiltInRegistries.ITEM.getKey(stack.getItem()), e);
+                SomeStacksCommon.LOGGER.warn(
+                        "Block rendering threw for {}; drawing it as 3d instead",
+                        BuiltInRegistries.ITEM.getKey(stack.getItem()),
+                        e);
             }
             render3DItem(stack, pose, buffers, light, level, finalScale, offset);
             return;
@@ -301,16 +365,24 @@ public final class CubeRenderHelper {
         pose.popPose();
     }
 
-    private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedQuad[][] art,
-                                         ResourceLocation background, int light, float scale, RenderOffset offset) {
+    private static void render2DItemCube(
+            PoseStack pose,
+            MultiBufferSource buffers,
+            ItemStack stack,
+            BakedQuad[][] art,
+            ResourceLocation background,
+            int light,
+            float scale,
+            RenderOffset offset) {
         List<FaceTarget> faces = visibleFaces(pose, scale, offset);
         if (faces.isEmpty()) {
             return;
         }
 
-        TextureAtlasSprite backgroundSprite = Minecraft.getInstance()
-                .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-                .apply(background);
+        TextureAtlasSprite backgroundSprite =
+                Minecraft.getInstance()
+                        .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+                        .apply(background);
         VertexConsumer solidVc = buffers.getBuffer(RenderType.solid());
         for (FaceTarget target : faces) {
             emitBackgroundFace(pose.last().pose(), solidVc, backgroundSprite, light, target);
@@ -335,10 +407,11 @@ public final class CubeRenderHelper {
     }
 
     /**
-     * Collects the quads of one pass that the flat projection can show. An item model lays its art on
-     * a front and a back plate and hangs a sliver off every span of the sprite's outline. The slivers
-     * stand perpendicular to the plates to give a held item its thickness; flattened onto a cell face
-     * they are edge-on and cover nothing, and they outnumber the plates by up to a hundred to one.
+     * Collects the quads of one pass that the flat projection can show. An item model lays its art
+     * on a front and a back plate and hangs a sliver off every span of the sprite's outline. The
+     * slivers stand perpendicular to the plates to give a held item its thickness; flattened onto a
+     * cell face they are edge-on and cover nothing, and they outnumber the plates by up to a
+     * hundred to one.
      */
     private static BakedQuad[] gatherPlates(BakedModel pass) {
         // Walk the pass as ItemRenderer.renderModelLists does: each culled direction group and then
@@ -361,7 +434,9 @@ public final class CubeRenderHelper {
         }
     }
 
-    /** Clears geometry and failure state tied to baked models being replaced by a resource reload. */
+    /**
+     * Clears geometry and failure state tied to baked models being replaced by a resource reload.
+     */
     public static void onResourceReload() {
         PLATE_CACHE.clear();
         BLOCK_RENDER_FAILURES.clear();
@@ -386,24 +461,31 @@ public final class CubeRenderHelper {
 
         List<FaceTarget> faces = new ArrayList<>(3);
         for (Direction face : DIRECTIONS) {
-            Vector3f normal = cellNormal.transform(
-                    new Vector3f(face.getStepX(), face.getStepY(), face.getStepZ()));
+            Vector3f normal =
+                    cellNormal.transform(
+                            new Vector3f(face.getStepX(), face.getStepY(), face.getStepZ()));
             if (centre.dot(normal) >= 0.0f) {
                 continue;
             }
             normal.normalize();
-            faces.add(new FaceTarget(face, artMatrix(pose, face, scale, offset),
-                    normal.x(), normal.y(), normal.z()));
+            faces.add(
+                    new FaceTarget(
+                            face,
+                            artMatrix(pose, face, scale, offset),
+                            normal.x(),
+                            normal.y(),
+                            normal.z()));
         }
         return faces;
     }
 
     /**
      * The transform from a baked quad's own coordinates onto one cube face: turn the +Z face onto
-     * the target face, sit just outside it keeping a sliver of the quad's own depth, then shrink the
-     * art about the face center to leave a border and apply the profile's offset.
+     * the target face, sit just outside it keeping a sliver of the quad's own depth, then shrink
+     * the art about the face center to leave a border and apply the profile's offset.
      */
-    private static Matrix4f artMatrix(PoseStack pose, Direction face, float scale, RenderOffset offset) {
+    private static Matrix4f artMatrix(
+            PoseStack pose, Direction face, float scale, RenderOffset offset) {
         pose.pushPose();
 
         Quaternionf rotation = FACE_ROTATIONS[face.ordinal()];
@@ -425,8 +507,12 @@ public final class CubeRenderHelper {
         return art;
     }
 
-    private static void emitQuads(VertexConsumer vc, ItemStack stack, BakedQuad[] plates, int light,
-                                  List<FaceTarget> faces) {
+    private static void emitQuads(
+            VertexConsumer vc,
+            ItemStack stack,
+            BakedQuad[] plates,
+            int light,
+            List<FaceTarget> faces) {
         int tintIndex = Integer.MIN_VALUE;
         int r = 0xFF, g = 0xFF, b = 0xFF;
 
@@ -438,9 +524,10 @@ public final class CubeRenderHelper {
             // and a coated weapon's are per stack.
             if (quad.getTintIndex() != tintIndex) {
                 tintIndex = quad.getTintIndex();
-                int color = tintIndex >= 0
-                        ? ClientRenderPlatform.itemColor(stack, tintIndex)
-                        : 0xFFFFFFFF;
+                int color =
+                        tintIndex >= 0
+                                ? ClientRenderPlatform.itemColor(stack, tintIndex)
+                                : 0xFFFFFFFF;
                 r = FastColor.ARGB32.red(color);
                 g = FastColor.ARGB32.green(color);
                 b = FastColor.ARGB32.blue(color);
@@ -450,20 +537,26 @@ public final class CubeRenderHelper {
             for (FaceTarget target : faces) {
                 for (int i = 0; i < 4; i++) {
                     int base = i * 8;
-                    vertex(vc, target.art(),
+                    vertex(
+                            vc,
+                            target.art(),
                             Float.intBitsToFloat(vertices[base]),
                             Float.intBitsToFloat(vertices[base + 1]),
                             Float.intBitsToFloat(vertices[base + 2]),
                             Float.intBitsToFloat(vertices[base + 4]),
                             Float.intBitsToFloat(vertices[base + 5]),
-                            r, g, b, light, target);
+                            r,
+                            g,
+                            b,
+                            light,
+                            target);
                 }
             }
         }
     }
 
-    private static void emitBackgroundFace(Matrix4f cell, VertexConsumer vc, TextureAtlasSprite sp, int light,
-                                           FaceTarget target) {
+    private static void emitBackgroundFace(
+            Matrix4f cell, VertexConsumer vc, TextureAtlasSprite sp, int light, FaceTarget target) {
         float[] c = FACE_CORNERS[target.face().ordinal()];
         float u0 = sp.getU0(), v0 = sp.getV0(), u1 = sp.getU1(), v1 = sp.getV1();
 
@@ -474,14 +567,26 @@ public final class CubeRenderHelper {
     }
 
     /**
-     * Writes one vertex. The position is transformed here rather than through
-     * {@link VertexConsumer#vertex(Matrix4f, float, float, float)}, which allocates a vector per
-     * call, and the normal is the cube face's rather than the source quad's, so lighting reads the
-     * surface the art lies on instead of the direction of an extruded sprite edge.
+     * Writes one vertex. The position is transformed here rather than through {@link
+     * VertexConsumer#vertex(Matrix4f, float, float, float)}, which allocates a vector per call, and
+     * the normal is the cube face's rather than the source quad's, so lighting reads the surface
+     * the art lies on instead of the direction of an extruded sprite edge.
      */
-    private static void vertex(VertexConsumer vc, Matrix4f m, float x, float y, float z, float u, float v,
-                               int r, int g, int b, int light, FaceTarget target) {
-        vc.vertex(m.m00() * x + m.m10() * y + m.m20() * z + m.m30(),
+    private static void vertex(
+            VertexConsumer vc,
+            Matrix4f m,
+            float x,
+            float y,
+            float z,
+            float u,
+            float v,
+            int r,
+            int g,
+            int b,
+            int light,
+            FaceTarget target) {
+        vc.vertex(
+                        m.m00() * x + m.m10() * y + m.m20() * z + m.m30(),
                         m.m01() * x + m.m11() * y + m.m21() * z + m.m31(),
                         m.m02() * x + m.m12() * y + m.m22() * z + m.m32())
                 .color(r, g, b, 0xFF)

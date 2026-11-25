@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.util;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.BarStackBE;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -12,9 +13,7 @@ import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
 
-/**
- * The three stack types and their registered blocks and server enablement settings.
- */
+/** The three stack types and their registered blocks and server enablement settings. */
 public enum BlockType {
     STORAGE_STACK,
     SINGLES_STACK,
@@ -47,7 +46,10 @@ public enum BlockType {
         };
     }
 
-    /** Silent admission for simulation/commit; null denotes automation, which ignores exact-item denial. */
+    /**
+     * Silent admission for simulation/commit; null denotes automation, which ignores exact-item
+     * denial.
+     */
     public boolean admits(ItemStack stack, @Nullable ServerPlayer depositor) {
         if (policyDenial(stack, depositor != null) != Denial.NONE) return false;
         return switch (this) {
@@ -65,9 +67,12 @@ public enum BlockType {
         Denial denial = policyDenial(stack, true);
         if (denial == Denial.MOD || denial == Denial.ITEM) {
             ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
-            player.displayClientMessage(denial == Denial.MOD
-                    ? Component.translatable("somestacks.message.disabled_mod", id.getNamespace())
-                    : Component.translatable("somestacks.message.disabled_item", id), true);
+            player.displayClientMessage(
+                    denial == Denial.MOD
+                            ? Component.translatable(
+                                    "somestacks.message.disabled_mod", id.getNamespace())
+                            : Component.translatable("somestacks.message.disabled_item", id),
+                    true);
         }
         return denial == Denial.NONE;
     }
@@ -80,5 +85,10 @@ public enum BlockType {
         return Denial.NONE;
     }
 
-    private enum Denial { NONE, EMPTY, MOD, ITEM }
+    private enum Denial {
+        NONE,
+        EMPTY,
+        MOD,
+        ITEM
+    }
 }

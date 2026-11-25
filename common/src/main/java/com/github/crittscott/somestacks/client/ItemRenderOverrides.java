@@ -12,6 +12,7 @@ import com.github.crittscott.somestacks.client.renderconfig.RenderProfile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -48,51 +49,65 @@ import javax.annotation.Nullable;
  * entire presentation: the user's override file, then resource-pack overrides. Items absent from
  * every layer use measured profiles.
  *
- * <p>A corpus file is named for the namespace whose items it covers, and covers no other.
- * The corpus is cross-mod compatibility data, most of which any one client cannot use, so a
- * file naming a namespace this client does not have is skipped without parsing or retention. A file
- * whose name is not a namespace therefore applies to nothing.
+ * <p>A corpus file is named for the namespace whose items it covers, and covers no other. The
+ * corpus is cross-mod compatibility data, most of which any one client cannot use, so a file naming
+ * a namespace this client does not have is skipped without parsing or retention. A file whose name
+ * is not a namespace therefore applies to nothing.
  */
-public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
+public class ItemRenderOverrides
+        extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path USER_FILE = PlatformServices.modConfigFolder().resolve("item_overrides.json");
-    private static final Path GENERATED_DIR = PlatformServices.modConfigFolder().resolve("generated_overrides");
+    private static final Path USER_FILE =
+            PlatformServices.modConfigFolder().resolve("item_overrides.json");
+    private static final Path GENERATED_DIR =
+            PlatformServices.modConfigFolder().resolve("generated_overrides");
 
     /** Bundled corpus, from client resource reload. */
     private static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
+
     /** The user's own overrides: {@code ss item} changes plus the loaded user file. */
     private static final Map<ResourceLocation, ItemRenderConfig> USER_OVERRIDES = new HashMap<>();
+
     private static final Map<Item, RenderProfile> RESOLVED_PROFILES = new HashMap<>();
     private static boolean userFileLoaded = false;
 
     @Override
-    protected Map<ResourceLocation, ItemRenderConfig> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected Map<ResourceLocation, ItemRenderConfig> prepare(
+            ResourceManager resourceManager, ProfilerFiller profiler) {
         Map<ResourceLocation, ItemRenderConfig> configMap = new HashMap<>();
 
-        var resources = resourceManager.listResources("item_render_overrides", loc -> loc.getPath().endsWith(".json"));
+        var resources =
+                resourceManager.listResources(
+                        "item_render_overrides", loc -> loc.getPath().endsWith(".json"));
         Set<String> present = presentNamespaces();
         int skipped = 0;
 
         // Read in file order so that two files covering one item resolve the same way every reload.
-        for (Map.Entry<ResourceLocation, Resource> fileEntry
-                : new TreeMap<>(resources).entrySet()) {
+        for (Map.Entry<ResourceLocation, Resource> fileEntry :
+                new TreeMap<>(resources).entrySet()) {
             ResourceLocation fileLocation = fileEntry.getKey();
             if (!present.contains(coveredNamespace(fileLocation))) {
                 skipped++;
                 continue;
             }
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(fileEntry.getValue().open(), StandardCharsets.UTF_8))) {
+            try (BufferedReader reader =
+                    new BufferedReader(
+                            new InputStreamReader(
+                                    fileEntry.getValue().open(), StandardCharsets.UTF_8))) {
                 JsonObject json = GSON.fromJson(reader, JsonObject.class);
                 configMap.putAll(OverrideJsonCodec.parse(json, fileLocation.toString()));
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to process file {}: {}", fileLocation, e.getMessage());
+                SomeStacksCommon.LOGGER.warn(
+                        "Failed to process file {}: {}", fileLocation, e.getMessage());
             }
         }
 
-        SomeStacksCommon.LOGGER.info("Loaded {} render override(s) from {} file(s); skipped {} for absent namespaces",
-                configMap.size(), resources.size() - skipped, skipped);
+        SomeStacksCommon.LOGGER.info(
+                "Loaded {} render override(s) from {} file(s); skipped {} for absent namespaces",
+                configMap.size(),
+                resources.size() - skipped,
+                skipped);
         return configMap;
     }
 
@@ -115,15 +130,18 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, ItemRenderConfig> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(
+            Map<ResourceLocation, ItemRenderConfig> prepared,
+            ResourceManager resourceManager,
+            ProfilerFiller profiler) {
         CONFIG_MAP.clear();
         CONFIG_MAP.putAll(prepared);
         clearResolvedProfiles();
     }
 
     /**
-     * Loads the user file if needed, then replaces this item's in-memory user override and invalidates
-     * resolved profiles. Does not save to disk.
+     * Loads the user file if needed, then replaces this item's in-memory user override and
+     * invalidates resolved profiles. Does not save to disk.
      */
     public static void putUser(ResourceLocation itemId, ItemRenderConfig config) {
         ensureUserFileLoaded();
@@ -142,10 +160,9 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     }
 
     /**
-     * Resolves the item's presentation through the override layers. The first layer
-     * with an entry owns the presentation: only a missing mode is measured, because
-     * scale and offset mean different things from one mode to the next; missing scale
-     * and offset take plain defaults.
+     * Resolves the item's presentation through the override layers. The first layer with an entry
+     * owns the presentation: only a missing mode is measured, because scale and offset mean
+     * different things from one mode to the next; missing scale and offset take plain defaults.
      *
      * @return the complete profile, or null for an empty stack.
      */
@@ -156,7 +173,8 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         }
         ensureUserFileLoaded();
 
-        return RESOLVED_PROFILES.computeIfAbsent(stack.getItem(), ignored -> resolveUncached(stack));
+        return RESOLVED_PROFILES.computeIfAbsent(
+                stack.getItem(), ignored -> resolveUncached(stack));
     }
 
     /** Discards profiles after override or baked-model changes. */
@@ -174,16 +192,17 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
             return AutoRenderProfiles.get(stack);
         }
 
-        RenderMode mode = entry.mode() != null ? entry.mode() : AutoRenderProfiles.get(stack).mode();
+        RenderMode mode =
+                entry.mode() != null ? entry.mode() : AutoRenderProfiles.get(stack).mode();
         float scale = entry.scale() != null ? entry.scale() : 1.0f;
         RenderOffset offset = entry.offset() != null ? entry.offset() : RenderOffset.ZERO;
         return new RenderProfile(mode, scale, offset);
     }
 
     /**
-     * Writes the user layer to the user override file and reports the result to the
-     * player. The map contains only entries the user explicitly set, so the file never
-     * accumulates measured or bundled values, and reset entries disappear from it.
+     * Writes the user layer to the user override file and reports the result to the player. The map
+     * contains only entries the user explicitly set, so the file never accumulates measured or
+     * bundled values, and reset entries disappear from it.
      */
     public static void handleWriteRequest() {
         ensureUserFileLoaded();
@@ -191,13 +210,20 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         Component message;
         try {
             Files.createDirectories(USER_FILE.getParent());
-            Files.writeString(USER_FILE, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(USER_OVERRIDES)));
-            message = Component.translatable("somestacks.command.write.success",
-                    USER_OVERRIDES.size(), USER_FILE.toString());
+            Files.writeString(
+                    USER_FILE, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(USER_OVERRIDES)));
+            message =
+                    Component.translatable(
+                            "somestacks.command.write.success",
+                            USER_OVERRIDES.size(),
+                            USER_FILE.toString());
         } catch (IOException e) {
             SomeStacksCommon.LOGGER.error("Failed to write {}", USER_FILE, e);
-            message = Component.translatable("somestacks.command.write.failure",
-                    USER_FILE.toString(), e.getMessage());
+            message =
+                    Component.translatable(
+                            "somestacks.command.write.failure",
+                            USER_FILE.toString(),
+                            e.getMessage());
         }
 
         report(message);
@@ -230,14 +256,17 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
         for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
             ResourceLocation itemId = entry.getKey().location();
-            Map<ResourceLocation, ItemRenderConfig> namespaceEntries = byNamespace.get(itemId.getNamespace());
+            Map<ResourceLocation, ItemRenderConfig> namespaceEntries =
+                    byNamespace.get(itemId.getNamespace());
             if (namespaceEntries == null) {
                 continue;
             }
 
             RenderProfile profile = resolve(new ItemStack(entry.getValue()));
             if (profile != null) {
-                namespaceEntries.put(itemId, new ItemRenderConfig(profile.mode(), profile.scale(), profile.offset()));
+                namespaceEntries.put(
+                        itemId,
+                        new ItemRenderConfig(profile.mode(), profile.scale(), profile.offset()));
             }
         }
 
@@ -249,15 +278,20 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
             Files.createDirectories(GENERATED_DIR);
         } catch (IOException e) {
             SomeStacksCommon.LOGGER.error("Failed to create {}", GENERATED_DIR, e);
-            report(Component.translatable("somestacks.command.dump.create_failure",
-                    GENERATED_DIR.toString(), e.getMessage()));
+            report(
+                    Component.translatable(
+                            "somestacks.command.dump.create_failure",
+                            GENERATED_DIR.toString(),
+                            e.getMessage()));
             return;
         }
 
-        for (Map.Entry<String, Map<ResourceLocation, ItemRenderConfig>> entry : byNamespace.entrySet()) {
+        for (Map.Entry<String, Map<ResourceLocation, ItemRenderConfig>> entry :
+                byNamespace.entrySet()) {
             Path file = GENERATED_DIR.resolve(entry.getKey() + ".json").normalize();
             try {
-                Files.writeString(file, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(entry.getValue())));
+                Files.writeString(
+                        file, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(entry.getValue())));
                 itemCount += entry.getValue().size();
             } catch (IOException e) {
                 SomeStacksCommon.LOGGER.error("Failed to write {}", file, e);
@@ -265,14 +299,22 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
             }
         }
 
-        MutableComponent message = Component.translatable("somestacks.command.dump.success",
-                itemCount, byNamespace.size() - failed.size(), GENERATED_DIR.toString());
+        MutableComponent message =
+                Component.translatable(
+                        "somestacks.command.dump.success",
+                        itemCount,
+                        byNamespace.size() - failed.size(),
+                        GENERATED_DIR.toString());
         if (!failed.isEmpty()) {
-            message.append(Component.translatable("somestacks.command.dump.failed",
-                    failed.size(), String.join(", ", failed)));
+            message.append(
+                    Component.translatable(
+                            "somestacks.command.dump.failed",
+                            failed.size(),
+                            String.join(", ", failed)));
         }
         if (!rejected.isEmpty()) {
-            message.append(Component.translatable("somestacks.command.dump.rejected", rejected.size()));
+            message.append(
+                    Component.translatable("somestacks.command.dump.rejected", rejected.size()));
         }
         report(message);
     }

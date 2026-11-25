@@ -73,14 +73,15 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">CommonRegistry</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Loader-neutral access to the registered blocks, block entity types, and sound events. The loader's own
- registration glue (Forge's <code>ModRegistry</code>, or its Fabric equivalent) assigns these once
- registration is set up; common code never registers anything itself, only reads these back.
+<div class="block">Loader-neutral access to the registered blocks, block entity types, and sound events. The
+ loader's own registration glue (Forge's <code>ModRegistry</code>, or its Fabric equivalent) assigns
+ these once registration is set up; common code never registers anything itself, only reads these
+ back.
 
- <p>There are no block items, recipes, or menus: stacks enter the world through player gestures
- or automation, and players access contents by clicking rendered cells. Each block class supplies
- its own shared properties. Singles and Bar use dynamic shapes; all types block pistons because
- moving a stack would leave its block entity behind.</div>
+ <p>There are no block items, recipes, or menus: stacks enter the world through player gestures or
+ automation, and players access contents by clicking rendered cells. Each block class supplies its
+ own shared properties. Singles and Bar use dynamic shapes; all types block pistons because moving
+ a stack would leave its block entity behind.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

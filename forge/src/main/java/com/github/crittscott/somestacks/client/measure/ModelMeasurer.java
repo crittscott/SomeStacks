@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.client.ForgeRenderPlatform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,18 +20,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import java.util.List;
+
 import javax.annotation.Nonnull;
 
 /**
- * Measures the geometry an item will actually produce in the FIXED display context,
- * mirroring the vanilla/Forge {@code ItemRenderer.render} pipeline: item-override
- * resolution, {@code applyTransform} (which may substitute another model), the
- * renderer's -0.5 origin shift, and all Forge render passes. Custom-renderer (BEWLR)
- * items are probed by running their renderer once against a vertex-capturing buffer.
+ * Measures the geometry an item will actually produce in the FIXED display context, mirroring the
+ * vanilla/Forge {@code ItemRenderer.render} pipeline: item-override resolution, {@code
+ * applyTransform} (which may substitute another model), the renderer's -0.5 origin shift, and all
+ * Forge render passes. Custom-renderer (BEWLR) items are probed by running their renderer once
+ * against a vertex-capturing buffer.
  */
 public final class ModelMeasurer implements ModelMeasurement.Backend {
 
@@ -53,7 +56,8 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
             ItemStack stack, ItemDisplayContext context, boolean counterRotate) {
         boolean gui3d = true;
         try {
-            BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, null, null, 0);
+            BakedModel model =
+                    Minecraft.getInstance().getItemRenderer().getModel(stack, null, null, 0);
 
             PoseStack pose = new PoseStack();
             pose.pushPose();
@@ -76,13 +80,18 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
         }
     }
 
-    private static ModelMeasurement.Result measureQuads(ItemStack stack, BakedModel model, boolean gui3d,
-                                       ItemDisplayContext context, PoseStack pose) {
+    private static ModelMeasurement.Result measureQuads(
+            ItemStack stack,
+            BakedModel model,
+            boolean gui3d,
+            ItemDisplayContext context,
+            PoseStack pose) {
         BoundsCollector collector = new BoundsCollector();
         Matrix4f matrix = pose.last().pose();
         RandomSource random = RandomSource.create();
 
-        for (BakedModel pass : model.getRenderPasses(stack, ForgeRenderPlatform.fabulousFlag(stack, context))) {
+        for (BakedModel pass :
+                model.getRenderPasses(stack, ForgeRenderPlatform.fabulousFlag(stack, context))) {
             for (Direction direction : Direction.values()) {
                 // Seed 42 per group matches ItemRenderer.renderModelLists.
                 random.setSeed(ClientRenderPlatform.ITEM_MODEL_SEED);
@@ -98,13 +107,15 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
         return new ModelMeasurement.Result(gui3d, true, collector.toAABB());
     }
 
-    private static void collectQuads(List<BakedQuad> quads, Matrix4f matrix, BoundsCollector collector) {
+    private static void collectQuads(
+            List<BakedQuad> quads, Matrix4f matrix, BoundsCollector collector) {
         Vector4f v = new Vector4f();
         for (BakedQuad quad : quads) {
             int[] data = quad.getVertices();
             for (int i = 0; i < 4; i++) {
                 int base = i * 8;
-                v.set(Float.intBitsToFloat(data[base]),
+                v.set(
+                        Float.intBitsToFloat(data[base]),
                         Float.intBitsToFloat(data[base + 1]),
                         Float.intBitsToFloat(data[base + 2]),
                         1.0f);
@@ -119,9 +130,15 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
         BoundsCollector collector = new BoundsCollector();
         CapturingBufferSource buffers = new CapturingBufferSource(collector);
         try {
-            IClientItemExtensions.of(stack).getCustomRenderer().renderByItem(
-                    stack, context, pose, buffers,
-                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+            IClientItemExtensions.of(stack)
+                    .getCustomRenderer()
+                    .renderByItem(
+                            stack,
+                            context,
+                            pose,
+                            buffers,
+                            LightTexture.FULL_BRIGHT,
+                            OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
             ModelMeasurement.reportFailure(stack, context, e);
             return new ModelMeasurement.Result(gui3d, false, null);
@@ -213,15 +230,12 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
         }
 
         @Override
-        public void endVertex() {
-        }
+        public void endVertex() {}
 
         @Override
-        public void defaultColor(int r, int g, int b, int a) {
-        }
+        public void defaultColor(int r, int g, int b, int a) {}
 
         @Override
-        public void unsetDefaultColor() {
-        }
+        public void unsetDefaultColor() {}
     }
 }

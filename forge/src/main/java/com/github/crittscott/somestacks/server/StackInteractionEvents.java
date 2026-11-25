@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.SomeStacks;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -20,7 +21,8 @@ public final class StackInteractionEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getLevel().isClientSide() || event.isCanceled()
+        if (event.getLevel().isClientSide()
+                || event.isCanceled()
                 || !(event.getEntity() instanceof ServerPlayer player)) return;
         boolean blockAllowed = event.getUseBlock() != Event.Result.DENY;
         boolean itemAllowed = event.getUseItem() != Event.Result.DENY;
@@ -38,8 +40,8 @@ public final class StackInteractionEvents {
     /** Refuses the item use a Stack Modifier air click still sends, before other mods act on it. */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
-        if (event.getLevel().isClientSide()
-                || !(event.getEntity() instanceof ServerPlayer player)) return;
+        if (event.getLevel().isClientSide() || !(event.getEntity() instanceof ServerPlayer player))
+            return;
         if (StackInteractions.modifierClaimsItemUse(player, event.getHand())) {
             event.setCanceled(true);
             event.setCancellationResult(InteractionResult.FAIL);

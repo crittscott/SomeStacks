@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.client.measure;
 import com.github.crittscott.somestacks.client.ClientRenderPlatform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -11,6 +12,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
+
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -18,8 +20,7 @@ import java.util.List;
 
 /** Measures ordinary quads exposed by Fabric item models after their display transform. */
 public final class FabricModelMeasurer implements ModelMeasurement.Backend {
-    private static final AABB SAFE_FALLBACK_BOUNDS =
-            new AABB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5);
+    private static final AABB SAFE_FALLBACK_BOUNDS = new AABB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5);
 
     @Override
     public ModelMeasurement.Result measure(ItemStack stack) {
@@ -35,13 +36,12 @@ public final class FabricModelMeasurer implements ModelMeasurement.Backend {
             ItemStack stack, ItemDisplayContext context, boolean counterRotate) {
         boolean gui3d = true;
         try {
-            BakedModel model = Minecraft.getInstance().getItemRenderer()
-                    .getModel(stack, null, null, 0);
+            BakedModel model =
+                    Minecraft.getInstance().getItemRenderer().getModel(stack, null, null, 0);
             gui3d = model.isGui3d();
 
             if (model.isCustomRenderer()) {
-                return new ModelMeasurement.Result(
-                        gui3d, false, SAFE_FALLBACK_BOUNDS);
+                return new ModelMeasurement.Result(gui3d, false, SAFE_FALLBACK_BOUNDS);
             }
 
             PoseStack pose = new PoseStack();
@@ -54,8 +54,7 @@ public final class FabricModelMeasurer implements ModelMeasurement.Backend {
             return measureQuads(model, gui3d, pose);
         } catch (Exception e) {
             ModelMeasurement.reportFailure(stack, context, e);
-            return new ModelMeasurement.Result(
-                    gui3d, false, null);
+            return new ModelMeasurement.Result(gui3d, false, null);
         }
     }
 
@@ -75,8 +74,7 @@ public final class FabricModelMeasurer implements ModelMeasurement.Backend {
         if (!collector.hasAny()) {
             // A model with no directly exposed geometry may draw only through Fabric's enhanced
             // item-quad path. ItemRenderer remains safe; the shared 2-D projection would be blank.
-            return new ModelMeasurement.Result(
-                    gui3d, false, SAFE_FALLBACK_BOUNDS);
+            return new ModelMeasurement.Result(gui3d, false, SAFE_FALLBACK_BOUNDS);
         }
         return new ModelMeasurement.Result(gui3d, true, collector.toAABB());
     }

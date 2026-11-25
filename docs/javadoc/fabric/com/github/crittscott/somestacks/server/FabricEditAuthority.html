@@ -84,18 +84,17 @@ loadScripts(document, 'script');</script>
 implements com.github.crittscott.somestacks.server.EditAuthority</span></div>
 <div class="block">Fabric's <code>EditAuthority</code>: the automation actor is Fabric API's native <code>FakePlayer</code>
  with the shared <code>AutomationActor</code> profile. Removal answers to Common Protection API and
- Fabric API's block-break event, so claim and protection mods can veto cleanup.
- Vetoed removals report cancellation; successful removals report completion with the original
- actor, block state, and block entity.
+ Fabric API's block-break event, so claim and protection mods can veto cleanup. Vetoed removals
+ report cancellation; successful removals report completion with the original actor, block state,
+ and block entity.
 
  <p>Placement has no comparable vanilla click to consult: automated growth has no player gesture
- for the mod's placement-protection hook (the native block-use callback) to fire, and Fabric
- API has no generic "a block was placed" event the way Forge's block-place event is. Placement
- instead queries each installed protection provider: Common Protection API through
- <code>CommonProtectionQueries</code>, which covers every claim mod that implements it, and FTB Chunks
- and Open Parties and Claims directly through <code>FtbChunksProtection</code> and
- <code>OpacProtection</code>. A deposit into a neighboring stack also asks Common Protection API
- whether the player may interact with the destination.</div>
+ for the mod's placement-protection hook (the native block-use callback) to fire, and Fabric API
+ has no generic "a block was placed" event the way Forge's block-place event is. Placement instead
+ queries each installed protection provider: Common Protection API through <code>CommonProtectionQueries</code>, which covers every claim mod that implements it, and FTB Chunks and
+ Open Parties and Claims directly through <code>FtbChunksProtection</code> and <code>OpacProtection</code>.
+ A deposit into a neighboring stack also asks Common Protection API whether the player may
+ interact with the destination.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

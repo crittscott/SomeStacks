@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -31,9 +32,9 @@ public final class SomeStacksFabric implements ModInitializer {
         });
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> ServerLifecycle.stopped());
 
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
-                ServerLifecycle.login(handler.player));
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
-                ServerLifecycle.logout(handler.player.getUUID()));
+        ServerPlayConnectionEvents.JOIN.register(
+                (handler, sender, server) -> ServerLifecycle.login(handler.player));
+        ServerPlayConnectionEvents.DISCONNECT.register(
+                (handler, server) -> ServerLifecycle.logout(handler.player.getUUID()));
     }
 }

@@ -58,9 +58,7 @@ public final class RunItemHandler implements IItemHandler {
                 RunEdit.end();
             }
         }
-        return accepted >= stack.getCount()
-                ? ItemStack.EMPTY
-                : remainder(stack, accepted);
+        return accepted >= stack.getCount() ? ItemStack.EMPTY : remainder(stack, accepted);
     }
 
     /** Extracts through the concrete run's movement rules, refusing reentrant mutations. */

@@ -1,12 +1,17 @@
 package com.github.crittscott.somestacks.gametest;
 
-import net.minecraft.world.phys.shapes.CollisionContext;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.mojang.authlib.GameProfile;
+
 import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.common.protection.api.ProtectionProvider;
+
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
@@ -26,21 +31,19 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.CollisionContext;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import javax.annotation.Nullable;
 
 /**
- * Provider-backed checks, loaded only in development runs started with
- * {@code -PwithCommonProtectionApi=true}. A test provider denies the positions a scenario names
- * and records who asked and what stood there when it did.
+ * Provider-backed checks, loaded only in development runs started with {@code
+ * -PwithCommonProtectionApi=true}. A test provider denies the positions a scenario names and
+ * records who asked and what stood there when it did.
  */
 public final class ProtectionApiGameTests implements FabricGameTest {
     private record Target(Level level, BlockPos pos) {}
@@ -53,7 +56,8 @@ public final class ProtectionApiGameTests implements FabricGameTest {
 
     private static final Map<Target, Probe> DENIED = new ConcurrentHashMap<>();
 
-    private record RemovalNotice(String phase, Player actor, BlockState state, BlockEntity entity) {}
+    private record RemovalNotice(
+            String phase, Player actor, BlockState state, BlockEntity entity) {}
 
     private static final class RemovalProbe {
         boolean denyBreak;
@@ -68,7 +72,8 @@ public final class ProtectionApiGameTests implements FabricGameTest {
     private static final Map<Target, RemovalProbe> REMOVALS = new ConcurrentHashMap<>();
 
     static {
-        CommonProtection.register(new ResourceLocation("somestacks", "test_protection"),
+        CommonProtection.register(
+                new ResourceLocation("somestacks", "test_protection"),
                 new ProtectionProvider() {
                     @Override
                     public boolean isProtected(Level level, BlockPos pos) {
@@ -81,17 +86,20 @@ public final class ProtectionApiGameTests implements FabricGameTest {
                     }
 
                     @Override
-                    public boolean canPlaceBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
+                    public boolean canPlaceBlock(
+                            Level level, BlockPos pos, GameProfile profile, Player player) {
                         return consult(level, pos, player);
                     }
 
                     @Override
-                    public boolean canInteractBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
+                    public boolean canInteractBlock(
+                            Level level, BlockPos pos, GameProfile profile, Player player) {
                         return consult(level, pos, player);
                     }
 
                     @Override
-                    public boolean canBreakBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
+                    public boolean canBreakBlock(
+                            Level level, BlockPos pos, GameProfile profile, Player player) {
                         RemovalProbe probe = REMOVALS.get(new Target(level, pos));
                         if (probe == null) return true;
                         probe.queries++;
@@ -150,12 +158,27 @@ public final class ProtectionApiGameTests implements FabricGameTest {
         DENIED.put(key, probe);
         try {
             var storage = FabricGameTestSupport.capability(base);
-            checkEquals(4, FabricGameTestSupport.insertAt(storage, StorageStackBE.SLOTS,
-                    new ItemStack(Items.STONE, 4), true).getCount(), "Denied growth was advertised");
-            checkEquals(4, FabricGameTestSupport.insertAt(storage, StorageStackBE.SLOTS,
-                    new ItemStack(Items.STONE, 4), false).getCount(), "Denied growth remainder");
+            checkEquals(
+                    4,
+                    FabricGameTestSupport.insertAt(
+                                    storage,
+                                    StorageStackBE.SLOTS,
+                                    new ItemStack(Items.STONE, 4),
+                                    true)
+                            .getCount(),
+                    "Denied growth was advertised");
+            checkEquals(
+                    4,
+                    FabricGameTestSupport.insertAt(
+                                    storage,
+                                    StorageStackBE.SLOTS,
+                                    new ItemStack(Items.STONE, 4),
+                                    false)
+                            .getCount(),
+                    "Denied growth remainder");
             check(probe.invoked, "Automation skipped the protection query");
-            check(probe.asker == WorldEdits.automationActor(helper.getLevel()),
+            check(
+                    probe.asker == WorldEdits.automationActor(helper.getLevel()),
                     "Protection query lost the automation actor");
             check(probe.sawAir, "Automation queried protection after placement");
             helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
@@ -166,8 +189,8 @@ public final class ProtectionApiGameTests implements FabricGameTest {
     }
 
     /**
-     * To reproduce in-game: stand outside a claim managed through Common Protection API and
-     * place a stack against a block whose face points into it. Nothing is placed.
+     * To reproduce in-game: stand outside a claim managed through Common Protection API and place a
+     * stack against a block whose face points into it. Nothing is placed.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void placementConsultsProtectionApiBeforePlacing(GameTestHelper helper) {
@@ -177,7 +200,16 @@ public final class ProtectionApiGameTests implements FabricGameTest {
         Probe probe = new Probe();
         DENIED.put(key, probe);
         try {
-            check(!WorldEdits.placeChecked(player, level, key.pos(), Blocks.STONE.defaultBlockState(), Direction.DOWN, (Blocks.STONE.defaultBlockState()).getCollisionShape(level, key.pos(), CollisionContext.empty())), "Denied placement was accepted");
+            check(
+                    !WorldEdits.placeChecked(
+                            player,
+                            level,
+                            key.pos(),
+                            Blocks.STONE.defaultBlockState(),
+                            Direction.DOWN,
+                            (Blocks.STONE.defaultBlockState())
+                                    .getCollisionShape(level, key.pos(), CollisionContext.empty())),
+                    "Denied placement was accepted");
         } finally {
             DENIED.remove(key);
         }
@@ -189,8 +221,8 @@ public final class ProtectionApiGameTests implements FabricGameTest {
 
     /**
      * To reproduce in-game: deny interaction at a Singles Stack inside a claim managed through
-     * Common Protection API, then hold the modifier and right-click the neighboring block toward
-     * it from outside. Nothing is deposited.
+     * Common Protection API, then hold the modifier and right-click the neighboring block toward it
+     * from outside. Nothing is deposited.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void adjacentDepositConsultsProtectionApi(GameTestHelper helper) {
@@ -200,7 +232,8 @@ public final class ProtectionApiGameTests implements FabricGameTest {
         Probe probe = new Probe();
         DENIED.put(key, probe);
         try {
-            check(!WorldEdits.mayUseAdjacent(player, key.pos()),
+            check(
+                    !WorldEdits.mayUseAdjacent(player, key.pos()),
                     "Protection query did not veto the adjacent deposit");
         } finally {
             DENIED.remove(key);
@@ -213,9 +246,9 @@ public final class ProtectionApiGameTests implements FabricGameTest {
     /**
      * To reproduce: allow placement and interaction in a Common Protection API claim, but deny
      * breaking for [SomeStacks]. Empty a temporary Storage Stack through a hopper; its empty block
-     * remains. Next allow the API query but deny breaking through a Fabric event listener; it
-     * still remains. Allow both and empty it again; cleanup removes it and emits destruction.
-     * The test verifies one cancellation on either denial and the original actor/state/entity.
+     * remains. Next allow the API query but deny breaking through a Fabric event listener; it still
+     * remains. Allow both and empty it again; cleanup removes it and emits destruction. The test
+     * verifies one cancellation on either denial and the original actor/state/entity.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automationCleanupConsultsProtectionApi(GameTestHelper helper) {
@@ -225,16 +258,17 @@ public final class ProtectionApiGameTests implements FabricGameTest {
     /**
      * To reproduce: allow placement and interaction in a Common Protection API claim, but deny
      * breaking for your player. Extract the last item from a temporary Storage Stack; its empty
-     * block remains. Repeat with the API allowing breaks and a Fabric listener denying them;
-     * it still remains. Allow both and empty it again; cleanup removes it as your player.
-     * The test checks callback context and destruction vibrations for all three cases.
+     * block remains. Repeat with the API allowing breaks and a Fabric listener denying them; it
+     * still remains. Allow both and empty it again; cleanup removes it as your player. The test
+     * checks callback context and destruction vibrations for all three cases.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void playerCleanupConsultsProtectionApi(GameTestHelper helper) {
         checkCleanupProtection(helper, FakePlayer.get(helper.getLevel()));
     }
 
-    private static void checkCleanupProtection(GameTestHelper helper, @Nullable ServerPlayer player) {
+    private static void checkCleanupProtection(
+            GameTestHelper helper, @Nullable ServerPlayer player) {
         ServerLevel level = helper.getLevel();
         StorageStackBE stack = GameTestScaffold.placeStorage(helper, ORIGIN);
         BlockPos pos = stack.getBlockPos();
@@ -243,29 +277,42 @@ public final class ProtectionApiGameTests implements FabricGameTest {
         Target key = new Target(level, pos);
         RemovalProbe probe = new RemovalProbe();
         REMOVALS.put(key, probe);
-        List<List<String>> phases = List.of(
-                List.of("canceled"), List.of("before", "canceled"), List.of("before", "after"));
+        List<List<String>> phases =
+                List.of(
+                        List.of("canceled"),
+                        List.of("before", "canceled"),
+                        List.of("before", "after"));
         try (var events = new WorldEditChecks.EventProbe(level, pos)) {
             for (int phase = 0; phase < phases.size(); phase++) {
                 probe.denyBreak = phase == 0;
                 probe.denyEvent = phase == 1;
                 probe.notices.clear();
-                check(CommonProtection.canPlaceBlock(level, pos, actor.getGameProfile(), actor),
+                check(
+                        CommonProtection.canPlaceBlock(level, pos, actor.getGameProfile(), actor),
                         "Break-only protection denied placement");
-                check(CommonProtection.canInteractBlock(level, pos, actor.getGameProfile(), actor),
+                check(
+                        CommonProtection.canInteractBlock(
+                                level, pos, actor.getGameProfile(), actor),
                         "Break-only protection denied interaction");
 
                 stack.getItems().setStackInSlot(0, new ItemStack(Items.STONE));
-                ItemStack taken = player == null ? stack.pile().extract(0, 1, false)
-                        : stack.extractAt(0, 1, ItemStack.EMPTY, player);
+                ItemStack taken =
+                        player == null
+                                ? stack.pile().extract(0, 1, false)
+                                : stack.extractAt(0, 1, ItemStack.EMPTY, player);
                 checkEquals(1, taken.getCount(), "Extraction was blocked by removal protection");
                 stack.pile().settle();
 
                 checkEquals(phase + 1, probe.queries, "Break query count");
                 check(probe.asker == actor, "Break query lost the cleanup actor");
-                checkEquals(actor.getGameProfile(), probe.profile, "Break query lost the actor profile");
+                checkEquals(
+                        actor.getGameProfile(),
+                        probe.profile,
+                        "Break query lost the actor profile");
                 check(probe.entityAtQuery == stack, "Break query ran after entity removal");
-                checkEquals(phases.get(phase), probe.notices.stream().map(RemovalNotice::phase).toList(),
+                checkEquals(
+                        phases.get(phase),
+                        probe.notices.stream().map(RemovalNotice::phase).toList(),
                         "Removal callback sequence");
                 for (RemovalNotice notice : probe.notices) {
                     check(notice.actor() == actor, "Removal callback lost the cleanup actor");
@@ -273,8 +320,13 @@ public final class ProtectionApiGameTests implements FabricGameTest {
                     check(notice.entity() == stack, "Removal callback lost the original entity");
                 }
                 if (phase < 2) {
-                    check(level.getBlockEntity(pos) == stack, "Denied cleanup removed the block entity");
-                    checkEquals(state, level.getBlockState(pos), "Denied cleanup changed the block state");
+                    check(
+                            level.getBlockEntity(pos) == stack,
+                            "Denied cleanup removed the block entity");
+                    checkEquals(
+                            state,
+                            level.getBlockState(pos),
+                            "Denied cleanup changed the block state");
                     check(stack.isEmpty(), "Denied cleanup restored extracted contents");
                     events.expectNone();
                 } else {

@@ -6,6 +6,7 @@ import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -13,9 +14,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Loader-neutral renderer for a Singles Stack's 64 stored items. Each occupied cell is placed at its
- * corner, rotated with the block's layout, and handed to {@link CubeRenderHelper}, which applies
- * the item's own render profile.
+ * Loader-neutral renderer for a Singles Stack's 64 stored items. Each occupied cell is placed at
+ * its corner, rotated with the block's layout, and handed to {@link CubeRenderHelper}, which
+ * applies the item's own render profile.
  *
  * <p>Unlike Storage, each item also carries a rotation of its own, applied on top of the block's.
  */
@@ -27,7 +28,13 @@ public class SinglesStackBER implements BlockEntityRenderer<SinglesStackBE> {
     }
 
     @Override
-    public void render(SinglesStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
+    public void render(
+            SinglesStackBE be,
+            float partialTick,
+            PoseStack pose,
+            MultiBufferSource buffers,
+            int light,
+            int overlay) {
         StackItemStorage handler = be.getItems();
 
         if (be.getLevel() == null) return;
@@ -54,7 +61,8 @@ public class SinglesStackBER implements BlockEntityRenderer<SinglesStackBE> {
             pose.mulPose(Axis.YP.rotationDegrees(cubeRotation * CubeGrid.DEGREES_PER_ROTATION));
             pose.translate(-centre, -centre, -centre);
 
-            CubeRenderHelper.renderItemInCube(stack, pose, buffers, light, blockRenderer, be.getLevel());
+            CubeRenderHelper.renderItemInCube(
+                    stack, pose, buffers, light, blockRenderer, be.getLevel());
 
             pose.popPose();
         }

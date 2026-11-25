@@ -153,7 +153,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementGrowthAndCleanupNotify(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementGrowthAndCleanupNotify</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty the top; each structural edit emits a vibration.</div>
+<div class="block">To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty
+ the top; each structural edit emits a vibration.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementIntoWaterKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementIntoWaterKeepsTheWater</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -192,8 +193,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stackGesturesFollowBlockUsePermission(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">stackGesturesFollowBlockUsePermission</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Forge permission fixture: a RightClickBlock listener at an existing Storage block first denies
- only item use, then only block use.</div>
+<div class="block">Forge permission fixture: a RightClickBlock listener at an existing Storage block first
+ denies only item use, then only block use.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -228,7 +229,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="placementGrowthAndCleanupNotify(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>placementGrowthAndCleanupNotify</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementGrowthAndCleanupNotify</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty the top; each structural edit emits a vibration.</div>
+<div class="block">To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty
+ the top; each structural edit emits a vibration.</div>
 </section>
 </li>
 <li>
@@ -400,9 +402,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="stackGesturesFollowBlockUsePermission(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>stackGesturesFollowBlockUsePermission</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stackGesturesFollowBlockUsePermission</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Forge permission fixture: a RightClickBlock listener at an existing Storage block first denies
- only item use, then only block use. Stack gestures are the block's own use, so with item use
- denied a dirt deposit and an extraction both succeed; with block use denied neither happens.
+<div class="block">Forge permission fixture: a RightClickBlock listener at an existing Storage block first
+ denies only item use, then only block use. Stack gestures are the block's own use, so with
+ item use denied a dirt deposit and an extraction both succeed; with block use denied neither
+ happens.
 
  <p>To check manually, use a protection rule or test listener that denies item use at the
  stack while allowing block use: V-deposit dirt, then release V and extract it; both work.
@@ -429,14 +432,16 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="placementDefersNeighborPublicationAndRestoresDeniedInventory(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>placementDefersNeighborPublicationAndRestoresDeniedInventory</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementDefersNeighborPublicationAndRestoresDeniedInventory</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce: deny stack placement in a claim. The rejected block produces no neighbor update; an accepted placement publishes after the event permits it.</div>
+<div class="block">To reproduce: deny stack placement in a claim. The rejected block produces no neighbor
+ update; an accepted placement publishes after the event permits it.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="placementRefusesReentrancyAndForeignCapture(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>placementRefusesReentrancyAndForeignCapture</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementRefusesReentrancyAndForeignCapture</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce: a placement listener attempts another stack placement. Reentrant edits are refused without corrupting the outer transaction.</div>
+<div class="block">To reproduce: a placement listener attempts another stack placement. Reentrant edits are
+ refused without corrupting the outer transaction.</div>
 </section>
 </li>
 </ul>

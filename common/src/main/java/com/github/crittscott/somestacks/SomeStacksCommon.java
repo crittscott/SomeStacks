@@ -8,8 +8,7 @@ import org.apache.logging.log4j.Logger;
  * logging, and metadata remain identical on Forge and Fabric.
  */
 public final class SomeStacksCommon {
-    private SomeStacksCommon() {
-    }
+    private SomeStacksCommon() {}
 
     /** Wire-format version shared by both loader transports. */
     public static final int PROTOCOL_VERSION = 5;

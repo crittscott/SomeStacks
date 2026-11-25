@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,14 +25,15 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/** Local inventory, persistence, synchronization, lighting, batching, and run caching for stacks. */
+/**
+ * Local inventory, persistence, synchronization, lighting, batching, and run caching for stacks.
+ */
 public abstract class StackBlockEntity extends BlockEntity {
     private static final String TAG_DATA_VERSION = "DataVersion";
 
     protected final StackItemStorage items;
     private final IntegerProperty lightProperty;
-    @Nullable
-    private StackItemStorage.LoadResult pendingLoadResult;
+    @Nullable private StackItemStorage.LoadResult pendingLoadResult;
     private int batchDepth;
     private boolean batchTouched;
     private boolean publishPending;
@@ -45,34 +47,39 @@ public abstract class StackBlockEntity extends BlockEntity {
     private long cachedRunTick = Long.MIN_VALUE;
 
     /** Creates local storage with subtype admission and a deferred publication callback. */
-    protected StackBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state,
-                               int slots, IntegerProperty lightProperty) {
+    protected StackBlockEntity(
+            BlockEntityType<?> type,
+            BlockPos pos,
+            BlockState state,
+            int slots,
+            IntegerProperty lightProperty) {
         super(type, pos, state);
         this.lightProperty = lightProperty;
         slotContributions = new double[slots];
-        items = new StackItemStorage(slots) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                setChanged();
-                updateComparatorContribution(slot);
-                onLocalContentsChanged(slot);
-                if (isBatching()) {
-                    batchTouched = true;
-                } else {
-                    schedulePublish();
-                }
-            }
+        items =
+                new StackItemStorage(slots) {
+                    @Override
+                    protected void onContentsChanged(int slot) {
+                        setChanged();
+                        updateComparatorContribution(slot);
+                        onLocalContentsChanged(slot);
+                        if (isBatching()) {
+                            batchTouched = true;
+                        } else {
+                            schedulePublish();
+                        }
+                    }
 
-            @Override
-            public int getSlotLimit(int slot) {
-                return localSlotLimit();
-            }
+                    @Override
+                    public int getSlotLimit(int slot) {
+                        return localSlotLimit();
+                    }
 
-            @Override
-            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                return isStoredItemValid(stack);
-            }
-        };
+                    @Override
+                    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                        return isStoredItemValid(stack);
+                    }
+                };
     }
 
     /** Admission for new items; saved contents and internal moves bypass this check. */
@@ -137,8 +144,12 @@ public abstract class StackBlockEntity extends BlockEntity {
     private void updateComparatorContribution(int slot) {
         ItemStack stack = items.getStackInSlot(slot);
         double previous = slotContributions[slot];
-        double current = stack.isEmpty() ? 0.0 : localSlotLimit() == 1 ? 1.0
-                : (double) stack.getCount() / stack.getMaxStackSize();
+        double current =
+                stack.isEmpty()
+                        ? 0.0
+                        : localSlotLimit() == 1
+                                ? 1.0
+                                : (double) stack.getCount() / stack.getMaxStackSize();
         slotContributions[slot] = current;
         occupiedSlots += (current != 0.0 ? 1 : 0) - (previous != 0.0 ? 1 : 0);
         fullSlots += (current == 1.0 ? 1 : 0) - (previous == 1.0 ? 1 : 0);
@@ -156,15 +167,13 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     /** Refreshes subtype-derived state after a local slot changes, including inside a batch. */
-    protected void onLocalContentsChanged(int slot) {
-    }
+    protected void onLocalContentsChanged(int slot) {}
 
     /**
      * Loads subtype metadata and derived state after inventory replacement, without publication.
      * Client data has already passed {@link #isValidClientStackData(CompoundTag)}.
      */
-    protected void loadStackData(CompoundTag tag) {
-    }
+    protected void loadStackData(CompoundTag tag) {}
 
     /** Checks type-specific update data before inventory or metadata is changed. */
     protected boolean isValidClientStackData(CompoundTag tag) {
@@ -175,12 +184,10 @@ public abstract class StackBlockEntity extends BlockEntity {
      * Adds subtype metadata to both disk saves and client update tags; private fields are removed
      * in {@link #stripServerOnlyUpdateData(CompoundTag)} before transmission.
      */
-    protected void saveStackData(CompoundTag tag) {
-    }
+    protected void saveStackData(CompoundTag tag) {}
 
     /** Removes server-only state before a saved tag is sent as a client update. */
-    protected void stripServerOnlyUpdateData(CompoundTag tag) {
-    }
+    protected void stripServerOnlyUpdateData(CompoundTag tag) {}
 
     /** Whether all local slots are empty. */
     public final boolean isEmpty() {
@@ -214,7 +221,8 @@ public abstract class StackBlockEntity extends BlockEntity {
         if (!state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
             return;
         }
-        BlockState rotated = state.setValue(BlockStateProperties.HORIZONTAL_FACING, facingOf(rotation));
+        BlockState rotated =
+                state.setValue(BlockStateProperties.HORIZONTAL_FACING, facingOf(rotation));
         if (state == rotated) {
             return;
         }
@@ -320,7 +328,8 @@ public abstract class StackBlockEntity extends BlockEntity {
         int light = ItemOps.calculateLightLevelFromItems(items);
         BlockState state = getBlockState();
         if (state.getValue(lightProperty) != light) {
-            currentLevel.setBlock(getBlockPos(), state.setValue(lightProperty, light), Block.UPDATE_ALL);
+            currentLevel.setBlock(
+                    getBlockPos(), state.setValue(lightProperty, light), Block.UPDATE_ALL);
         }
         return true;
     }
@@ -365,11 +374,13 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     /**
      * Applies a server update only with the current data version, a well-formed inventory without
-     * recovery data, and valid subtype metadata. Unrelated keys are ignored; a rejected tag changes nothing.
+     * recovery data, and valid subtype metadata. Unrelated keys are ignored; a rejected tag changes
+     * nothing.
      */
     public final boolean loadClientUpdate(CompoundTag tag) {
         if (!tag.contains(TAG_DATA_VERSION, Tag.TAG_INT)
-                || tag.getInt(TAG_DATA_VERSION) != SharedConstants.getCurrentVersion().getDataVersion().getVersion()
+                || tag.getInt(TAG_DATA_VERSION)
+                        != SharedConstants.getCurrentVersion().getDataVersion().getVersion()
                 || !tag.contains(StackItemStorage.TAG_ITEMS, Tag.TAG_COMPOUND)
                 || !isValidClientStackData(tag)
                 || !items.deserializeClientUpdate(tag.getCompound(StackItemStorage.TAG_ITEMS))) {

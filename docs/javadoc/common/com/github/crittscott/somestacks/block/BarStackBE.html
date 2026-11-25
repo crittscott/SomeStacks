@@ -88,8 +88,8 @@ loadScripts(document, 'script');</script>
  is what automation addresses; this class owns one block's slots, its shape, and the player-facing
  cascade that drops whatever an extracted bar was holding up.
 
- <p>Local slots are available through <a href="StackBlockEntity.html#getItems()"><code>StackBlockEntity.getItems()</code></a>; loader automation adapters expose
- the whole run through <a href="StackBlockEntity.html#itemRun()"><code>StackBlockEntity.itemRun()</code></a>.</div>
+ <p>Local slots are available through <a href="StackBlockEntity.html#getItems()"><code>StackBlockEntity.getItems()</code></a>; loader automation adapters expose the
+ whole run through <a href="StackBlockEntity.html#itemRun()"><code>StackBlockEntity.itemRun()</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -304,12 +304,12 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extractAt</span><wbr><span class="parameters">(int&nbsp;index,
  @Nullable
  net.minecraft.server.level.ServerPlayer&nbsp;actor)</span></div>
-<div class="block">Takes one bar and cascades unsupported bars, preserving the actor through cleanup.
- Automation uses <a href="BarColumn.html#extract(int,int,boolean)"><code>BarColumn.extract(int, int, boolean)</code></a>, which backfills instead.</div>
+<div class="block">Takes one bar and cascades unsupported bars, preserving the actor through cleanup. Automation
+ uses <a href="BarColumn.html#extract(int,int,boolean)"><code>BarColumn.extract(int, int, boolean)</code></a>, which backfills instead.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>actor</code> - the player responsible for any block the cascade empties away, or null for
-              automation</dd>
+     automation</dd>
 </dl>
 </section>
 </li>

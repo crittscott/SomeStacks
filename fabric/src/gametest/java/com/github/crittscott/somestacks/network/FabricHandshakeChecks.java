@@ -1,13 +1,14 @@
 package com.github.crittscott.somestacks.network;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+
 import com.github.crittscott.somestacks.SomeStacksCommon;
+
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.List;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 
 /** Login payload validation independent of a live remote client. */
 public final class FabricHandshakeChecks {
@@ -16,9 +17,10 @@ public final class FabricHandshakeChecks {
     /**
      * To reproduce in-game: connect matching Fabric builds, then try a client without Some Stacks
      * and one with a different protocol version; only the matching build joins the server. From a
-     * matching client, also try a server without Some Stacks, then reconnect to the matching server;
-     * the missing handshake is rejected and does not affect the subsequent connection. The fixture
-     * checks the payload codec; connection event ordering needs this two-process manual check.
+     * matching client, also try a server without Some Stacks, then reconnect to the matching
+     * server; the missing handshake is rejected and does not affect the subsequent connection. The
+     * fixture checks the payload codec; connection event ordering needs this two-process manual
+     * check.
      */
     public static void loginProtocolPayloadIsBounded(GameTestHelper helper) {
         FriendlyByteBuf supported = FabricNetworking.protocolPayload();

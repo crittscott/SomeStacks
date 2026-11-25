@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
  * the player, how a broken block sheds its contents, and how stored items add up to a light level.
  */
 public final class ItemOps {
-    private ItemOps(){}
+    private ItemOps() {}
 
     /** The brightest a block can be, and so the top of each stack block's light property. */
     public static final int MAX_LIGHT_LEVEL = 15;
@@ -23,12 +23,14 @@ public final class ItemOps {
 
     /**
      * Whether an extraction may land in this hand: it must be empty, or hold the same item and tags
-     * with room left. This is the rule that keeps a player's hand from being swapped out mid-gesture.
+     * with room left. This is the rule that keeps a player's hand from being swapped out
+     * mid-gesture.
      */
     public static boolean canTakeIntoHand(ItemStack hand, ItemStack offer) {
         if (offer.isEmpty()) return false;
         if (hand.isEmpty()) return true;
-        return ItemStack.isSameItemSameTags(hand, offer) && hand.getCount() < hand.getMaxStackSize();
+        return ItemStack.isSameItemSameTags(hand, offer)
+                && hand.getCount() < hand.getMaxStackSize();
     }
 
     /**
@@ -98,5 +100,4 @@ public final class ItemOps {
         }
         return Math.min(totalLight, MAX_LIGHT_LEVEL);
     }
-
 }

@@ -177,10 +177,10 @@ loadScripts(document, 'script');</script>
  net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
 <div class="block">To reproduce: in a claim that admits a player but denies [SomeStacks], extract the last item
  from a temporary Storage, Singles, and Bar Stack, and toggle an empty permanent Storage pile
- back to temporary. Each empty block is removed on the player's behalf, so the claim allows
- it and logging mods record the player. Extracting one of two Storage items by hand and the
- other by automation before settlement attributes the cleanup to [SomeStacks] instead, so
- that claim keeps the empty block.</div>
+ back to temporary. Each empty block is removed on the player's behalf, so the claim allows it
+ and logging mods record the player. Extracting one of two Storage items by hand and the other
+ by automation before settlement attributes the cleanup to [SomeStacks] instead, so that claim
+ keeps the empty block.</div>
 </section>
 </li>
 <li>
@@ -190,9 +190,9 @@ loadScripts(document, 'script');</script>
  net.minecraft.server.level.ServerPlayer&nbsp;player,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.server.level.ServerPlayer&gt;&nbsp;placeGesture)</span></div>
 <div class="block">To reproduce: put a sculk sensor near a floor, V-place Storage holding dirt, fill its slots,
- and deposit stone to grow it. Extract the stone and let settlement trim the upper block.
- Each structural edit produces its placement or destruction vibration, subject to ordinary
- sculk filtering. Inventory edits alone do not produce these structural events.</div>
+ and deposit stone to grow it. Extract the stone and let settlement trim the upper block. Each
+ structural edit produces its placement or destruction vibration, subject to ordinary sculk
+ filtering. Inventory edits alone do not produce these structural events.</div>
 </section>
 </li>
 </ul>

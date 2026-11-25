@@ -1,5 +1,13 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+import static com.github.crittscott.somestacks.gametest.GameTestSupport.count;
+
 import com.github.crittscott.somestacks.ForgeServerConfig;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacks;
@@ -9,6 +17,7 @@ import com.github.crittscott.somestacks.block.SinglesColumn;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -31,17 +40,9 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
-import static com.github.crittscott.somestacks.gametest.GameTestSupport.count;
-
 /**
- * The automation surface and the saved state behind it: the item handler exposed on every side,
- * a run advertising its reachable headroom, and each type's update tag round-tripping the contents
+ * The automation surface and the saved state behind it: the item handler exposed on every side, a
+ * run advertising its reachable headroom, and each type's update tag round-tripping the contents
  * and presentation state it is responsible for.
  */
 @GameTestHolder(SomeStacks.MODID)
@@ -49,6 +50,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestSupport.count;
 public final class CapabilityAndPersistenceGameTests {
     private static final long CONFIG_RELOAD_TIMEOUT_NANOS = TimeUnit.SECONDS.toNanos(5);
     private static final int CONFIG_RELOAD_TIMEOUT_TICKS = 10000;
+
     private CapabilityAndPersistenceGameTests() {}
 
     /**
@@ -66,18 +68,24 @@ public final class CapabilityAndPersistenceGameTests {
         BarStackBE bar = placeBar(helper, ORIGIN.east(6));
 
         for (Direction side : Direction.values()) {
-            check(storage.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent(),
+            check(
+                    storage.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent(),
                     "Storage capability missing on " + side);
-            check(singles.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent(),
+            check(
+                    singles.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent(),
                     "Singles capability missing on " + side);
-            check(bar.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent(),
+            check(
+                    bar.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent(),
                     "Bar capability missing on " + side);
         }
-        check(storage.getCapability(ForgeCapabilities.ITEM_HANDLER, null).isPresent(),
+        check(
+                storage.getCapability(ForgeCapabilities.ITEM_HANDLER, null).isPresent(),
                 "Storage capability missing on null side");
-        check(singles.getCapability(ForgeCapabilities.ITEM_HANDLER, null).isPresent(),
+        check(
+                singles.getCapability(ForgeCapabilities.ITEM_HANDLER, null).isPresent(),
                 "Singles capability missing on null side");
-        check(bar.getCapability(ForgeCapabilities.ITEM_HANDLER, null).isPresent(),
+        check(
+                bar.getCapability(ForgeCapabilities.ITEM_HANDLER, null).isPresent(),
                 "Bar capability missing on null side");
         helper.succeed();
     }
@@ -91,8 +99,7 @@ public final class CapabilityAndPersistenceGameTests {
      * Actual growth is covered by the growth tests.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void singleBlockCapabilitiesAdvertiseConfiguredHeadroom(
-            GameTestHelper helper) {
+    public static void singleBlockCapabilitiesAdvertiseConfiguredHeadroom(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
         BarStackBE bar = placeBar(helper, ORIGIN.east(6));
@@ -100,25 +107,33 @@ public final class CapabilityAndPersistenceGameTests {
         int storageLevels = StoragePile.maxHeight() > 1 ? 2 : 1;
         int singlesLevels = SinglesColumn.maxHeight() > 1 ? 2 : 1;
         int barLevels = BarColumn.maxHeight() > 1 ? 2 : 1;
-        checkEquals(StorageStackBE.SLOTS * storageLevels,
+        checkEquals(
+                StorageStackBE.SLOTS * storageLevels,
                 GameTestSupport.capability(storage).getSlots(),
                 "Storage advertised slots");
-        checkEquals(SinglesStackBE.SLOTS * singlesLevels,
+        checkEquals(
+                SinglesStackBE.SLOTS * singlesLevels,
                 GameTestSupport.capability(singles).getSlots(),
                 "Singles advertised slots");
-        checkEquals(BarStackBE.SLOTS * barLevels,
+        checkEquals(
+                BarStackBE.SLOTS * barLevels,
                 GameTestSupport.capability(bar).getSlots(),
                 "Bar advertised slots");
         helper.succeed();
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}. */
+    /**
+     * See {@link
+     * CapabilityAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}. */
+    /**
+     * See {@link CapabilityAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(helper);
@@ -130,7 +145,9 @@ public final class CapabilityAndPersistenceGameTests {
         CapabilityAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}. */
+    /**
+     * See {@link CapabilityAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(helper);
@@ -154,13 +171,18 @@ public final class CapabilityAndPersistenceGameTests {
         CapabilityAndPersistenceChecks.clientUpdatesRejectMalformedDataAtomically(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#clientSinglesUpdatesValidateRotationBeforeInventory}. */
+    /**
+     * See {@link
+     * CapabilityAndPersistenceChecks#clientSinglesUpdatesValidateRotationBeforeInventory}.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */
+    /**
+     * See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(helper);
@@ -195,17 +217,16 @@ public final class CapabilityAndPersistenceGameTests {
         ItemStack remainder = capability.insertItem(0, offered, true);
 
         checkEquals(5, offered.getCount(), "Simulation mutated its input");
-        checkEquals(0, count(capability, Items.APPLE),
-                "Simulation mutated the column");
-        checkEquals(4, remainder.getCount(),
-                "A cell takes one item, so one call should accept one");
+        checkEquals(0, count(capability, Items.APPLE), "Simulation mutated the column");
+        checkEquals(
+                4, remainder.getCount(), "A cell takes one item, so one call should accept one");
         helper.succeed();
     }
 
     /**
      * Loader entry point for {@link
-     * StackFoundationChecks#nestedBatchesPublishOnlyAfterTheOuterBatch}; see that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * StackFoundationChecks#nestedBatchesPublishOnlyAfterTheOuterBatch}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void nestedBatchesPublishOnlyAfterTheOuterBatch(GameTestHelper helper) {
@@ -224,8 +245,8 @@ public final class CapabilityAndPersistenceGameTests {
 
     /**
      * Loader entry point for {@link
-     * StackFoundationChecks#loadedContentsRefreshComparatorFillAndShapes}; see that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * StackFoundationChecks#loadedContentsRefreshComparatorFillAndShapes}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void loadedContentsRefreshComparatorFillAndShapes(GameTestHelper helper) {
@@ -234,8 +255,8 @@ public final class CapabilityAndPersistenceGameTests {
 
     /**
      * Loader entry point for {@link
-     * StackFoundationChecks#runContractPreservesTypeSpecificMutations}; see that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * StackFoundationChecks#runContractPreservesTypeSpecificMutations}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void runContractPreservesTypeSpecificMutations(GameTestHelper helper) {
@@ -250,18 +271,17 @@ public final class CapabilityAndPersistenceGameTests {
 
     /**
      * Loader entry point for {@link ServiceAndConfigChecks#installedServicesAndLogoutResetPacing};
-     * see that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * see that method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void installedServicesAndLogoutResetPacing(GameTestHelper helper) {
-        ServiceAndConfigChecks.installedServicesAndLogoutResetPacing(helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
+        ServiceAndConfigChecks.installedServicesAndLogoutResetPacing(
+                helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
     }
 
     /**
      * Loader entry point for {@link ServiceAndConfigChecks#listEditsPublishImmutablePolicy}; see
-     * that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * that method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void listEditsPublishImmutablePolicy(GameTestHelper helper) {
@@ -278,7 +298,8 @@ public final class CapabilityAndPersistenceGameTests {
     /** See {@link NetworkPolicyChecks#admissionSeparatesPlayersAutomationAndTypes}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void admissionSeparatesPlayersAutomationAndTypes(GameTestHelper helper) {
-        NetworkPolicyChecks.admissionSeparatesPlayersAutomationAndTypes(helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
+        NetworkPolicyChecks.admissionSeparatesPlayersAutomationAndTypes(
+                helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
     }
 
     /** See {@link NetworkPolicyChecks#namespacePolicyIsPreparedAndBounded}. */
@@ -305,9 +326,13 @@ public final class CapabilityAndPersistenceGameTests {
         ServiceAndConfigChecks.reloadCommandPublishesStoredPolicy(helper);
     }
 
-    /** To reproduce: use /ss deny mod add, inspect somestacks-server.toml, then remove the entry; command edits persist through Forge's native config. */
+    /**
+     * To reproduce: use /ss deny mod add, inspect somestacks-server.toml, then remove the entry;
+     * command edits persist through Forge's native config.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void commandPolicyEditsPersistToNativeForgeConfig(GameTestHelper helper) throws IOException {
+    public static void commandPolicyEditsPersistToNativeForgeConfig(GameTestHelper helper)
+            throws IOException {
         String marker = "somestacks_gametest_native_save";
         var policy = ServerConfig.ListSetting.DISABLE_MODS;
         var spec = ForgeServerConfig.SPEC;
@@ -316,9 +341,14 @@ public final class CapabilityAndPersistenceGameTests {
         try {
             ForgeConfigSpec.ConfigValue<?> nativeValue =
                     spec.getValues().get("compatibility.disable_mods");
-            check(((List<?>) nativeValue.get()).contains(marker), "Native config omitted command edit");
-            var file = helper.getLevel().getServer().getWorldPath(LevelResource.ROOT)
-                    .resolve("serverconfig/somestacks-server.toml");
+            check(
+                    ((List<?>) nativeValue.get()).contains(marker),
+                    "Native config omitted command edit");
+            var file =
+                    helper.getLevel()
+                            .getServer()
+                            .getWorldPath(LevelResource.ROOT)
+                            .resolve("serverconfig/somestacks-server.toml");
             check(Files.readString(file).contains(marker), "TOML omitted command edit");
         } finally {
             ServerConfig.removeListEntry(policy, marker);
@@ -328,17 +358,21 @@ public final class CapabilityAndPersistenceGameTests {
 
     /**
      * To reproduce: edit render_gallery.gen_mods in the world's somestacks-server.toml while the
-     * server runs; /ss gen mod list reflects Forge's reload without restart. The fixture edits
-     * the file directly in its own batch and waits for native publication using a wall-clock
-     * deadline, since accelerated GameTest ticks do not measure file-watcher latency. File,
-     * native value, and common policy are restored on completion or failure. The edit overwrites
-     * without truncation to avoid coalescing truncate/write notifications, which NightConfig's
-     * watcher skips when their event count exceeds one.
+     * server runs; /ss gen mod list reflects Forge's reload without restart. The fixture edits the
+     * file directly in its own batch and waits for native publication using a wall-clock deadline,
+     * since accelerated GameTest ticks do not measure file-watcher latency. File, native value, and
+     * common policy are restored on completion or failure. The edit overwrites without truncation
+     * to avoid coalescing truncate/write notifications, which NightConfig's watcher skips when
+     * their event count exceeds one.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE, batch = "somestacks_native_reload",
+    @GameTest(
+            template = GameTestSupport.TEMPLATE,
+            batch = "somestacks_native_reload",
             timeoutTicks = CONFIG_RELOAD_TIMEOUT_TICKS)
     public static void nativeForgeReloadPublishesPolicy(GameTestHelper helper) throws IOException {
-        String marker = "somestacks_gametest_native_reload_" + UUID.randomUUID().toString().replace("-", "");
+        String marker =
+                "somestacks_gametest_native_reload_"
+                        + UUID.randomUUID().toString().replace("-", "");
         var spec = ForgeServerConfig.SPEC;
         check(spec.isLoaded(), "Forge server config is not loaded");
         ForgeConfigSpec.ConfigValue<List<? extends String>> nativeValue =
@@ -346,53 +380,73 @@ public final class CapabilityAndPersistenceGameTests {
         List<String> before = List.copyOf(nativeValue.get());
         ServerConfig.Settings policyBefore = ServerConfig.settings();
         check(!policyBefore.genMods().contains(marker), "Reload marker already present");
-        var file = helper.getLevel().getServer().getWorldPath(LevelResource.ROOT)
-                .resolve("serverconfig/somestacks-server.toml");
+        var file =
+                helper.getLevel()
+                        .getServer()
+                        .getWorldPath(LevelResource.ROOT)
+                        .resolve("serverconfig/somestacks-server.toml");
         String original = Files.readString(file);
-        var entry = Pattern.compile("(?m)^([ \\t]*gen_mods[ \\t]*=[ \\t]*)\\[[^\\r\\n]*\\]([ \\t]*)$")
-                .matcher(original);
+        var entry =
+                Pattern.compile("(?m)^([ \\t]*gen_mods[ \\t]*=[ \\t]*)\\[[^\\r\\n]*\\]([ \\t]*)$")
+                        .matcher(original);
         check(entry.find(), "Native TOML has no single-line gen_mods entry");
-        String edited = original.substring(0, entry.start()) + entry.group(1)
-                + "[\"" + marker + "\"]" + entry.group(2) + original.substring(entry.end());
-        int padding = original.getBytes(StandardCharsets.UTF_8).length
-                - edited.getBytes(StandardCharsets.UTF_8).length;
+        String edited =
+                original.substring(0, entry.start())
+                        + entry.group(1)
+                        + "[\""
+                        + marker
+                        + "\"]"
+                        + entry.group(2)
+                        + original.substring(entry.end());
+        int padding =
+                original.getBytes(StandardCharsets.UTF_8).length
+                        - edited.getBytes(StandardCharsets.UTF_8).length;
         if (padding > 0) edited += " ".repeat(padding);
         long startedAt = System.nanoTime();
         long deadline = startedAt + CONFIG_RELOAD_TIMEOUT_NANOS;
         Files.writeString(file, edited, StandardOpenOption.WRITE);
-        helper.onEachTick(new Runnable() {
-            private boolean finished;
+        helper.onEachTick(
+                new Runnable() {
+                    private boolean finished;
 
-            @Override
-            public void run() {
-                if (finished) return;
-                boolean published = ServerConfig.ListSetting.GEN_MODS.get().equals(List.of(marker));
-                if (!published && System.nanoTime() - deadline < 0
-                        && helper.getTick() < CONFIG_RELOAD_TIMEOUT_TICKS - 2) {
-                    return;
-                }
-                finished = true;
-                boolean nativeLoaded = nativeValue.get().equals(List.of(marker));
-                String timeoutDetail = " (native value loaded edit: " + nativeLoaded
-                        + ", elapsed milliseconds: "
-                        + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startedAt)
-                        + ", test tick: " + helper.getTick() + ")";
-                try {
-                    nativeValue.set(before);
-                    Files.writeString(file, original);
-                } catch (IOException exception) {
-                    helper.fail("Could not restore native TOML: " + exception.getMessage());
-                    return;
-                } finally {
-                    ServerConfig.publish(policyBefore);
-                }
-                if (published) {
-                    helper.succeed();
-                } else {
-                    helper.fail("Native Forge file reload did not publish policy before its wall-clock or tick limit"
-                            + timeoutDetail);
-                }
-            }
-        });
+                    @Override
+                    public void run() {
+                        if (finished) return;
+                        boolean published =
+                                ServerConfig.ListSetting.GEN_MODS.get().equals(List.of(marker));
+                        if (!published
+                                && System.nanoTime() - deadline < 0
+                                && helper.getTick() < CONFIG_RELOAD_TIMEOUT_TICKS - 2) {
+                            return;
+                        }
+                        finished = true;
+                        boolean nativeLoaded = nativeValue.get().equals(List.of(marker));
+                        String timeoutDetail =
+                                " (native value loaded edit: "
+                                        + nativeLoaded
+                                        + ", elapsed milliseconds: "
+                                        + TimeUnit.NANOSECONDS.toMillis(
+                                                System.nanoTime() - startedAt)
+                                        + ", test tick: "
+                                        + helper.getTick()
+                                        + ")";
+                        try {
+                            nativeValue.set(before);
+                            Files.writeString(file, original);
+                        } catch (IOException exception) {
+                            helper.fail("Could not restore native TOML: " + exception.getMessage());
+                            return;
+                        } finally {
+                            ServerConfig.publish(policyBefore);
+                        }
+                        if (published) {
+                            helper.succeed();
+                        } else {
+                            helper.fail(
+                                    "Native Forge file reload did not publish policy before its wall-clock or tick limit"
+                                            + timeoutDetail);
+                        }
+                    }
+                });
     }
 }

@@ -77,10 +77,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">SinglesColumnChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Singles support and gravity in a live level that does not touch loader-native automation
- directly: grounding at the bottom of a column, a cell resting on the one below it, visual
- columns lining up across differently rotated blocks, and extraction shifting a column down while
- carrying each item's rotation with it. Capability/Transfer-API-facing tests stay in each loader's
- own <code>SinglesColumnGameTests</code>.</div>
+ directly: grounding at the bottom of a column, a cell resting on the one below it, visual columns
+ lining up across differently rotated blocks, and extraction shifting a column down while carrying
+ each item's rotation with it. Capability/Transfer-API-facing tests stay in each loader's own
+ <code>SinglesColumnGameTests</code>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -202,9 +202,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">middleRemovalPreservesAndPublishesBothSurvivingColumns</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce: build three occupied Singles blocks, rotate the upper block and some of its
  items, and put comparators beside the ends. Break the middle block. Only its local contents
- drop; upper items keep their positions and rotations, and both surviving runs update fill
- and light. The fixture drains placement ticks, then inserts an upper glowstone in the same
- tick as removal to test pending publication at the new upper base without invoking gravity.</div>
+ drop; upper items keep their positions and rotations, and both surviving runs update fill and
+ light. The fixture drains placement ticks, then inserts an upper glowstone in the same tick
+ as removal to test pending publication at the new upper base without invoking gravity.</div>
 </section>
 </li>
 <li>

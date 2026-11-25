@@ -16,9 +16,9 @@ public interface InteractionRule {
     boolean matches(InteractionContext ctx);
 
     /**
-     * Acts on the claimed gesture, normally by calling
-     * {@link InteractionContext#cancelEvent()} to take the click away from the vanilla interaction.
-     * A matched rule ends the walk whether or not it cancels.
+     * Acts on the claimed gesture, normally by calling {@link InteractionContext#cancelEvent()} to
+     * take the click away from the vanilla interaction. A matched rule ends the walk whether or not
+     * it cancels.
      */
     void execute(InteractionContext ctx);
 }

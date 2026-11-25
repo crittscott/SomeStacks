@@ -84,11 +84,11 @@ loadScripts(document, 'script');</script>
  <p>Cells are a structure, not a bag: a slot index is a position and every item must rest on the
  cell beneath it or on the seam with the Singles Stack below. So insertion places one item at the
  cell it is given, and only where that cell is empty and supported, growing the column when the
- cell lies in the block above it. Refusing an unsupported cell rather than choosing another is what
- keeps a slot index meaning one place, and no placement can leave an item hanging in the air.
+ cell lies in the block above it. Refusing an unsupported cell rather than choosing another is
+ what keeps a slot index meaning one place, and no placement can leave an item hanging in the air.
 
- <p>Automation uses the same extraction behavior as the player: the target cell is emptied and
- its visual column shifts down without drops or horizontal movement. Singles cannot use the Bar
+ <p>Automation uses the same extraction behavior as the player: the target cell is emptied and its
+ visual column shifts down without drops or horizontal movement. Singles cannot use the Bar
  column's topmost-item backfill because different items are not interchangeable.
 
  <p>An instance describes the run bounds at resolution time. Block entities cache it for the
@@ -153,8 +153,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Inserts one item into only the named empty, supported cell,
- leaving the caller's stack unchanged.</div>
+<div class="block">Inserts one item into only the named empty, supported cell, leaving the caller's stack
+ unchanged.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackRun.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRun.InsertionTest</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertionTest()" class="member-name-link">insertionTest</a>()</code></div>
@@ -219,18 +219,20 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">insertAt</span><wbr><span class="parameters">(int&nbsp;flatSlot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</span></div>
-<div class="block">Inserts one item into only the named empty, supported cell,
- leaving the caller's stack unchanged. Admission and support are checked before insertion.
+<div class="block">Inserts one item into only the named empty, supported cell, leaving the caller's stack
+ unchanged. Admission and support are checked before insertion.
 
- A slot in advertised headroom can grow the column only when height, enablement, space,
+ <p>A slot in advertised headroom can grow the column only when height, enablement, space,
  obstruction, and the loader's automation edit authority permit it.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="StackRun.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)">insertAt</a></code>&nbsp;in class&nbsp;<code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&gt;</code></dd>
 <dt>Parameters:</dt>
-<dd><code>simulate</code> - when true, evaluates current capacity and growth checks without storing or growing</dd>
+<dd><code>simulate</code> - when true, evaluates current capacity and growth checks without storing or
+     growing</dd>
 <dt>Returns:</dt>
-<dd>the accepted item count, or the count currently acceptable when simulating; zero on refusal</dd>
+<dd>the accepted item count, or the count currently acceptable when simulating; zero on
+     refusal</dd>
 </dl>
 </section>
 </li>
@@ -239,8 +241,8 @@ loadScripts(document, 'script');</script>
 <h3>insertionTest</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackRun.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRun.InsertionTest</a></span>&nbsp;<span class="element-name">insertionTest</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="StackRun.html#insertionTest()">StackRun</a></code></span></div>
-<div class="block">One read-only insertion sweep. Discard before world, inventory, policy, or permission changes;
- committed insertions always perform fresh validation.</div>
+<div class="block">One read-only insertion sweep. Discard before world, inventory, policy, or permission
+ changes; committed insertions always perform fresh validation.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="StackRun.html#insertionTest()">insertionTest</a></code>&nbsp;in class&nbsp;<code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&gt;</code></dd>

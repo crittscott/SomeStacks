@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelReader;
@@ -37,11 +38,16 @@ public final class StackPlacement {
         return stateFor(block, level, pos, facing);
     }
 
-    /** Builds the final placement state with an explicit layout facing, including Storage growth. */
-    public static BlockState stateFor(Block block, LevelReader level, BlockPos pos, Direction facing) {
+    /**
+     * Builds the final placement state with an explicit layout facing, including Storage growth.
+     */
+    public static BlockState stateFor(
+            Block block, LevelReader level, BlockPos pos, Direction facing) {
         boolean inWater = level.getFluidState(pos).getType() == Fluids.WATER;
-        BlockState state = block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, inWater);
+        BlockState state =
+                block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, inWater);
         return state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)
-                ? state.setValue(BlockStateProperties.HORIZONTAL_FACING, facing) : state;
+                ? state.setValue(BlockStateProperties.HORIZONTAL_FACING, facing)
+                : state;
     }
 }

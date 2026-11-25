@@ -1,5 +1,7 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.*;
+
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
@@ -8,6 +10,7 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 import com.github.crittscott.somestacks.server.AutomationActor;
 import com.github.crittscott.somestacks.server.WorldEdits;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -31,9 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.*;
-
-/** World edits and their notifications, observed through the world's native game-event dispatcher. */
+/**
+ * World edits and their notifications, observed through the world's native game-event dispatcher.
+ */
 public final class WorldEditChecks {
     private WorldEditChecks() {}
 
@@ -55,7 +58,9 @@ public final class WorldEditChecks {
     public static void cleanupOfWaterloggedStackKeepsTheWater(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         BlockPos pos = placeStorage(helper, ORIGIN).getBlockPos();
-        level.setBlock(pos, level.getBlockState(pos).setValue(StorageStackBlock.WATERLOGGED, true),
+        level.setBlock(
+                pos,
+                level.getBlockState(pos).setValue(StorageStackBlock.WATERLOGGED, true),
                 Block.UPDATE_ALL);
         StorageStackBE storage = (StorageStackBE) level.getBlockEntity(pos);
         storage.getItems().insertItem(0, new ItemStack(Items.STONE), false);
@@ -64,7 +69,9 @@ public final class WorldEditChecks {
         checkEquals(1, pile.extract(0, 1, false).getCount(), "Extraction count");
         pile.settle();
         helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        check(level.getFluidState(pos).getType() == Fluids.WATER && level.getFluidState(pos).isSource(),
+        check(
+                level.getFluidState(pos).getType() == Fluids.WATER
+                        && level.getFluidState(pos).isSource(),
                 "Cleanup removed the water source");
         helper.succeed();
     }
@@ -72,53 +79,81 @@ public final class WorldEditChecks {
     /**
      * To reproduce: in a claim that admits a player but denies [SomeStacks], extract the last item
      * from a temporary Storage, Singles, and Bar Stack, and toggle an empty permanent Storage pile
-     * back to temporary. Each empty block is removed on the player's behalf, so the claim allows
-     * it and logging mods record the player. Extracting one of two Storage items by hand and the
-     * other by automation before settlement attributes the cleanup to [SomeStacks] instead, so
-     * that claim keeps the empty block.
+     * back to temporary. Each empty block is removed on the player's behalf, so the claim allows it
+     * and logging mods record the player. Extracting one of two Storage items by hand and the other
+     * by automation before settlement attributes the cleanup to [SomeStacks] instead, so that claim
+     * keeps the empty block.
      */
-    public static void playerCausedCleanupCarriesThePlayer(GameTestHelper helper, ServerPlayer player) {
+    public static void playerCausedCleanupCarriesThePlayer(
+            GameTestHelper helper, ServerPlayer player) {
         ServerLevel level = helper.getLevel();
         check(!AutomationActor.is(player), "Fixture player is the automation actor");
 
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         storage.getItems().insertItem(0, new ItemStack(Items.STONE), false);
-        expectRemovalBy(level, storage.getBlockPos(), player, () -> {
-            checkEquals(1, storage.extractAt(0, 1, ItemStack.EMPTY, player).getCount(), "Storage extraction");
-            storage.pile().settle();
-        });
+        expectRemovalBy(
+                level,
+                storage.getBlockPos(),
+                player,
+                () -> {
+                    checkEquals(
+                            1,
+                            storage.extractAt(0, 1, ItemStack.EMPTY, player).getCount(),
+                            "Storage extraction");
+                    storage.pile().settle();
+                });
 
         StorageStackBE permanent = placeStorage(helper, ORIGIN);
         permanent.pile().setPermanent(true, null);
         permanent.pile().settle();
         helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        expectRemovalBy(level, permanent.getBlockPos(), player, () -> {
-            permanent.pile().setPermanent(false, player);
-            permanent.pile().settle();
-        });
+        expectRemovalBy(
+                level,
+                permanent.getBlockPos(),
+                player,
+                () -> {
+                    permanent.pile().setPermanent(false, player);
+                    permanent.pile().settle();
+                });
 
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         singles.getItems().insertItem(0, new ItemStack(Items.STONE), false);
-        expectRemovalBy(level, singles.getBlockPos(), player,
-                () -> checkEquals(1, singles.extractAt(0, player).getCount(), "Singles extraction"));
+        expectRemovalBy(
+                level,
+                singles.getBlockPos(),
+                player,
+                () ->
+                        checkEquals(
+                                1, singles.extractAt(0, player).getCount(), "Singles extraction"));
 
         BarStackBE bars = placeBar(helper, ORIGIN);
         bars.getItems().insertItem(0, new ItemStack(firstBarItem()), false);
-        expectRemovalBy(level, bars.getBlockPos(), player,
+        expectRemovalBy(
+                level,
+                bars.getBlockPos(),
+                player,
                 () -> checkEquals(1, bars.extractAt(0, player).getCount(), "Bar extraction"));
 
         StorageStackBE mixed = placeStorage(helper, ORIGIN);
         mixed.getItems().insertItem(0, new ItemStack(Items.STONE, 2), false);
-        expectRemovalBy(level, mixed.getBlockPos(), WorldEdits.automationActor(level), () -> {
-            checkEquals(1, mixed.extractAt(0, 1, ItemStack.EMPTY, player).getCount(), "Player extraction");
-            StoragePile pile = mixed.pile();
-            checkEquals(1, pile.extract(0, 1, false).getCount(), "Automation extraction");
-            pile.settle();
-        });
+        expectRemovalBy(
+                level,
+                mixed.getBlockPos(),
+                WorldEdits.automationActor(level),
+                () -> {
+                    checkEquals(
+                            1,
+                            mixed.extractAt(0, 1, ItemStack.EMPTY, player).getCount(),
+                            "Player extraction");
+                    StoragePile pile = mixed.pile();
+                    checkEquals(1, pile.extract(0, 1, false).getCount(), "Automation extraction");
+                    pile.settle();
+                });
         helper.succeed();
     }
 
-    private static void expectRemovalBy(ServerLevel level, BlockPos pos, ServerPlayer actor, Runnable edit) {
+    private static void expectRemovalBy(
+            ServerLevel level, BlockPos pos, ServerPlayer actor, Runnable edit) {
         BlockState state = level.getBlockState(pos);
         try (EventProbe events = new EventProbe(level, pos)) {
             edit.run();
@@ -129,23 +164,25 @@ public final class WorldEditChecks {
 
     /**
      * To reproduce: put a sculk sensor near a floor, V-place Storage holding dirt, fill its slots,
-     * and deposit stone to grow it. Extract the stone and let settlement trim the upper block.
-     * Each structural edit produces its placement or destruction vibration, subject to ordinary
-     * sculk filtering. Inventory edits alone do not produce these structural events.
+     * and deposit stone to grow it. Extract the stone and let settlement trim the upper block. Each
+     * structural edit produces its placement or destruction vibration, subject to ordinary sculk
+     * filtering. Inventory edits alone do not produce these structural events.
      */
-    public static void placementGrowthAndCleanupNotify(GameTestHelper helper, ServerPlayer player,
-                                                     Consumer<ServerPlayer> placeGesture) {
+    public static void placementGrowthAndCleanupNotify(
+            GameTestHelper helper, ServerPlayer player, Consumer<ServerPlayer> placeGesture) {
         ServerLevel level = helper.getLevel();
         BlockPos base = helper.absolutePos(ORIGIN);
         BlockPos above = base.above();
         level.setBlock(base.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
         try (EventProbe baseEvents = new EventProbe(level, base);
-             EventProbe upperEvents = new EventProbe(level, above);
-             InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
+                EventProbe upperEvents = new EventProbe(level, above);
+                InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
             player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT));
             placeGesture.accept(player);
             BlockState baseState = level.getBlockState(base);
-            check(baseState.is(CommonRegistry.STORAGE_STACK_BLOCK.get()), "Gesture did not place Storage");
+            check(
+                    baseState.is(CommonRegistry.STORAGE_STACK_BLOCK.get()),
+                    "Gesture did not place Storage");
             baseEvents.expectOne(GameEvent.BLOCK_PLACE, player, baseState);
             upperEvents.expectNone();
             StorageStackBE storage = (StorageStackBE) level.getBlockEntity(base);
@@ -154,14 +191,21 @@ public final class WorldEditChecks {
             }
             checkEquals(1, storage.deposit(new ItemStack(Items.STONE)), "Automated growth deposit");
             BlockState grownState = level.getBlockState(above);
-            check(grownState.is(CommonRegistry.STORAGE_STACK_BLOCK.get()), "Growth did not place Storage");
-            upperEvents.expectOne(GameEvent.BLOCK_PLACE, WorldEdits.automationActor(level), grownState);
+            check(
+                    grownState.is(CommonRegistry.STORAGE_STACK_BLOCK.get()),
+                    "Growth did not place Storage");
+            upperEvents.expectOne(
+                    GameEvent.BLOCK_PLACE, WorldEdits.automationActor(level), grownState);
             baseEvents.expectNone();
             StorageStackBE grown = (StorageStackBE) level.getBlockEntity(above);
-            checkEquals(1, grown.extractAt(0, 1, ItemStack.EMPTY, null).getCount(), "Upper extraction");
+            checkEquals(
+                    1, grown.extractAt(0, 1, ItemStack.EMPTY, null).getCount(), "Upper extraction");
             storage.pile().settle();
-            check(!level.getBlockState(above).is(CommonRegistry.STORAGE_STACK_BLOCK.get()), "Empty top survived");
-            upperEvents.expectOne(GameEvent.BLOCK_DESTROY, WorldEdits.automationActor(level), grownState);
+            check(
+                    !level.getBlockState(above).is(CommonRegistry.STORAGE_STACK_BLOCK.get()),
+                    "Empty top survived");
+            upperEvents.expectOne(
+                    GameEvent.BLOCK_DESTROY, WorldEdits.automationActor(level), grownState);
             baseEvents.expectNone();
         }
         helper.succeed();
@@ -180,7 +224,9 @@ public final class WorldEditChecks {
         public EventProbe(ServerLevel level, BlockPos pos) {
             this.pos = pos.immutable();
             source = new BlockPositionSource(this.pos);
-            registry = level.getChunkAt(pos).getListenerRegistry(SectionPos.blockToSectionCoord(pos.getY()));
+            registry =
+                    level.getChunkAt(pos)
+                            .getListenerRegistry(SectionPos.blockToSectionCoord(pos.getY()));
             registry.register(this);
         }
 
@@ -195,10 +241,11 @@ public final class WorldEditChecks {
         }
 
         @Override
-        public boolean handleGameEvent(ServerLevel level, GameEvent event,
-                                       GameEvent.Context context, Vec3 location) {
-            if ((event == GameEvent.BLOCK_PLACE || event == GameEvent.BLOCK_DESTROY
-                    || event == GameEvent.BLOCK_CHANGE)
+        public boolean handleGameEvent(
+                ServerLevel level, GameEvent event, GameEvent.Context context, Vec3 location) {
+            if ((event == GameEvent.BLOCK_PLACE
+                            || event == GameEvent.BLOCK_DESTROY
+                            || event == GameEvent.BLOCK_CHANGE)
                     && location.equals(Vec3.atCenterOf(pos))) {
                 events.add(new Observed(event, context));
                 return true;

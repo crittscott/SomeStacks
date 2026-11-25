@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.util.PlayerReach;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,12 +18,13 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
 import org.apache.logging.log4j.Logger;
 
 /**
  * The mod entry point: registers the blocks and block entities, the network channel, and the
- * listeners behind server config loading, sound data, login sync, and commands. Client
- * registration is deferred to {@link ClientSetup} so the dedicated server never touches it.
+ * listeners behind server config loading, sound data, login sync, and commands. Client registration
+ * is deferred to {@link ClientSetup} so the dedicated server never touches it.
  *
  * <p>The mod must be present on both sides; there is no client-optional or server-optional mode.
  */
@@ -77,5 +79,4 @@ public class SomeStacks {
             RenderGalleryGenerator.onServerTick();
         }
     }
-
 }

@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.StorageStackBE;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -15,7 +16,7 @@ import net.minecraft.world.phys.Vec3;
  * the grid's center rather than moving the contents between slots.
  */
 public final class StorageCubeIdx {
-    private StorageCubeIdx(){}
+    private StorageCubeIdx() {}
 
     /** Cells along one axis of the grid. */
     public static final int GRID_EDGE = 3;
@@ -25,7 +26,6 @@ public final class StorageCubeIdx {
 
     /** Cells in one block, and therefore slots in one {@link StorageStackBE}. */
     public static final int CELLS = LAYER_SIZE * GRID_EDGE;
-
 
     /** Edge of one cell, in pixels. */
     private static final double CELL_PIXELS = 4.5;
@@ -58,5 +58,4 @@ public final class StorageCubeIdx {
 
         return closestIndex;
     }
-
 }

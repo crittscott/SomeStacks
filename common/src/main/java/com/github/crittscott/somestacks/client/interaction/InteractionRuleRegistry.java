@@ -14,23 +14,19 @@ import java.util.List;
 public final class InteractionRuleRegistry {
     private InteractionRuleRegistry() {}
 
-    private static final List<InteractionRule> EMPTY_HAND_RULES = List.of(
-            new ModeCycleRule()
-    );
+    private static final List<InteractionRule> EMPTY_HAND_RULES = List.of(new ModeCycleRule());
 
-    private static final List<InteractionRule> ITEM_RULES = List.of(
-            new ModeCycleRule()
-    );
+    private static final List<InteractionRule> ITEM_RULES = List.of(new ModeCycleRule());
 
-    private static final List<InteractionRule> BLOCK_RULES = List.of(
-            new TogglePermanentRule(),
-            new RotateBlockWithRedstoneTorchRule(),
-            new RotateItemWithSoulTorchRule(),
-            new DepositIntoClickedStackRule(),
-            new DepositIntoAdjacentStackRule(),
-            new PlaceAdjacentGenericRule(),
-            new ExtractionRule()
-    );
+    private static final List<InteractionRule> BLOCK_RULES =
+            List.of(
+                    new TogglePermanentRule(),
+                    new RotateBlockWithRedstoneTorchRule(),
+                    new RotateItemWithSoulTorchRule(),
+                    new DepositIntoClickedStackRule(),
+                    new DepositIntoAdjacentStackRule(),
+                    new PlaceAdjacentGenericRule(),
+                    new ExtractionRule());
 
     public static InteractionRule processEmptyHandRules(InteractionContext ctx) {
         return processFirstMatch(EMPTY_HAND_RULES, ctx);
@@ -44,7 +40,8 @@ public final class InteractionRuleRegistry {
         return processFirstMatch(BLOCK_RULES, ctx);
     }
 
-    private static InteractionRule processFirstMatch(List<InteractionRule> rules, InteractionContext ctx) {
+    private static InteractionRule processFirstMatch(
+            List<InteractionRule> rules, InteractionContext ctx) {
         for (InteractionRule rule : rules) {
             if (rule.matches(ctx)) {
                 rule.execute(ctx);

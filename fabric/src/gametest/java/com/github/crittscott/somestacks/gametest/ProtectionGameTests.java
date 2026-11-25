@@ -1,5 +1,9 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
@@ -11,6 +15,7 @@ import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StackMode;
+
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -45,20 +50,20 @@ import net.minecraft.world.phys.shapes.Shapes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-
 /**
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
  * and waterlogging, plus growth answering to the same checks in both simulation and commit.
- *
  */
 public final class ProtectionGameTests implements FabricGameTest {
-    /** To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty the top; each structural edit emits a vibration. */
+    /**
+     * To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty
+     * the top; each structural edit emits a vibration.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void placementGrowthAndCleanupNotify(GameTestHelper helper) {
-        WorldEditChecks.placementGrowthAndCleanupNotify(helper, FakePlayer.get(helper.getLevel()),
+        WorldEditChecks.placementGrowthAndCleanupNotify(
+                helper,
+                FakePlayer.get(helper.getLevel()),
                 player -> nativeGesture(player, helper.absolutePos(ORIGIN.below()), Direction.UP));
     }
 
@@ -77,7 +82,8 @@ public final class ProtectionGameTests implements FabricGameTest {
     /** Loader entry point for {@link WorldEditChecks#playerCausedCleanupCarriesThePlayer}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void playerCausedCleanupCarriesThePlayer(GameTestHelper helper) {
-        WorldEditChecks.playerCausedCleanupCarriesThePlayer(helper, FakePlayer.get(helper.getLevel()));
+        WorldEditChecks.playerCausedCleanupCarriesThePlayer(
+                helper, FakePlayer.get(helper.getLevel()));
     }
 
     /**
@@ -94,18 +100,32 @@ public final class ProtectionGameTests implements FabricGameTest {
         ServerLevel level = helper.getLevel();
         ServerPlayer player = FakePlayer.get(helper.getLevel());
         BlockPos valid = helper.absolutePos(ORIGIN);
-        BlockPos invalid = new BlockPos(
-                valid.getX(), level.getMinBuildHeight() - 1, valid.getZ());
+        BlockPos invalid = new BlockPos(valid.getX(), level.getMinBuildHeight() - 1, valid.getZ());
 
-        check(WorldEdits.placeChecked(
-                player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN,
-                Blocks.STONE.defaultBlockState().getCollisionShape(level, valid, CollisionContext.empty())),
+        check(
+                WorldEdits.placeChecked(
+                        player,
+                        level,
+                        valid,
+                        Blocks.STONE.defaultBlockState(),
+                        Direction.DOWN,
+                        Blocks.STONE
+                                .defaultBlockState()
+                                .getCollisionShape(level, valid, CollisionContext.empty())),
                 "Valid checked placement was rejected");
-        check(level.getBlockState(valid).is(Blocks.STONE),
+        check(
+                level.getBlockState(valid).is(Blocks.STONE),
                 "Valid checked placement did not change the world");
-        check(!WorldEdits.placeChecked(
-                player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN,
-                Blocks.STONE.defaultBlockState().getCollisionShape(level, invalid, CollisionContext.empty())),
+        check(
+                !WorldEdits.placeChecked(
+                        player,
+                        level,
+                        invalid,
+                        Blocks.STONE.defaultBlockState(),
+                        Direction.DOWN,
+                        Blocks.STONE
+                                .defaultBlockState()
+                                .getCollisionShape(level, invalid, CollisionContext.empty())),
                 "Out-of-height checked placement was accepted");
         helper.succeed();
     }
@@ -125,9 +145,16 @@ public final class ProtectionGameTests implements FabricGameTest {
         putCowIn(helper, ORIGIN);
 
         try (var events = new WorldEditChecks.EventProbe(level, target)) {
-            check(!WorldEdits.placeChecked(
-                    player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN,
-                    Blocks.STONE.defaultBlockState().getCollisionShape(level, target, CollisionContext.empty())),
+            check(
+                    !WorldEdits.placeChecked(
+                            player,
+                            level,
+                            target,
+                            Blocks.STONE.defaultBlockState(),
+                            Direction.DOWN,
+                            Blocks.STONE
+                                    .defaultBlockState()
+                                    .getCollisionShape(level, target, CollisionContext.empty())),
                     "Entity-obstructed checked placement was accepted");
             events.expectNone();
         }
@@ -149,10 +176,12 @@ public final class ProtectionGameTests implements FabricGameTest {
         player.getAbilities().instabuild = true;
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT, 64));
         nativeGesture(player, target, Direction.WEST);
-        checkEquals(64, player.getMainHandItem().getCount(),
-                "A creative deposit spent the held stack");
+        checkEquals(
+                64, player.getMainHandItem().getCount(), "A creative deposit spent the held stack");
 
-        checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
+        checkEquals(
+                64,
+                GameTestScaffold.heldAt(helper, target, Items.DIRT),
                 "Creative deposit did not reach the stack");
         helper.succeed();
     }
@@ -173,9 +202,11 @@ public final class ProtectionGameTests implements FabricGameTest {
         nativeGesture(player, target.below(), Direction.UP);
 
         helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        check(level.getBlockState(target).getValue(StorageStackBlock.WATERLOGGED),
+        check(
+                level.getBlockState(target).getValue(StorageStackBlock.WATERLOGGED),
                 "A stack placed into water was not waterlogged");
-        check(level.getFluidState(target).getType() == Fluids.WATER,
+        check(
+                level.getFluidState(target).getType() == Fluids.WATER,
                 "A stack placed into water swallowed the water");
         helper.succeed();
     }
@@ -183,9 +214,12 @@ public final class ProtectionGameTests implements FabricGameTest {
     // Growth under protection
     //
     // A storage insertion aimed at a slot past what the run holds is the one that grows it, and it
-    // checks the position above the run before promising the caller anything, so a simulation and the
-    // commit that follows agree about a position growth cannot have. The three tests below stage that
-    // with the world border. Spawn protection, the other half of the same predicate, cannot be staged
+    // checks the position above the run before promising the caller anything, so a simulation and
+    // the
+    // commit that follows agree about a position growth cannot have. The three tests below stage
+    // that
+    // with the world border. Spawn protection, the other half of the same predicate, cannot be
+    // staged
     // here: it is implemented on DedicatedServer, and the server running these tests is not one.
 
     /**
@@ -208,19 +242,27 @@ public final class ProtectionGameTests implements FabricGameTest {
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
         int headroom = StorageStackBE.SLOTS;
-        check(FabricGameTestSupport.insertAt(capability, headroom, offered, true).isEmpty(),
+        check(
+                FabricGameTestSupport.insertAt(capability, headroom, offered, true).isEmpty(),
                 "A full pile with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
-                    "Committed remainder");
-        });
+        outsideTheBorder(
+                helper,
+                () -> {
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(capability, headroom, offered, true)
+                                    .getCount(),
+                            "Simulated remainder");
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(capability, headroom, offered, false)
+                                    .getCount(),
+                            "Committed remainder");
+                });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -245,19 +287,28 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         // A cell takes one item, so a credited growth leaves three of the four behind.
         int headroom = SinglesStackBE.SLOTS;
-        checkEquals(3, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+        checkEquals(
+                3,
+                FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
-                    "Committed remainder");
-        });
+        outsideTheBorder(
+                helper,
+                () -> {
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(capability, headroom, offered, true)
+                                    .getCount(),
+                            "Simulated remainder");
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(capability, headroom, offered, false)
+                                    .getCount(),
+                            "Committed remainder");
+                });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -283,19 +334,28 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         // A position takes one bar, so a credited growth leaves three of the four behind.
         int headroom = BarStackBE.SLOTS;
-        checkEquals(3, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+        checkEquals(
+                3,
+                FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
-                    "Committed remainder");
-        });
+        outsideTheBorder(
+                helper,
+                () -> {
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(capability, headroom, offered, true)
+                                    .getCount(),
+                            "Simulated remainder");
+                    checkEquals(
+                            4,
+                            FabricGameTestSupport.insertAt(capability, headroom, offered, false)
+                                    .getCount(),
+                            "Committed remainder");
+                });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -320,13 +380,16 @@ public final class ProtectionGameTests implements FabricGameTest {
         putCowIn(helper, ORIGIN.above());
 
         int headroom = StorageStackBE.SLOTS;
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -349,13 +412,16 @@ public final class ProtectionGameTests implements FabricGameTest {
         putCowIn(helper, ORIGIN.above());
 
         int headroom = SinglesStackBE.SLOTS;
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -378,19 +444,22 @@ public final class ProtectionGameTests implements FabricGameTest {
         putCowIn(helper, ORIGIN.above());
 
         int headroom = BarStackBE.SLOTS;
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
+        checkEquals(
+                4,
+                FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(
-                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+        helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
     /**
-     * Puts a living placement-blocking entity across the bottom north-west cell and bar position
-     * of {@code relative}.
+     * Puts a living placement-blocking entity across the bottom north-west cell and bar position of
+     * {@code relative}.
      */
     private static void putCowIn(GameTestHelper helper, BlockPos relative) {
         ServerLevel level = helper.getLevel();
@@ -398,12 +467,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         Cow cow = EntityType.COW.create(level);
         check(cow != null, "Could not create obstruction cow");
         check(cow.blocksBuilding, "Cow does not block building");
-        cow.moveTo(
-                target.getX() + 0.5,
-                target.getY(),
-                target.getZ() + 0.5,
-                0.0F,
-                0.0F);
+        cow.moveTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5, 0.0F, 0.0F);
         check(level.addFreshEntity(cow), "Could not add obstruction cow");
     }
 
@@ -421,7 +485,8 @@ public final class ProtectionGameTests implements FabricGameTest {
         try {
             border.setCenter(above.getX() + 1000.0, above.getZ());
             border.setSize(16.0);
-            check(!border.isWithinBounds(above),
+            check(
+                    !border.isWithinBounds(above),
                     "Test setup left the position inside the world border");
             action.run();
         } finally {
@@ -429,17 +494,22 @@ public final class ProtectionGameTests implements FabricGameTest {
             border.setSize(size);
         }
     }
+
     private static ServerPlayer deniedPlayer;
     private static BlockPos deniedPosition;
     private static BlockPos automatedRemovalPosition;
     private static ServerLevel removalLevel;
     private static boolean denyRemoval;
     private static final List<RemovalNotice> removalNotices = new ArrayList<>();
-    private record RemovalNotice(String phase, Player actor, BlockState state, BlockEntity entity) {}
+
+    private record RemovalNotice(
+            String phase, Player actor, BlockState state, BlockEntity entity) {}
+
     static {
         UseBlockCallback.EVENT.register((player, level, hand, hit) ->
                 player == deniedPlayer && hit.getBlockPos().equals(deniedPosition)
-                        ? InteractionResult.FAIL : InteractionResult.PASS);
+                        ? InteractionResult.FAIL
+                        : InteractionResult.PASS);
         PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
             if (level != removalLevel || !pos.equals(automatedRemovalPosition)) return true;
             removalNotices.add(new RemovalNotice("before", player, state, blockEntity));
@@ -454,12 +524,19 @@ public final class ProtectionGameTests implements FabricGameTest {
         PlayerBlockBreakEvents.CANCELED.register((level, player, pos, state, blockEntity) -> {
             if (level == removalLevel && pos.equals(automatedRemovalPosition)) {
                 removalNotices.add(new RemovalNotice("canceled", player, state, blockEntity));
-                check(level.getBlockEntity(pos) == blockEntity, "CANCELED lost the original entity");
+                check(
+                        level.getBlockEntity(pos) == blockEntity,
+                        "CANCELED lost the original entity");
             }
         });
     }
 
-    /** To reproduce: deny automated cleanup through a protection mod, then allow it. The empty stack stays on veto; Fabric listeners receive BEFORE/CANCELED or BEFORE/AFTER with the [SomeStacks] fake player and original block entity. A nearby sculk sensor receives only the accepted destruction vibration. */
+    /**
+     * To reproduce: deny automated cleanup through a protection mod, then allow it. The empty stack
+     * stays on veto; Fabric listeners receive BEFORE/CANCELED or BEFORE/AFTER with the [SomeStacks]
+     * fake player and original block entity. A nearby sculk sensor receives only the accepted
+     * destruction vibration.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automatedRemovalUsesNativeActorAndHonorsVeto(GameTestHelper helper) {
         StorageStackBE stack = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -471,23 +548,37 @@ public final class ProtectionGameTests implements FabricGameTest {
         denyRemoval = true;
         removalNotices.clear();
         try (var events = new WorldEditChecks.EventProbe(helper.getLevel(), target)) {
-            check(WorldEdits.automationActor(helper.getLevel()) == actor,
+            check(
+                    WorldEdits.automationActor(helper.getLevel()) == actor,
                     "Automation does not use Fabric's native actor with the shared profile");
-            outsideTheBorder(helper, () -> {
-                check(!WorldEdits.removeChecked(null, helper.getLevel(), target), "Protected removal was accepted");
-                checkEquals(0, removalNotices.size(), "Protected removal invoked break callbacks");
-                events.expectNone();
-            });
-            check(!WorldEdits.removeChecked(null, helper.getLevel(), target), "Vetoed removal was accepted");
+            outsideTheBorder(
+                    helper,
+                    () -> {
+                        check(
+                                !WorldEdits.removeChecked(null, helper.getLevel(), target),
+                                "Protected removal was accepted");
+                        checkEquals(
+                                0,
+                                removalNotices.size(),
+                                "Protected removal invoked break callbacks");
+                        events.expectNone();
+                    });
+            check(
+                    !WorldEdits.removeChecked(null, helper.getLevel(), target),
+                    "Vetoed removal was accepted");
             expectRemovalNotices(actor, state, stack, "before", "canceled");
             events.expectNone();
             helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
             denyRemoval = false;
-            check(WorldEdits.removeChecked(null, helper.getLevel(), target), "Allowed removal was rejected");
+            check(
+                    WorldEdits.removeChecked(null, helper.getLevel(), target),
+                    "Allowed removal was rejected");
             expectRemovalNotices(actor, state, stack, "before", "after");
             events.expectOne(GameEvent.BLOCK_DESTROY, actor, state);
             helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-            check(!WorldEdits.removeChecked(null, helper.getLevel(), target), "Unchanged air reported successful removal");
+            check(
+                    !WorldEdits.removeChecked(null, helper.getLevel(), target),
+                    "Unchanged air reported successful removal");
             expectRemovalNotices(actor, Blocks.AIR.defaultBlockState(), null, "before");
             events.expectNone();
         } finally {
@@ -501,8 +592,8 @@ public final class ProtectionGameTests implements FabricGameTest {
 
     /**
      * To reproduce: with a protection or logging mod listening to Fabric block breaks, extract the
-     * last bar from a Bar Stack. The removal reaches BEFORE and AFTER as the extracting player, with
-     * the original block state and block entity.
+     * last bar from a Bar Stack. The removal reaches BEFORE and AFTER as the extracting player,
+     * with the original block state and block entity.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void playerCleanupReachesBreakCallbacksAsThePlayer(GameTestHelper helper) {
@@ -526,8 +617,8 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
-    private static void expectRemovalNotices(Player actor, BlockState state, BlockEntity entity,
-                                             String... phases) {
+    private static void expectRemovalNotices(
+            Player actor, BlockState state, BlockEntity entity, String... phases) {
         checkEquals(phases.length, removalNotices.size(), "Removal callback count");
         for (int i = 0; i < phases.length; i++) {
             RemovalNotice notice = removalNotices.get(i);
@@ -560,26 +651,46 @@ public final class ProtectionGameTests implements FabricGameTest {
         var player = FakePlayer.get(helper.getLevel());
         try {
             for (BlockPos denied : new BlockPos[] {clicked, destination}) {
-                deniedPlayer = player; deniedPosition = denied;
-                try (InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
+                deniedPlayer = player;
+                deniedPosition = denied;
+                try (InteractionChecks.PlayerScope scope =
+                        new InteractionChecks.PlayerScope(player)) {
                     player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STONE));
                     ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
                     var hit = InteractionChecks.aim(player, clicked, 0.125, 0.125);
-                    UseBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND,
-                            new BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
-                    checkEquals(0, GameTestScaffold.count(singles.getItems(), Items.STONE), "Denied adjacent deposit");
+                    UseBlockCallback.EVENT
+                            .invoker()
+                            .interact(
+                                    player,
+                                    player.level(),
+                                    InteractionHand.MAIN_HAND,
+                                    new BlockHitResult(
+                                            hit.getLocation(), Direction.EAST, clicked, false));
+                    checkEquals(
+                            0,
+                            GameTestScaffold.count(singles.getItems(), Items.STONE),
+                            "Denied adjacent deposit");
                 }
             }
         } finally {
-            deniedPlayer = null; deniedPosition = null;
+            deniedPlayer = null;
+            deniedPosition = null;
         }
         try (InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
             player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STONE));
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             var hit = InteractionChecks.aim(player, clicked, 0.125, 0.125);
-            UseBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND,
-                    new BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
-            checkEquals(1, GameTestScaffold.count(singles.getItems(), Items.STONE), "Allowed adjacent deposit");
+            UseBlockCallback.EVENT
+                    .invoker()
+                    .interact(
+                            player,
+                            player.level(),
+                            InteractionHand.MAIN_HAND,
+                            new BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
+            checkEquals(
+                    1,
+                    GameTestScaffold.count(singles.getItems(), Items.STONE),
+                    "Allowed adjacent deposit");
         }
         helper.succeed();
     }
@@ -602,16 +713,27 @@ public final class ProtectionGameTests implements FabricGameTest {
         cow.moveTo(target.getX() + 1.25, target.getY(), target.getZ() + 0.5, 0.0F, 0.0F);
         check(level.addFreshEntity(cow), "Could not add obstruction cow");
         try {
-            check(!WorldEdits.isUnobstructed(level, target, Shapes.block()), "Full block missed obstruction");
-            check(WorldEdits.isUnobstructed(level, target, Shapes.empty()), "Empty shape was obstructed");
-            check(WorldEdits.isUnobstructed(level, target, SinglesCubeIdx.GRID.localShape(0, 0)),
+            check(
+                    !WorldEdits.isUnobstructed(level, target, Shapes.block()),
+                    "Full block missed obstruction");
+            check(
+                    WorldEdits.isUnobstructed(level, target, Shapes.empty()),
+                    "Empty shape was obstructed");
+            check(
+                    WorldEdits.isUnobstructed(level, target, SinglesCubeIdx.GRID.localShape(0, 0)),
                     "Free Singles cell was obstructed by another cell's occupant");
-            check(!WorldEdits.isUnobstructed(level, target,
+            check(
+                    !WorldEdits.isUnobstructed(
+                            level,
+                            target,
                             SinglesCubeIdx.GRID.localShape(SinglesCubeIdx.LAYER_SIZE - 1, 0)),
                     "Occupied Singles shape missed obstruction");
-            check(WorldEdits.isUnobstructed(level, target, BarCubeIdx.shapeFor(0)),
+            check(
+                    WorldEdits.isUnobstructed(level, target, BarCubeIdx.shapeFor(0)),
                     "Free Bar position was obstructed by another position's occupant");
-            check(!WorldEdits.isUnobstructed(level, target, BarCubeIdx.shapeFor(BarCubeIdx.LAYER_SIZE - 1)),
+            check(
+                    !WorldEdits.isUnobstructed(
+                            level, target, BarCubeIdx.shapeFor(BarCubeIdx.LAYER_SIZE - 1)),
                     "Occupied Bar shape missed obstruction");
         } finally {
             cow.discard();
@@ -627,7 +749,10 @@ public final class ProtectionGameTests implements FabricGameTest {
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             var hit = InteractionChecks.aim(player, clicked, 0.5, 0.5);
             // Vanilla's server block use invokes Fabric's callback and then calls the block.
-            player.gameMode.useItemOn(player, player.serverLevel(), player.getMainHandItem(),
+            player.gameMode.useItemOn(
+                    player,
+                    player.serverLevel(),
+                    player.getMainHandItem(),
                     InteractionHand.MAIN_HAND,
                     new BlockHitResult(hit.getLocation(), face, clicked, false));
             result = player.getMainHandItem().copy();

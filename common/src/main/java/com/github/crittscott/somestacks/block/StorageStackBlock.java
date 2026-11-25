@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -48,12 +49,14 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
      * Light this block emits, derived from the {@code BlockItem}s stored in it and kept in the
      * block state so lighting updates travel by the ordinary block-state path.
      */
-    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
+    public static final IntegerProperty LIGHT_LEVEL =
+            IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     /** The layout rotation, so structure rotation and mirroring turn the layout with the block. */
-    public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final DirectionProperty HORIZONTAL_FACING =
+            BlockStateProperties.HORIZONTAL_FACING;
 
     /** Shared mining, lighting, collision, and piston settings for this stack type. */
     public static Properties properties() {
@@ -67,10 +70,11 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
 
     public StorageStackBlock(Properties props) {
         super(props);
-        registerDefaultState(defaultBlockState()
-                .setValue(LIGHT_LEVEL, 0)
-                .setValue(WATERLOGGED, false)
-                .setValue(HORIZONTAL_FACING, Direction.NORTH));
+        registerDefaultState(
+                defaultBlockState()
+                        .setValue(LIGHT_LEVEL, 0)
+                        .setValue(WATERLOGGED, false)
+                        .setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override
@@ -80,7 +84,8 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
 
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
+        return state.setValue(
+                HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
     }
 
     @Override
@@ -96,8 +101,13 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
-                                  LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(
+            BlockState state,
+            Direction direction,
+            BlockState neighborState,
+            LevelAccessor level,
+            BlockPos pos,
+            BlockPos neighborPos) {
         if (state.getValue(WATERLOGGED)) {
             level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
@@ -146,9 +156,16 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            InteractionHand hand,
+            BlockHitResult hit) {
         if (!level.isClientSide) {
-            StackInteractions.handleExistingStack((ServerPlayer) player, hand, hit, BlockType.STORAGE_STACK);
+            StackInteractions.handleExistingStack(
+                    (ServerPlayer) player, hand, hit, BlockType.STORAGE_STACK);
         }
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
@@ -167,12 +184,12 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
 
     /** Repairs the run-wide state and derived values affected when this block joins a pile. */
     @Override
-    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(
+            BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
         if (!oldState.is(this)) {
             StoragePile.invalidateAround(level, pos);
-            if (!level.isClientSide
-                    && level.getBlockEntity(pos) instanceof StorageStackBE placed) {
+            if (!level.isClientSide && level.getBlockEntity(pos) instanceof StorageStackBE placed) {
                 StoragePile.inheritNeighbourPermanence(level, pos, placed);
                 StoragePile.markDirtyAt(level, pos);
             }
@@ -180,7 +197,8 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(
+            BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof StorageStackBE sbe) {

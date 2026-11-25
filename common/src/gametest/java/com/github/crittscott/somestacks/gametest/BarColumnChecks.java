@@ -1,9 +1,19 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.util.BlockType;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedInColumn;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedNear;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalAt;
+
 import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.BlockType;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
@@ -18,20 +28,10 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedInColumn;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedNear;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalAt;
-
 /**
  * Bar support and collapse in a live level that does not touch loader-native automation directly:
- * item validity, grounding at the bottom of a column, footprint overlap deciding support across
- * the alternating layer orientations, and player extraction dropping what it unsupports.
+ * item validity, grounding at the bottom of a column, footprint overlap deciding support across the
+ * alternating layer orientations, and player extraction dropping what it unsupports.
  * Capability/Transfer-API-facing tests, and Forge's event-bus-driven protection test, stay in each
  * loader's own {@code BarColumnGameTests}.
  */
@@ -63,15 +63,29 @@ public final class BarColumnChecks {
      * Select Singles and V-deposit an iron ingot; it is refused there too.
      */
     public static void barAdmissionFollowsTheIngotTag(GameTestHelper helper) {
-        for (Item item : List.of(Items.IRON_INGOT, Items.GOLD_INGOT, Items.COPPER_INGOT,
-                Items.NETHERITE_INGOT, Items.BRICK, Items.NETHER_BRICK)) {
+        for (Item item :
+                List.of(
+                        Items.IRON_INGOT,
+                        Items.GOLD_INGOT,
+                        Items.COPPER_INGOT,
+                        Items.NETHERITE_INGOT,
+                        Items.BRICK,
+                        Items.NETHER_BRICK)) {
             check(new ItemStack(item).is(BarStackBE.INGOTS), item + " is not in the ingot tag");
-            check(BlockType.BAR_STACK.admits(new ItemStack(item), null), item + " was refused by Bar");
-            check(!BlockType.SINGLES_STACK.admits(new ItemStack(item), null), item + " was accepted by Singles");
+            check(
+                    BlockType.BAR_STACK.admits(new ItemStack(item), null),
+                    item + " was refused by Bar");
+            check(
+                    !BlockType.SINGLES_STACK.admits(new ItemStack(item), null),
+                    item + " was accepted by Singles");
         }
         for (Item item : List.of(Items.STICK, Items.IRON_NUGGET)) {
-            check(!BlockType.BAR_STACK.admits(new ItemStack(item), null), item + " was accepted by Bar");
-            check(BlockType.SINGLES_STACK.admits(new ItemStack(item), null), item + " was refused by Singles");
+            check(
+                    !BlockType.BAR_STACK.admits(new ItemStack(item), null),
+                    item + " was accepted by Bar");
+            check(
+                    BlockType.SINGLES_STACK.admits(new ItemStack(item), null),
+                    item + " was refused by Singles");
         }
         helper.succeed();
     }
@@ -86,11 +100,9 @@ public final class BarColumnChecks {
         Item barItem = firstBarItem();
         int upper = firstSupportedBy(0, 8, 16);
 
-        check(!bars.depositAt(upper, new ItemStack(barItem)),
-                "Floating upper bar was accepted");
+        check(!bars.depositAt(upper, new ItemStack(barItem)), "Floating upper bar was accepted");
         check(bars.depositAt(0, new ItemStack(barItem)), "Bottom bar deposit failed");
-        check(bars.depositAt(upper, new ItemStack(barItem)),
-                "Supported upper bar was rejected");
+        check(bars.depositAt(upper, new ItemStack(barItem)), "Supported upper bar was rejected");
         helper.succeed();
     }
 
@@ -111,10 +123,11 @@ public final class BarColumnChecks {
 
         checkEquals(barItem, extracted.getItem(), "Extracted item");
         checkEquals(1, extracted.getCount(), "Extracted count");
-        check(helper.getLevel().getBlockEntity(bars.getBlockPos()) == null,
+        check(
+                helper.getLevel().getBlockEntity(bars.getBlockPos()) == null,
                 "Emptied Bar block remained");
-        checkEquals(1, droppedNear(helper, bars.getBlockPos(), barItem),
-                "Unsupported bar drop count");
+        checkEquals(
+                1, droppedNear(helper, bars.getBlockPos(), barItem), "Unsupported bar drop count");
         helper.succeed();
     }
 
@@ -135,10 +148,12 @@ public final class BarColumnChecks {
 
         bars.extractAt(removedSupport, null);
 
-        checkEquals(barItem, bars.getItems().getStackInSlot(upper).getItem(),
+        checkEquals(
+                barItem,
+                bars.getItems().getStackInSlot(upper).getItem(),
                 "Still-supported upper bar was removed");
-        checkEquals(0, droppedNear(helper, bars.getBlockPos(), barItem),
-                "A supported bar was dropped");
+        checkEquals(
+                0, droppedNear(helper, bars.getBlockPos(), barItem), "A supported bar was dropped");
         helper.succeed();
     }
 
@@ -158,7 +173,8 @@ public final class BarColumnChecks {
         int upperBottom = firstSeamSupportedBy(0);
         lower.getItems().insertItem(lowerTop, new ItemStack(barItem), false);
 
-        check(upper.depositAt(upperBottom, new ItemStack(barItem)),
+        check(
+                upper.depositAt(upperBottom, new ItemStack(barItem)),
                 "Cross-block footprint support was rejected");
         helper.succeed();
     }
@@ -178,12 +194,14 @@ public final class BarColumnChecks {
         lower.getItems().insertItem(56, new ItemStack(barItem), false);
         upper.depositAt(upperBottom, new ItemStack(barItem));
 
-        helper.getLevel().setBlock(lower.getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        helper.getLevel()
+                .setBlock(lower.getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
 
-        check(helper.getLevel().getBlockEntity(upper.getBlockPos()) == null,
+        check(
+                helper.getLevel().getBlockEntity(upper.getBlockPos()) == null,
                 "Dependent upper Bar block remained");
-        checkEquals(2, droppedNear(helper, lower.getBlockPos(), barItem),
-                "Break/collapse drop count");
+        checkEquals(
+                2, droppedNear(helper, lower.getBlockPos(), barItem), "Break/collapse drop count");
         helper.succeed();
     }
 
@@ -207,21 +225,34 @@ public final class BarColumnChecks {
 
         helper.getLevel().setBlock(lowerPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
 
-        check(helper.getLevel().getBlockEntity(lowerPos) == null,
+        check(
+                helper.getLevel().getBlockEntity(lowerPos) == null,
                 "Broken lower Bar block remained");
-        check(helper.getLevel().getBlockEntity(upperPos) == null,
+        check(
+                helper.getLevel().getBlockEntity(upperPos) == null,
                 "Collapsed upper Bar block remained");
 
-        List<ItemEntity> drops = droppedInColumn(helper, lowerPos, upperPos).stream()
-                .filter(entity -> entity.getItem().is(barItem))
-                .toList();
-        checkEquals(128, drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
+        List<ItemEntity> drops =
+                droppedInColumn(helper, lowerPos, upperPos).stream()
+                        .filter(entity -> entity.getItem().is(barItem))
+                        .toList();
+        checkEquals(
+                128,
+                drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
                 "Consolidated item count");
-        checkEquals(64, drops.stream().filter(entity -> entity.blockPosition().equals(lowerPos))
-                        .mapToInt(entity -> entity.getItem().getCount()).sum(),
+        checkEquals(
+                64,
+                drops.stream()
+                        .filter(entity -> entity.blockPosition().equals(lowerPos))
+                        .mapToInt(entity -> entity.getItem().getCount())
+                        .sum(),
                 "Broken block's drop count at its position");
-        checkEquals(64, drops.stream().filter(entity -> entity.blockPosition().equals(upperPos))
-                        .mapToInt(entity -> entity.getItem().getCount()).sum(),
+        checkEquals(
+                64,
+                drops.stream()
+                        .filter(entity -> entity.blockPosition().equals(upperPos))
+                        .mapToInt(entity -> entity.getItem().getCount())
+                        .sum(),
                 "Collapsed block's drop count at its position");
         helper.succeed();
     }
@@ -246,7 +277,8 @@ public final class BarColumnChecks {
     }
 
     private static void withBlockDropsDisabled(GameTestHelper helper, Runnable scenario) {
-        GameRules.BooleanValue blockDrops = helper.getLevel().getGameRules().getRule(GameRules.RULE_DOBLOCKDROPS);
+        GameRules.BooleanValue blockDrops =
+                helper.getLevel().getGameRules().getRule(GameRules.RULE_DOBLOCKDROPS);
         boolean previous = blockDrops.get();
         try {
             blockDrops.set(false, helper.getLevel().getServer());
@@ -287,25 +319,40 @@ public final class BarColumnChecks {
 
         checkEquals(barItem, extracted.getItem(), "Extracted support item");
         checkEquals(1, extracted.getCount(), "Extracted support count");
-        check(helper.getLevel().getBlockEntity(lowerPos) == null,
+        check(
+                helper.getLevel().getBlockEntity(lowerPos) == null,
                 "Emptied lower Bar block remained");
-        check(helper.getLevel().getBlockEntity(upperPos) == null,
+        check(
+                helper.getLevel().getBlockEntity(upperPos) == null,
                 "Emptied upper Bar block remained");
 
-        List<ItemEntity> drops = droppedInColumn(helper, lowerPos, upperPos).stream()
-                .filter(entity -> entity.getItem().is(barItem))
-                .toList();
+        List<ItemEntity> drops =
+                droppedInColumn(helper, lowerPos, upperPos).stream()
+                        .filter(entity -> entity.getItem().is(barItem))
+                        .toList();
         checkEquals(2, drops.size(), "Cross-block cascade item-entity count");
-        checkEquals(15, drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
+        checkEquals(
+                15,
+                drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
                 "Cross-block cascade item count");
-        int[] counts = drops.stream().mapToInt(entity -> entity.getItem().getCount()).sorted().toArray();
-        check(Arrays.equals(new int[]{7, 8}, counts),
+        int[] counts =
+                drops.stream().mapToInt(entity -> entity.getItem().getCount()).sorted().toArray();
+        check(
+                Arrays.equals(new int[] {7, 8}, counts),
                 "Drops were not packed at their originating blocks: " + Arrays.toString(counts));
-        checkEquals(7, drops.stream().filter(entity -> entity.blockPosition().equals(lowerPos))
-                        .mapToInt(entity -> entity.getItem().getCount()).sum(),
+        checkEquals(
+                7,
+                drops.stream()
+                        .filter(entity -> entity.blockPosition().equals(lowerPos))
+                        .mapToInt(entity -> entity.getItem().getCount())
+                        .sum(),
                 "Lower cascade drop count at its position");
-        checkEquals(8, drops.stream().filter(entity -> entity.blockPosition().equals(upperPos))
-                        .mapToInt(entity -> entity.getItem().getCount()).sum(),
+        checkEquals(
+                8,
+                drops.stream()
+                        .filter(entity -> entity.blockPosition().equals(upperPos))
+                        .mapToInt(entity -> entity.getItem().getCount())
+                        .sum(),
                 "Upper cascade drop count at its position");
         helper.succeed();
     }
@@ -333,14 +380,18 @@ public final class BarColumnChecks {
 
         bars.extractAt(0, null);
 
-        List<ItemEntity> drops = droppedInColumn(helper, pos, pos).stream()
-                .filter(entity -> entity.getItem().is(barItem))
-                .toList();
+        List<ItemEntity> drops =
+                droppedInColumn(helper, pos, pos).stream()
+                        .filter(entity -> entity.getItem().is(barItem))
+                        .toList();
         checkEquals(2, drops.size(), "Differently tagged item-entity count");
-        checkEquals(2, drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
+        checkEquals(
+                2,
+                drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
                 "Differently tagged item count");
         int[] variants = drops.stream().mapToInt(BarColumnChecks::testVariant).sorted().toArray();
-        check(Arrays.equals(new int[]{1, 2}, variants),
+        check(
+                Arrays.equals(new int[] {1, 2}, variants),
                 "Different tags were merged or changed: " + Arrays.toString(variants));
         helper.succeed();
     }
@@ -360,8 +411,7 @@ public final class BarColumnChecks {
         checkEquals(0, signalAt(helper, ORIGIN), "Empty column signal");
 
         bars.getItems().insertItem(0, new ItemStack(barItem, 1), false);
-        checkEquals(1, signalAt(helper, ORIGIN),
-                "Signal for a single bar in a whole column");
+        checkEquals(1, signalAt(helper, ORIGIN), "Signal for a single bar in a whole column");
 
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
             bars.getItems().insertItem(slot, new ItemStack(barItem, 1), false);
@@ -387,7 +437,8 @@ public final class BarColumnChecks {
             lower.getItems().insertItem(slot, new ItemStack(barItem, 1), false);
         }
 
-        // Half the column's positions are occupied, and both blocks report that rather than their own.
+        // Half the column's positions are occupied, and both blocks report that rather than their
+        // own.
         checkEquals(8, signalAt(helper, ORIGIN), "Lower block signal");
         checkEquals(8, signalAt(helper, ORIGIN.above()), "Upper block signal");
         helper.succeed();

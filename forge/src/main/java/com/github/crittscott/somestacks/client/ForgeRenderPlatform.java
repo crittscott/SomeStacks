@@ -20,22 +20,23 @@ public final class ForgeRenderPlatform implements ClientRenderPlatform.Backend {
     }
 
     /**
-     * The flag Forge's item renderer uses when selecting a model's passes and render types:
-     * false only for the translucent blocks
-     * vanilla draws through the indirect buffers outside GUI and first-person contexts.
+     * The flag Forge's item renderer uses when selecting a model's passes and render types: false
+     * only for the translucent blocks vanilla draws through the indirect buffers outside GUI and
+     * first-person contexts.
      */
     public static boolean fabulousFlag(ItemStack stack, ItemDisplayContext context) {
-        if (context == ItemDisplayContext.GUI || context.firstPerson()
+        if (context == ItemDisplayContext.GUI
+                || context.firstPerson()
                 || !(stack.getItem() instanceof BlockItem blockItem)) {
             return true;
         }
         Block block = blockItem.getBlock();
-        return !(block instanceof HalfTransparentBlock) && !(block instanceof StainedGlassPaneBlock);
+        return !(block instanceof HalfTransparentBlock)
+                && !(block instanceof StainedGlassPaneBlock);
     }
 
     @Override
     public int itemColor(ItemStack stack, int tintIndex) {
         return Minecraft.getInstance().getItemColors().getColor(stack, tintIndex);
     }
-
 }

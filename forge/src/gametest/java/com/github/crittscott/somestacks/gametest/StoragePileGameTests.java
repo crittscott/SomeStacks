@@ -1,9 +1,16 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
@@ -12,19 +19,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.common.util.FakePlayerFactory;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.level.BlockEvent;
-import java.util.function.Consumer;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+import java.util.function.Consumer;
 
 /**
  * Storage pile behavior in a live level: deposits filling partial stacks before empty ones, growth
@@ -38,8 +40,8 @@ public final class StoragePileGameTests {
 
     /**
      * Loader entry point for {@link
-     * StoragePileChecks#depositFillsCompatiblePartialBeforeEmptySlot}; see that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * StoragePileChecks#depositFillsCompatiblePartialBeforeEmptySlot}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void depositFillsCompatiblePartialBeforeEmptySlot(GameTestHelper helper) {
@@ -58,7 +60,8 @@ public final class StoragePileGameTests {
     /** See {@link StoragePileChecks#growthRequiresBuildPermission}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void growthRequiresBuildPermission(GameTestHelper helper) {
-        StoragePileChecks.growthRequiresBuildPermission(helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
+        StoragePileChecks.growthRequiresBuildPermission(
+                helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
     }
 
     /** See {@link StoragePileChecks#placementChoosesFacingBeforeJoining}. */
@@ -72,29 +75,37 @@ public final class StoragePileGameTests {
     public static void grownBlockTakesTheBaseFacing(GameTestHelper helper) {
         int[] placements = {0};
         BlockPos target = helper.absolutePos(ORIGIN.above(2));
-        Consumer<BlockEvent.EntityPlaceEvent> observe = event -> {
-            if (event.getLevel() == helper.getLevel() && event.getPos().equals(target)) {
-                placements[0]++;
-                checkEquals(Direction.WEST, helper.getLevel().getBlockState(target)
-                        .getValue(StorageStackBlock.HORIZONTAL_FACING),
-                        "Placement listener saw intermediate facing");
-            }
-        };
+        Consumer<BlockEvent.EntityPlaceEvent> observe =
+                event -> {
+                    if (event.getLevel() == helper.getLevel() && event.getPos().equals(target)) {
+                        placements[0]++;
+                        checkEquals(
+                                Direction.WEST,
+                                helper.getLevel()
+                                        .getBlockState(target)
+                                        .getValue(StorageStackBlock.HORIZONTAL_FACING),
+                                "Placement listener saw intermediate facing");
+                    }
+                };
         MinecraftForge.EVENT_BUS.addListener(observe);
         try {
             StorageStackBE lower = placeStorage(helper, ORIGIN);
             StorageStackBE upper = placeStorage(helper, ORIGIN.above());
             lower.setRotation(1);
             upper.setRotation(3);
-            for (StorageStackBE member : new StorageStackBE[]{lower, upper}) {
+            for (StorageStackBE member : new StorageStackBE[] {lower, upper}) {
                 for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
                     member.getItems().setStackInSlot(slot, new ItemStack(Items.DIRT, 64));
                 }
             }
             checkEquals(1, lower.deposit(new ItemStack(Items.STONE)), "Growth deposit refused");
             checkEquals(1, placements[0], "Growth placement event count");
-            checkEquals(Direction.WEST, helper.getLevel().getBlockState(target)
-                    .getValue(StorageStackBlock.HORIZONTAL_FACING), "Final growth facing");
+            checkEquals(
+                    Direction.WEST,
+                    helper.getLevel()
+                            .getBlockState(target)
+                            .getValue(StorageStackBlock.HORIZONTAL_FACING),
+                    "Final growth facing");
             checkEquals(3, upper.getRotation(), "Old top rotation changed");
         } finally {
             MinecraftForge.EVENT_BUS.unregister(observe);
@@ -119,27 +130,36 @@ public final class StoragePileGameTests {
 
         // A pile is a bag, so the slot named takes what a slot takes — here all eight, in slot 20
         // rather than at the base a deposit would have filled.
-        checkEquals(0, capability.insertItem(20, offered, true).getCount(),
+        checkEquals(
+                0,
+                capability.insertItem(20, offered, true).getCount(),
                 "Simulated insertion into an empty slot");
-        checkEquals(0, capability.insertItem(20, offered, false).getCount(),
+        checkEquals(
+                0,
+                capability.insertItem(20, offered, false).getCount(),
                 "Committed insertion into an empty slot");
         checkEquals(8, offered.getCount(), "Capability mutated caller input");
-        checkEquals(8, storage.getItems().getStackInSlot(20).getCount(),
+        checkEquals(
+                8,
+                storage.getItems().getStackInSlot(20).getCount(),
                 "The slot named should hold the items");
 
         // An incompatible slot takes nothing rather than redirecting to available space elsewhere.
         ItemStack other = new ItemStack(Items.DIRT, 8);
-        checkEquals(8, capability.insertItem(20, other, true).getCount(),
+        checkEquals(
+                8,
+                capability.insertItem(20, other, true).getCount(),
                 "Simulated insertion into an occupied incompatible slot");
 
         // The settle the insertion scheduled is what puts the items at the base.
         StoragePile pile = storage.pile();
         check(pile != null, "Pile did not resolve");
         pile.settle();
-        checkEquals(8, storage.getItems().getStackInSlot(0).getCount(),
+        checkEquals(
+                8,
+                storage.getItems().getStackInSlot(0).getCount(),
                 "Settle should pack the insertion down to the base");
-        checkEquals(0, count(storage.getItems(), Items.DIRT),
-                "Refused insertion stored something");
+        checkEquals(0, count(storage.getItems(), Items.DIRT), "Refused insertion stored something");
         helper.succeed();
     }
 
@@ -169,15 +189,13 @@ public final class StoragePileGameTests {
         checkEquals(4, simulatedRemainder.getCount(), "Simulated remainder");
         checkEquals(4, committedRemainder.getCount(), "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        check(helper.getLevel().getBlockState(above).is(Blocks.STONE),
-                "Obstruction changed");
+        check(helper.getLevel().getBlockState(above).is(Blocks.STONE), "Obstruction changed");
         helper.succeed();
     }
 
     /**
      * Loader entry point for {@link StoragePileChecks#settleConsolidatesExactIdentityAndPacksDown};
-     * see that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * see that method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void settleConsolidatesExactIdentityAndPacksDown(GameTestHelper helper) {
@@ -186,8 +204,7 @@ public final class StoragePileGameTests {
 
     /**
      * Loader entry point for {@link StoragePileChecks#extractionSettlesOnScheduledBlockTick}; see
-     * that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * that method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
     public static void extractionSettlesOnScheduledBlockTick(GameTestHelper helper) {
@@ -220,19 +237,15 @@ public final class StoragePileGameTests {
         IItemHandler lowerCapability = GameTestSupport.capability(lower);
         IItemHandler upperCapability = GameTestSupport.capability(upper);
 
-        checkEquals(12, lowerCapability.getStackInSlot(0).getCount(),
-                "Lower capability count");
-        checkEquals(12, upperCapability.getStackInSlot(0).getCount(),
-                "Upper capability count");
-        checkEquals(lowerCapability.getSlots(), upperCapability.getSlots(),
-                "Capability shape");
+        checkEquals(12, lowerCapability.getStackInSlot(0).getCount(), "Lower capability count");
+        checkEquals(12, upperCapability.getStackInSlot(0).getCount(), "Upper capability count");
+        checkEquals(lowerCapability.getSlots(), upperCapability.getSlots(), "Capability shape");
         helper.succeed();
     }
 
     /**
      * Loader entry point for {@link StoragePileChecks#comparatorReadsTheWholePileFromEveryBlock};
-     * see that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * see that method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorReadsTheWholePileFromEveryBlock(GameTestHelper helper) {
@@ -242,8 +255,7 @@ public final class StoragePileGameTests {
     /**
      * Loader entry point for {@link
      * StoragePileChecks#ordinaryPlacementBelowPermanentPileRepairsDerivedState}; see that method
-     * for
-     * the scenario, manual check, and any internal-only assertions.
+     * for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
     public static void ordinaryPlacementBelowPermanentPileRepairsDerivedState(
@@ -253,15 +265,17 @@ public final class StoragePileGameTests {
 
     /**
      * Loader entry point for {@link StoragePileChecks#comparatorReservesZeroForAnEmptyPile}; see
-     * that method for
-     * the scenario, manual check, and any internal-only assertions.
+     * that method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
         StoragePileChecks.comparatorReservesZeroForAnEmptyPile(helper);
     }
 
-    /** See {@link StoragePileChecks#middleRemovalSettlesAndPublishesBothSurvivingPiles} for the split scenario and manual procedure. */
+    /**
+     * See {@link StoragePileChecks#middleRemovalSettlesAndPublishesBothSurvivingPiles} for the
+     * split scenario and manual procedure.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void middleRemovalSettlesAndPublishesBothSurvivingPiles(GameTestHelper helper) {
         StoragePileChecks.middleRemovalSettlesAndPublishesBothSurvivingPiles(helper);

@@ -77,10 +77,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">WorldEdits</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Vanilla world-edit mechanics for automated growth and removal: world border and spawn
- protection, entity obstruction, and the actual block placement/removal. The one loader-specific
- authority â€” the automation actor, protection callbacks, and loader completion notifications â€”
- is delegated to <a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server"><code>EditAuthority</code></a>.</div>
+<div class="block">Vanilla world-edit mechanics for automated growth and removal: world border and spawn protection,
+ entity obstruction, and the actual block placement/removal. The one loader-specific authority â€”
+ the automation actor, protection callbacks, and loader completion notifications â€” is delegated to
+ <a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server"><code>EditAuthority</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -143,8 +143,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.Direction&nbsp;placedAgainst,
  net.minecraft.world.phys.shapes.VoxelShape&nbsp;finalCollision)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Places <code>state</code> through the loader transaction, restoring captured state and block-entity
- data when protection denies it.</div>
+<div class="block">Places <code>state</code> through the loader transaction, restoring captured state and
+ block-entity data when protection denies it.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">removeChecked</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
@@ -186,8 +186,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.server.level.ServerPlayer&nbsp;actor,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Whether the actor may place a block: build ability, vanilla protection, and loader queries.
- A null actor uses the level's automation identity. Growth checks this before promising space.</div>
+<div class="block">Whether the actor may place a block: build ability, vanilla protection, and loader queries. A
+ null actor uses the level's automation identity. Growth checks this before promising space.</div>
 </section>
 </li>
 <li>
@@ -238,10 +238,11 @@ loadScripts(document, 'script');</script>
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.core.Direction&nbsp;placedAgainst,
  net.minecraft.world.phys.shapes.VoxelShape&nbsp;finalCollision)</span></div>
-<div class="block">Places <code>state</code> through the loader transaction, restoring captured state and block-entity
- data when protection denies it. <code>finalCollision</code> is the completed placement's collision shape, since a
- block-entity stack can start empty and acquire its real shape only with its first deposit.
- A null placer uses the level's automation identity for both placement and its game event.</div>
+<div class="block">Places <code>state</code> through the loader transaction, restoring captured state and
+ block-entity data when protection denies it. <code>finalCollision</code> is the completed
+ placement's collision shape, since a block-entity stack can start empty and acquire its real
+ shape only with its first deposit. A null placer uses the level's automation identity for
+ both placement and its game event.</div>
 </section>
 </li>
 <li>

@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.client.interaction;
 
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -31,9 +32,15 @@ public final class InteractionContext {
 
     private boolean shouldCancel = false;
 
-    private InteractionContext(Player player, Level level, InteractionHand hand,
-                               BlockPos clickedPos, Block clickedBlock, Direction face,
-                               StackMode currentMode, boolean modeKeyDown) {
+    private InteractionContext(
+            Player player,
+            Level level,
+            InteractionHand hand,
+            BlockPos clickedPos,
+            Block clickedBlock,
+            Direction face,
+            StackMode currentMode,
+            boolean modeKeyDown) {
         this.player = player;
         this.level = level;
         this.hand = hand;
@@ -45,35 +52,27 @@ public final class InteractionContext {
     }
 
     public static InteractionContext forAirClick(
-            Player player, Level level, InteractionHand hand,
-            StackMode currentMode, boolean modeKeyDown) {
+            Player player,
+            Level level,
+            InteractionHand hand,
+            StackMode currentMode,
+            boolean modeKeyDown) {
         return new InteractionContext(
-                player,
-                level,
-                hand,
-                null,
-                null,
-                null,
-                currentMode,
-                modeKeyDown
-        );
+                player, level, hand, null, null, null, currentMode, modeKeyDown);
     }
 
     public static InteractionContext forBlockClick(
-            Player player, Level level, InteractionHand hand, BlockPos pos, Direction face,
-            StackMode currentMode, boolean modeKeyDown) {
+            Player player,
+            Level level,
+            InteractionHand hand,
+            BlockPos pos,
+            Direction face,
+            StackMode currentMode,
+            boolean modeKeyDown) {
         Block block = level.getBlockState(pos).getBlock();
 
         return new InteractionContext(
-                player,
-                level,
-                hand,
-                pos,
-                block,
-                face,
-                currentMode,
-                modeKeyDown
-        );
+                player, level, hand, pos, block, face, currentMode, modeKeyDown);
     }
 
     public boolean isShift() {
