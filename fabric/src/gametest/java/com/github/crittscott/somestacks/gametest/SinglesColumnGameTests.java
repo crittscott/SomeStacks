@@ -3,12 +3,6 @@ package com.github.crittscott.somestacks.gametest;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
-
 /**
  * Singles support and gravity in a live level: grounding at the bottom of a column, a cell resting
  * on the one below it, visual columns lining up across differently rotated blocks, and extraction
@@ -82,8 +76,8 @@ public final class SinglesColumnGameTests {
     }
 
     /**
-     * To reproduce in-game: extract a lower Singles cell through item automation and verify the item
-     * above shifts down with its rotation, just as it does after player extraction.
+     * To reproduce in-game: extract a lower Singles cell through item automation and verify the
+     * item above shifts down with its rotation, just as it does after player extraction.
      */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void storageExtractionUsesThePlayerGravityPath(GameTestHelper helper) {

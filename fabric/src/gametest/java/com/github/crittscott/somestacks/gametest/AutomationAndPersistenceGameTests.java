@@ -1,28 +1,29 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.RunEdit;
-import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StorageStackBE;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.minecraft.core.Direction;
-import net.fabricmc.fabric.api.gametest.v1.GameTest;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+
+import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.RunEdit;
+import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.StorageStackBE;
+
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 /**
  * The automation surface and the saved state behind it: the whole-run storage exposed on every
@@ -73,25 +74,33 @@ public final class AutomationAndPersistenceGameTests {
         int storageLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
         int singlesLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
         int barLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
-        checkEquals(StorageStackBE.SLOTS * storageLevels,
+        checkEquals(
+                StorageStackBE.SLOTS * storageLevels,
                 FabricGameTestSupport.storage(storage).getSlotCount(),
                 "Storage advertised slots");
-        checkEquals(SinglesStackBE.SLOTS * singlesLevels,
+        checkEquals(
+                SinglesStackBE.SLOTS * singlesLevels,
                 FabricGameTestSupport.storage(singles).getSlotCount(),
                 "Singles advertised slots");
-        checkEquals(BarStackBE.SLOTS * barLevels,
+        checkEquals(
+                BarStackBE.SLOTS * barLevels,
                 FabricGameTestSupport.storage(bar).getSlotCount(),
                 "Bar advertised slots");
         helper.succeed();
     }
 
-    /** See {@link AutomationAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}. */
+    /**
+     * See {@link
+     * AutomationAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}.
+     */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         AutomationAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(helper);
     }
 
-    /** See {@link AutomationAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}. */
+    /**
+     * See {@link AutomationAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}.
+     */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper helper) {
         AutomationAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(helper);
@@ -103,7 +112,9 @@ public final class AutomationAndPersistenceGameTests {
         AutomationAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
     }
 
-    /** See {@link AutomationAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}. */
+    /**
+     * See {@link AutomationAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}.
+     */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
         AutomationAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(helper);
@@ -127,7 +138,9 @@ public final class AutomationAndPersistenceGameTests {
         AutomationAndPersistenceChecks.previousReleaseSaveUpgradesOnLoad(helper);
     }
 
-    /** See {@link AutomationAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */
+    /**
+     * See {@link AutomationAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}.
+     */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
         AutomationAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(helper);
@@ -149,14 +162,17 @@ public final class AutomationAndPersistenceGameTests {
         boolean claimed = RunEdit.begin();
         try {
             check(claimed, "Structural edit guard was already claimed");
-            checkEquals(1, FabricGameTestSupport.insertAt(storage, 0, offered, false).getCount(),
+            checkEquals(
+                    1,
+                    FabricGameTestSupport.insertAt(storage, 0, offered, false).getCount(),
                     "Reentrant insertion accepted an item");
         } finally {
             if (claimed) {
                 RunEdit.end();
             }
         }
-        check(FabricGameTestSupport.insertAt(storage, 0, offered, false).isEmpty(),
+        check(
+                FabricGameTestSupport.insertAt(storage, 0, offered, false).isEmpty(),
                 "Released guard still refused insertion");
         helper.succeed();
     }
@@ -176,12 +192,15 @@ public final class AutomationAndPersistenceGameTests {
         ItemStack remainder = FabricGameTestSupport.insertAt(storage, 0, offered, true);
 
         checkEquals(5, offered.getCount(), "Simulation mutated its input");
-        checkEquals(0, FabricGameTestSupport.count(storage, Items.APPLE),
+        checkEquals(
+                0,
+                FabricGameTestSupport.count(storage, Items.APPLE),
                 "Simulation mutated the column");
-        checkEquals(4, remainder.getCount(),
-                "A cell takes one item, so one call should accept one");
+        checkEquals(
+                4, remainder.getCount(), "A cell takes one item, so one call should accept one");
         helper.succeed();
     }
+
     /** See {@link SynchronizationChecks#clientInventoryUpdatesRejectMalformedDataAtomically}. */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void clientInventoryUpdatesRejectMalformedDataAtomically(GameTestHelper helper) {
@@ -193,5 +212,4 @@ public final class AutomationAndPersistenceGameTests {
     public void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
         SynchronizationChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
     }
-
 }

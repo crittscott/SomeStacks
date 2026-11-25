@@ -136,9 +136,9 @@ planned and completed totals.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">queuedStorageGalleryBuildsFloorRowsAndCompletionTotals</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
 <div class="block">A queued Storage gallery builds its sandstone floor, one column per item group, and reports
-planned and completed totals. To reproduce in-game: enable galleries and run an
-<code>/ss gallery</code> form containing multiple groups. The rows begin east of the player on a
-sandstone floor and the completion message reports the placed stacks and items.</div>
+planned and completed totals. To reproduce in-game: enable galleries and run an <code>/ss
+gallery</code> form containing multiple groups. The rows begin east of the player on a sandstone
+floor and the completion message reports the placed stacks and items.</div>
 </div>
 </section>
 </li>
@@ -148,10 +148,10 @@ sandstone floor and the completion message reports the placed stacks and items.<
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">queuedStorageGallerySpreadsWorkAcrossTicks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
-<div class="block">Gallery placement obeys the configured per-tick budget. To reproduce in-game: lower
-<code>render_gallery.placements_per_tick</code> and request a large Storage gallery. Construction
-visibly progresses across multiple ticks rather than completing in one server tick. The
-automated check uses two isolated jobs and a budget of four, including both phase boundaries.</div>
+<div class="block">Gallery placement obeys the configured per-tick budget. To reproduce in-game: lower <code>
+render_gallery.placements_per_tick</code> and request a large Storage gallery. Construction visibly
+progresses across multiple ticks rather than completing in one server tick. The automated
+check uses two isolated jobs and a budget of four, including both phase boundaries.</div>
 </div>
 </section>
 </li>

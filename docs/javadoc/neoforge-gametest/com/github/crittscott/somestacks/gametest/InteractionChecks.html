@@ -162,7 +162,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionEventsFollowBlockSurvival(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionEventsFollowBlockSurvival</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: extract one of two Singles or Bars beside a sculk sensor, then the last.</div>
+<div class="block">To reproduce in-game: extract one of two Singles or Bars beside a sculk sensor, then the
+last.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionRefusesIncompatibleOrFullHands(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionRefusesIncompatibleOrFullHands</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
@@ -329,8 +330,8 @@ occupied hand retain ordinary use; plain extraction consumes even an empty targe
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">rotationValidatesHeldItemAndBlockType</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Redstone torches rotate Storage and Singles blocks, soul torches rotate Singles items, and
-Bar blocks do not rotate. To reproduce in-game: Shift-right-click each type with those torches
-and observe that only the matching gestures change orientation.</div>
+Bar blocks do not rotate. To reproduce in-game: Shift-right-click each type with those
+torches and observe that only the matching gestures change orientation.</div>
 </div>
 </section>
 </li>
@@ -390,9 +391,9 @@ inside a claim that denies the player. Only the unprotected empty-hand click tog
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionRefusesIncompatibleOrFullHands</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Extraction refuses an incompatible held item or a compatible stack with no room. To
-reproduce in-game: plain-click stored stone while holding dirt, then while holding a full
-stack of matching stone. The Storage contents and held stacks remain unchanged.</div>
+<div class="block">Extraction refuses an incompatible held item or a compatible stack with no room. To reproduce
+in-game: plain-click stored stone while holding dirt, then while holding a full stack of
+matching stone. The Storage contents and held stacks remain unchanged.</div>
 </div>
 </section>
 </li>
@@ -436,8 +437,8 @@ the reconnect clears the old player's pacing state so the first new rotation can
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerMutationEmitsBlockChange</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">A successful mutation inside a stack emits one block-change game event. To reproduce
-in-game: put a sculk sensor beside a Storage Stack and deposit an item; the sensor activates.</div>
+<div class="block">A successful mutation inside a stack emits one block-change game event. To reproduce in-game:
+put a sculk sensor beside a Storage Stack and deposit an item; the sensor activates.</div>
 </div>
 </section>
 </li>
@@ -447,8 +448,8 @@ in-game: put a sculk sensor beside a Storage Stack and deposit an item; the sens
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionEventsFollowBlockSurvival</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">To reproduce in-game: extract one of two Singles or Bars beside a sculk sensor, then the last.
-The surviving block emits only change; removing the last item emits only destroy.</div>
+<div class="block">To reproduce in-game: extract one of two Singles or Bars beside a sculk sensor, then the
+last. The surviving block emits only change; removing the last item emits only destroy.</div>
 </div>
 </section>
 </li>

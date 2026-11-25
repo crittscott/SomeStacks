@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.FabricRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
+
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -13,23 +14,23 @@ public final class FabricClientRendering {
     private FabricClientRendering() {}
 
     public static void init() {
-        BlockEntityRenderers.register(
-                FabricRegistry.STORAGE_STACK_BE, GridStackBER::storage);
-        BlockEntityRenderers.register(
-                FabricRegistry.SINGLES_STACK_BE, GridStackBER::singles);
-        BlockEntityRenderers.register(
-                FabricRegistry.BAR_STACK_BE, BarStackBER::new);
+        BlockEntityRenderers.register(FabricRegistry.STORAGE_STACK_BE, GridStackBER::storage);
+        BlockEntityRenderers.register(FabricRegistry.SINGLES_STACK_BE, GridStackBER::singles);
+        BlockEntityRenderers.register(FabricRegistry.BAR_STACK_BE, BarStackBER::new);
 
         ResourceLoader clientResources = ResourceLoader.get(PackType.CLIENT_RESOURCES);
-        clientResources.registerReloadListener(ItemRenderOverrides.RELOAD_LISTENER_ID, new ItemRenderOverrides());
-        clientResources.registerReloadListener(BarTextureStore.RELOAD_LISTENER_ID, new BarTextureStore());
-        clientResources.registerReloadListener(CubeRenderHelper.RENDER_CACHE_RELOAD_LISTENER_ID,
-                (ResourceManagerReloadListener) manager -> {
-                    AutoRenderProfiles.onResourceReload();
-                    CubeRenderHelper.onResourceReload();
-                });
+        clientResources.registerReloadListener(
+                ItemRenderOverrides.RELOAD_LISTENER_ID, new ItemRenderOverrides());
+        clientResources.registerReloadListener(
+                BarTextureStore.RELOAD_LISTENER_ID, new BarTextureStore());
+        clientResources.registerReloadListener(
+                CubeRenderHelper.RENDER_CACHE_RELOAD_LISTENER_ID,
+                (ResourceManagerReloadListener)
+                        manager -> {
+                            AutoRenderProfiles.onResourceReload();
+                            CubeRenderHelper.onResourceReload();
+                        });
 
-        ClientLifecycleEvents.CLIENT_STOPPING.register(
-                client -> SomeStacksClient.onStopping());
+        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> SomeStacksClient.onStopping());
     }
 }

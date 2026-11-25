@@ -1,8 +1,9 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.client.ClientGestures;
-import com.github.crittscott.somestacks.client.SomeStacksClient;
 import com.github.crittscott.somestacks.client.ClientServerSettings;
+import com.github.crittscott.somestacks.client.SomeStacksClient;
+
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -20,11 +21,11 @@ public final class FabricClientNetworking {
         ClientGestures.setSender(packet -> ClientPlayNetworking.send(packet));
 
         ClientConfigurationNetworking.registerGlobalReceiver(
-                ProtocolPkt.TYPE, (payload, context) -> { });
+                ProtocolPkt.TYPE, (payload, context) -> {});
         ClientConfigurationConnectionEvents.START.register((handler, client) -> {
             if (!ClientConfigurationNetworking.canSend(ProtocolPkt.TYPE)) {
-                ClientConfigurationNetworking.getSender().disconnect(
-                        Component.translatable("somestacks.disconnect.protocol"));
+                ClientConfigurationNetworking.getSender()
+                        .disconnect(Component.translatable("somestacks.disconnect.protocol"));
             }
         });
         registerClient(ConfigSyncPkt.TYPE, ClientServerSettings::apply);
@@ -39,7 +40,7 @@ public final class FabricClientNetworking {
 
     private static <T extends CustomPacketPayload> void registerClient(
             CustomPacketPayload.Type<T> type, Consumer<T> handler) {
-        ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
-                handler.accept(payload));
+        ClientPlayNetworking.registerGlobalReceiver(
+                type, (payload, context) -> handler.accept(payload));
     }
 }

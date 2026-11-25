@@ -9,8 +9,8 @@ import java.util.function.IntFunction;
  *
  * <p>Stacks returned by {@link #getSlot} are the live stored objects: callers must not modify them,
  * and must copy one before keeping or editing it. A committed {@link #insertAt} may keep the
- * caller's stack object, so the caller gives it up or passes a copy. Stacks returned by
- * {@link #extract} belong to the caller.
+ * caller's stack object, so the caller gives it up or passes a copy. Stacks returned by {@link
+ * #extract} belong to the caller.
  */
 public interface StackRunItemAccess {
     /**
