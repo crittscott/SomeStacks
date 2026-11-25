@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollection;
 import net.minecraft.client.renderer.SubmitNodeStorage;
@@ -12,13 +13,15 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+
 import org.joml.Vector3f;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.annotation.Nullable;
 
 /**
  * Resolves an item through vanilla's model pipeline, visits its declared extents, and records its
@@ -27,8 +30,8 @@ import java.util.TreeMap;
  */
 public final class ItemCapture {
     /**
-     * A baked quad together with its resolved layer tint. The quad's item render type binds the atlas
-     * holding its sprite. Baked model geometry is immutable.
+     * A baked quad together with its resolved layer tint. The quad's item render type binds the
+     * atlas holding its sprite. Baked model geometry is immutable.
      */
     public record TintedQuad(BakedQuad quad, int color) {}
 
@@ -36,29 +39,36 @@ public final class ItemCapture {
     private final List<TintedQuad> quads = new ArrayList<>();
     private boolean specialGeometry;
     private boolean bounded;
-    private float minX = Float.POSITIVE_INFINITY, minY = Float.POSITIVE_INFINITY,
+    private float minX = Float.POSITIVE_INFINITY,
+            minY = Float.POSITIVE_INFINITY,
             minZ = Float.POSITIVE_INFINITY;
-    private float maxX = Float.NEGATIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY,
+    private float maxX = Float.NEGATIVE_INFINITY,
+            maxY = Float.NEGATIVE_INFINITY,
             maxZ = Float.NEGATIVE_INFINITY;
 
     private ItemCapture() {}
 
     /** Captures model extents under the supplied pose, including the item's display transform. */
-    public static ItemCapture capture(ItemStack stack, ItemDisplayContext context, @Nullable Level level,
-                                      PoseStack pose) {
+    public static ItemCapture capture(
+            ItemStack stack, ItemDisplayContext context, @Nullable Level level, PoseStack pose) {
         return capture(stack, context, level, pose, true);
     }
 
     /** Captures baked quads and tints without visiting unused bounds. */
-    public static ItemCapture captureQuads(ItemStack stack, ItemDisplayContext context,
-                                          @Nullable Level level, PoseStack pose) {
+    public static ItemCapture captureQuads(
+            ItemStack stack, ItemDisplayContext context, @Nullable Level level, PoseStack pose) {
         return capture(stack, context, level, pose, false);
     }
 
-    private static ItemCapture capture(ItemStack stack, ItemDisplayContext context,
-                                       @Nullable Level level, PoseStack pose, boolean bounds) {
+    private static ItemCapture capture(
+            ItemStack stack,
+            ItemDisplayContext context,
+            @Nullable Level level,
+            PoseStack pose,
+            boolean bounds) {
         ItemCapture capture = new ItemCapture();
-        Minecraft.getInstance().getItemModelResolver()
+        Minecraft.getInstance()
+                .getItemModelResolver()
                 .updateForTopItem(capture.renderState, stack, context, level, null, 0);
         if (capture.renderState.isEmpty()) {
             return capture;
@@ -72,10 +82,10 @@ public final class ItemCapture {
             });
         }
         CaptureCollector collector = capture.new CaptureCollector();
-        capture.renderState.submit(pose, collector, LightCoordsUtil.FULL_BRIGHT,
-                OverlayTexture.NO_OVERLAY, 0);
-        capture.specialGeometry = collector.orders.values().stream()
-                .anyMatch(SubmitNodeCollection::wasUsed);
+        capture.renderState.submit(
+                pose, collector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
+        capture.specialGeometry =
+                collector.orders.values().stream().anyMatch(SubmitNodeCollection::wasUsed);
         return capture;
     }
 
@@ -121,20 +131,35 @@ public final class ItemCapture {
 
         @Override
         public SubmitNodeCollection order(int order) {
-            return orders.computeIfAbsent(order, ignored -> new SubmitNodeCollection(this) {
-                @Override
-                public void submitItem(PoseStack pose, ItemDisplayContext context, int light,
-                                       int overlay, int outline, int[] tints, List<BakedQuad> submitted,
-                                       ItemStackRenderState.FoilType foil) {
-                    acceptQuads(tints, submitted);
-                }
-            });
+            return orders.computeIfAbsent(
+                    order,
+                    ignored ->
+                            new SubmitNodeCollection(this) {
+                                @Override
+                                public void submitItem(
+                                        PoseStack pose,
+                                        ItemDisplayContext context,
+                                        int light,
+                                        int overlay,
+                                        int outline,
+                                        int[] tints,
+                                        List<BakedQuad> submitted,
+                                        ItemStackRenderState.FoilType foil) {
+                                    acceptQuads(tints, submitted);
+                                }
+                            });
         }
 
         @Override
-        public void submitItem(PoseStack pose, ItemDisplayContext context, int light, int overlay,
-                               int outline, int[] tints, List<BakedQuad> submitted,
-                               ItemStackRenderState.FoilType foil) {
+        public void submitItem(
+                PoseStack pose,
+                ItemDisplayContext context,
+                int light,
+                int overlay,
+                int outline,
+                int[] tints,
+                List<BakedQuad> submitted,
+                ItemStackRenderState.FoilType foil) {
             acceptQuads(tints, submitted);
         }
     }

@@ -10,15 +10,14 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.world.item.ItemStack;
 
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 /**
- * Fabric Transfer API view over a complete Storage pile, Singles column, or Bar column.
- * Slot changes are staged in the Fabric transaction and applied through the shared run mutations
- * only after its outer commit, so an aborted transaction never edits the world. Insertion is judged
+ * Fabric Transfer API view over a complete Storage pile, Singles column, or Bar column. Slot
+ * changes are staged in the Fabric transaction and applied through the shared run mutations only
+ * after its outer commit, so an aborted transaction never edits the world. Insertion is judged
  * against the staged contents. Singles and Bar accept one extraction position per transaction,
  * without other pending positions or later insertion, because gravity and backfill remap the
  * positions at commit.
@@ -120,7 +119,9 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
         return changes.current(slot, blockEntity.itemRun());
     }
 
-    /** How much of {@code stack} the slot accepts given the contents this transaction has staged. */
+    /**
+     * How much of {@code stack} the slot accepts given the contents this transaction has staged.
+     */
     private int acceptedAt(int slot, ItemStack stack) {
         if (blockEntity.isRemoved()) return 0;
         StackRunItemAccess run = blockEntity.itemRun();
@@ -145,12 +146,15 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
         changes.stage(slot, stack, run());
     }
 
+    @Override
+    protected RunTransferLedger.State createSnapshot() {
+        return changes.snapshot();
+    }
 
     @Override
-    protected RunTransferLedger.State createSnapshot() { return changes.snapshot(); }
-
-    @Override
-    protected void readSnapshot(RunTransferLedger.State snapshot) { changes.restore(snapshot); }
+    protected void readSnapshot(RunTransferLedger.State snapshot) {
+        changes.restore(snapshot);
+    }
 
     @Override
     protected void onFinalCommit() {
@@ -162,7 +166,9 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
         }
     }
 
-    private StackRunItemAccess run() { return blockEntity.itemRun(); }
+    private StackRunItemAccess run() {
+        return blockEntity.itemRun();
+    }
 
     private final class RunSlot implements SingleSlotStorage<ItemVariant> {
         private final int slot;
@@ -176,7 +182,8 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
             FabricRunItemStorage ledger = ledger();
             if (ledger != FabricRunItemStorage.this) {
                 return slot < ledger.getSlotCount()
-                        ? ledger.getSlot(slot).insert(resource, maxAmount, transaction) : 0;
+                        ? ledger.getSlot(slot).insert(resource, maxAmount, transaction)
+                        : 0;
             }
             StoragePreconditions.notBlankNotNegative(resource, maxAmount);
             if (maxAmount == 0 || RunEdit.isInProgress() || !changes.allowsInsertion()) {
@@ -211,10 +218,12 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
             FabricRunItemStorage ledger = ledger();
             if (ledger != FabricRunItemStorage.this) {
                 return slot < ledger.getSlotCount()
-                        ? ledger.getSlot(slot).extract(resource, maxAmount, transaction) : 0;
+                        ? ledger.getSlot(slot).extract(resource, maxAmount, transaction)
+                        : 0;
             }
             StoragePreconditions.notBlankNotNegative(resource, maxAmount);
-            if (maxAmount == 0 || RunEdit.isInProgress()
+            if (maxAmount == 0
+                    || RunEdit.isInProgress()
                     || isStructural() && !changes.mayExtract(slot)) return 0;
 
             ItemStack current = currentStack(slot);

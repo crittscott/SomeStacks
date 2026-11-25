@@ -16,32 +16,50 @@ public final class NeoForgeStackBlockEntities {
     }
 
     public static final class Storage extends StorageStackBE {
-        public Storage(BlockPos pos, BlockState state) { super(pos, state); }
+        public Storage(BlockPos pos, BlockState state) {
+            super(pos, state);
+        }
 
         @Override
-        public void handleUpdateTag(ValueInput input) { update(this, input); }
+        public void handleUpdateTag(ValueInput input) {
+            update(this, input);
+        }
 
         @Override
-        public void onDataPacket(Connection connection, ValueInput input) { update(this, input); }
+        public void onDataPacket(Connection connection, ValueInput input) {
+            update(this, input);
+        }
     }
 
     public static final class Singles extends SinglesStackBE {
-        public Singles(BlockPos pos, BlockState state) { super(pos, state); }
+        public Singles(BlockPos pos, BlockState state) {
+            super(pos, state);
+        }
 
         @Override
-        public void handleUpdateTag(ValueInput input) { update(this, input); }
+        public void handleUpdateTag(ValueInput input) {
+            update(this, input);
+        }
 
         @Override
-        public void onDataPacket(Connection connection, ValueInput input) { update(this, input); }
+        public void onDataPacket(Connection connection, ValueInput input) {
+            update(this, input);
+        }
     }
 
     public static final class Bar extends BarStackBE {
-        public Bar(BlockPos pos, BlockState state) { super(pos, state); }
+        public Bar(BlockPos pos, BlockState state) {
+            super(pos, state);
+        }
 
         @Override
-        public void handleUpdateTag(ValueInput input) { update(this, input); }
+        public void handleUpdateTag(ValueInput input) {
+            update(this, input);
+        }
 
         @Override
-        public void onDataPacket(Connection connection, ValueInput input) { update(this, input); }
+        public void onDataPacket(Connection connection, ValueInput input) {
+            update(this, input);
+        }
     }
 }

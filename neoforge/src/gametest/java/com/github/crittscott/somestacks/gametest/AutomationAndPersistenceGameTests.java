@@ -1,17 +1,5 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.RunEdit;
-import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StorageStackBE;
-import net.minecraft.core.Direction;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemResource;
-
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
@@ -20,9 +8,22 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSi
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.count;
 
+import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.RunEdit;
+import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.StorageStackBE;
+
+import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+
 /**
- * The automation surface and the saved state behind it: the item handler exposed on every side,
- * a run advertising its reachable headroom, and each type's update tag round-tripping the contents
+ * The automation surface and the saved state behind it: the item handler exposed on every side, a
+ * run advertising its reachable headroom, and each type's update tag round-tripping the contents
  * and presentation state it is responsible for.
  */
 public final class AutomationAndPersistenceGameTests {
@@ -38,19 +39,23 @@ public final class AutomationAndPersistenceGameTests {
         BarStackBE bar = placeBar(helper, ORIGIN.east(6));
 
         for (Direction side : Direction.values()) {
-            check(GameTestSupport.capabilityPresent(storage, side),
+            check(
+                    GameTestSupport.capabilityPresent(storage, side),
                     "Storage capability missing on " + side);
-            check(GameTestSupport.capabilityPresent(singles, side),
+            check(
+                    GameTestSupport.capabilityPresent(singles, side),
                     "Singles capability missing on " + side);
-            check(GameTestSupport.capabilityPresent(bar, side),
+            check(
+                    GameTestSupport.capabilityPresent(bar, side),
                     "Bar capability missing on " + side);
         }
-        check(GameTestSupport.capabilityPresent(storage, null),
+        check(
+                GameTestSupport.capabilityPresent(storage, null),
                 "Storage capability missing on null side");
-        check(GameTestSupport.capabilityPresent(singles, null),
+        check(
+                GameTestSupport.capabilityPresent(singles, null),
                 "Singles capability missing on null side");
-        check(GameTestSupport.capabilityPresent(bar, null),
-                "Bar capability missing on null side");
+        check(GameTestSupport.capabilityPresent(bar, null), "Bar capability missing on null side");
         helper.succeed();
     }
 
@@ -58,8 +63,7 @@ public final class AutomationAndPersistenceGameTests {
      * To reproduce in-game: connect item automation to a one-block stack below its height limit and
      * verify it can address one additional block of empty positions for growth.
      */
-    public static void singleBlockCapabilitiesAdvertiseConfiguredHeadroom(
-            GameTestHelper helper) {
+    public static void singleBlockCapabilitiesAdvertiseConfiguredHeadroom(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
         BarStackBE bar = placeBar(helper, ORIGIN.east(6));
@@ -67,27 +71,33 @@ public final class AutomationAndPersistenceGameTests {
         int storageLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
         int singlesLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
         int barLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
-        checkEquals(StorageStackBE.SLOTS * storageLevels,
+        checkEquals(
+                StorageStackBE.SLOTS * storageLevels,
                 GameTestSupport.capability(storage).size(),
                 "Storage advertised slots");
-        checkEquals(SinglesStackBE.SLOTS * singlesLevels,
+        checkEquals(
+                SinglesStackBE.SLOTS * singlesLevels,
                 GameTestSupport.capability(singles).size(),
                 "Singles advertised slots");
-        checkEquals(BarStackBE.SLOTS * barLevels,
+        checkEquals(
+                BarStackBE.SLOTS * barLevels,
                 GameTestSupport.capability(bar).size(),
                 "Bar advertised slots");
         helper.succeed();
     }
 
-    /** See {@link AutomationAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}. */
-    public static void storageDiskSaveRoundTripsItemsRotationAndPermanence(
-            GameTestHelper helper) {
+    /**
+     * See {@link
+     * AutomationAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}.
+     */
+    public static void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         AutomationAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(helper);
     }
 
-    /** See {@link AutomationAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}. */
-    public static void singlesDiskSaveRoundTripsItemsAndBothRotations(
-            GameTestHelper helper) {
+    /**
+     * See {@link AutomationAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}.
+     */
+    public static void singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper helper) {
         AutomationAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(helper);
     }
 
@@ -96,7 +106,9 @@ public final class AutomationAndPersistenceGameTests {
         AutomationAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
     }
 
-    /** See {@link AutomationAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}. */
+    /**
+     * See {@link AutomationAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}.
+     */
     public static void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
         AutomationAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(helper);
     }
@@ -116,7 +128,9 @@ public final class AutomationAndPersistenceGameTests {
         AutomationAndPersistenceChecks.previousReleaseSaveUpgradesOnLoad(helper);
     }
 
-    /** See {@link AutomationAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */
+    /**
+     * See {@link AutomationAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}.
+     */
     public static void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
         AutomationAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(helper);
     }
@@ -135,14 +149,18 @@ public final class AutomationAndPersistenceGameTests {
         boolean claimed = RunEdit.begin();
         try {
             check(claimed, "Structural edit guard was already claimed");
-            checkEquals(0, GameTestSupport.offer(capability, 0, offered, true),
+            checkEquals(
+                    0,
+                    GameTestSupport.offer(capability, 0, offered, true),
                     "Reentrant insertion accepted an item");
         } finally {
             if (claimed) {
                 RunEdit.end();
             }
         }
-        checkEquals(1, GameTestSupport.offer(capability, 0, offered, true),
+        checkEquals(
+                1,
+                GameTestSupport.offer(capability, 0, offered, true),
                 "Released guard still refused insertion");
         helper.succeed();
     }
@@ -161,12 +179,11 @@ public final class AutomationAndPersistenceGameTests {
         int accepted = GameTestSupport.offer(capability, 0, offered, false);
 
         checkEquals(5, offered.getCount(), "Simulation mutated its input");
-        checkEquals(0, count(capability, Items.APPLE),
-                "Simulation mutated the column");
-        checkEquals(1, accepted,
-                "A cell takes one item, so one call should accept one");
+        checkEquals(0, count(capability, Items.APPLE), "Simulation mutated the column");
+        checkEquals(1, accepted, "A cell takes one item, so one call should accept one");
         helper.succeed();
     }
+
     /** See {@link SynchronizationChecks#clientInventoryUpdatesRejectMalformedDataAtomically}. */
     public static void clientInventoryUpdatesRejectMalformedDataAtomically(GameTestHelper helper) {
         SynchronizationChecks.clientInventoryUpdatesRejectMalformedDataAtomically(helper);
@@ -176,5 +193,4 @@ public final class AutomationAndPersistenceGameTests {
     public static void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
         SynchronizationChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
     }
-
 }

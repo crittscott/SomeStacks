@@ -17,8 +17,9 @@ public final class CubeGrid {
 
     /**
      * Creates an {@code edge}-cell grid along each axis. Cell width and axis starts are model
-     * pixels (16 per block); the same {@code edge} starts are used on all three axes.
-     * Callers supply valid cell dimensions and coordinates.
+     * pixels (16 per block); the same {@code edge} starts are used on all three axes. Callers
+     * supply valid cell dimensions and coordinates.
+     *
      * @throws IllegalArgumentException when edge is nonpositive or starts has a different length
      */
     public CubeGrid(int edge, double cellPixels, int... starts) {
@@ -38,12 +39,17 @@ public final class CubeGrid {
                     int index = indexFromXYZ(x, y, z);
                     for (int rotation = 0; rotation < rotatedIndices.length; rotation++) {
                         int[] visual = rotateXYZ(x, y, z, rotation);
-                        rotatedIndices[rotation][index] = indexFromXYZ(visual[0], visual[1], visual[2]);
+                        rotatedIndices[rotation][index] =
+                                indexFromXYZ(visual[0], visual[1], visual[2]);
                     }
-                    localShapes[index] = Block.box(
-                            starts[x], starts[y], starts[z],
-                            starts[x] + cellPixels, starts[y] + cellPixels,
-                            starts[z] + cellPixels);
+                    localShapes[index] =
+                            Block.box(
+                                    starts[x],
+                                    starts[y],
+                                    starts[z],
+                                    starts[x] + cellPixels,
+                                    starts[y] + cellPixels,
+                                    starts[z] + cellPixels);
                     localBoxes[index] = localShapes[index].bounds();
                 }
             }
@@ -68,23 +74,23 @@ public final class CubeGrid {
         int remainder = index % layerSize;
         int z = remainder / edge;
         int x = remainder % edge;
-        return new int[]{x, y, z};
+        return new int[] {x, y, z};
     }
 
     /** Rotates grid coordinates counterclockwise in quarter turns when viewed from above. */
     public int[] rotateXYZ(int x, int y, int z, int rotation) {
         return switch (QuarterTurns.normalize(rotation)) {
-            case 0 -> new int[]{x, y, z};
-            case 1 -> new int[]{z, y, maxCoord - x};
-            case 2 -> new int[]{maxCoord - x, y, maxCoord - z};
-            case 3 -> new int[]{maxCoord - z, y, x};
+            case 0 -> new int[] {x, y, z};
+            case 1 -> new int[] {z, y, maxCoord - x};
+            case 2 -> new int[] {maxCoord - x, y, maxCoord - z};
+            case 3 -> new int[] {maxCoord - z, y, x};
             default -> throw new IllegalStateException();
         };
     }
 
     public AABB worldBox(int storageIndex, int rotation, BlockPos blockPos) {
-        return localBox(storageIndex, rotation).move(
-                blockPos.getX(), blockPos.getY(), blockPos.getZ());
+        return localBox(storageIndex, rotation)
+                .move(blockPos.getX(), blockPos.getY(), blockPos.getZ());
     }
 
     /** Returns the cached block-local bounds for one stored cell at the given layout rotation. */

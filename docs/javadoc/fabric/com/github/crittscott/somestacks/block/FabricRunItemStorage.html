@@ -94,9 +94,9 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">FabricRunItemStorage</span>
 <span class="extends-implements">extends net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.RunTransferLedger.State&gt;
 implements net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;</span></div>
-<div class="block">Fabric Transfer API view over a complete Storage pile, Singles column, or Bar column.
-Slot changes are staged in the Fabric transaction and applied through the shared run mutations
-only after its outer commit, so an aborted transaction never edits the world. Insertion is judged
+<div class="block">Fabric Transfer API view over a complete Storage pile, Singles column, or Bar column. Slot
+changes are staged in the Fabric transaction and applied through the shared run mutations only
+after its outer commit, so an aborted transaction never edits the world. Insertion is judged
 against the staged contents. Singles and Bar accept one extraction position per transaction,
 without other pending positions or later insertion, because gravity and backfill remap the
 positions at commit.</div>

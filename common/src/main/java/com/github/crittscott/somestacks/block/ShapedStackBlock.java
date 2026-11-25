@@ -22,7 +22,8 @@ public abstract class ShapedStackBlock extends StackBlock {
      */
     protected VoxelShape occupiedShape(BlockGetter level, BlockPos pos) {
         return level.getBlockEntity(pos) instanceof StackBlockEntity member
-                ? member.getCachedShape() : Shapes.empty();
+                ? member.getCachedShape()
+                : Shapes.empty();
     }
 
     @Override
