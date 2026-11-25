@@ -6,7 +6,9 @@ import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 public final class SomeStacksClient {
     private SomeStacksClient() {}
 
-    public static void onJoin() { ClientGestures.resetSync(); }
+    public static void onJoin() {
+        ClientGestures.resetSync();
+    }
 
     public static void onDisconnect() {
         ClientGestures.resetSync();
@@ -14,5 +16,7 @@ public final class SomeStacksClient {
         AutoRenderProfiles.saveCache();
     }
 
-    public static void onStopping() { AutoRenderProfiles.saveCache(); }
+    public static void onStopping() {
+        AutoRenderProfiles.saveCache();
+    }
 }

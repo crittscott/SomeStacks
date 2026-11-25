@@ -277,21 +277,24 @@ distinct insertion, extraction, growth, settlement, and collapse rules.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markDirty()" class="member-name-link">markDirty</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Coalesces server changes into one next-tick pass on the base; no immediate publication occurs.</div>
+<div class="block">Coalesces server changes into one next-tick pass on the base; no immediate publication
+occurs.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a>&gt;<br>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">markDirtyAt</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level, net.minecraft.core.BlockPos, R&gt;&nbsp;resolver)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does nothing.</div>
+<div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does
+nothing.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;?&gt;&gt;<br>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">publishAround</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level, net.minecraft.core.BlockPos, R&gt;&nbsp;resolver)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Publishes comparator changes for runs at and beside a structural edit after cache invalidation.</div>
+<div class="block">Publishes comparator changes for runs at and beside a structural edit after cache
+invalidation.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#publishPending()" class="member-name-link">publishPending</a>()</code></div>
@@ -464,7 +467,8 @@ distinct insertion, extraction, growth, settlement, and collapse rules.</div>
 <span class="return-type">void</span>&nbsp;<span class="element-name">markDirtyAt</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level, net.minecraft.core.BlockPos, R&gt;&nbsp;resolver)</span></div>
-<div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does nothing.</div>
+<div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does
+nothing.</div>
 </div>
 </section>
 </li>
@@ -475,8 +479,9 @@ distinct insertion, extraction, growth, settlement, and collapse rules.</div>
 <div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="type-parameters">&lt;R extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;?&gt;&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">publishAround</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level, net.minecraft.core.BlockPos, R&gt;&nbsp;resolver)</span></div>
-<div class="block">Publishes comparator changes for runs at and beside a structural edit after cache invalidation.
-Null resolutions are ignored; this does not publish inventories or settle Storage.</div>
+<div class="block">Publishes comparator changes for runs at and beside a structural edit after cache
+invalidation. Null resolutions are ignored; this does not publish inventories or settle
+Storage.</div>
 </div>
 </section>
 </li>
@@ -558,9 +563,9 @@ currently possible.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getSlot</span><wbr><span class="parameters">(int&nbsp;flatSlot)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="StackRunItemAccess.html#getSlot(int)">StackRunItemAccess</a></code></span></div>
-<div class="block">The current stack in a run position, or empty for headroom or an invalid position. The
-result is the live stored stack, not a copy: callers must not modify it, and must copy it
-before keeping or editing it.</div>
+<div class="block">The current stack in a run position, or empty for headroom or an invalid position. The result
+is the live stored stack, not a copy: callers must not modify it, and must copy it before
+keeping or editing it.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="StackRunItemAccess.html#getSlot(int)">getSlot</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
@@ -618,7 +623,8 @@ before keeping or editing it.</div>
 <h3>markDirty</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markDirty</span>()</div>
-<div class="block">Coalesces server changes into one next-tick pass on the base; no immediate publication occurs.</div>
+<div class="block">Coalesces server changes into one next-tick pass on the base; no immediate publication
+occurs.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="StackRunItemAccess.html#markDirty()">markDirty</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>

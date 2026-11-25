@@ -75,8 +75,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">SlotAccess</span></div>
-<div class="block">A read-only view of numbered local item slots for geometry, rendering, drops, and inventory reads.
-Mutations belong to StackItemStorage; loader-native automation adapts whole runs.</div>
+<div class="block">A read-only view of numbered local item slots for geometry, rendering, drops, and inventory
+reads. Mutations belong to StackItemStorage; loader-native automation adapts whole runs.</div>
 </div>
 </section>
 <section class="summary">
@@ -131,9 +131,9 @@ Mutations belong to StackItemStorage; loader-native automation adapts whole runs
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Nonnull
 </span><span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getStackInSlot</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
-<div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null. This is
-the live stored stack, not a copy: changing it bypasses change notification, so callers must
-not modify it and must copy it before keeping or editing it.</div>
+<div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null. This
+is the live stored stack, not a copy: changing it bypasses change notification, so callers
+must not modify it and must copy it before keeping or editing it.</div>
 </div>
 </section>
 </li>

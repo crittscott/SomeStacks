@@ -99,8 +99,8 @@ anything:
       first. A caller walking the positions in order therefore fills the column layer by layer
       from the bottom, because each placement stands before the next position is offered.
   <li>Extraction takes the requested bar and moves the column's topmost bar into the hole. The
-      topmost bar holds nothing up, and a slot vacated by extraction keeps the support it had,
-      so the result always stands. When the hole is in a top layer the backfill restores that
+      topmost bar holds nothing up, and a slot vacated by extraction keeps the support it had, so
+      the result always stands. When the hole is in a top layer the backfill restores that
       layer's occupancy exactly, leaving the seam under the block above untouched.
 </ul>
 
@@ -234,9 +234,9 @@ counting the runs both below and above it, must fit the configured maximum.</div
 above it.
 
 <p>Answering for the position it was given rather than for the column is what makes the
-handler's slot range mean something: a caller that walks the range and sums what each position
-accepts gets the column's real capacity; reporting whole-column capacity at every position
-would multiply it.
+handler's slot range mean something: a caller that walks the range and sums what each
+position accepts gets the column's real capacity; reporting whole-column capacity at every
+position would multiply it.
 
 <p>A caller walking the range in ascending order still fills the column, because each
 placement stands before the next position is offered: a filled layer supports the layer above
@@ -279,8 +279,8 @@ would refuse.</div>
 Nothing is dropped and nothing is left unsupported.
 
 <p>The backfilled bar is written into the hole rather than inserted. Validity gates what a
-deposit may add rather than what the column may carry, so a bar stored before a
-data pack reload narrowed the ingot set still moves.</div>
+deposit may add rather than what the column may carry, so a bar stored before a data pack
+reload narrowed the ingot set still moves.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>flatSlot</code> - the position to extract, numbered from the bottom block upward</dd>

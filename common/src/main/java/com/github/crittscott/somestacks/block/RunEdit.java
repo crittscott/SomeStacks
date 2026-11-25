@@ -5,18 +5,18 @@ package com.github.crittscott.somestacks.block;
  *
  * <p>One flag serves the whole server and is touched only on the server thread. Callers pair a
  * successful {@link #begin()} with {@link #end()} in a {@code finally}. An edit that arrives while
- * another is running is refused with the ordinary failure result for automation: an insertion
- * keeps its stack and an extraction yields nothing.
+ * another is running is refused with the ordinary failure result for automation: an insertion keeps
+ * its stack and an extraction yields nothing.
  */
 public final class RunEdit {
     // A run's world edits notify neighbors, and a woken neighbor can reach back into the same run's
     // handler mid-call: while a batch is open, while the block list is being appended to, or while
-    // a held automation view is being invalidated. The inner call is refused so the run stays in the
+    // a held automation view is being invalidated. The inner call is refused so the run stays in
+    // the
     // state the outer call is building.
     private static boolean inProgress;
 
-    private RunEdit() {
-    }
+    private RunEdit() {}
 
     /** Claims the right to edit, or reports that an edit is already running. */
     public static boolean begin() {

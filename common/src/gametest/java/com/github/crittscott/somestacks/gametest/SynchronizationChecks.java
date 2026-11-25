@@ -1,12 +1,18 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.client.ClientServerSettings;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
+import com.github.crittscott.somestacks.client.ClientServerSettings;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+
 import io.netty.buffer.Unpooled;
+
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -15,15 +21,11 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-import java.util.List;
-import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
 /** Wire boundaries, independent of forgiving saved-world recovery. */
 public final class SynchronizationChecks {
@@ -44,7 +46,12 @@ public final class SynchronizationChecks {
                 List<String> denied = new ArrayList<>();
                 for (int i = 0; i < size; i++) {
                     String prefix = "namespace" + i;
-                    String namespace = prefix + "a".repeat(ConfigSyncPkt.MAX_NAMESPACE_LENGTH - prefix.length());
+                    String namespace =
+                            prefix
+                                    + "a"
+                                            .repeat(
+                                                    ConfigSyncPkt.MAX_NAMESPACE_LENGTH
+                                                            - prefix.length());
                     gallery.add(namespace);
                     denied.add(namespace);
                 }
@@ -53,7 +60,9 @@ public final class SynchronizationChecks {
                 try {
                     var buf = new RegistryFriendlyByteBuf(raw, helper.getLevel().registryAccess());
                     ConfigSyncPkt.STREAM_CODEC.encode(buf, packet);
-                    check(raw.readableBytes() < 132 * 1024, "Maximum snapshot exceeds its bounded size");
+                    check(
+                            raw.readableBytes() < 132 * 1024,
+                            "Maximum snapshot exceeds its bounded size");
                     var decoded = ConfigSyncPkt.STREAM_CODEC.decode(buf);
                     checkEquals(packet, decoded, "Snapshot codec round trip");
                     checkEquals(0, raw.readableBytes(), "Snapshot decoder left fields unread");
@@ -62,18 +71,33 @@ public final class SynchronizationChecks {
                     raw.release();
                 }
                 checkEquals(gallery, ClientServerSettings.genMods(), "Published gallery list");
-                checkEquals(Set.copyOf(denied), ClientServerSettings.disabledMods(), "Published deny set");
-                check(Arrays.equals(new boolean[] {size == 0, size == 1, size > 1}, flags()), "Published flags");
+                checkEquals(
+                        Set.copyOf(denied),
+                        ClientServerSettings.disabledMods(),
+                        "Published deny set");
+                check(
+                        Arrays.equals(new boolean[] {size == 0, size == 1, size > 1}, flags()),
+                        "Published flags");
             }
             var defaults = ServerConfig.defaults();
-            var normalized = ConfigSyncPkt.fromSettings(new ServerConfig.Settings(defaults.maxPileHeight(),
-                    true, true, true, List.of(" Minecraft ", "minecraft"), defaults.disableItems(),
-                    defaults.renderGalleryPlacementsPerTick(), false, defaults.galleryPermissionLevel(),
-                    List.of(" SomeStacks ", "somestacks"), List.of()));
+            var normalized =
+                    ConfigSyncPkt.fromSettings(
+                            new ServerConfig.Settings(
+                                    defaults.maxPileHeight(),
+                                    true,
+                                    true,
+                                    true,
+                                    List.of(" Minecraft ", "minecraft"),
+                                    defaults.disableItems(),
+                                    defaults.renderGalleryPlacementsPerTick(),
+                                    false,
+                                    defaults.galleryPermissionLevel(),
+                                    List.of(" SomeStacks ", "somestacks"),
+                                    List.of()));
             checkEquals(List.of("minecraft"), normalized.disabledMods(), "Deny normalization");
             checkEquals(List.of("somestacks"), normalized.genMods(), "Gallery normalization");
             ClientServerSettings.clear();
-            check(Arrays.equals(new boolean[]{true, true, true}, flags()), "Disconnect defaults");
+            check(Arrays.equals(new boolean[] {true, true, true}, flags()), "Disconnect defaults");
             check(ClientServerSettings.genMods().isEmpty(), "Disconnected gallery list survived");
             check(ClientServerSettings.disabledMods().isEmpty(), "Disconnected deny list survived");
         } finally {
@@ -83,7 +107,10 @@ public final class SynchronizationChecks {
         helper.succeed();
     }
 
-    /** No in-game reproduction applies: hostile list counts, names, and duplicate entries must fail decoding. */
+    /**
+     * No in-game reproduction applies: hostile list counts, names, and duplicate entries must fail
+     * decoding.
+     */
     public static void configDecoderRejectsMalformedCountsAndNamespaces(GameTestHelper helper) {
         for (boolean gallery : new boolean[] {true, false}) {
             for (int count : new int[] {-1, ConfigSyncPkt.MAX_NAMESPACES + 1}) {
@@ -93,13 +120,21 @@ public final class SynchronizationChecks {
                     writeFlags(buf);
                     if (!gallery) buf.writeVarInt(0);
                     buf.writeVarInt(count);
-                    rejects(() -> ConfigSyncPkt.STREAM_CODEC.decode(buf), "Invalid wire count decoded");
-                } finally { raw.release(); }
+                    rejects(
+                            () -> ConfigSyncPkt.STREAM_CODEC.decode(buf),
+                            "Invalid wire count decoded");
+                } finally {
+                    raw.release();
+                }
             }
         }
-        for (List<String> namespaces : List.of(List.of(""), List.of("Uppercase"),
-                List.of("bad namespace"), List.of("a".repeat(ConfigSyncPkt.MAX_NAMESPACE_LENGTH + 1)),
-                List.of("duplicate", "duplicate"))) {
+        for (List<String> namespaces :
+                List.of(
+                        List.of(""),
+                        List.of("Uppercase"),
+                        List.of("bad namespace"),
+                        List.of("a".repeat(ConfigSyncPkt.MAX_NAMESPACE_LENGTH + 1)),
+                        List.of("duplicate", "duplicate"))) {
             var raw = Unpooled.buffer();
             try {
                 var buf = new RegistryFriendlyByteBuf(raw, helper.getLevel().registryAccess());
@@ -108,10 +143,18 @@ public final class SynchronizationChecks {
                 namespaces.forEach(buf::writeUtf);
                 buf.writeVarInt(0);
                 rejects(() -> ConfigSyncPkt.STREAM_CODEC.decode(buf), "Invalid namespace decoded");
-            } finally { raw.release(); }
+            } finally {
+                raw.release();
+            }
         }
-        rejects(() -> new ConfigSyncPkt(true, true, true,
-                Collections.nCopies(ConfigSyncPkt.MAX_NAMESPACES + 1, "namespace"), List.of()),
+        rejects(
+                () ->
+                        new ConfigSyncPkt(
+                                true,
+                                true,
+                                true,
+                                Collections.nCopies(ConfigSyncPkt.MAX_NAMESPACES + 1, "namespace"),
+                                List.of()),
                 "Direct construction bypassed count limit");
         helper.succeed();
     }
@@ -123,8 +166,11 @@ public final class SynchronizationChecks {
     }
 
     private static boolean[] flags() {
-        return new boolean[] {ClientServerSettings.isBlockTypeEnabled(BlockType.STORAGE_STACK),
-                ClientServerSettings.isBlockTypeEnabled(BlockType.SINGLES_STACK), ClientServerSettings.isBlockTypeEnabled(BlockType.BAR_STACK)};
+        return new boolean[] {
+            ClientServerSettings.isBlockTypeEnabled(BlockType.STORAGE_STACK),
+            ClientServerSettings.isBlockTypeEnabled(BlockType.SINGLES_STACK),
+            ClientServerSettings.isBlockTypeEnabled(BlockType.BAR_STACK)
+        };
     }
 
     private static void restoreFlags(boolean[] flags) {
@@ -138,44 +184,88 @@ public final class SynchronizationChecks {
      * untouched rather than run saved-world recovery or retain rejected entries.
      */
     public static void clientInventoryUpdatesRejectMalformedDataAtomically(GameTestHelper helper) {
-        for (StackBlockEntity be : List.of(GameTestScaffold.placeStorage(helper, ORIGIN),
-                GameTestScaffold.placeSingles(helper, ORIGIN.east()),
-                GameTestScaffold.placeBar(helper, ORIGIN.east(2)))) {
+        for (StackBlockEntity be :
+                List.of(
+                        GameTestScaffold.placeStorage(helper, ORIGIN),
+                        GameTestScaffold.placeSingles(helper, ORIGIN.east()),
+                        GameTestScaffold.placeBar(helper, ORIGIN.east(2)))) {
             be.getItems().setStackInSlot(0, new ItemStack(Items.STONE));
             CompoundTag valid = be.getUpdateTag(helper.getLevel().registryAccess());
             CompoundTag oversized = valid.copy();
             ListTag tooMany = new ListTag();
-            CompoundTag item = valid.getCompound("Items").orElseThrow().getList("Items").orElseThrow().getCompound(0).orElseThrow();
+            CompoundTag item =
+                    valid.getCompound("Items")
+                            .orElseThrow()
+                            .getList("Items")
+                            .orElseThrow()
+                            .getCompound(0)
+                            .orElseThrow();
             for (int i = 0; i <= be.getItems().getSlots(); i++) tooMany.add(item.copy());
             oversized.getCompound("Items").orElseThrow().put("Items", tooMany);
             rejectedUpdate(helper, be, oversized);
 
             CompoundTag duplicate = valid.copy();
-            duplicate.getCompound("Items").orElseThrow().getList("Items").orElseThrow().add(item.copy());
+            duplicate
+                    .getCompound("Items")
+                    .orElseThrow()
+                    .getList("Items")
+                    .orElseThrow()
+                    .add(item.copy());
             rejectedUpdate(helper, be, duplicate);
             for (int slot : new int[] {-1, be.getItems().getSlots()}) {
                 CompoundTag outOfRange = valid.copy();
-                outOfRange.getCompound("Items").orElseThrow().getList("Items").orElseThrow()
-                        .getCompound(0).orElseThrow().putInt("Slot", slot);
+                outOfRange
+                        .getCompound("Items")
+                        .orElseThrow()
+                        .getList("Items")
+                        .orElseThrow()
+                        .getCompound(0)
+                        .orElseThrow()
+                        .putInt("Slot", slot);
                 rejectedUpdate(helper, be, outOfRange);
             }
             CompoundTag missingSlot = valid.copy();
-            missingSlot.getCompound("Items").orElseThrow().getList("Items").orElseThrow().getCompound(0).orElseThrow().remove("Slot");
+            missingSlot
+                    .getCompound("Items")
+                    .orElseThrow()
+                    .getList("Items")
+                    .orElseThrow()
+                    .getCompound(0)
+                    .orElseThrow()
+                    .remove("Slot");
             rejectedUpdate(helper, be, missingSlot);
             CompoundTag wrongSlotType = valid.copy();
-            wrongSlotType.getCompound("Items").orElseThrow().getList("Items").orElseThrow()
-                    .getCompound(0).orElseThrow().putByte("Slot", (byte) 0);
+            wrongSlotType
+                    .getCompound("Items")
+                    .orElseThrow()
+                    .getList("Items")
+                    .orElseThrow()
+                    .getCompound(0)
+                    .orElseThrow()
+                    .putByte("Slot", (byte) 0);
             rejectedUpdate(helper, be, wrongSlotType);
             CompoundTag mixedEntries = valid.copy();
-            mixedEntries.getCompound("Items").orElseThrow().getList("Items").orElseThrow()
+            mixedEntries
+                    .getCompound("Items")
+                    .orElseThrow()
+                    .getList("Items")
+                    .orElseThrow()
                     .add(StringTag.valueOf("not an item"));
             rejectedUpdate(helper, be, mixedEntries);
             CompoundTag invalidItem = valid.copy();
-            invalidItem.getCompound("Items").orElseThrow().getList("Items").orElseThrow()
-                    .getCompound(0).orElseThrow().putString("id", "somestacks:nonexistent_item");
+            invalidItem
+                    .getCompound("Items")
+                    .orElseThrow()
+                    .getList("Items")
+                    .orElseThrow()
+                    .getCompound(0)
+                    .orElseThrow()
+                    .putString("id", "somestacks:nonexistent_item");
             rejectedUpdate(helper, be, invalidItem);
             CompoundTag setAside = valid.copy();
-            setAside.getCompound("Items").orElseThrow().put(StackItemStorage.TAG_SET_ASIDE, new ListTag());
+            setAside.getCompound("Items")
+                    .orElseThrow()
+                    .put(StackItemStorage.TAG_SET_ASIDE, new ListTag());
             rejectedUpdate(helper, be, setAside);
             CompoundTag wrongType = valid.copy();
             wrongType.getCompound("Items").orElseThrow().putString("Items", "not a list");
@@ -200,15 +290,23 @@ public final class SynchronizationChecks {
             var source = new StackItemStorage(be.getItems().getSlots());
             source.setStackInSlot(1, new ItemStack(Items.DIAMOND));
             replacement.put("Items", source.save(helper.getLevel().registryAccess()));
-            check(be.loadClientUpdate(replacement, helper.getLevel().registryAccess()),
+            check(
+                    be.loadClientUpdate(replacement, helper.getLevel().registryAccess()),
                     "Valid current-format update rejected");
-            check(be.getItems().getStackInSlot(0).isEmpty(), "Old client slot survived replacement");
-            checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(), "Replacement client item");
+            check(
+                    be.getItems().getStackInSlot(0).isEmpty(),
+                    "Old client slot survived replacement");
+            checkEquals(
+                    Items.DIAMOND,
+                    be.getItems().getStackInSlot(1).getItem(),
+                    "Replacement client item");
         }
         helper.succeed();
     }
 
-    /** No in-game reproduction applies: malformed rotation metadata invalidates the entire update. */
+    /**
+     * No in-game reproduction applies: malformed rotation metadata invalidates the entire update.
+     */
     public static void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
         var be = GameTestScaffold.placeSingles(helper, ORIGIN);
         be.getItems().insertItem(0, new ItemStack(Items.STONE));
@@ -238,18 +336,29 @@ public final class SynchronizationChecks {
             invalid.putIntArray("CubeRotations", rotations);
             rejectedUpdate(helper, be, invalid);
         }
-        check(be.loadClientUpdate(valid, helper.getLevel().registryAccess()), "Valid rotations rejected");
+        check(
+                be.loadClientUpdate(valid, helper.getLevel().registryAccess()),
+                "Valid rotations rejected");
         helper.succeed();
     }
 
-    private static void rejectedUpdate(GameTestHelper helper, StackBlockEntity be, CompoundTag tag) {
+    private static void rejectedUpdate(
+            GameTestHelper helper, StackBlockEntity be, CompoundTag tag) {
         CompoundTag before = be.getUpdateTag(helper.getLevel().registryAccess());
-        check(!be.loadClientUpdate(tag, helper.getLevel().registryAccess()), "Malformed update accepted");
+        check(
+                !be.loadClientUpdate(tag, helper.getLevel().registryAccess()),
+                "Malformed update accepted");
         var registries = helper.getLevel().registryAccess();
         checkEquals(before, be.getUpdateTag(registries), "Rejected snapshot changed render state");
-        checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Rejected update changed slot 0");
-        check(be.getItems().getStackInSlot(1).isEmpty(), "Rejected update partially changed inventory");
-        check(!be.getItems().save(helper.getLevel().registryAccess()).contains("SetAside"),
+        checkEquals(
+                Items.STONE,
+                be.getItems().getStackInSlot(0).getItem(),
+                "Rejected update changed slot 0");
+        check(
+                be.getItems().getStackInSlot(1).isEmpty(),
+                "Rejected update partially changed inventory");
+        check(
+                !be.getItems().save(helper.getLevel().registryAccess()).contains("SetAside"),
                 "Client retained rejected entries for recovery");
     }
 

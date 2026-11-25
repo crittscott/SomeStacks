@@ -1,17 +1,16 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+
 import com.github.crittscott.somestacks.block.StorageStackBE;
+
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 
 /**
  * Storage pile behavior in a live level: deposits filling partial stacks before empty ones, growth
@@ -74,12 +73,9 @@ public final class StoragePileGameTests {
         ResourceHandler<ItemResource> lowerCapability = GameTestSupport.capability(lower);
         ResourceHandler<ItemResource> upperCapability = GameTestSupport.capability(upper);
 
-        checkEquals(12, lowerCapability.getAmountAsInt(0),
-                "Lower capability count");
-        checkEquals(12, upperCapability.getAmountAsInt(0),
-                "Upper capability count");
-        checkEquals(lowerCapability.size(), upperCapability.size(),
-                "Capability shape");
+        checkEquals(12, lowerCapability.getAmountAsInt(0), "Lower capability count");
+        checkEquals(12, upperCapability.getAmountAsInt(0), "Upper capability count");
+        checkEquals(lowerCapability.size(), upperCapability.size(), "Capability shape");
         helper.succeed();
     }
 
@@ -95,8 +91,7 @@ public final class StoragePileGameTests {
     }
 
     /** See {@link StoragePileChecks#breakingMiddleBlockDropsItsContentsAndSplitsThePile}. */
-    public static void breakingMiddleBlockDropsItsContentsAndSplitsThePile(
-            GameTestHelper helper) {
+    public static void breakingMiddleBlockDropsItsContentsAndSplitsThePile(GameTestHelper helper) {
         StoragePileChecks.breakingMiddleBlockDropsItsContentsAndSplitsThePile(helper);
     }
 
@@ -104,6 +99,7 @@ public final class StoragePileGameTests {
     public static void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
         StoragePileChecks.comparatorReservesZeroForAnEmptyPile(helper);
     }
+
     /** See {@link StoragePileChecks#comparatorContributionLoadsAndTracksMutations}. */
     public static void comparatorContributionLoadsAndTracksMutations(GameTestHelper helper) {
         StoragePileChecks.comparatorContributionLoadsAndTracksMutations(helper);
@@ -111,12 +107,12 @@ public final class StoragePileGameTests {
 
     /** See {@link StoragePileChecks#storageCapAppliesToPlayersAutomationAndSettlement}. */
     public static void storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper helper) {
-        StoragePileChecks.storageCapAppliesToPlayersAutomationAndSettlement(helper, GameTestSupport::offerAt);
+        StoragePileChecks.storageCapAppliesToPlayersAutomationAndSettlement(
+                helper, GameTestSupport::offerAt);
     }
 
     /** See {@link StoragePileChecks#storageDiskMigrationPreservesOverCapContents}. */
     public static void storageDiskMigrationPreservesOverCapContents(GameTestHelper helper) {
         StoragePileChecks.storageDiskMigrationPreservesOverCapContents(helper);
     }
-
 }
