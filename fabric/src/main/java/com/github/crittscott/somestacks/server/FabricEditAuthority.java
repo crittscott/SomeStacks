@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import eu.pb4.common.protection.api.CommonProtection;
+
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
@@ -16,7 +17,8 @@ import javax.annotation.Nullable;
 
 /**
  * Pure destination permission queries through Common Protection API, followed by Fabric's native
- * block-break lifecycle. Providers receive the same player identity for queries and committed edits.
+ * block-break lifecycle. Providers receive the same player identity for queries and committed
+ * edits.
  */
 public final class FabricEditAuthority implements EditAuthority {
     @Override
@@ -26,7 +28,8 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
-        return CommonProtection.canInteractBlock(player.level(), pos, player.getGameProfile(), player);
+        return CommonProtection.canInteractBlock(
+                player.level(), pos, player.getGameProfile(), player);
     }
 
     @Override
@@ -35,20 +38,30 @@ public final class FabricEditAuthority implements EditAuthority {
     }
 
     @Override
-    public boolean place(Player placer, ServerLevel level, BlockPos pos,
-                         BlockState state, Direction placedAgainst) {
+    public boolean place(
+            Player placer,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
+            Direction placedAgainst) {
         return mayPlace(placer, level, pos) && level.setBlock(pos, state, Block.UPDATE_ALL);
     }
 
     @Override
     public boolean vetoesRemoval(
-            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            ServerPlayer actor,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
             @Nullable BlockEntity blockEntity) {
-        boolean allowed = CommonProtection.canBreakBlock(level, pos, actor.getGameProfile(), actor)
-                && PlayerBlockBreakEvents.BEFORE.invoker()
-                .beforeBlockBreak(level, actor, pos, state, blockEntity);
+        boolean allowed =
+                CommonProtection.canBreakBlock(level, pos, actor.getGameProfile(), actor)
+                        && PlayerBlockBreakEvents.BEFORE
+                                .invoker()
+                                .beforeBlockBreak(level, actor, pos, state, blockEntity);
         if (!allowed) {
-            PlayerBlockBreakEvents.CANCELED.invoker()
+            PlayerBlockBreakEvents.CANCELED
+                    .invoker()
                     .onBlockBreakCanceled(level, actor, pos, state, blockEntity);
         }
         return !allowed;
@@ -56,9 +69,13 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public void afterRemoval(
-            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            ServerPlayer actor,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
             @Nullable BlockEntity blockEntity) {
-        PlayerBlockBreakEvents.AFTER.invoker()
+        PlayerBlockBreakEvents.AFTER
+                .invoker()
                 .afterBlockBreak(level, actor, pos, state, blockEntity);
     }
 }

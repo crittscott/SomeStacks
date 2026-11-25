@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.ServerConfig;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -10,15 +11,15 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.lighting.LightEngine;
 
 /**
  * Item handling shared by all three stack types: what a hand can accept, how a taken stack reaches
  * the player, how a broken block sheds its contents, and how stored items add up to a light level.
  */
 public final class ItemOps {
-    private ItemOps(){}
+    private ItemOps() {}
 
     /** Share of a stored block's own emission that a cell holding it contributes. */
     private static final int LIGHT_SHARE_DIVISOR = 4;
@@ -30,7 +31,8 @@ public final class ItemOps {
     public static boolean canTakeIntoHand(ItemStack hand, ItemStack offer) {
         if (offer.isEmpty()) return false;
         if (hand.isEmpty()) return true;
-        return ItemStack.isSameItemSameComponents(hand, offer) && hand.getCount() < hand.getMaxStackSize();
+        return ItemStack.isSameItemSameComponents(hand, offer)
+                && hand.getCount() < hand.getMaxStackSize();
     }
 
     /**
@@ -101,7 +103,9 @@ public final class ItemOps {
         return Math.min(totalLight, LightEngine.MAX_LEVEL);
     }
 
-    /** Whether the server config bars this item's namespace. Disabled contents may still be removed. */
+    /**
+     * Whether the server config bars this item's namespace. Disabled contents may still be removed.
+     */
     public static boolean isItemFromDisabledMod(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -116,9 +120,7 @@ public final class ItemOps {
         if (isItemFromDisabledMod(stack)) {
             String modId = BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace();
             player.displayClientMessage(
-                    Component.translatable("somestacks.message.disabled_mod", modId),
-                    true
-            );
+                    Component.translatable("somestacks.message.disabled_mod", modId), true);
             return true;
         }
         return false;
@@ -140,8 +142,7 @@ public final class ItemOps {
             ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
             player.displayClientMessage(
                     Component.translatable("somestacks.message.disabled_item", itemId.toString()),
-                    true
-            );
+                    true);
             return true;
         }
         return false;

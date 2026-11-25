@@ -2,10 +2,12 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.ForgeServerConfig;
 import com.github.crittscott.somestacks.ServerConfig;
-import java.io.IOException;
-import java.nio.file.Files;
+
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
+
+import java.io.IOException;
+import java.nio.file.Files;
 
 /** Forge delegates for loader-neutral JSON and server-policy checks. */
 public final class ConfigurationGameTests {
@@ -18,8 +20,7 @@ public final class ConfigurationGameTests {
     }
 
     /** See {@link ConfigurationChecks#overrideJsonUsesInclusiveBounds}. */
-    public static void overrideJsonUsesInclusiveBounds(
-            GameTestHelper helper) {
+    public static void overrideJsonUsesInclusiveBounds(GameTestHelper helper) {
         ConfigurationChecks.overrideJsonUsesInclusiveBounds(helper);
     }
 
@@ -30,7 +31,10 @@ public final class ConfigurationGameTests {
                 helper, GameTestSupport.playerFactory(helper));
     }
 
-    /** See {@link ConfigurationChecks#disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically}. */
+    /**
+     * See {@link
+     * ConfigurationChecks#disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically}.
+     */
     public static void disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(
             GameTestHelper helper) {
         ConfigurationChecks.disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(
@@ -42,6 +46,7 @@ public final class ConfigurationGameTests {
         ConfigurationChecks.serverCommandsEnforcePermissionsAndPersistEdits(
                 helper, GameTestSupport.playerFactory(helper));
     }
+
     /** See {@link ConfigurationChecks#ingotTagControlsBarAndSinglesAdmission}. */
     public static void ingotTagControlsBarAndSinglesAdmission(GameTestHelper helper) {
         ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(helper);
@@ -52,22 +57,22 @@ public final class ConfigurationGameTests {
      * loader-managed TOML, and reopen the world. The saved denial is exposed through common policy.
      */
     public static void nativeServerPolicyPersistsCommandLists(GameTestHelper helper) {
-        ForgeServerConfig config =
-                ForgeServerConfig.INSTANCE;
+        ForgeServerConfig config = ForgeServerConfig.INSTANCE;
         ServerConfig.Settings original = config.reload();
-        ServerConfig.Backend previous =
-                ServerConfig.backend();
+        ServerConfig.Backend previous = ServerConfig.backend();
         try {
             ServerConfig.install(config);
             ServerConfig.apply(original);
-            ServerConfig.addListEntry(
-                    ServerConfig.ListSetting.DISABLE_ITEMS, "minecraft:diamond");
-            GameTestScaffold.check(config.reload().disableItems().contains("minecraft:diamond"),
+            ServerConfig.addListEntry(ServerConfig.ListSetting.DISABLE_ITEMS, "minecraft:diamond");
+            GameTestScaffold.check(
+                    config.reload().disableItems().contains("minecraft:diamond"),
                     "Command edit did not reach native config values");
-            GameTestScaffold.check(Files.readString(config.path()).contains("minecraft:diamond"),
+            GameTestScaffold.check(
+                    Files.readString(config.path()).contains("minecraft:diamond"),
                     "Command edit did not reach the loader-managed TOML");
         } catch (IOException e) {
-            throw helper.assertionException(Component.literal("Could not read native config: " + e));
+            throw helper.assertionException(
+                    Component.literal("Could not read native config: " + e));
         } finally {
             config.save(original);
             ServerConfig.install(previous);
@@ -75,5 +80,4 @@ public final class ConfigurationGameTests {
         }
         helper.succeed();
     }
-
 }

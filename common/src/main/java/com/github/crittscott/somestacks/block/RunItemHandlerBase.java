@@ -14,15 +14,18 @@ public abstract class RunItemHandlerBase {
     }
 
     /**
-     * Bottom-up run positions, including one prospective block while growth is advertised.
-     * Without a server run, returns only this block's local slot count.
+     * Bottom-up run positions, including one prospective block while growth is advertised. Without
+     * a server run, returns only this block's local slot count.
      */
     public int getSlots() {
         StackRunItemAccess run = blockEntity.itemRun();
         return run != null ? run.advertisedSlots() : blockEntity.getItems().getSlots();
     }
 
-    /** Returns read-only live contents, or local contents without a run; headroom and invalid positions are empty. */
+    /**
+     * Returns read-only live contents, or local contents without a run; headroom and invalid
+     * positions are empty.
+     */
     @Nonnull
     public ItemStack getStackInSlot(int slot) {
         StackRunItemAccess run = blockEntity.itemRun();
@@ -91,12 +94,18 @@ public abstract class RunItemHandlerBase {
         }
     }
 
-    /** Per-position capacity before the offered item's own stack limit, independent of slot occupancy. */
+    /**
+     * Per-position capacity before the offered item's own stack limit, independent of slot
+     * occupancy.
+     */
     public int getSlotLimit(int slot) {
         return blockEntity.localSlotLimit();
     }
 
-    /** Admission only: ignores position, capacity, support, enablement for growth, and edit authority. */
+    /**
+     * Admission only: ignores position, capacity, support, enablement for growth, and edit
+     * authority.
+     */
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         return blockEntity.isStoredItemValid(stack);
     }

@@ -98,15 +98,15 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">FabricRunItemStorage</span>
 <span class="extends-implements">extends net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.FabricRunItemStorage.State&gt;
 implements net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;</span></div>
-<div class="block">Fabric Transfer API view over a complete Storage pile, Singles column, or Bar column.
- Slot changes are staged in the Fabric transaction and applied through the shared run mutations
- only after its outer commit, so an aborted transaction never edits the world. Admission and
- support are judged against the staged contents, so one transaction can fill a layer and then the
- layer above it, or empty a slot and refill it with something else.
+<div class="block">Fabric Transfer API view over a complete Storage pile, Singles column, or Bar column. Slot
+ changes are staged in the Fabric transaction and applied through the shared run mutations only
+ after its outer commit, so an aborted transaction never edits the world. Admission and support
+ are judged against the staged contents, so one transaction can fill a layer and then the layer
+ above it, or empty a slot and refill it with something else.
 
- <p>Singles and Bar accept one extraction position per transaction because each extraction
- remaps later positions: while it is staged no insertion is accepted, and it is refused while any
- other position has a staged change.</div>
+ <p>Singles and Bar accept one extraction position per transaction because each extraction remaps
+ later positions: while it is staged no insertion is accepted, and it is refused while any other
+ position has a staged change.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

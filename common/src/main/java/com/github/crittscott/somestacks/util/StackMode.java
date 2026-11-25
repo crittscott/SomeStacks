@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.util;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.DecoderException;
+
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
@@ -29,7 +30,8 @@ public enum StackMode {
     }
 
     public static StackMode fromOrdinal(int ordinal) {
-        if (ordinal < 0 || ordinal >= values().length) throw new DecoderException("Invalid stack mode: " + ordinal);
+        if (ordinal < 0 || ordinal >= values().length)
+            throw new DecoderException("Invalid stack mode: " + ordinal);
         return values()[ordinal];
     }
 
@@ -46,7 +48,8 @@ public enum StackMode {
             case STORAGE_STACK -> BlockType.STORAGE_STACK;
             case SINGLES_STACK -> BlockType.SINGLES_STACK;
             case BAR_STACK -> BlockType.BAR_STACK;
-            case TOGGLE_PERMANENT -> throw new IllegalStateException("TOGGLE_PERMANENT is not a block type");
+            case TOGGLE_PERMANENT ->
+                    throw new IllegalStateException("TOGGLE_PERMANENT is not a block type");
         };
     }
 }

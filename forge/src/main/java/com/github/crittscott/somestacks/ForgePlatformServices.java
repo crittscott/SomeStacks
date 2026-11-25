@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ForgeNetworking;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -21,7 +22,8 @@ public final class ForgePlatformServices implements PlatformServices.Backend {
 
     @Override
     public String modVersion(String namespace) {
-        return ModList.get().getModContainerById(namespace)
+        return ModList.get()
+                .getModContainerById(namespace)
                 .map(container -> container.getModInfo().getVersion().toString())
                 .orElse("unknown");
     }

@@ -45,6 +45,8 @@ The root `collectJars` task copies each enabled loader's already-built productio
 
 The build targets Minecraft 1.21.8. The configuration-only `gradlew.bat help --console=plain` check succeeds under Java 21 across `common`, `fabric`, `forge`, and `neoforge`, and the user has confirmed IntelliJ Gradle sync succeeds. Common and loader production source/API reviews identified no required adaptations from 1.21.6 to 1.21.8. Production sources remain the copied implementation; Forge and NeoForge GameTests use deferred test-function registration and test-instance JSON. Pack metadata still uses the 1.21.6 formats. Source compilation, GameTest execution, and runtime verification remain pending.
 
+Spotless formats the Java sources of every module and source set: `spotlessApply` runs google-java-format in AOSP style over code and javadoc, reorders imports, trims trailing whitespace, ends files with a newline, and skips `// spotless:off` / `// spotless:on` regions. `spotlessCheck` is not attached to `check`.
+
 `clean` empties `build/`; root `cleanDev` empties every project's `build/` and `run/`, deleting worlds, logs, and configs. Both retain the directories and Dropbox marks set by `../dropbox-ignore.ps1`. `../cleandevs.ps1` runs release checkouts and accepts `-Repos`.
 
 ## Exact build versions
@@ -67,6 +69,8 @@ The build targets Minecraft 1.21.8. The configuration-only `gradlew.bat help --c
 | Forge EventBus validator | `net.minecraftforge:eventbus-validator:7.0-beta.10` | Annotation processor for Forge production and GameTest sources |
 | NightConfig core and TOML | `com.electronwill.night-config:core:3.6.7`, `com.electronwill.night-config:toml:3.6.7` | Common compile-only; Fabric bundles and relocates |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
+| Spotless Gradle plugin | `8.12.0` | Runs the source formatter |
+| google-java-format | `2.0.0`, AOSP style | Java source and javadoc formatting; runs in the Gradle host JVM |
 
 The Java setting is exact only at the language/toolchain-major level. The repository does not pin a JDK vendor, distribution, or patch release, and it does not pin the host JVM that runs Gradle. Gradle core plugins such as `base` and `java` use Gradle `9.5.1` and therefore have no separate declared version.
 
@@ -89,7 +93,7 @@ These values do not select build tools, but they are versioned inputs consumed b
 
 ## Resolution and version authorities
 
-`gradle.properties` is the authority for the Minecraft, mapping, loader, API, compatibility, integration, and mod versions. The root `build.gradle` pins the three external Gradle plugins and JSR 305, `forge/build.gradle` pins the EventBus validator, and `gradle/wrapper/gradle-wrapper.properties` pins Gradle itself. The loader scripts consume the root properties for the game and loader dependencies.
+`gradle.properties` is the authority for the Minecraft, mapping, loader, API, compatibility, integration, formatter, and mod versions. The root `build.gradle` pins the four external Gradle plugins and JSR 305, `forge/build.gradle` pins the EventBus validator, and `gradle/wrapper/gradle-wrapper.properties` pins Gradle itself. The loader scripts consume the root properties for the game and loader dependencies.
 
 Plugin resolution uses Fabric Maven, Architectury Maven, Forge Maven, and the Gradle Plugin Portal. Every module declares Parchment Maven; the Fabric module also declares Nucleoid Maven (for the Common Protection API), and the NeoForge module also declares NeoForge Maven; Loom supplies its standard Minecraft repositories. Common and Fabric also declare Maven Central for NightConfig. There is no Gradle version catalog, dependency-lock state, dependency-verification metadata, exact JDK distribution, or wrapper-distribution checksum in the repository. The versions above do not lock transitive artifacts resolved by Gradle and Loom.
 

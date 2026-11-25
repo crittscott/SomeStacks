@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.ForgeRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
+
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -22,17 +23,21 @@ public final class ForgeClientSetup {
 
     public static void init(BusGroup modBus) {
         ForgeClientEvents.init();
-        EntityRenderersEvent.RegisterRenderers.getBus(modBus).addListener(ForgeClientSetup::onRegisterRenderers);
+        EntityRenderersEvent.RegisterRenderers.getBus(modBus)
+                .addListener(ForgeClientSetup::onRegisterRenderers);
         RegisterKeyMappingsEvent.getBus(modBus).addListener(ForgeClientSetup::onRegisterKeys);
-        RegisterClientReloadListenersEvent.getBus(modBus).addListener(ForgeClientSetup::onRegisterReloadListeners);
+        RegisterClientReloadListenersEvent.getBus(modBus)
+                .addListener(ForgeClientSetup::onRegisterReloadListeners);
         ClientPlayerNetworkEvent.LoggingIn.BUS.addListener(evt -> SomeStacksClient.onJoin());
         ClientPlayerNetworkEvent.LoggingOut.BUS.addListener(evt -> SomeStacksClient.onDisconnect());
         GameShuttingDownEvent.BUS.addListener(evt -> SomeStacksClient.onStopping());
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers evt) {
-        evt.registerBlockEntityRenderer(ForgeRegistry.STORAGE_STACK_BE.get(), GridStackBER::storage);
-        evt.registerBlockEntityRenderer(ForgeRegistry.SINGLES_STACK_BE.get(), GridStackBER::singles);
+        evt.registerBlockEntityRenderer(
+                ForgeRegistry.STORAGE_STACK_BE.get(), GridStackBER::storage);
+        evt.registerBlockEntityRenderer(
+                ForgeRegistry.SINGLES_STACK_BE.get(), GridStackBER::singles);
         evt.registerBlockEntityRenderer(ForgeRegistry.BAR_STACK_BE.get(), BarStackBER::new);
     }
 
@@ -43,9 +48,11 @@ public final class ForgeClientSetup {
     private static void onRegisterReloadListeners(RegisterClientReloadListenersEvent evt) {
         evt.registerReloadListener(new ItemRenderOverrides());
         evt.registerReloadListener(new BarTextureStore());
-        evt.registerReloadListener((ResourceManagerReloadListener) manager -> {
-            AutoRenderProfiles.onResourceReload();
-            CubeRenderHelper.onResourceReload();
-        });
+        evt.registerReloadListener(
+                (ResourceManagerReloadListener)
+                        manager -> {
+                            AutoRenderProfiles.onResourceReload();
+                            CubeRenderHelper.onResourceReload();
+                        });
     }
 }

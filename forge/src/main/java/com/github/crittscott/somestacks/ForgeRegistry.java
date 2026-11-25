@@ -8,6 +8,7 @@ import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -42,14 +43,29 @@ public final class ForgeRegistry {
     public static final DeferredRegister<SoundEvent> SOUNDS =
             DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, SomeStacksCommon.MODID);
 
-    public static final RegistryObject<Block> BAR_STACK_BLOCK = BLOCKS.register(CommonRegistry.BAR_STACK_BLOCK.getPath(),
-            () -> new BarStackBlock(StackBlock.barProperties().setId(blockKey(CommonRegistry.BAR_STACK_BLOCK))));
+    public static final RegistryObject<Block> BAR_STACK_BLOCK =
+            BLOCKS.register(
+                    CommonRegistry.BAR_STACK_BLOCK.getPath(),
+                    () ->
+                            new BarStackBlock(
+                                    StackBlock.barProperties()
+                                            .setId(blockKey(CommonRegistry.BAR_STACK_BLOCK))));
 
-    public static final RegistryObject<Block> SINGLES_STACK_BLOCK = BLOCKS.register(CommonRegistry.SINGLES_STACK_BLOCK.getPath(),
-            () -> new SinglesStackBlock(StackBlock.singlesProperties().setId(blockKey(CommonRegistry.SINGLES_STACK_BLOCK))));
+    public static final RegistryObject<Block> SINGLES_STACK_BLOCK =
+            BLOCKS.register(
+                    CommonRegistry.SINGLES_STACK_BLOCK.getPath(),
+                    () ->
+                            new SinglesStackBlock(
+                                    StackBlock.singlesProperties()
+                                            .setId(blockKey(CommonRegistry.SINGLES_STACK_BLOCK))));
 
-    public static final RegistryObject<Block> STORAGE_STACK_BLOCK = BLOCKS.register(CommonRegistry.STORAGE_STACK_BLOCK.getPath(),
-            () -> new StorageStackBlock(StackBlock.storageProperties().setId(blockKey(CommonRegistry.STORAGE_STACK_BLOCK))));
+    public static final RegistryObject<Block> STORAGE_STACK_BLOCK =
+            BLOCKS.register(
+                    CommonRegistry.STORAGE_STACK_BLOCK.getPath(),
+                    () ->
+                            new StorageStackBlock(
+                                    StackBlock.storageProperties()
+                                            .setId(blockKey(CommonRegistry.STORAGE_STACK_BLOCK))));
 
     static {
         sound(CommonRegistry.STORAGE_DEPOSIT_SOUND);
@@ -64,16 +80,28 @@ public final class ForgeRegistry {
     }
 
     public static final RegistryObject<BlockEntityType<BarStackBE>> BAR_STACK_BE =
-            BLOCK_ENTITIES.register(CommonRegistry.BAR_STACK_BE.getPath(),
-                    () -> new BlockEntityType<>(ForgeStackBlockEntities.Bar::new, Set.of(BAR_STACK_BLOCK.get())));
+            BLOCK_ENTITIES.register(
+                    CommonRegistry.BAR_STACK_BE.getPath(),
+                    () ->
+                            new BlockEntityType<>(
+                                    ForgeStackBlockEntities.Bar::new,
+                                    Set.of(BAR_STACK_BLOCK.get())));
 
     public static final RegistryObject<BlockEntityType<SinglesStackBE>> SINGLES_STACK_BE =
-            BLOCK_ENTITIES.register(CommonRegistry.SINGLES_STACK_BE.getPath(),
-                    () -> new BlockEntityType<>(ForgeStackBlockEntities.Singles::new, Set.of(SINGLES_STACK_BLOCK.get())));
+            BLOCK_ENTITIES.register(
+                    CommonRegistry.SINGLES_STACK_BE.getPath(),
+                    () ->
+                            new BlockEntityType<>(
+                                    ForgeStackBlockEntities.Singles::new,
+                                    Set.of(SINGLES_STACK_BLOCK.get())));
 
     public static final RegistryObject<BlockEntityType<StorageStackBE>> STORAGE_STACK_BE =
-            BLOCK_ENTITIES.register(CommonRegistry.STORAGE_STACK_BE.getPath(),
-                    () -> new BlockEntityType<>(ForgeStackBlockEntities.Storage::new, Set.of(STORAGE_STACK_BLOCK.get())));
+            BLOCK_ENTITIES.register(
+                    CommonRegistry.STORAGE_STACK_BE.getPath(),
+                    () ->
+                            new BlockEntityType<>(
+                                    ForgeStackBlockEntities.Storage::new,
+                                    Set.of(STORAGE_STACK_BLOCK.get())));
 
     private static ResourceKey<Block> blockKey(ResourceLocation id) {
         return ResourceKey.create(Registries.BLOCK, id);

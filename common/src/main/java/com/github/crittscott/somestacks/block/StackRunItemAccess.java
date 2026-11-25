@@ -22,8 +22,8 @@ public interface StackRunItemAccess {
 
     /**
      * How many of {@code stack} the named advertised position would accept if every run position
-     * held what {@code contents} reports for it. Admission, slot room and support read
-     * {@code contents}; growth into headroom is checked against the live world. This lets a staged
+     * held what {@code contents} reports for it. Admission, slot room and support read {@code
+     * contents}; growth into headroom is checked against the live world. This lets a staged
      * transaction ask about the contents it would commit rather than the contents the world holds.
      */
     int acceptsAt(int slot, ItemStack stack, IntFunction<ItemStack> contents);

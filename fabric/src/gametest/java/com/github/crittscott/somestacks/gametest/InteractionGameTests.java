@@ -1,24 +1,22 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.client.ClientGestures;
+
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-
-/**
- * Fabric delegates for loader-neutral interaction and validation checks.
- */
+/** Fabric delegates for loader-neutral interaction and validation checks. */
 public final class InteractionGameTests {
     private static final String TEMPLATE = FabricGameTestSupport.TEMPLATE;
 
@@ -44,7 +42,8 @@ public final class InteractionGameTests {
     /** See {@link InteractionChecks#interactionReadsOnlyTheMainHand}. */
     @GameTest(structure = TEMPLATE, maxTicks = 100)
     public void interactionReadsOnlyTheMainHand(GameTestHelper helper) {
-        InteractionChecks.interactionReadsOnlyTheMainHand(helper, FabricGameTestSupport.playerFactory(helper));
+        InteractionChecks.interactionReadsOnlyTheMainHand(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /**
@@ -58,7 +57,8 @@ public final class InteractionGameTests {
         player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.SHIELD));
         BlockHitResult miss = BlockHitResult.miss(Vec3.ZERO, Direction.NORTH, BlockPos.ZERO);
 
-        GameTestScaffold.check(ClientGestures.isEmptyMainHandAirClick(player, miss),
+        GameTestScaffold.check(
+                ClientGestures.isEmptyMainHandAirClick(player, miss),
                 "Occupied offhand blocked empty-main-hand mode cycling");
         helper.succeed();
     }
@@ -74,9 +74,13 @@ public final class InteractionGameTests {
     @GameTest(structure = TEMPLATE, maxTicks = 100)
     public void sneakingRotationsReachTheLoaderHook(GameTestHelper helper) {
         InteractionChecks.sneakingRotationsReachTheLoaderHook(
-                helper, FabricGameTestSupport.playerFactory(helper), (player, hit) ->
-                        UseBlockCallback.EVENT.invoker().interact(
-                                player, player.level(), InteractionChecks.HAND, hit)
+                helper,
+                FabricGameTestSupport.playerFactory(helper),
+                (player, hit) ->
+                        UseBlockCallback.EVENT
+                                        .invoker()
+                                        .interact(
+                                                player, player.level(), InteractionChecks.HAND, hit)
                                 == InteractionResult.SUCCESS);
     }
 
@@ -138,7 +142,8 @@ public final class InteractionGameTests {
     /** See {@link InteractionChecks#extractionEventsFollowBlockSurvival}. */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void extractionEventsFollowBlockSurvival(GameTestHelper helper) {
-        InteractionChecks.extractionEventsFollowBlockSurvival(helper, FabricGameTestSupport.playerFactory(helper));
+        InteractionChecks.extractionEventsFollowBlockSurvival(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link SynchronizationChecks#configSnapshotsRoundTripAndPublishAtomically}. */
@@ -156,19 +161,22 @@ public final class InteractionGameTests {
     /** See {@link ClientGestureChecks#blockRulesRespectPrecedenceAndHands}. */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void blockRulesRespectPrecedenceAndHands(GameTestHelper helper) {
-        ClientGestureChecks.blockRulesRespectPrecedenceAndHands(helper, FabricGameTestSupport.playerFactory(helper));
+        ClientGestureChecks.blockRulesRespectPrecedenceAndHands(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link ClientGestureChecks#fullTopFacesFallThroughToPlacement}. */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void fullTopFacesFallThroughToPlacement(GameTestHelper helper) {
-        ClientGestureChecks.fullTopFacesFallThroughToPlacement(helper, FabricGameTestSupport.playerFactory(helper));
+        ClientGestureChecks.fullTopFacesFallThroughToPlacement(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link ClientGestureChecks#airRulesAndDisabledModeCycling}. */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void airRulesAndDisabledModeCycling(GameTestHelper helper) {
-        ClientGestureChecks.airRulesAndDisabledModeCycling(helper, FabricGameTestSupport.playerFactory(helper));
+        ClientGestureChecks.airRulesAndDisabledModeCycling(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link ClientGestureChecks#gestureSyncSendsChangesAndResets}. */
@@ -176,5 +184,4 @@ public final class InteractionGameTests {
     public void gestureSyncSendsChangesAndResets(GameTestHelper helper) {
         ClientGestureChecks.gestureSyncSendsChangesAndResets(helper);
     }
-
 }

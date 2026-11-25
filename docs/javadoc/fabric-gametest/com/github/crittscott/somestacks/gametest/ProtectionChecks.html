@@ -245,8 +245,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)" class="member-name-link">singlesGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="ProtectionChecks.OfferAt.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.OfferAt</a>&nbsp;offer)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
- through item automation; it accepts nothing and creates no block.</div>
+<div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and
+ insert through item automation; it accepts nothing and creates no block.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)" class="member-name-link">storageGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
@@ -287,7 +287,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">adventureExtractionKeepsEmptyBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Adventure players may extract contents but cannot remove the emptied block. To reproduce
- in-game: enter Adventure mode and empty a Singles Stack; the item is returned and its block remains.</div>
+ in-game: enter Adventure mode and empty a Singles Stack; the item is returned and its block
+ remains.</div>
 </section>
 </li>
 <li>
@@ -296,8 +297,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementReplacesClickedVegetation</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Ordinary new placement replaces clicked vegetation instead of floating above it. To reproduce
- in-game: hold dirt and the modifier in Storage mode and click short grass, thin snow, then full snow from above.
- Grass and thin snow are replaced; full snow stays below the new stack.</div>
+ in-game: hold dirt and the modifier in Storage mode and click short grass, thin snow, then
+ full snow from above. Grass and thin snow are replaced; full snow stays below the new stack.</div>
 </section>
 </li>
 <li>
@@ -334,9 +335,9 @@ loadScripts(document, 'script');</script>
 <h3>creativeDepositFillsTheStackWithoutSpendingTheHand</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">creativeDepositFillsTheStackWithoutSpendingTheHand</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Creative deposits fill a stack without consuming the held items. To reproduce in-game:
- switch to Creative, hold the modifier, and deposit a full held stack into Storage. Storage
- receives the items while the hand retains its original count.</div>
+<div class="block">Creative deposits fill a stack without consuming the held items. To reproduce in-game: switch
+ to Creative, hold the modifier, and deposit a full held stack into Storage. Storage receives
+ the items while the hand retains its original count.</div>
 </section>
 </li>
 <li>
@@ -345,8 +346,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementIntoWaterKeepsTheWater</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Placing a stack into water waterlogs it instead of removing the fluid. To reproduce in-game:
- hold the modifier and place a new stack into a water source. The block appears waterlogged and
- the water remains present.</div>
+ hold the modifier and place a new stack into a water source. The block appears waterlogged
+ and the water remains present.</div>
 </section>
 </li>
 <li>
@@ -363,10 +364,10 @@ loadScripts(document, 'script');</script>
 <h3>adjacentDepositsFillGroundedCells</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">adjacentDepositsFillGroundedCells</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Empty grounded cells remain depositable beside occupied cells in both stack types.
- To reproduce in-game: place a Singles or Bar Stack on stone, put an item in one bottom cell,
- then hold the modifier and aim down through two other empty bottom cells at the stone.
- Each deposit fills the aimed cell without changing the first item or adding an upper layer.</div>
+<div class="block">Empty grounded cells remain depositable beside occupied cells in both stack types. To
+ reproduce in-game: place a Singles or Bar Stack on stone, put an item in one bottom cell,
+ then hold the modifier and aim down through two other empty bottom cells at the stone. Each
+ deposit fills the aimed cell without changing the first item or adding an upper layer.</div>
 </section>
 </li>
 <li>
@@ -400,8 +401,8 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce in-game: deny stack placement over a modded replaceable container containing
  items. The refused placement restores the container's contents. This stages the rollback
  directly with a chest so no test-only replaceable block registration is needed. A second
- rollback over an empty permanent Storage Stack must restore permanence without scheduling
- a new placement/settlement tick.</div>
+ rollback over an empty permanent Storage Stack must restore permanence without scheduling a
+ new placement/settlement tick.</div>
 </section>
 </li>
 <li>
@@ -412,7 +413,8 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;installVeto,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;removeVeto)</span></div>
 <div class="block">To reproduce in-game: face an observer toward a denied placement position. A rejected
- placement produces no observer pulse; after permitting the same placement, the observer pulses.</div>
+ placement produces no observer pulse; after permitting the same placement, the observer
+ pulses.</div>
 </section>
 </li>
 <li>
@@ -471,8 +473,8 @@ loadScripts(document, 'script');</script>
 <h3>singlesGrowthAnswersToProtectionInSimulationAndCommit</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesGrowthAnswersToProtectionInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="ProtectionChecks.OfferAt.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.OfferAt</a>&nbsp;offer)</span></div>
-<div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
- through item automation; it accepts nothing and creates no block.</div>
+<div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and
+ insert through item automation; it accepts nothing and creates no block.</div>
 </section>
 </li>
 <li>

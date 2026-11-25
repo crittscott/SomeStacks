@@ -7,6 +7,7 @@ import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,14 +25,21 @@ import java.util.function.Function;
 public final class FabricRegistry {
     private FabricRegistry() {}
 
-    public static final Block BAR_STACK_BLOCK = registerBlock(CommonRegistry.BAR_STACK_BLOCK, BarStackBlock::new,
-            StackBlock.barProperties());
+    public static final Block BAR_STACK_BLOCK =
+            registerBlock(
+                    CommonRegistry.BAR_STACK_BLOCK, BarStackBlock::new, StackBlock.barProperties());
 
-    public static final Block SINGLES_STACK_BLOCK = registerBlock(CommonRegistry.SINGLES_STACK_BLOCK, SinglesStackBlock::new,
-            StackBlock.singlesProperties());
+    public static final Block SINGLES_STACK_BLOCK =
+            registerBlock(
+                    CommonRegistry.SINGLES_STACK_BLOCK,
+                    SinglesStackBlock::new,
+                    StackBlock.singlesProperties());
 
-    public static final Block STORAGE_STACK_BLOCK = registerBlock(CommonRegistry.STORAGE_STACK_BLOCK, StorageStackBlock::new,
-            StackBlock.storageProperties());
+    public static final Block STORAGE_STACK_BLOCK =
+            registerBlock(
+                    CommonRegistry.STORAGE_STACK_BLOCK,
+                    StorageStackBlock::new,
+                    StackBlock.storageProperties());
 
     static {
         registerSound(CommonRegistry.STORAGE_DEPOSIT_SOUND);
@@ -45,36 +53,43 @@ public final class FabricRegistry {
         registerSound(CommonRegistry.BAR_EXTRACT_SOUND);
     }
 
-    public static final BlockEntityType<BarStackBE> BAR_STACK_BE = registerBlockEntity(
-            CommonRegistry.BAR_STACK_BE,
-            FabricBlockEntityTypeBuilder.create(BarStackBE::new, BAR_STACK_BLOCK).build());
+    public static final BlockEntityType<BarStackBE> BAR_STACK_BE =
+            registerBlockEntity(
+                    CommonRegistry.BAR_STACK_BE,
+                    FabricBlockEntityTypeBuilder.create(BarStackBE::new, BAR_STACK_BLOCK).build());
 
-    public static final BlockEntityType<SinglesStackBE> SINGLES_STACK_BE = registerBlockEntity(
-            CommonRegistry.SINGLES_STACK_BE,
-            FabricBlockEntityTypeBuilder.create(
-                    SinglesStackBE::new, SINGLES_STACK_BLOCK).build());
+    public static final BlockEntityType<SinglesStackBE> SINGLES_STACK_BE =
+            registerBlockEntity(
+                    CommonRegistry.SINGLES_STACK_BE,
+                    FabricBlockEntityTypeBuilder.create(SinglesStackBE::new, SINGLES_STACK_BLOCK)
+                            .build());
 
-    public static final BlockEntityType<StorageStackBE> STORAGE_STACK_BE = registerBlockEntity(
-            CommonRegistry.STORAGE_STACK_BE,
-            FabricBlockEntityTypeBuilder.create(
-                    StorageStackBE::new, STORAGE_STACK_BLOCK).build());
+    public static final BlockEntityType<StorageStackBE> STORAGE_STACK_BE =
+            registerBlockEntity(
+                    CommonRegistry.STORAGE_STACK_BE,
+                    FabricBlockEntityTypeBuilder.create(StorageStackBE::new, STORAGE_STACK_BLOCK)
+                            .build());
 
     public static void init() {
         // Calling this method initializes the class and registers its values.
     }
 
-    private static Block registerBlock(ResourceLocation id, Function<BlockBehaviour.Properties, Block> factory,
-                                       BlockBehaviour.Properties properties) {
+    private static Block registerBlock(
+            ResourceLocation id,
+            Function<BlockBehaviour.Properties, Block> factory,
+            BlockBehaviour.Properties properties) {
         ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, id);
-        return Registry.register(BuiltInRegistries.BLOCK, key, factory.apply(properties.setId(key)));
+        return Registry.register(
+                BuiltInRegistries.BLOCK, key, factory.apply(properties.setId(key)));
     }
 
-    private static <T extends BlockEntityType<?>> T registerBlockEntity(ResourceLocation id, T type) {
+    private static <T extends BlockEntityType<?>> T registerBlockEntity(
+            ResourceLocation id, T type) {
         return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id, type);
     }
 
     private static void registerSound(ResourceLocation id) {
-        Registry.register(BuiltInRegistries.SOUND_EVENT, id,
-                SoundEvent.createVariableRangeEvent(id));
+        Registry.register(
+                BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 }

@@ -1,27 +1,16 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.ForgeRegistry;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
+
 import com.github.crittscott.somestacks.block.BarStackBE;
-import net.minecraft.core.BlockPos;
+
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.Result;
-import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.items.IItemHandler;
-
-import java.util.function.Consumer;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedNear;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.heldAt;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
 
 /**
  * Bar support and collapse in a live level: item validity, grounding at the bottom of a column,
@@ -77,21 +66,22 @@ public final class BarColumnGameTests {
 
     /**
      * To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
-     * positions; unsupported positions refuse insertion while a supported empty position accepts it.
+     * positions; unsupported positions refuse insertion while a supported empty position accepts
+     * it.
      */
     public static void capabilityInsertionAnswersForThePositionItIsGiven(GameTestHelper helper) {
         AutomationChecks.barInsertionAnswersForThePositionItIsGiven(helper);
     }
 
     /**
-     * Validity gates insertion only, so a bar stored before a data pack
-     * reload narrowed the rule has to survive the backfill an automated extraction moves it through.
-     * A stick stands in for such a bar: a Bar Stack refuses one from a deposit, but may be holding
-     * contents the current ingot set no longer covers.
+     * Validity gates insertion only, so a bar stored before a data pack reload narrowed the rule
+     * has to survive the backfill an automated extraction moves it through. A stick stands in for
+     * such a bar: a Bar Stack refuses one from a deposit, but may be holding contents the current
+     * ingot set no longer covers.
      *
      * <p>To reproduce in-game: fill a Bar Stack, narrow the ingot rule so one stored bar is no
-     * longer accepted, then automate extraction below it. Backfill retains or drops that legacy
-     * bar without deleting or changing it.
+     * longer accepted, then automate extraction below it. Backfill retains or drops that legacy bar
+     * without deleting or changing it.
      */
     public static void backfillKeepsABarItWouldNoLongerAccept(GameTestHelper helper) {
         AutomationChecks.barBackfillKeepsAStoredItemNoLongerAccepted(helper);
@@ -111,7 +101,9 @@ public final class BarColumnGameTests {
 
         checkEquals(barItem, simulated.getItem(), "Simulated item");
         checkEquals(1, simulated.getCount(), "Simulated count");
-        checkEquals(barItem, bars.getItems().getStackInSlot(0).getItem(),
+        checkEquals(
+                barItem,
+                bars.getItems().getStackInSlot(0).getItem(),
                 "Simulation mutated contents");
         helper.succeed();
     }

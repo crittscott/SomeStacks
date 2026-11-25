@@ -7,6 +7,7 @@ import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.mojang.brigadier.CommandDispatcher;
+
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
@@ -30,7 +31,8 @@ public final class SomeStacksServer {
     public static synchronized void onServerStarting(MinecraftServer server) {
         runningServer = server;
         StackDataMigration.beginSession();
-        if (!(ServerConfig.backend() instanceof TomlServerConfig)) ServerConfigMigration.reportLegacyIngots(server);
+        if (!(ServerConfig.backend() instanceof TomlServerConfig))
+            ServerConfigMigration.reportLegacyIngots(server);
         ServerConfig.loadFor(server);
         publishedPolicy = ServerConfig.settings();
         clientSnapshot = ConfigSyncPkt.fromSettings(publishedPolicy);
@@ -42,10 +44,15 @@ public final class SomeStacksServer {
         ServerConfig.Settings policy = ServerConfig.settings();
         SomeStacksCommon.LOGGER.info(
                 "{} server policy: Storage {}, Singles {}, Bar {}; maximum run height {}; galleries {} at permission {}; {} disabled mods, {} disabled items",
-                action, enabledLabel(policy.enableStorageStackBlock()), enabledLabel(policy.enableSinglesStackBlock()),
-                enabledLabel(policy.enableBarStackBlock()), policy.maxPileHeight(),
-                enabledLabel(policy.galleryEnabled()), policy.galleryPermissionLevel(),
-                policy.disableMods().size(), policy.disableItems().size());
+                action,
+                enabledLabel(policy.enableStorageStackBlock()),
+                enabledLabel(policy.enableSinglesStackBlock()),
+                enabledLabel(policy.enableBarStackBlock()),
+                policy.maxPileHeight(),
+                enabledLabel(policy.galleryEnabled()),
+                policy.galleryPermissionLevel(),
+                policy.disableMods().size(),
+                policy.disableItems().size());
     }
 
     private static String enabledLabel(boolean enabled) {
@@ -116,8 +123,7 @@ public final class SomeStacksServer {
 
     /** Registers server commands with the loader's dispatcher and current registry context. */
     public static void registerCommands(
-            CommandDispatcher<CommandSourceStack> dispatcher,
-            CommandBuildContext buildContext) {
+            CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         SsCommand.register(dispatcher, buildContext);
     }
 }

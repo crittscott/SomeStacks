@@ -1,10 +1,11 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.block.StackBlockEntity;
+
 import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -16,40 +17,49 @@ import net.neoforged.neoforge.items.IItemHandler;
 import java.util.function.Function;
 
 /**
- * NeoForge-native scaffolding for the GameTests: {@code IItemHandler}
- * capability access through {@code Capabilities.ItemHandler.BLOCK}, and the level's fake player.
- * Everything loader-neutral lives in {@link GameTestScaffold}.
+ * NeoForge-native scaffolding for the GameTests: {@code IItemHandler} capability access through
+ * {@code Capabilities.ItemHandler.BLOCK}, and the level's fake player. Everything loader-neutral
+ * lives in {@link GameTestScaffold}.
  */
 public final class GameTestSupport {
     private GameTestSupport() {}
 
     public static IItemHandler capability(BlockEntity blockEntity) {
         IItemHandler handler = handlerOn(blockEntity, null);
-        GameTestScaffold.check(handler != null,
-                "Missing item-handler capability at " + blockEntity.getBlockPos());
+        GameTestScaffold.check(
+                handler != null, "Missing item-handler capability at " + blockEntity.getBlockPos());
         return handler;
     }
 
     /** Shared scenario adapter: accepted count, with an explicit commit flag. */
-    public static int offerAt(StackBlockEntity blockEntity, int slot, ItemStack stack, boolean commit) {
-        return stack.getCount() - capability(blockEntity).insertItem(slot, stack, !commit).getCount();
+    public static int offerAt(
+            StackBlockEntity blockEntity, int slot, ItemStack stack, boolean commit) {
+        return stack.getCount()
+                - capability(blockEntity).insertItem(slot, stack, !commit).getCount();
     }
 
-    /** Whether the whole-run item handler is exposed on {@code side}; {@code null} is the sideless query. */
+    /**
+     * Whether the whole-run item handler is exposed on {@code side}; {@code null} is the sideless
+     * query.
+     */
     public static boolean capabilityPresent(BlockEntity blockEntity, Direction side) {
         return handlerOn(blockEntity, side) != null;
     }
 
     private static IItemHandler handlerOn(BlockEntity blockEntity, Direction side) {
-        return ((ServerLevel) blockEntity.getLevel()).getCapability(
-                Capabilities.ItemHandler.BLOCK,
-                blockEntity.getBlockPos(),
-                blockEntity.getBlockState(),
-                blockEntity,
-                side);
+        return ((ServerLevel) blockEntity.getLevel())
+                .getCapability(
+                        Capabilities.ItemHandler.BLOCK,
+                        blockEntity.getBlockPos(),
+                        blockEntity.getBlockState(),
+                        blockEntity,
+                        side);
     }
 
-    /** {@link GameTestScaffold#count} for a real NeoForge capability, as {@link #capability} returns. */
+    /**
+     * {@link GameTestScaffold#count} for a real NeoForge capability, as {@link #capability}
+     * returns.
+     */
     public static int count(IItemHandler handler, Item item) {
         int total = 0;
         for (int slot = 0; slot < handler.getSlots(); slot++) {
@@ -62,9 +72,9 @@ public final class GameTestSupport {
     }
 
     /**
-     * The level's shared fake player, standing in for automation. This is the same actor
-     * {@link com.github.crittscott.somestacks.server.NeoForgeEditAuthority} uses, and NeoForge still
-     * ships {@code FakePlayerFactory}, so there is nothing to reconstruct by hand.
+     * The level's shared fake player, standing in for automation. This is the same actor {@link
+     * com.github.crittscott.somestacks.server.NeoForgeEditAuthority} uses, and NeoForge still ships
+     * {@code FakePlayerFactory}, so there is nothing to reconstruct by hand.
      */
     public static ServerPlayer fakePlayer(ServerLevel level) {
         return FakePlayerFactory.getMinecraft(level);

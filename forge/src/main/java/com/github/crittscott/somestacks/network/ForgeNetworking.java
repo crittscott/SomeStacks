@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -22,27 +23,33 @@ public final class ForgeNetworking {
 
     public static SimpleChannel CHANNEL;
 
-    private static final StreamCodec<RegistryFriendlyByteBuf, GestureStatePkt>
-            GESTURE_STATE_CODEC = StreamCodec.of(
-                    GestureStatePkt.STREAM_CODEC::encode,
-                    GestureStatePkt.STREAM_CODEC::decode);
+    private static final StreamCodec<RegistryFriendlyByteBuf, GestureStatePkt> GESTURE_STATE_CODEC =
+            StreamCodec.of(
+                    GestureStatePkt.STREAM_CODEC::encode, GestureStatePkt.STREAM_CODEC::decode);
 
     public static void init() {
-        CHANNEL = ChannelBuilder
-                .named(ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "main"))
-                .networkProtocolVersion(SomeStacksCommon.PROTOCOL_VERSION)
-                .clientAcceptedVersions(Channel.VersionTest.exact(SomeStacksCommon.PROTOCOL_VERSION))
-                .serverAcceptedVersions(Channel.VersionTest.exact(SomeStacksCommon.PROTOCOL_VERSION))
-                .simpleChannel();
+        CHANNEL =
+                ChannelBuilder.named(
+                                ResourceLocation.fromNamespaceAndPath(
+                                        SomeStacksCommon.MODID, "main"))
+                        .networkProtocolVersion(SomeStacksCommon.PROTOCOL_VERSION)
+                        .clientAcceptedVersions(
+                                Channel.VersionTest.exact(SomeStacksCommon.PROTOCOL_VERSION))
+                        .serverAcceptedVersions(
+                                Channel.VersionTest.exact(SomeStacksCommon.PROTOCOL_VERSION))
+                        .simpleChannel();
 
         CHANNEL.protocol(NetworkProtocol.PLAY)
                 .serverbound()
-                .addMain(GestureStatePkt.class, GESTURE_STATE_CODEC,
+                .addMain(
+                        GestureStatePkt.class,
+                        GESTURE_STATE_CODEC,
                         ForgePacketHandlers::handleGestureState)
                 .clientbound()
-                .addMain(ConfigSyncPkt.class, ConfigSyncPkt.STREAM_CODEC,
+                .addMain(
+                        ConfigSyncPkt.class,
+                        ConfigSyncPkt.STREAM_CODEC,
                         ForgePacketHandlers::handleClient)
                 .build();
     }
-
 }

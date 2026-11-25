@@ -1,28 +1,5 @@
 package com.github.crittscott.somestacks.gametest;
 
-import net.minecraft.world.level.block.Block;
-import com.github.crittscott.somestacks.client.ClientGestures;
-import com.github.crittscott.somestacks.client.ClientServerSettings;
-import com.github.crittscott.somestacks.network.GestureStatePkt;
-import com.github.crittscott.somestacks.util.BlockType;
-import com.github.crittscott.somestacks.util.StackMode;
-import com.github.crittscott.somestacks.util.StackGesture;
-import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
@@ -31,12 +8,44 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBa
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 
-/** Client decision and state checks with explicit hit classification, runnable without a client singleton. */
+import com.github.crittscott.somestacks.client.ClientGestures;
+import com.github.crittscott.somestacks.client.ClientServerSettings;
+import com.github.crittscott.somestacks.network.GestureStatePkt;
+import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.StackGesture;
+import com.github.crittscott.somestacks.util.StackMode;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+/**
+ * Client decision and state checks with explicit hit classification, runnable without a client
+ * singleton.
+ */
 public final class ClientGestureChecks {
     private ClientGestureChecks() {}
 
-    private record Click(int target, Item held, boolean shift, boolean modifier, StackMode mode,
-                         boolean consumed) {}
+    private record Click(
+            int target,
+            Item held,
+            boolean shift,
+            boolean modifier,
+            StackMode mode,
+            boolean consumed) {}
 
     /**
      * Only the first matching main-hand rule claims a block click. To reproduce in-game: try plain
@@ -51,29 +60,54 @@ public final class ClientGestureChecks {
         var bars = placeBar(helper, ORIGIN.east(6));
         BlockPos ordinary = helper.absolutePos(ORIGIN.south(3));
         helper.getLevel().setBlock(ordinary, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
-        BlockPos[] targets = {storage.getBlockPos(), singles.getBlockPos(), bars.getBlockPos(), ordinary};
+        BlockPos[] targets = {
+            storage.getBlockPos(), singles.getBlockPos(), bars.getBlockPos(), ordinary
+        };
         List<Click> cases = new ArrayList<>();
         for (int target = 0; target < 4; target++) {
             for (Item held : new Item[] {Items.AIR, Items.APPLE}) {
-                cases.add(new Click(target, held, false, false, StackMode.STORAGE_STACK,
-                        target < 3));
+                cases.add(
+                        new Click(target, held, false, false, StackMode.STORAGE_STACK, target < 3));
                 cases.add(new Click(target, held, true, false, StackMode.STORAGE_STACK, false));
-                cases.add(new Click(target, held, false, true, StackMode.STORAGE_STACK,
-                        held != Items.AIR));
-                cases.add(new Click(target, held, false, true, StackMode.TOGGLE_PERMANENT,
-                        held == Items.AIR && target == 0));
+                cases.add(
+                        new Click(
+                                target,
+                                held,
+                                false,
+                                true,
+                                StackMode.STORAGE_STACK,
+                                held != Items.AIR));
+                cases.add(
+                        new Click(
+                                target,
+                                held,
+                                false,
+                                true,
+                                StackMode.TOGGLE_PERMANENT,
+                                held == Items.AIR && target == 0));
                 cases.add(new Click(target, held, true, true, StackMode.STORAGE_STACK, false));
             }
             for (boolean modifier : new boolean[] {false, true}) {
-                cases.add(new Click(target, Items.REDSTONE_TORCH, true, modifier, StackMode.STORAGE_STACK,
-                        target < 2));
-                cases.add(new Click(target, Items.SOUL_TORCH, true, modifier, StackMode.STORAGE_STACK,
-                        target == 1));
+                cases.add(
+                        new Click(
+                                target,
+                                Items.REDSTONE_TORCH,
+                                true,
+                                modifier,
+                                StackMode.STORAGE_STACK,
+                                target < 2));
+                cases.add(
+                        new Click(
+                                target,
+                                Items.SOUL_TORCH,
+                                true,
+                                modifier,
+                                StackMode.STORAGE_STACK,
+                                target == 1));
             }
         }
         cases.add(new Click(0, Items.AIR, true, true, StackMode.TOGGLE_PERMANENT, true));
-        cases.add(new Click(0, Items.REDSTONE_TORCH, true, true, StackMode.TOGGLE_PERMANENT,
-                true));
+        cases.add(new Click(0, Items.REDSTONE_TORCH, true, true, StackMode.TOGGLE_PERMANENT, true));
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
         ItemStack originalOffhand = player.getOffhandItem().copy();
         boolean originalShift = player.isShiftKeyDown();
@@ -83,11 +117,22 @@ public final class ClientGestureChecks {
                 player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(click.held()));
                 player.setShiftKeyDown(click.shift());
                 for (InteractionHand hand : InteractionHand.values()) {
-                    StackGesture gesture = StackGesture.classify(
-                            BlockType.of(helper.getLevel().getBlockState(targets[click.target()]).getBlock()),
-                            click.mode(), click.modifier(), click.shift(), player.getMainHandItem(), true, hand);
+                    StackGesture gesture =
+                            StackGesture.classify(
+                                    BlockType.of(
+                                            helper.getLevel()
+                                                    .getBlockState(targets[click.target()])
+                                                    .getBlock()),
+                                    click.mode(),
+                                    click.modifier(),
+                                    click.shift(),
+                                    player.getMainHandItem(),
+                                    true,
+                                    hand);
                     boolean expected = hand == InteractionHand.MAIN_HAND && click.consumed();
-                    checkEquals(expected, gesture.consumesLocalUse(player.getMainHandItem()),
+                    checkEquals(
+                            expected,
+                            gesture.consumesLocalUse(player.getMainHandItem()),
                             "Cancellation for " + click + " / " + hand);
                 }
             }
@@ -107,10 +152,10 @@ public final class ClientGestureChecks {
     }
 
     /**
-     * Modified top-face clicks are consumed for both full and partially filled stacks.
-     * To reproduce in-game: fill a Singles or Bar top cell and modifier-click its top face while
-     * holding an eligible item. Repeat with an empty supported cell. Both clicks consume the client
-     * gesture; server interaction checks cover the destination and resulting world edit.
+     * Modified top-face clicks are consumed for both full and partially filled stacks. To reproduce
+     * in-game: fill a Singles or Bar top cell and modifier-click its top face while holding an
+     * eligible item. Repeat with an empty supported cell. Both clicks consume the client gesture;
+     * server interaction checks cover the destination and resulting world edit.
      */
     public static void fullTopFacesFallThroughToPlacement(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -127,7 +172,10 @@ public final class ClientGestureChecks {
             for (var be : List.of(storage, singles, bars)) {
                 Item item = be == bars ? firstBarItem() : Items.APPLE;
                 player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item));
-                player.setPos(be.getBlockPos().getX() + 0.125, be.getBlockPos().getY() + 2, be.getBlockPos().getZ() + 0.125);
+                player.setPos(
+                        be.getBlockPos().getX() + 0.125,
+                        be.getBlockPos().getY() + 2,
+                        be.getBlockPos().getZ() + 0.125);
                 player.setXRot(90);
                 player.setYRot(0);
                 if (be != storage) {
@@ -151,17 +199,23 @@ public final class ClientGestureChecks {
     }
 
     private static void assertConsumed(ServerPlayer player, BlockPos pos) {
-        StackGesture gesture = StackGesture.classify(BlockType.of(player.level().getBlockState(pos).getBlock()),
-                StackMode.STORAGE_STACK, true, player.isShiftKeyDown(), player.getMainHandItem(),
-                true, InteractionHand.MAIN_HAND);
+        StackGesture gesture =
+                StackGesture.classify(
+                        BlockType.of(player.level().getBlockState(pos).getBlock()),
+                        StackMode.STORAGE_STACK,
+                        true,
+                        player.isShiftKeyDown(),
+                        player.getMainHandItem(),
+                        true,
+                        InteractionHand.MAIN_HAND);
         check(gesture.consumesLocalUse(player.getMainHandItem()), "Claimed click not consumed");
     }
 
     /**
-     * Air cycling distinguishes hit type and hand, skips disabled types, and always retains permanence.
-     * To reproduce in-game: hold the modifier and click air with empty and occupied main hands, also
-     * holding an off-hand item. Modes cycle only from the main hand, and disabled types are skipped.
-     * Clicking a block must not cycle the mode.
+     * Air cycling distinguishes hit type and hand, skips disabled types, and always retains
+     * permanence. To reproduce in-game: hold the modifier and click air with empty and occupied
+     * main hands, also holding an off-hand item. Modes cycle only from the main hand, and disabled
+     * types are skipped. Clicking a block must not cycle the mode.
      */
     public static void airRulesAndDisabledModeCycling(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -170,28 +224,49 @@ public final class ClientGestureChecks {
         try (GestureStateScope scope = new GestureStateScope()) {
             player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.DIRT));
             for (boolean occupied : new boolean[] {false, true}) {
-                player.setItemInHand(InteractionHand.MAIN_HAND, occupied ? new ItemStack(Items.APPLE) : ItemStack.EMPTY);
+                player.setItemInHand(
+                        InteractionHand.MAIN_HAND,
+                        occupied ? new ItemStack(Items.APPLE) : ItemStack.EMPTY);
                 for (boolean hittingBlock : new boolean[] {false, true}) {
                     for (boolean modifier : new boolean[] {false, true}) {
                         for (InteractionHand hand : InteractionHand.values()) {
                             for (boolean itemRules : new boolean[] {false, true}) {
                                 var before = ClientGestures.currentMode();
-                                var gesture = hittingBlock ? StackGesture.NONE
-                                        : ClientGestures.processClick(player, hand, null, false, modifier);
-                                boolean claimed = hand == InteractionHand.MAIN_HAND && modifier && !hittingBlock;
-                                checkEquals(claimed ? StackGesture.CYCLE_MODE : StackGesture.NONE, gesture, "Air intent");
-                                checkEquals(claimed && occupied, gesture.consumesLocalUse(player.getMainHandItem()), "Air cancellation");
-                                checkEquals(claimed, before != ClientGestures.currentMode(), "Air mode change");
+                                var gesture =
+                                        hittingBlock
+                                                ? StackGesture.NONE
+                                                : ClientGestures.processClick(
+                                                        player, hand, null, false, modifier);
+                                boolean claimed =
+                                        hand == InteractionHand.MAIN_HAND
+                                                && modifier
+                                                && !hittingBlock;
+                                checkEquals(
+                                        claimed ? StackGesture.CYCLE_MODE : StackGesture.NONE,
+                                        gesture,
+                                        "Air intent");
+                                checkEquals(
+                                        claimed && occupied,
+                                        gesture.consumesLocalUse(player.getMainHandItem()),
+                                        "Air cancellation");
+                                checkEquals(
+                                        claimed,
+                                        before != ClientGestures.currentMode(),
+                                        "Air mode change");
                             }
                         }
                     }
                 }
             }
             for (int mask = 0; mask < 8; mask++) {
-                for (BlockType type : BlockType.values()) ClientServerSettings.setBlockEnabled(type, true);
+                for (BlockType type : BlockType.values())
+                    ClientServerSettings.setBlockEnabled(type, true);
                 selectMode(StackMode.STORAGE_STACK);
-                BlockType[] types = {BlockType.STORAGE_STACK, BlockType.SINGLES_STACK, BlockType.BAR_STACK};
-                for (int i = 0; i < types.length; i++) ClientServerSettings.setBlockEnabled(types[i], (mask & (1 << i)) != 0);
+                BlockType[] types = {
+                    BlockType.STORAGE_STACK, BlockType.SINGLES_STACK, BlockType.BAR_STACK
+                };
+                for (int i = 0; i < types.length; i++)
+                    ClientServerSettings.setBlockEnabled(types[i], (mask & (1 << i)) != 0);
                 List<StackMode> expected = new ArrayList<>();
                 if ((mask & 2) != 0) expected.add(StackMode.SINGLES_STACK);
                 if ((mask & 4) != 0) expected.add(StackMode.BAR_STACK);
@@ -212,8 +287,8 @@ public final class ClientGestureChecks {
     }
 
     /**
-     * Only changed mode/modifier state is sent; reconnect reset forces the next state packet.
-     * To reproduce in-game: cycle mode and use modified/unmodified gestures, reconnect, and use the
+     * Only changed mode/modifier state is sent; reconnect reset forces the next state packet. To
+     * reproduce in-game: cycle mode and use modified/unmodified gestures, reconnect, and use the
      * same mode again. The server interprets the first new click correctly. Packet suppression
      * itself requires observing the sender, as this test does.
      */
@@ -231,17 +306,23 @@ public final class ClientGestureChecks {
             ClientGestures.syncState(true);
             ClientGestures.syncState(true);
             ClientGestures.syncState(false);
-            checkEquals(List.of(new GestureStatePkt(StackMode.STORAGE_STACK, false),
-                    new GestureStatePkt(StackMode.STORAGE_STACK, true),
-                    new GestureStatePkt(StackMode.SINGLES_STACK, true),
-                    new GestureStatePkt(StackMode.SINGLES_STACK, true),
-                    new GestureStatePkt(StackMode.SINGLES_STACK, false)), scope.sent, "Changed-only/reset packets");
+            checkEquals(
+                    List.of(
+                            new GestureStatePkt(StackMode.STORAGE_STACK, false),
+                            new GestureStatePkt(StackMode.STORAGE_STACK, true),
+                            new GestureStatePkt(StackMode.SINGLES_STACK, true),
+                            new GestureStatePkt(StackMode.SINGLES_STACK, true),
+                            new GestureStatePkt(StackMode.SINGLES_STACK, false)),
+                    scope.sent,
+                    "Changed-only/reset packets");
         }
         helper.succeed();
     }
 
     private static void selectMode(StackMode mode) {
-        for (int i = 0; i < StackMode.values().length && ClientGestures.currentMode() != mode; i++) {
+        for (int i = 0;
+                i < StackMode.values().length && ClientGestures.currentMode() != mode;
+                i++) {
             ClientGestures.cycleMode();
         }
         checkEquals(mode, ClientGestures.currentMode(), "Could not select enabled mode");
@@ -264,9 +345,11 @@ public final class ClientGestureChecks {
 
         @Override
         public void close() {
-            for (BlockType type : BlockType.values()) ClientServerSettings.setBlockEnabled(type, true);
+            for (BlockType type : BlockType.values())
+                ClientServerSettings.setBlockEnabled(type, true);
             selectMode(previousMode);
-            for (BlockType type : BlockType.values()) ClientServerSettings.setBlockEnabled(type, previousFlags[type.ordinal()]);
+            for (BlockType type : BlockType.values())
+                ClientServerSettings.setBlockEnabled(type, previousFlags[type.ordinal()]);
             ClientGestures.setSender(previousSender);
             ClientGestures.resetSync();
         }

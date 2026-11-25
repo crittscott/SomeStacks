@@ -163,16 +163,16 @@ loadScripts(document, 'script');</script>
 <h3>overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Valid render-override fields round-trip in stable item-id order while malformed entries and
- fields are skipped independently. No in-game reproduction applies: this directly verifies
- the JSON codec rather than a player-visible action.</div>
+ fields are skipped independently. No in-game reproduction applies: this directly verifies the
+ JSON codec rather than a player-visible action.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="overrideJsonUsesInclusiveBounds(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>overrideJsonUsesInclusiveBounds</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">overrideJsonUsesInclusiveBounds</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Render scale and offset bounds are inclusive, finite, and shared by authored file values.
- No in-game reproduction applies: this directly verifies validation at the serialization
+<div class="block">Render scale and offset bounds are inclusive, finite, and shared by authored file values. No
+ in-game reproduction applies: this directly verifies validation at the serialization
  boundary.</div>
 </section>
 </li>
@@ -204,18 +204,19 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">serverCommandsEnforcePermissionsAndPersistEdits</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Server commands enforce permissions and save list edits immediately. To reproduce in-game:
- try the administrative list commands without permission, then as an operator, and run
- <code>/ss reload</code>. Only the operator edits succeed, and they are already in the loader's
- server config file, so the reload keeps them. Enable galleries and change their required
- permission while connected: command availability updates without reconnecting.</div>
+ try the administrative list commands without permission, then as an operator, and run <code>
+ /ss reload</code>. Only the operator edits succeed, and they are already in the loader's server
+ config file, so the reload keeps them. Enable galleries and change their required permission
+ while connected: command availability updates without reconnecting.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="ingotTagControlsBarAndSinglesAdmission(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>ingotTagControlsBarAndSinglesAdmission</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">ingotTagControlsBarAndSinglesAdmission</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: add an item to somestacks:ingots with a data pack and reload. Bar accepts
- that item and Singles refuses it; items outside the tag follow the opposite admission rule.</div>
+<div class="block">To reproduce in-game: add an item to somestacks:ingots with a data pack and reload. Bar
+ accepts that item and Singles refuses it; items outside the tag follow the opposite admission
+ rule.</div>
 </section>
 </li>
 </ul>

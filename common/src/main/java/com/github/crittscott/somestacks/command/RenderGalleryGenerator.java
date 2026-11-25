@@ -7,6 +7,7 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,9 +31,9 @@ import java.util.function.Consumer;
  * the world. One column of stacks per group — a namespace, or a row of hand-picked items — with
  * rows running north, over a uniform floor.
  *
- * <p>A gallery spanning every loaded mod runs to tens of thousands of placements, so a
- * request is queued and drained a bounded number of placements per server tick rather
- * than built inside the command call.
+ * <p>A gallery spanning every loaded mod runs to tens of thousands of placements, so a request is
+ * queued and drained a bounded number of placements per server tick rather than built inside the
+ * command call.
  */
 public final class RenderGalleryGenerator {
     /** Empty columns between adjacent item groups. */
@@ -46,7 +47,9 @@ public final class RenderGalleryGenerator {
      */
     public enum Kind {
         /** Storage Stacks showing nine items each. */
-        STORAGE("somestacks.command.gallery.storage_stacks", "somestacks.command.gallery.items",
+        STORAGE(
+                "somestacks.command.gallery.storage_stacks",
+                "somestacks.command.gallery.items",
                 StorageCubeIdx.LAYER_SIZE),
 
         /**
@@ -54,7 +57,9 @@ public final class RenderGalleryGenerator {
          * qualify, tested by the block entity itself so that a gallery shows what a player could
          * actually deposit rather than a second opinion about it.
          */
-        BAR("somestacks.command.gallery.bar_stacks", "somestacks.command.gallery.ingots",
+        BAR(
+                "somestacks.command.gallery.bar_stacks",
+                "somestacks.command.gallery.ingots",
                 BarCubeIdx.LAYER_SIZE);
 
         private final String stackLabelKey;
@@ -88,7 +93,8 @@ public final class RenderGalleryGenerator {
          */
         public List<Item> itemsIn(String modId) {
             return index().getOrDefault(modId, List.of()).stream()
-                    .filter(item -> !ServerConfig.isItemDisabled(BuiltInRegistries.ITEM.getKey(item)))
+                    .filter(item ->
+                            !ServerConfig.isItemDisabled(BuiltInRegistries.ITEM.getKey(item)))
                     .toList();
         }
 
@@ -102,15 +108,16 @@ public final class RenderGalleryGenerator {
         }
 
         private boolean fill(Level level, BlockPos pos, List<Item> batch) {
-            return this == BAR ? fillBarStack(level, pos, batch) : fillStorageStack(level, pos, batch);
+            return this == BAR
+                    ? fillBarStack(level, pos, batch)
+                    : fillStorageStack(level, pos, batch);
         }
     }
 
     /**
-     * Item registry contents grouped by namespace. The registry is frozen before any
-     * command or suggestion request can arrive, so one pass serves every later query;
-     * without this cache, every suggestion keystroke rescans the full registry on the
-     * server thread.
+     * Item registry contents grouped by namespace. The registry is frozen before any command or
+     * suggestion request can arrive, so one pass serves every later query; without this cache,
+     * every suggestion keystroke rescans the full registry on the server thread.
      */
     private static Map<String, List<Item>> itemsByNamespace;
 
@@ -122,19 +129,23 @@ public final class RenderGalleryGenerator {
 
     /** The ingot generation {@link #barItemsByNamespace} was grouped under. */
 
-    /** Queued galleries. Server thread only: appended by the command, drained by the tick handler. */
+    /**
+     * Queued galleries. Server thread only: appended by the command, drained by the tick handler.
+     */
     private static final Deque<Job> jobs = new ArrayDeque<>();
 
     /**
-     * Every item grouped by namespace, with namespaces and each namespace's items in id order, so
-     * a gallery reads alphabetically and an item's place in it can be guessed from its name.
+     * Every item grouped by namespace, with namespaces and each namespace's items in id order, so a
+     * gallery reads alphabetically and an item's place in it can be guessed from its name.
      */
     private static Map<String, List<Item>> itemsByNamespace() {
         if (itemsByNamespace == null) {
             Map<String, List<Item>> map = new TreeMap<>();
-            BuiltInRegistries.ITEM.keySet().stream().sorted().forEach(id -> map
-                    .computeIfAbsent(id.getNamespace(), ns -> new ArrayList<>())
-                    .add(BuiltInRegistries.ITEM.getValue(id)));
+            BuiltInRegistries.ITEM.keySet().stream()
+                    .sorted()
+                    .forEach(id ->
+                            map.computeIfAbsent(id.getNamespace(), ns -> new ArrayList<>())
+                                    .add(BuiltInRegistries.ITEM.getValue(id)));
             itemsByNamespace = map;
         }
         return itemsByNamespace;
@@ -142,11 +153,14 @@ public final class RenderGalleryGenerator {
 
     private static Map<String, List<Item>> barItemsByNamespace() {
         Map<String, List<Item>> map = new TreeMap<>();
-        itemsByNamespace().forEach((namespace, items) -> {
-            List<Item> ingots = items.stream()
-                    .filter(item -> BarStackBE.isValidBarItem(new ItemStack(item))).toList();
-            if (!ingots.isEmpty()) map.put(namespace, ingots);
-        });
+        itemsByNamespace()
+                .forEach((namespace, items) -> {
+                    List<Item> ingots =
+                            items.stream()
+                                    .filter(item -> BarStackBE.isValidBarItem(new ItemStack(item)))
+                                    .toList();
+                    if (!ingots.isEmpty()) map.put(namespace, ingots);
+                });
         return map;
     }
 
@@ -163,8 +177,8 @@ public final class RenderGalleryGenerator {
      * built over the following ticks; {@code onComplete} runs on the server thread once the last
      * stack is placed, and not at all if the player disconnects first.
      */
-    public static Plan enqueue(ServerPlayer player, Kind kind, List<List<Item>> groups,
-                               Consumer<Result> onComplete) {
+    public static Plan enqueue(
+            ServerPlayer player, Kind kind, List<List<Item>> groups, Consumer<Result> onComplete) {
         Level level = player.level();
         BlockPos basePos = player.blockPosition().east();
 
@@ -180,14 +194,26 @@ public final class RenderGalleryGenerator {
         for (List<Item> group : groups) {
             BlockPos currentPos = basePos.offset(groupIndex * MOD_SPACING, 0, 0);
             for (int i = 0; i < group.size(); i += kind.itemsPerStack) {
-                stacks.add(new PendingStack(currentPos,
-                        group.subList(i, Math.min(i + kind.itemsPerStack, group.size()))));
+                stacks.add(
+                        new PendingStack(
+                                currentPos,
+                                group.subList(i, Math.min(i + kind.itemsPerStack, group.size()))));
                 currentPos = currentPos.north();
             }
             groupIndex++;
         }
 
-        jobs.add(new Job(player, level, kind, basePos, groups.size(), maxRows, stacks, totalItems, onComplete));
+        jobs.add(
+                new Job(
+                        player,
+                        level,
+                        kind,
+                        basePos,
+                        groups.size(),
+                        maxRows,
+                        stacks,
+                        totalItems,
+                        onComplete));
         return new Plan(stacks.size(), totalItems);
     }
 
@@ -214,9 +240,12 @@ public final class RenderGalleryGenerator {
                 if (skipped > 0) {
                     SomeStacksCommon.LOGGER.warn(
                             "Gallery for {} skipped {} of {} stack placement(s)",
-                            job.player.getGameProfile().getName(), skipped, job.expectedStacks);
+                            job.player.getGameProfile().getName(),
+                            skipped,
+                            job.expectedStacks);
                 }
-                job.onComplete.accept(new Result(job.placedStacks, job.expectedStacks, job.totalItems));
+                job.onComplete.accept(
+                        new Result(job.placedStacks, job.expectedStacks, job.totalItems));
             }
         }
     }
@@ -224,9 +253,9 @@ public final class RenderGalleryGenerator {
     private record PendingStack(BlockPos pos, List<Item> batch) {}
 
     /**
-     * One queued gallery: a floor laid out by a cursor over its extent, then the stacks. Both
-     * draw from the same per-tick budget, since a floor spanning every loaded mod is itself
-     * far larger than the gallery standing on it.
+     * One queued gallery: a floor laid out by a cursor over its extent, then the stacks. Both draw
+     * from the same per-tick budget, since a floor spanning every loaded mod is itself far larger
+     * than the gallery standing on it.
      */
     private static final class Job {
         private final ServerPlayer player;
@@ -247,8 +276,16 @@ public final class RenderGalleryGenerator {
 
         private int placedStacks;
 
-        private Job(ServerPlayer player, Level level, Kind kind, BlockPos basePos, int groupCount, int maxRows,
-                    Deque<PendingStack> stacks, int totalItems, Consumer<Result> onComplete) {
+        private Job(
+                ServerPlayer player,
+                Level level,
+                Kind kind,
+                BlockPos basePos,
+                int groupCount,
+                int maxRows,
+                Deque<PendingStack> stacks,
+                int totalItems,
+                Consumer<Result> onComplete) {
             this.player = player;
             this.level = level;
             this.kind = kind;
