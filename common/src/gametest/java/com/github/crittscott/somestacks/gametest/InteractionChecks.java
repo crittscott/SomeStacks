@@ -1,5 +1,8 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -11,19 +14,21 @@ import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.mojang.authlib.GameProfile;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.SectionPos;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.level.ClientInformation;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -43,9 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
 /** Loader-neutral checks for the state packet and vanilla-interaction gesture service. */
 public final class InteractionChecks {
@@ -68,7 +70,8 @@ public final class InteractionChecks {
         buffer.writeByte(StackMode.values().length);
         buffer.writeBoolean(false);
         try {
-            check(decodeGestureFails(buffer),
+            check(
+                    decodeGestureFails(buffer),
                     "Invalid stack-mode ordinal reached the state handler");
         } finally {
             buffer.release();
@@ -94,8 +97,7 @@ public final class InteractionChecks {
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
         try {
-            GestureStatePkt.handleServer(
-                    new GestureStatePkt(StackMode.BAR_STACK, true), player);
+            GestureStatePkt.handleServer(new GestureStatePkt(StackMode.BAR_STACK, true), player);
             ServerGestureState.State state = ServerGestureState.get(player);
             checkEquals(StackMode.BAR_STACK, state.mode(), "Server gesture mode");
             check(state.modifierDown(), "Server lost the gesture modifier state");
@@ -117,12 +119,16 @@ public final class InteractionChecks {
         player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.DIRT, 4));
         ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
         try {
-            check(!StackInteractions.handleExistingStack(
-                            player, InteractionHand.OFF_HAND,
+            check(
+                    !StackInteractions.handleExistingStack(
+                            player,
+                            InteractionHand.OFF_HAND,
                             hit(player, storage.getBlockPos(), 0.5, 0.5, 0.5),
-                    BlockType.STORAGE_STACK),
+                            BlockType.STORAGE_STACK),
                     "Off-hand interaction was consumed");
-            checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.DIRT),
+            checkEquals(
+                    0,
+                    GameTestScaffold.count(storage.getItems(), Items.DIRT),
                     "Off-hand item was deposited");
         } finally {
             player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
@@ -133,8 +139,8 @@ public final class InteractionChecks {
 
     /**
      * Redstone torches rotate Storage and Singles blocks, soul torches rotate Singles items, and
-     * Bar blocks do not rotate. To reproduce in-game: Shift-right-click each type with those torches
-     * and observe that only the matching gestures change orientation.
+     * Bar blocks do not rotate. To reproduce in-game: Shift-right-click each type with those
+     * torches and observe that only the matching gestures change orientation.
      */
     public static void rotationValidatesHeldItemAndBlockType(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -156,7 +162,8 @@ public final class InteractionChecks {
             checkEquals(1, singles.getRotation(), "Singles rotation");
 
             rotationClick(player, bars.getBlockPos(), 0.25, 0.0625, 0.125);
-            check(helper.getLevel().getBlockEntity(bars.getBlockPos()) == bars,
+            check(
+                    helper.getLevel().getBlockEntity(bars.getBlockPos()) == bars,
                     "Rotate-block gesture changed a Bar Stack");
         } finally {
             player.setShiftKeyDown(false);
@@ -173,22 +180,23 @@ public final class InteractionChecks {
      * occupied Singles cell with a soul torch. The block and item rotate respectively.
      */
     public static void sneakingRotationsReachTheLoaderHook(
-            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory,
             LoaderBlockClick loaderClick) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, TARGET);
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, TARGET.east(3));
-        check(singles.depositAt(0, new ItemStack(Items.STICK)),
-                "Singles fixture deposit failed");
+        check(singles.depositAt(0, new ItemStack(Items.STICK)), "Singles fixture deposit failed");
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.REDSTONE_TORCH));
         player.setShiftKeyDown(true);
         try {
-            check(loaderClick.click(
-                            player, hit(player, storage.getBlockPos(), 0.5, 0.5, 0.5)),
+            check(
+                    loaderClick.click(player, hit(player, storage.getBlockPos(), 0.5, 0.5, 0.5)),
                     "Loader hook declined redstone-torch rotation");
             checkEquals(1, storage.getRotation(), "Loader-hook block rotation");
 
             player.setItemInHand(HAND, new ItemStack(Items.SOUL_TORCH));
-            check(loaderClick.click(
+            check(
+                    loaderClick.click(
                             player, hit(player, singles.getBlockPos(), 0.125, 0.125, 0.125)),
                     "Loader hook declined soul-torch rotation");
             checkEquals(1, singles.getCubeRotation(0), "Loader-hook item rotation");
@@ -211,8 +219,8 @@ public final class InteractionChecks {
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         StorageStackBE depositTarget = GameTestScaffold.placeStorage(helper, TARGET);
         StorageStackBE extractTarget = GameTestScaffold.placeStorage(helper, TARGET.east(3));
-        int center = StorageCubeIdx.GRID_EDGE * StorageCubeIdx.GRID_EDGE
-                + StorageCubeIdx.GRID_EDGE + 1;
+        int center =
+                StorageCubeIdx.GRID_EDGE * StorageCubeIdx.GRID_EDGE + StorageCubeIdx.GRID_EDGE + 1;
         extractTarget.getItems().insertItem(center, new ItemStack(Items.STICK, 3), false);
         BlockPos support = helper.absolutePos(TARGET.east(6));
         helper.getLevel().setBlock(support, Blocks.STONE.defaultBlockState(), 3);
@@ -221,7 +229,9 @@ public final class InteractionChecks {
         try {
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             click(player, depositTarget.getBlockPos(), 0.5, 0.5, 0.5);
-            checkEquals(4, GameTestScaffold.count(depositTarget.getItems(), Items.DIRT),
+            checkEquals(
+                    4,
+                    GameTestScaffold.count(depositTarget.getItems(), Items.DIRT),
                     "Deposit contents");
 
             player.setItemInHand(HAND, ItemStack.EMPTY);
@@ -234,16 +244,26 @@ public final class InteractionChecks {
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             BlockPos destination = support.above();
             StackInteractions.handleAdjacentClick(
-                    player, HAND,
+                    player,
+                    HAND,
                     new BlockHitResult(
-                            new Vec3(support.getX() + 0.5, support.getY() + 1.0,
+                            new Vec3(
+                                    support.getX() + 0.5,
+                                    support.getY() + 1.0,
                                     support.getZ() + 0.5),
-                            Direction.UP, support, false),
-                    true, true);
-            check(helper.getLevel().getBlockState(destination)
+                            Direction.UP,
+                            support,
+                            false),
+                    true,
+                    true);
+            check(
+                    helper.getLevel()
+                            .getBlockState(destination)
                             .is(CommonRegistry.storageStackBlock()),
                     "Vanilla interaction did not place Storage");
-            checkEquals(2, GameTestScaffold.heldAt(helper, destination, Items.DIRT),
+            checkEquals(
+                    2,
+                    GameTestScaffold.heldAt(helper, destination, Items.DIRT),
                     "Placed stack contents");
         } finally {
             player.setItemInHand(HAND, ItemStack.EMPTY);
@@ -261,7 +281,8 @@ public final class InteractionChecks {
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, TARGET);
         int occupied = 0;
-        check(singles.depositAt(occupied, new ItemStack(Items.STICK)),
+        check(
+                singles.depositAt(occupied, new ItemStack(Items.STICK)),
                 "Singles fixture deposit failed");
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.SOUL_TORCH));
         player.setShiftKeyDown(true);
@@ -271,9 +292,11 @@ public final class InteractionChecks {
 
             int unobstructedEmpty = 4;
             rotationClick(player, singles.getBlockPos(), 0.125, 0.125, 0.375);
-            checkEquals(0, singles.getCubeRotation(unobstructedEmpty),
-                    "Empty cell retained rotation");
-            checkEquals(1, singles.getCubeRotation(occupied),
+            checkEquals(
+                    0, singles.getCubeRotation(unobstructedEmpty), "Empty cell retained rotation");
+            checkEquals(
+                    1,
+                    singles.getCubeRotation(occupied),
                     "Clicking an empty cell rotated another item");
         } finally {
             player.setShiftKeyDown(false);
@@ -303,8 +326,8 @@ public final class InteractionChecks {
             check(storage.pile().isPermanent(), "Empty hand did not toggle permanence");
 
             storage.pile().setPermanent(false);
-            GameTestScaffold.outsideWorldBorder(helper, TARGET, () ->
-                    click(player, storage.getBlockPos(), 0.5, 0.5, 0.5));
+            GameTestScaffold.outsideWorldBorder(
+                    helper, TARGET, () -> click(player, storage.getBlockPos(), 0.5, 0.5, 0.5));
             check(!storage.pile().isPermanent(), "Protected pile changed permanence");
         } finally {
             player.setItemInHand(HAND, ItemStack.EMPTY);
@@ -314,9 +337,9 @@ public final class InteractionChecks {
     }
 
     /**
-     * Extraction refuses an incompatible held item or a compatible stack with no room. To
-     * reproduce in-game: plain-click stored stone while holding dirt, then while holding a full
-     * stack of matching stone. The Storage contents and held stacks remain unchanged.
+     * Extraction refuses an incompatible held item or a compatible stack with no room. To reproduce
+     * in-game: plain-click stored stone while holding dirt, then while holding a full stack of
+     * matching stone. The Storage contents and held stacks remain unchanged.
      */
     public static void extractionRefusesIncompatibleOrFullHands(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -328,16 +351,22 @@ public final class InteractionChecks {
             ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
             click(player, storage.getBlockPos(), 0.5, 0.5, 0.5);
             checkEquals(Items.DIRT, player.getMainHandItem().getItem(), "Held item was replaced");
-            checkEquals(8, storage.getItems().getStackInSlot(center).getCount(),
+            checkEquals(
+                    8,
+                    storage.getItems().getStackInSlot(center).getCount(),
                     "Incompatible hand extracted items");
 
             ItemStack full = new ItemStack(Items.STONE);
             full.setCount(full.getMaxStackSize());
             player.setItemInHand(HAND, full);
             click(player, storage.getBlockPos(), 0.5, 0.5, 0.5);
-            checkEquals(full.getMaxStackSize(), player.getMainHandItem().getCount(),
+            checkEquals(
+                    full.getMaxStackSize(),
+                    player.getMainHandItem().getCount(),
                     "Full hand grew past its maximum");
-            checkEquals(8, storage.getItems().getStackInSlot(center).getCount(),
+            checkEquals(
+                    8,
+                    storage.getItems().getStackInSlot(center).getCount(),
                     "Full hand extracted items");
         } finally {
             player.setItemInHand(HAND, ItemStack.EMPTY);
@@ -372,10 +401,14 @@ public final class InteractionChecks {
                             singles.getBlockPos(),
                             false),
                     BlockType.SINGLES_STACK);
-            check(helper.getLevel().getBlockState(destination)
+            check(
+                    helper.getLevel()
+                            .getBlockState(destination)
                             .is(CommonRegistry.storageStackBlock()),
                     "Top-face placement ignored the selected type");
-            checkEquals(2, GameTestScaffold.heldAt(helper, destination, Items.STONE),
+            checkEquals(
+                    2,
+                    GameTestScaffold.heldAt(helper, destination, Items.STONE),
                     "Placed Storage contents");
             check(player.getMainHandItem().isEmpty(), "Successful placement did not spend hand");
         } finally {
@@ -390,17 +423,17 @@ public final class InteractionChecks {
      * Bar blocks remain in place and the piston cannot push them.
      */
     public static void everyStackTypeBlocksPistons(GameTestHelper helper) {
-        checkEquals(PushReaction.BLOCK,
-                CommonRegistry.storageStackBlock().defaultBlockState()
-                        .getPistonPushReaction(),
+        checkEquals(
+                PushReaction.BLOCK,
+                CommonRegistry.storageStackBlock().defaultBlockState().getPistonPushReaction(),
                 "Storage piston reaction");
-        checkEquals(PushReaction.BLOCK,
-                CommonRegistry.singlesStackBlock().defaultBlockState()
-                        .getPistonPushReaction(),
+        checkEquals(
+                PushReaction.BLOCK,
+                CommonRegistry.singlesStackBlock().defaultBlockState().getPistonPushReaction(),
                 "Singles piston reaction");
-        checkEquals(PushReaction.BLOCK,
-                CommonRegistry.barStackBlock().defaultBlockState()
-                        .getPistonPushReaction(),
+        checkEquals(
+                PushReaction.BLOCK,
+                CommonRegistry.barStackBlock().defaultBlockState().getPistonPushReaction(),
                 "Bar piston reaction");
         helper.succeed();
     }
@@ -417,7 +450,8 @@ public final class InteractionChecks {
         RotationSoundThrottle.clear(player.getUUID());
         try {
             check(RotationSoundThrottle.claim(player), "First rotation sound was refused");
-            check(!RotationSoundThrottle.claim(player),
+            check(
+                    !RotationSoundThrottle.claim(player),
                     "Second same-tick rotation sound succeeded");
             RotationSoundThrottle.clear(player.getUUID());
             check(RotationSoundThrottle.claim(player), "Clear did not reset sound pacing");
@@ -428,43 +462,54 @@ public final class InteractionChecks {
     }
 
     /**
-     * A successful mutation inside a stack emits one block-change game event. To reproduce
-     * in-game: put a sculk sensor beside a Storage Stack and deposit an item; the sensor activates.
+     * A successful mutation inside a stack emits one block-change game event. To reproduce in-game:
+     * put a sculk sensor beside a Storage Stack and deposit an item; the sensor activates.
      */
     public static void playerMutationEmitsBlockChange(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, TARGET);
         BlockPos sensorPos = helper.absolutePos(TARGET.east(2));
-        check(helper.getLevel().setBlock(
-                        sensorPos, Blocks.SCULK_SENSOR.defaultBlockState(), Block.UPDATE_ALL),
+        check(
+                helper.getLevel()
+                        .setBlock(
+                                sensorPos,
+                                Blocks.SCULK_SENSOR.defaultBlockState(),
+                                Block.UPDATE_ALL),
                 "Could not place sculk sensor");
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT));
         ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
         try {
-            check(click(player, storage.getBlockPos(), 0.5, 0.5, 0.5),
+            check(
+                    click(player, storage.getBlockPos(), 0.5, 0.5, 0.5),
                     "Storage deposit interaction was not consumed");
         } finally {
             ServerGestureState.clear(player.getUUID());
         }
 
-        helper.runAfterDelay(5, () -> {
-            checkEquals(
-                    SculkSensorPhase.ACTIVE,
-                    helper.getLevel().getBlockState(sensorPos).getValue(SculkSensorBlock.PHASE),
-                    "Sculk sensor phase after stack mutation");
-            helper.succeed();
-        });
+        helper.runAfterDelay(
+                5,
+                () -> {
+                    checkEquals(
+                            SculkSensorPhase.ACTIVE,
+                            helper.getLevel()
+                                    .getBlockState(sensorPos)
+                                    .getValue(SculkSensorBlock.PHASE),
+                            "Sculk sensor phase after stack mutation");
+                    helper.succeed();
+                });
     }
 
     /**
-     * To reproduce in-game: extract one of two Singles or Bars beside a sculk sensor, then the last.
-     * The surviving block emits only change; removing the last item emits only destroy.
+     * To reproduce in-game: extract one of two Singles or Bars beside a sculk sensor, then the
+     * last. The surviving block emits only change; removing the last item emits only destroy.
      */
     public static void extractionEventsFollowBlockSurvival(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         for (boolean bar : new boolean[] {false, true}) {
-            var be = bar ? GameTestScaffold.placeBar(helper, TARGET)
-                    : GameTestScaffold.placeSingles(helper, TARGET);
+            var be =
+                    bar
+                            ? GameTestScaffold.placeBar(helper, TARGET)
+                            : GameTestScaffold.placeSingles(helper, TARGET);
             var item = bar ? GameTestScaffold.firstBarItem() : Items.STONE;
             be.getItems().insertItem(0, new ItemStack(item), false);
             be.getItems().insertItem(1, new ItemStack(item), false);
@@ -472,13 +517,26 @@ public final class InteractionChecks {
             ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
             try {
                 double y = bar ? 0.0625 : 0.125;
-                List<Holder<GameEvent>> first = observeGameEvents(helper.getLevel(), be.getBlockPos(),
-                        () -> click(player, be.getBlockPos(), 0.125, y, 0.125));
+                List<Holder<GameEvent>> first =
+                        observeGameEvents(
+                                helper.getLevel(),
+                                be.getBlockPos(),
+                                () -> click(player, be.getBlockPos(), 0.125, y, 0.125));
                 checkEquals(List.of(GameEvent.BLOCK_CHANGE), first, "Surviving extraction events");
-                List<Holder<GameEvent>> last = observeGameEvents(helper.getLevel(), be.getBlockPos(),
-                        () -> click(player, be.getBlockPos(), bar ? 0.75 : 0.375, y, 0.125));
+                List<Holder<GameEvent>> last =
+                        observeGameEvents(
+                                helper.getLevel(),
+                                be.getBlockPos(),
+                                () ->
+                                        click(
+                                                player,
+                                                be.getBlockPos(),
+                                                bar ? 0.75 : 0.375,
+                                                y,
+                                                0.125));
                 checkEquals(List.of(GameEvent.BLOCK_DESTROY), last, "Last extraction events");
-                check(helper.getLevel().getBlockEntity(be.getBlockPos()) == null,
+                check(
+                        helper.getLevel().getBlockEntity(be.getBlockPos()) == null,
                         "Last extraction did not remove the block");
             } finally {
                 ServerGestureState.clear(player.getUUID());
@@ -493,22 +551,39 @@ public final class InteractionChecks {
      * The empty block survives and emits one change vibration, with no destroy vibration.
      */
     public static void deniedCleanupEmitsOnlyBlockChange(
-            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory,
             ProtectionChecks.RemovalObserver observer) {
         for (boolean bar : new boolean[] {false, true}) {
-            var be = bar ? GameTestScaffold.placeBar(helper, TARGET)
-                    : GameTestScaffold.placeSingles(helper, TARGET);
-            be.getItems().insertItem(0,
-                    new ItemStack(bar ? GameTestScaffold.firstBarItem() : Items.STONE), false);
+            var be =
+                    bar
+                            ? GameTestScaffold.placeBar(helper, TARGET)
+                            : GameTestScaffold.placeSingles(helper, TARGET);
+            be.getItems()
+                    .insertItem(
+                            0,
+                            new ItemStack(bar ? GameTestScaffold.firstBarItem() : Items.STONE),
+                            false);
             ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
-            Runnable unregister = observer.install(helper.getLevel(), be.getBlockPos(),
-                    actor -> {}, actor -> false);
+            Runnable unregister =
+                    observer.install(
+                            helper.getLevel(), be.getBlockPos(), actor -> {}, actor -> false);
             ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
             try {
-                List<Holder<GameEvent>> events = observeGameEvents(helper.getLevel(), be.getBlockPos(),
-                        () -> click(player, be.getBlockPos(), 0.125, bar ? 0.0625 : 0.125, 0.125));
+                List<Holder<GameEvent>> events =
+                        observeGameEvents(
+                                helper.getLevel(),
+                                be.getBlockPos(),
+                                () ->
+                                        click(
+                                                player,
+                                                be.getBlockPos(),
+                                                0.125,
+                                                bar ? 0.0625 : 0.125,
+                                                0.125));
                 checkEquals(List.of(GameEvent.BLOCK_CHANGE), events, "Denied-cleanup events");
-                check(helper.getLevel().getBlockEntity(be.getBlockPos()) == be && be.isEmpty(),
+                check(
+                        helper.getLevel().getBlockEntity(be.getBlockPos()) == be && be.isEmpty(),
                         "Denied cleanup did not leave the empty block");
             } finally {
                 unregister.run();
@@ -519,27 +594,38 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
-    private static List<Holder<GameEvent>> observeGameEvents(ServerLevel level, BlockPos pos,
-                                                            Runnable mutation) {
+    private static List<Holder<GameEvent>> observeGameEvents(
+            ServerLevel level, BlockPos pos, Runnable mutation) {
         var events = new ArrayList<Holder<GameEvent>>();
-        GameEventListener listener = new GameEventListener() {
-            @Override
-            public PositionSource getListenerSource() { return new BlockPositionSource(pos); }
+        GameEventListener listener =
+                new GameEventListener() {
+                    @Override
+                    public PositionSource getListenerSource() {
+                        return new BlockPositionSource(pos);
+                    }
 
-            @Override
-            public int getListenerRadius() { return 16; }
+                    @Override
+                    public int getListenerRadius() {
+                        return 16;
+                    }
 
-            @Override
-            public boolean handleGameEvent(ServerLevel sourceLevel, Holder<GameEvent> event,
-                                           GameEvent.Context context, Vec3 source) {
-                if (BlockPos.containing(source).equals(pos)
-                        && (event.equals(GameEvent.BLOCK_CHANGE) || event.equals(GameEvent.BLOCK_DESTROY))) {
-                    events.add(event);
-                }
-                return true;
-            }
-        };
-        var registry = level.getChunkAt(pos).getListenerRegistry(SectionPos.blockToSectionCoord(pos.getY()));
+                    @Override
+                    public boolean handleGameEvent(
+                            ServerLevel sourceLevel,
+                            Holder<GameEvent> event,
+                            GameEvent.Context context,
+                            Vec3 source) {
+                        if (BlockPos.containing(source).equals(pos)
+                                && (event.equals(GameEvent.BLOCK_CHANGE)
+                                        || event.equals(GameEvent.BLOCK_DESTROY))) {
+                            events.add(event);
+                        }
+                        return true;
+                    }
+                };
+        var registry =
+                level.getChunkAt(pos)
+                        .getListenerRegistry(SectionPos.blockToSectionCoord(pos.getY()));
         registry.register(listener);
         try {
             mutation.run();
@@ -551,24 +637,33 @@ public final class InteractionChecks {
 
     /**
      * To reproduce in-game with the test mod: revoke somestacks:gametest_place_storage, hold
-     * exactly two Dirt, and create a Storage Stack. Its placed-block criterion is awarded using
-     * the original two-item offer even though the deposit empties the hand. A blocked destination
+     * exactly two Dirt, and create a Storage Stack. Its placed-block criterion is awarded using the
+     * original two-item offer even though the deposit empties the hand. A blocked destination
      * awards nothing. Revoke it again and deposit two Dirt into a full pile: growth awards nothing.
      */
     public static void playerPlacementAwardsCriterionAfterDeposit(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         // Automation fake players can suppress advancement tracking. This check needs a regular
         // player's tracker, with no connection because the fixture has no display or rewards.
-        ServerPlayer player = new ServerPlayer(level.getServer(), level,
-                new GameProfile(UUID.randomUUID(), "[SSCriterion]"), ClientInformation.createDefault()) {
-            @Override
-            public void displayClientMessage(Component message, boolean actionBar) {
-                // Action-bar output is not observed by this server-side check.
-            }
-        };
+        ServerPlayer player =
+                new ServerPlayer(
+                        level.getServer(),
+                        level,
+                        new GameProfile(UUID.randomUUID(), "[SSCriterion]"),
+                        ClientInformation.createDefault()) {
+                    @Override
+                    public void displayClientMessage(Component message, boolean actionBar) {
+                        // Action-bar output is not observed by this server-side check.
+                    }
+                };
         player.setItemInHand(HAND, new ItemStack(Items.DIRT, 2));
-        var advancement = helper.getLevel().getServer().getAdvancements().get(
-                ResourceLocation.fromNamespaceAndPath("somestacks", "gametest_place_storage"));
+        var advancement =
+                helper.getLevel()
+                        .getServer()
+                        .getAdvancements()
+                        .get(
+                                ResourceLocation.fromNamespaceAndPath(
+                                        "somestacks", "gametest_place_storage"));
         check(advancement != null, "Missing placement advancement fixture");
         var progress = player.getAdvancements();
         BlockPos support = helper.absolutePos(TARGET.east());
@@ -576,25 +671,36 @@ public final class InteractionChecks {
         helper.getLevel().setBlock(support, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
         ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
         try {
-            helper.getLevel().setBlock(destination, CommonRegistry.storageStackBlock().defaultBlockState(),
-                    Block.UPDATE_ALL);
-            CriteriaTriggers.PLACED_BLOCK.trigger(player, destination, new ItemStack(Items.DIRT, 2));
-            check(progress.getOrStartProgress(advancement).isDone(),
+            helper.getLevel()
+                    .setBlock(
+                            destination,
+                            CommonRegistry.storageStackBlock().defaultBlockState(),
+                            Block.UPDATE_ALL);
+            CriteriaTriggers.PLACED_BLOCK.trigger(
+                    player, destination, new ItemStack(Items.DIRT, 2));
+            check(
+                    progress.getOrStartProgress(advancement).isDone(),
                     "Placement advancement fixture did not respond to the control trigger");
             progress.revoke(advancement, "placed");
 
-            helper.getLevel().setBlock(destination, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+            helper.getLevel()
+                    .setBlock(destination, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
             BlockHitResult hit = hit(player, support, 0.0, 0.5, 0.5);
             StackInteractions.handleAdjacentClick(player, HAND, hit, true, true);
-            check(!progress.getOrStartProgress(advancement).isDone(), "Denied placement awarded criterion");
+            check(
+                    !progress.getOrStartProgress(advancement).isDone(),
+                    "Denied placement awarded criterion");
             checkEquals(2, player.getMainHandItem().getCount(), "Denied placement spent the offer");
 
-            helper.getLevel().setBlock(destination, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            helper.getLevel()
+                    .setBlock(destination, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             StackInteractions.handleAdjacentClick(player, HAND, hit, true, true);
-            check(helper.getLevel().getBlockEntity(destination) instanceof StorageStackBE,
+            check(
+                    helper.getLevel().getBlockEntity(destination) instanceof StorageStackBE,
                     "Player placement failed");
             check(player.getMainHandItem().isEmpty(), "First deposit did not empty the hand");
-            check(progress.getOrStartProgress(advancement).isDone(),
+            check(
+                    progress.getOrStartProgress(advancement).isDone(),
                     "Player placement did not award the original-offer criterion");
 
             progress.revoke(advancement, "placed");
@@ -605,9 +711,14 @@ public final class InteractionChecks {
             ItemStack offer = new ItemStack(Items.DIRT, 2);
             player.setItemInHand(HAND, offer);
             checkEquals(2, storage.deposit(offer, player), "Growth deposit count");
-            check(helper.getLevel().getBlockState(destination.above()).is(CommonRegistry.storageStackBlock()),
+            check(
+                    helper.getLevel()
+                            .getBlockState(destination.above())
+                            .is(CommonRegistry.storageStackBlock()),
                     "Full pile did not grow");
-            check(!progress.getOrStartProgress(advancement).isDone(), "Pile growth awarded criterion");
+            check(
+                    !progress.getOrStartProgress(advancement).isDone(),
+                    "Pile growth awarded criterion");
         } finally {
             progress.stopListening();
             player.setItemInHand(HAND, ItemStack.EMPTY);
@@ -616,21 +727,23 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
-    private static boolean click(ServerPlayer player, BlockPos pos,
-                                 double localX, double localY, double localZ) {
+    private static boolean click(
+            ServerPlayer player, BlockPos pos, double localX, double localY, double localZ) {
         return StackInteractions.handleExistingStack(
-                player, HAND, hit(player, pos, localX, localY, localZ),
-                    BlockType.of(player.level().getBlockState(pos).getBlock()));
+                player,
+                HAND,
+                hit(player, pos, localX, localY, localZ),
+                BlockType.of(player.level().getBlockState(pos).getBlock()));
     }
 
-    private static boolean rotationClick(ServerPlayer player, BlockPos pos,
-                                         double localX, double localY, double localZ) {
+    private static boolean rotationClick(
+            ServerPlayer player, BlockPos pos, double localX, double localY, double localZ) {
         return StackInteractions.handleSneakingRotation(
                 player, HAND, hit(player, pos, localX, localY, localZ), true, true);
     }
 
-    private static BlockHitResult hit(ServerPlayer player, BlockPos pos,
-                                      double localX, double localY, double localZ) {
+    private static BlockHitResult hit(
+            ServerPlayer player, BlockPos pos, double localX, double localY, double localZ) {
         Vec3 point = new Vec3(pos.getX() + localX, pos.getY() + localY, pos.getZ() + localZ);
         player.setPos(pos.getX() - 2.0, point.y - player.getEyeHeight(), point.z);
         return new BlockHitResult(point, Direction.WEST, pos, false);

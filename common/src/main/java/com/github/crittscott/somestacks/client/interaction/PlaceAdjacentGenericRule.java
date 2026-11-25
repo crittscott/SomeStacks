@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-
 /**
  * Modifier plus an item, on a click no deposit rule claimed, places the selected stack type in the
  * position against the clicked face and makes the first deposit into it. Last of the modified-click
@@ -9,10 +8,7 @@ package com.github.crittscott.somestacks.client.interaction;
 public final class PlaceAdjacentGenericRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {
-        return ctx.isVDown()
-                && !ctx.isShift()
-                && ctx.hasItemInHand()
-                && ctx.canPlaceOrDeposit();
+        return ctx.isVDown() && !ctx.isShift() && ctx.hasItemInHand() && ctx.canPlaceOrDeposit();
     }
 
     @Override

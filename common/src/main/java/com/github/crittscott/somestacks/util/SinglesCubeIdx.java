@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -17,10 +18,11 @@ import javax.annotation.Nullable;
  * differently.
  */
 public final class SinglesCubeIdx {
-    private SinglesCubeIdx(){}
+    private SinglesCubeIdx() {}
 
     /** Cell width in model pixels, shared by targeting and rendering. */
     public static final double CELL_PIXELS = 4.0;
+
     public static final CubeGrid GRID = new CubeGrid(4, CELL_PIXELS, 0, 4, 8, 12);
 
     /** Cells along one axis of the grid. */
@@ -40,9 +42,9 @@ public final class SinglesCubeIdx {
 
     /**
      * Whether a prospective Singles Stack could support an item at {@code index}. Since all of its
-     * slots are still empty, only the bottom layer can be supported. It is grounded when there is no
-     * Singles Stack below; otherwise its visual column must be occupied in {@code seamBelow}. New
-     * blocks are unrotated, so {@code index} is already in the visual frame.
+     * slots are still empty, only the bottom layer can be supported. It is grounded when there is
+     * no Singles Stack below; otherwise its visual column must be occupied in {@code seamBelow}.
+     * New blocks are unrotated, so {@code index} is already in the visual frame.
      */
     public static boolean freshBlockSupports(int index, boolean[] seamBelow) {
         return isGroundedIn(new boolean[SinglesStackBE.SLOTS], index, 0, seamBelow);
@@ -54,7 +56,8 @@ public final class SinglesCubeIdx {
      * Singles Stack underneath. A null seam means there is no Singles Stack below, so the bottom
      * layer is grounded.
      */
-    public static boolean isGrounded(int index, SlotAccess handler, int blockRotation, boolean[] seamBelow) {
+    public static boolean isGrounded(
+            int index, SlotAccess handler, int blockRotation, boolean[] seamBelow) {
         int[] xyz = xyzFromIndex(index);
         int y = xyz[1];
 
@@ -69,7 +72,8 @@ public final class SinglesCubeIdx {
      * Applies {@link #isGrounded} to an occupancy snapshot rather than live slots. Column insertion
      * uses this to validate a proposed placement without mutating inventory.
      */
-    public static boolean isGroundedIn(boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
+    public static boolean isGroundedIn(
+            boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
         int y = xyzFromIndex(index)[1];
 
         if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
@@ -77,7 +81,9 @@ public final class SinglesCubeIdx {
         return occupancy[indexFromColumn(columnFromIndex(index), y - 1)];
     }
 
-    /** Whether the top layer beneath a block occupies the visual column containing {@code index}. */
+    /**
+     * Whether the top layer beneath a block occupies the visual column containing {@code index}.
+     */
     public static boolean seamSupports(int index, int blockRotation, boolean[] seamBelow) {
         if (seamBelow == null) {
             return false;
@@ -91,14 +97,17 @@ public final class SinglesCubeIdx {
     }
 
     /**
-     * The storage column a visual column occupies under a block rotation, the inverse of
-     * {@link #visualColumnFromStorage}. The four rotations form a cycle, so the inverse of
-     * {@code r} is its normalized inverse.
+     * The storage column a visual column occupies under a block rotation, the inverse of {@link
+     * #visualColumnFromStorage}. The four rotations form a cycle, so the inverse of {@code r} is
+     * its normalized inverse.
      */
     public static int storageColumnFromVisual(int visualColumn, int blockRotation) {
-        int[] storage = rotateXYZ(
-                visualColumn % GRID_EDGE, 0, visualColumn / GRID_EDGE,
-                QuarterTurns.inverse(blockRotation));
+        int[] storage =
+                rotateXYZ(
+                        visualColumn % GRID_EDGE,
+                        0,
+                        visualColumn / GRID_EDGE,
+                        QuarterTurns.inverse(blockRotation));
         return storage[2] * GRID_EDGE + storage[0];
     }
 
@@ -130,9 +139,11 @@ public final class SinglesCubeIdx {
      * occupied one, or the farthest intersected slot if the ray meets no occupied item. A null
      * handler describes a prospective, entirely empty block.
      */
-    public static int traceAllPositions(ViewRay ray, BlockPos blockPos,
-                                        @Nullable SlotAccess handler, int blockRotation) {
-        return ray.lastEmptyBeforeOccupied(SinglesStackBE.SLOTS, handler,
+    public static int traceAllPositions(
+            ViewRay ray, BlockPos blockPos, @Nullable SlotAccess handler, int blockRotation) {
+        return ray.lastEmptyBeforeOccupied(
+                SinglesStackBE.SLOTS,
+                handler,
                 slot -> GRID.worldBox(slot, blockRotation, blockPos));
     }
 
@@ -147,7 +158,8 @@ public final class SinglesCubeIdx {
      * but never y, so columns always map to columns and only their horizontal identity moves.
      */
     public static int visualColumnFromStorage(int storageColumn, int blockRotation) {
-        int[] visual = rotateXYZ(storageColumn % GRID_EDGE, 0, storageColumn / GRID_EDGE, blockRotation);
+        int[] visual =
+                rotateXYZ(storageColumn % GRID_EDGE, 0, storageColumn / GRID_EDGE, blockRotation);
         return visual[2] * GRID_EDGE + visual[0];
     }
 
@@ -182,5 +194,4 @@ public final class SinglesCubeIdx {
     public static int[] xyzFromIndex(int idx) {
         return GRID.xyzFromIndex(idx);
     }
-
 }

@@ -5,8 +5,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -14,26 +14,31 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 /**
  * Forge's {@link EditAuthority}: a synthetic per-level {@link ServerPlayer} stands in for
  * automation, and claim, protection, and logging mods are given the chance to veto through the
- * ordinary Forge placement and break events. Forge ships no FakePlayer helper, so this constructs
- * a connection-safe {@code ServerPlayer} and caches one actor per dimension.
+ * ordinary Forge placement and break events. Forge ships no FakePlayer helper, so this constructs a
+ * connection-safe {@code ServerPlayer} and caches one actor per dimension.
  */
 public final class ForgeEditAuthority implements EditAuthority {
     @Override
     public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
-        var event = new PlayerInteractEvent.RightClickBlock(
-                player, InteractionHand.MAIN_HAND, pos, WorldEdits.adjacentHit(player, pos));
+        var event =
+                new PlayerInteractEvent.RightClickBlock(
+                        player,
+                        InteractionHand.MAIN_HAND,
+                        pos,
+                        WorldEdits.adjacentHit(player, pos));
         MinecraftForge.EVENT_BUS.post(event);
         return !event.isCanceled()
                 && event.getUseBlock() != Event.Result.DENY
@@ -44,8 +49,8 @@ public final class ForgeEditAuthority implements EditAuthority {
 
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
-        return actors.computeIfAbsent(level.dimension(), key ->
-                new SyntheticPlayer(level, AutomationActor.PROFILE));
+        return actors.computeIfAbsent(
+                level.dimension(), key -> new SyntheticPlayer(level, AutomationActor.PROFILE));
     }
 
     /** Releases the actor that retains an unloading level. */
@@ -62,8 +67,12 @@ public final class ForgeEditAuthority implements EditAuthority {
     private boolean placing;
 
     @Override
-    public boolean place(Player placer, ServerLevel level, BlockPos pos,
-                         BlockState state, Direction placedAgainst) {
+    public boolean place(
+            Player placer,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
+            Direction placedAgainst) {
         if (placing || level.captureBlockSnapshots || level.restoringBlockSnapshots) {
             return false;
         }
@@ -77,12 +86,15 @@ public final class ForgeEditAuthority implements EditAuthority {
                 placed = level.setBlock(pos, state, Block.UPDATE_ALL);
             } finally {
                 level.captureBlockSnapshots = false;
-                snapshots.addAll(level.capturedBlockSnapshots.subList(
-                        firstSnapshot, level.capturedBlockSnapshots.size()));
-                level.capturedBlockSnapshots.subList(
-                        firstSnapshot, level.capturedBlockSnapshots.size()).clear();
+                snapshots.addAll(
+                        level.capturedBlockSnapshots.subList(
+                                firstSnapshot, level.capturedBlockSnapshots.size()));
+                level.capturedBlockSnapshots
+                        .subList(firstSnapshot, level.capturedBlockSnapshots.size())
+                        .clear();
             }
-            if (!placed || snapshots.isEmpty()
+            if (!placed
+                    || snapshots.isEmpty()
                     || ForgeEventFactory.onBlockPlace(placer, snapshots.get(0), placedAgainst)) {
                 level.restoringBlockSnapshots = true;
                 level.captureBlockSnapshots = true;
@@ -94,8 +106,9 @@ public final class ForgeEditAuthority implements EditAuthority {
                     }
                 } finally {
                     level.captureBlockSnapshots = false;
-                    level.capturedBlockSnapshots.subList(
-                            rollbackStart, level.capturedBlockSnapshots.size()).clear();
+                    level.capturedBlockSnapshots
+                            .subList(rollbackStart, level.capturedBlockSnapshots.size())
+                            .clear();
                     level.restoringBlockSnapshots = false;
                 }
                 return false;
@@ -104,8 +117,13 @@ public final class ForgeEditAuthority implements EditAuthority {
                 BlockState previous = snapshot.getReplacedBlock();
                 BlockState current = level.getBlockState(snapshot.getPos());
                 current.onPlace(level, snapshot.getPos(), previous, false);
-                level.markAndNotifyBlock(snapshot.getPos(), level.getChunkAt(snapshot.getPos()),
-                        previous, current, snapshot.getFlag(), UPDATE_RECURSION_LIMIT);
+                level.markAndNotifyBlock(
+                        snapshot.getPos(),
+                        level.getChunkAt(snapshot.getPos()),
+                        previous,
+                        current,
+                        snapshot.getFlag(),
+                        UPDATE_RECURSION_LIMIT);
             }
             return true;
         } finally {
@@ -115,7 +133,10 @@ public final class ForgeEditAuthority implements EditAuthority {
 
     @Override
     public boolean vetoesRemoval(
-            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            ServerPlayer actor,
+            ServerLevel level,
+            BlockPos pos,
+            BlockState state,
             @Nullable BlockEntity blockEntity) {
         BlockEvent.BreakEvent evt = new BlockEvent.BreakEvent(level, pos, state, actor);
         return MinecraftForge.EVENT_BUS.post(evt);

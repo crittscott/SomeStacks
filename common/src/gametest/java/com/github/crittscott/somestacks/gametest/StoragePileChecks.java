@@ -1,8 +1,14 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -15,11 +21,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.ComparatorBlockEntity;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 
 /**
  * Storage pile behavior in a live level that does not touch loader-native automation directly:
@@ -44,10 +45,8 @@ public final class StoragePileChecks {
 
         checkEquals(8, moved, "Moved count");
         checkEquals(0, offered.getCount(), "Offered remainder");
-        checkEquals(64, storage.getItems().getStackInSlot(5).getCount(),
-                "Compatible partial");
-        checkEquals(4, storage.getItems().getStackInSlot(0).getCount(),
-                "First empty slot");
+        checkEquals(64, storage.getItems().getStackInSlot(5).getCount(), "Compatible partial");
+        checkEquals(4, storage.getItems().getStackInSlot(0).getCount(), "First empty slot");
         helper.succeed();
     }
 
@@ -70,7 +69,9 @@ public final class StoragePileChecks {
         checkEquals(0, offered.getCount(), "Offered remainder");
         check(pile != null, "Pile did not resolve");
         checkEquals(2, pile.height(), "Pile height");
-        checkEquals(Items.STONE, pile.getSlot(StorageStackBE.SLOTS).getItem(),
+        checkEquals(
+                Items.STONE,
+                pile.getSlot(StorageStackBE.SLOTS).getItem(),
                 "First slot in grown block");
         helper.succeed();
     }
@@ -112,9 +113,13 @@ public final class StoragePileChecks {
         checkEquals(6, pile.getSlot(1).getCount(), "Consolidated partial stack");
         checkEquals(5, pile.getSlot(2).getCount(), "Distinct component stack");
         check(pile.getSlot(5).isEmpty(), "Packed contents left a gap");
-        checkEquals(CustomData.of(firstTag), pile.getSlot(0).get(DataComponents.CUSTOM_DATA),
+        checkEquals(
+                CustomData.of(firstTag),
+                pile.getSlot(0).get(DataComponents.CUSTOM_DATA),
                 "First component identity");
-        checkEquals(CustomData.of(secondTag), pile.getSlot(2).get(DataComponents.CUSTOM_DATA),
+        checkEquals(
+                CustomData.of(secondTag),
+                pile.getSlot(2).get(DataComponents.CUSTOM_DATA),
                 "Distinct component identity");
         checkEquals(1, pile.getSlot(3).getDamageValue(), "First damage component identity");
         checkEquals(2, pile.getSlot(4).getDamageValue(), "Second damage component identity");
@@ -122,9 +127,9 @@ public final class StoragePileChecks {
     }
 
     /**
-     * Extraction schedules settlement instead of leaving a lasting gap. To reproduce in-game:
-     * store two different stacks, extract the lower visible stack, and wait a moment. The remaining
-     * stack packs into the first Storage position.
+     * Extraction schedules settlement instead of leaving a lasting gap. To reproduce in-game: store
+     * two different stacks, extract the lower visible stack, and wait a moment. The remaining stack
+     * packs into the first Storage position.
      */
     public static void extractionSettlesOnScheduledBlockTick(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
@@ -134,15 +139,19 @@ public final class StoragePileChecks {
         ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY, null);
         checkEquals(64, extracted.getCount(), "Extracted count");
 
-        helper.runAfterDelay(2, () -> {
-            StoragePile pile = StoragePile.at(
-                    helper.getLevel(), helper.absolutePos(ORIGIN));
-            check(pile != null, "Pile disappeared unexpectedly");
-            checkEquals(Items.DIRT, pile.getSlot(0).getItem(),
-                    "Remaining stack did not pack down");
-            check(pile.getSlot(1).isEmpty(), "Gap survived settle");
-            helper.succeed();
-        });
+        helper.runAfterDelay(
+                2,
+                () -> {
+                    StoragePile pile =
+                            StoragePile.at(helper.getLevel(), helper.absolutePos(ORIGIN));
+                    check(pile != null, "Pile disappeared unexpectedly");
+                    checkEquals(
+                            Items.DIRT,
+                            pile.getSlot(0).getItem(),
+                            "Remaining stack did not pack down");
+                    check(pile.getSlot(1).isEmpty(), "Gap survived settle");
+                    helper.succeed();
+                });
     }
 
     /**
@@ -155,7 +164,8 @@ public final class StoragePileChecks {
         StoragePile temporaryPile = temporary.pile();
         check(temporaryPile != null, "Temporary pile did not resolve");
         temporaryPile.settle();
-        check(helper.getLevel().isEmptyBlock(helper.absolutePos(ORIGIN)),
+        check(
+                helper.getLevel().isEmptyBlock(helper.absolutePos(ORIGIN)),
                 "Empty temporary pile remained");
 
         BlockPos permanentPos = ORIGIN.east(3);
@@ -164,7 +174,8 @@ public final class StoragePileChecks {
         check(permanentPile != null, "Permanent pile did not resolve");
         permanentPile.setPermanent(true);
         permanentPile.settle();
-        check(helper.getLevel().getBlockEntity(helper.absolutePos(permanentPos))
+        check(
+                helper.getLevel().getBlockEntity(helper.absolutePos(permanentPos))
                         instanceof StorageStackBE,
                 "Empty permanent pile disappeared");
         helper.succeed();
@@ -183,10 +194,10 @@ public final class StoragePileChecks {
         check(pile != null, "Pile did not resolve");
 
         int expected = pile.comparatorSignal();
-        int lowerSignal = lower.getBlockState().getAnalogOutputSignal(
-                helper.getLevel(), lower.getBlockPos());
-        int upperSignal = upper.getBlockState().getAnalogOutputSignal(
-                helper.getLevel(), upper.getBlockPos());
+        int lowerSignal =
+                lower.getBlockState().getAnalogOutputSignal(helper.getLevel(), lower.getBlockPos());
+        int upperSignal =
+                upper.getBlockState().getAnalogOutputSignal(helper.getLevel(), upper.getBlockPos());
 
         checkEquals(expected, lowerSignal, "Lower comparator signal");
         checkEquals(expected, upperSignal, "Upper comparator signal");
@@ -195,9 +206,10 @@ public final class StoragePileChecks {
 
     /**
      * Placing Storage beneath a permanent pile preserves permanence, repacks contents into the new
-     * base, and republishes comparator output. To reproduce in-game: make a full one-block permanent
-     * pile with a comparator, place another Storage block beneath it, and wait. The joined pile stays
-     * permanent, moves contents downward, and the comparator changes to the two-block fill value.
+     * base, and republishes comparator output. To reproduce in-game: make a full one-block
+     * permanent pile with a comparator, place another Storage block beneath it, and wait. The
+     * joined pile stays permanent, moves contents downward, and the comparator changes to the
+     * two-block fill value.
      */
     public static void ordinaryPlacementBelowPermanentPileRepairsDerivedState(
             GameTestHelper helper) {
@@ -214,48 +226,69 @@ public final class StoragePileChecks {
         check(originalPile != null, "Original pile did not resolve");
         originalPile.setPermanent(true);
 
-        check(level.setBlock(
+        check(
+                level.setBlock(
                         comparatorPos.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL),
                 "Could not place comparator support");
-        check(level.setBlock(
+        check(
+                level.setBlock(
                         comparatorPos,
-                        Blocks.COMPARATOR.defaultBlockState()
+                        Blocks.COMPARATOR
+                                .defaultBlockState()
                                 .setValue(HorizontalDirectionalBlock.FACING, Direction.WEST),
                         Block.UPDATE_ALL),
                 "Could not place comparator");
         originalPile.settle();
 
-        helper.runAfterDelay(3, () -> {
-            check(level.getBlockEntity(comparatorPos) instanceof ComparatorBlockEntity,
-                    "Comparator block entity was missing");
-            ComparatorBlockEntity comparator =
-                    (ComparatorBlockEntity) level.getBlockEntity(comparatorPos);
-            checkEquals(15, comparator.getOutputSignal(), "Initial comparator output");
+        helper.runAfterDelay(
+                3,
+                () -> {
+                    check(
+                            level.getBlockEntity(comparatorPos) instanceof ComparatorBlockEntity,
+                            "Comparator block entity was missing");
+                    ComparatorBlockEntity comparator =
+                            (ComparatorBlockEntity) level.getBlockEntity(comparatorPos);
+                    checkEquals(15, comparator.getOutputSignal(), "Initial comparator output");
 
-            check(level.setBlock(
-                            lowerPos,
-                            CommonRegistry.storageStackBlock().defaultBlockState(),
-                            Block.UPDATE_ALL),
-                    "Could not place Storage Stack below pile");
+                    check(
+                            level.setBlock(
+                                    lowerPos,
+                                    CommonRegistry.storageStackBlock().defaultBlockState(),
+                                    Block.UPDATE_ALL),
+                            "Could not place Storage Stack below pile");
 
-            helper.runAfterDelay(4, () -> {
-                check(level.getBlockEntity(lowerPos) instanceof StorageStackBE,
-                        "Placed Storage Stack disappeared");
-                StorageStackBE lower = (StorageStackBE) level.getBlockEntity(lowerPos);
-                StoragePile joinedPile = lower.pile();
-                check(joinedPile != null, "Joined pile did not resolve");
-                checkEquals(2, joinedPile.height(), "Joined pile height");
-                checkEquals(8, joinedPile.comparatorSignal(), "Joined pile signal");
-                checkEquals(8, comparator.getOutputSignal(), "Published comparator output");
-                check(lower.isPermanent(), "New pile base did not inherit permanence");
-                check(upper.isPermanent(), "Permanence was not propagated through pile");
-                checkEquals(Items.STONE, lower.getItems().getStackInSlot(0).getItem(),
-                        "Pile did not settle into its new base");
-                check(upper.getItems().getStackInSlot(0).isEmpty(),
-                        "Old base contents did not pack down");
-                helper.succeed();
-            });
-        });
+                    helper.runAfterDelay(
+                            4,
+                            () -> {
+                                check(
+                                        level.getBlockEntity(lowerPos) instanceof StorageStackBE,
+                                        "Placed Storage Stack disappeared");
+                                StorageStackBE lower =
+                                        (StorageStackBE) level.getBlockEntity(lowerPos);
+                                StoragePile joinedPile = lower.pile();
+                                check(joinedPile != null, "Joined pile did not resolve");
+                                checkEquals(2, joinedPile.height(), "Joined pile height");
+                                checkEquals(8, joinedPile.comparatorSignal(), "Joined pile signal");
+                                checkEquals(
+                                        8,
+                                        comparator.getOutputSignal(),
+                                        "Published comparator output");
+                                check(
+                                        lower.isPermanent(),
+                                        "New pile base did not inherit permanence");
+                                check(
+                                        upper.isPermanent(),
+                                        "Permanence was not propagated through pile");
+                                checkEquals(
+                                        Items.STONE,
+                                        lower.getItems().getStackInSlot(0).getItem(),
+                                        "Pile did not settle into its new base");
+                                check(
+                                        upper.getItems().getStackInSlot(0).isEmpty(),
+                                        "Old base contents did not pack down");
+                                helper.succeed();
+                            });
+                });
     }
 
     /**
@@ -264,8 +297,7 @@ public final class StoragePileChecks {
      * three-block pile and break the middle block. Its items drop, while the other two blocks keep
      * their own contents and settle independently.
      */
-    public static void breakingMiddleBlockDropsItsContentsAndSplitsThePile(
-            GameTestHelper helper) {
+    public static void breakingMiddleBlockDropsItsContentsAndSplitsThePile(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE middle = placeStorage(helper, ORIGIN.above());
         StorageStackBE upper = placeStorage(helper, ORIGIN.above(2));
@@ -275,23 +307,43 @@ public final class StoragePileChecks {
 
         helper.setBlock(ORIGIN.above(), Blocks.AIR);
 
-        helper.runAfterDelay(3, () -> {
-            checkEquals(7, GameTestScaffold.droppedNear(
-                    helper, middle.getBlockPos(), Items.DIRT), "Dropped middle contents");
-            checkEquals(2, GameTestScaffold.heldAt(
-                    helper, lower.getBlockPos(), Items.STONE), "Lower-run contents");
-            checkEquals(3, GameTestScaffold.heldAt(
-                    helper, upper.getBlockPos(), Items.APPLE), "Upper-run contents");
-            check(helper.getLevel().getBlockEntity(lower.getBlockPos()) instanceof StorageStackBE,
-                    "Lower run disappeared");
-            check(helper.getLevel().getBlockEntity(upper.getBlockPos()) instanceof StorageStackBE,
-                    "Upper run disappeared");
-            checkEquals(1, ((StorageStackBE) helper.getLevel()
-                    .getBlockEntity(lower.getBlockPos())).pile().height(), "Lower-run height");
-            checkEquals(1, ((StorageStackBE) helper.getLevel()
-                    .getBlockEntity(upper.getBlockPos())).pile().height(), "Upper-run height");
-            helper.succeed();
-        });
+        helper.runAfterDelay(
+                3,
+                () -> {
+                    checkEquals(
+                            7,
+                            GameTestScaffold.droppedNear(helper, middle.getBlockPos(), Items.DIRT),
+                            "Dropped middle contents");
+                    checkEquals(
+                            2,
+                            GameTestScaffold.heldAt(helper, lower.getBlockPos(), Items.STONE),
+                            "Lower-run contents");
+                    checkEquals(
+                            3,
+                            GameTestScaffold.heldAt(helper, upper.getBlockPos(), Items.APPLE),
+                            "Upper-run contents");
+                    check(
+                            helper.getLevel().getBlockEntity(lower.getBlockPos())
+                                    instanceof StorageStackBE,
+                            "Lower run disappeared");
+                    check(
+                            helper.getLevel().getBlockEntity(upper.getBlockPos())
+                                    instanceof StorageStackBE,
+                            "Upper run disappeared");
+                    checkEquals(
+                            1,
+                            ((StorageStackBE) helper.getLevel().getBlockEntity(lower.getBlockPos()))
+                                    .pile()
+                                    .height(),
+                            "Lower-run height");
+                    checkEquals(
+                            1,
+                            ((StorageStackBE) helper.getLevel().getBlockEntity(upper.getBlockPos()))
+                                    .pile()
+                                    .height(),
+                            "Upper-run height");
+                    helper.succeed();
+                });
     }
 
     /**
@@ -318,19 +370,23 @@ public final class StoragePileChecks {
         checkEquals(15, pile.comparatorSignal(), "Full pile signal");
         helper.succeed();
     }
+
     /**
-     * To reproduce in-game: fill a Storage pile with mixed stack limits, save and reopen
-     * the world, then extract an item. Comparators match the contents immediately after loading
-     * and again after extraction, before the deferred settlement runs.
+     * To reproduce in-game: fill a Storage pile with mixed stack limits, save and reopen the world,
+     * then extract an item. Comparators match the contents immediately after loading and again
+     * after extraction, before the deferred settlement runs.
      */
     public static void comparatorContributionLoadsAndTracksMutations(GameTestHelper helper) {
         StorageStackBE source = placeStorage(helper, ORIGIN);
         source.getItems().setStackInSlot(0, new ItemStack(Items.STONE, 64));
         source.getItems().setStackInSlot(1, new ItemStack(Items.WOODEN_PICKAXE));
         StorageStackBE loaded = placeStorage(helper, ORIGIN.east(3));
-        loaded.loadWithComponents(source.saveWithoutMetadata(helper.getLevel().registryAccess()),
+        loaded.loadWithComponents(
+                source.saveWithoutMetadata(helper.getLevel().registryAccess()),
                 helper.getLevel().registryAccess());
-        checkEquals(source.pile().comparatorSignal(), loaded.pile().comparatorSignal(),
+        checkEquals(
+                source.pile().comparatorSignal(),
+                loaded.pile().comparatorSignal(),
                 "Signal after loading saved contents");
         checkEquals(2, loaded.pile().comparatorSignal(), "Mixed stack-limit fill");
         loaded.getItems().extractItem(1, 1, false);

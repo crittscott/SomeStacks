@@ -226,7 +226,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLocalContentsChanged(int)" class="member-name-link">onLocalContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt; getItems().getSlots()</code>.</div>
+<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt;
+ getItems().getSlots()</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;serverLevel)</code></div>
@@ -237,7 +238,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportSeamBeneath(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">supportSeamBeneath</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Top-layer occupancy of the Bar Stack below <code>pos</code>, or null when no Bar Stack is beneath it.</div>
+<div class="block">Top-layer occupancy of the Bar Stack below <code>pos</code>, or null when no Bar Stack is beneath
+ it.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportsFreshDeposit(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,int)" class="member-name-link">supportsFreshDeposit</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
@@ -336,9 +338,10 @@ loadScripts(document, 'script');</script>
 <h3>onLocalContentsChanged</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onLocalContentsChanged</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="StackBlockEntity.html#onLocalContentsChanged(int)">StackBlockEntity</a></code></span></div>
-<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt; getItems().getSlots()</code>.
- Runs on either side after dirty/fill updates, even inside a batch, before deferred publication.
- Disk and client snapshot loads bypass this hook and must refresh subtype state in loadStackData.</div>
+<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt;
+ getItems().getSlots()</code>. Runs on either side after dirty/fill updates, even inside a batch,
+ before deferred publication. Disk and client snapshot loads bypass this hook and must refresh
+ subtype state in loadStackData.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="StackBlockEntity.html#onLocalContentsChanged(int)">onLocalContentsChanged</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
@@ -359,8 +362,9 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BarColumn.html" title="class in com.github.crittscott.somestacks.block">BarColumn</a></span>&nbsp;<span class="element-name">column</span>()</div>
 <div class="block">The column this block belongs to, or null on the client and for a block being removed.
 
- <p>Resolved once a tick and held, because a machine reading this block's item handler resolves
- the column once per slot it walks. See <a href="StorageStackBE.html#pile()"><code>StorageStackBE.pile()</code></a> for the full reasoning.</div>
+ <p>Resolved once a tick and held, because a machine reading this block's item handler
+ resolves the column once per slot it walks. See <a href="StorageStackBE.html#pile()"><code>StorageStackBE.pile()</code></a> for the full
+ reasoning.</div>
 </section>
 </li>
 <li>
@@ -444,8 +448,8 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">supportSeamBeneath</span><wbr><span class="parameters">(@Nullable
  net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Top-layer occupancy of the Bar Stack below <code>pos</code>, or null when no Bar Stack is beneath it.
- A null seam grounds a bottom-layer deposit directly on the world.</div>
+<div class="block">Top-layer occupancy of the Bar Stack below <code>pos</code>, or null when no Bar Stack is beneath
+ it. A null seam grounds a bottom-layer deposit directly on the world.</div>
 </section>
 </li>
 <li>

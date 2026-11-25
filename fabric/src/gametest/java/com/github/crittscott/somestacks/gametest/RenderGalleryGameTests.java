@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;

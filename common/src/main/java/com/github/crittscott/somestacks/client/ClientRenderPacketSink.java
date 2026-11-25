@@ -23,9 +23,9 @@ public final class ClientRenderPacketSink {
     private ClientRenderPacketSink() {}
 
     /**
-     * Stages a decoded chunk on the client thread. A first chunk replaces incomplete staging;
-     * only a complete final chunk publishes flags and lists. Rejection clears staging and throws
-     * a runtime exception to the loader's receive handler.
+     * Stages a decoded chunk on the client thread. A first chunk replaces incomplete staging; only
+     * a complete final chunk publishes flags and lists. Rejection clears staging and throws a
+     * runtime exception to the loader's receive handler.
      */
     public static void apply(ConfigSyncPkt packet) {
         try {
@@ -102,9 +102,9 @@ public final class ClientRenderPacketSink {
     }
 
     private static void finish() {
-        if (GEN_MODS.size() != expectedGenMods
-                || DISABLED_MODS.size() != expectedDisabledMods) {
-            throw new IllegalStateException("Config sync ended before reaching its declared totals");
+        if (GEN_MODS.size() != expectedGenMods || DISABLED_MODS.size() != expectedDisabledMods) {
+            throw new IllegalStateException(
+                    "Config sync ended before reaching its declared totals");
         }
 
         StackState.setBlockEnabled(BlockType.STORAGE_STACK, enableStack);

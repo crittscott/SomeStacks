@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.NeoForgeServerConfig;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksNeoForge;
+
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -27,8 +28,7 @@ public final class ConfigurationGameTests {
 
     /** See {@link ConfigurationChecks#overrideJsonUsesInclusiveBounds}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void overrideJsonUsesInclusiveBounds(
-            GameTestHelper helper) {
+    public static void overrideJsonUsesInclusiveBounds(GameTestHelper helper) {
         ConfigurationChecks.overrideJsonUsesInclusiveBounds(helper);
     }
 
@@ -46,7 +46,10 @@ public final class ConfigurationGameTests {
                 helper, GameTestSupport.playerFactory(helper));
     }
 
-    /** See {@link ConfigurationChecks#disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically}. */
+    /**
+     * See {@link
+     * ConfigurationChecks#disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically}.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(
             GameTestHelper helper) {
@@ -60,6 +63,7 @@ public final class ConfigurationGameTests {
         ConfigurationChecks.serverCommandsEnforcePermissionsAndPersistEdits(
                 helper, GameTestSupport.playerFactory(helper));
     }
+
     /** See {@link ConfigurationChecks#ingotTagControlsBarAndSinglesAdmission}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void ingotTagControlsBarAndSinglesAdmission(GameTestHelper helper) {
@@ -72,19 +76,18 @@ public final class ConfigurationGameTests {
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void nativeServerPolicyPersistsCommandLists(GameTestHelper helper) {
-        NeoForgeServerConfig config =
-                NeoForgeServerConfig.INSTANCE;
+        NeoForgeServerConfig config = NeoForgeServerConfig.INSTANCE;
         ServerConfig.Settings original = config.reload();
-        ServerConfig.Backend previous =
-                ServerConfig.backend();
+        ServerConfig.Backend previous = ServerConfig.backend();
         try {
             ServerConfig.install(config);
             ServerConfig.apply(original);
-            ServerConfig.addListEntry(
-                    ServerConfig.DISABLE_ITEMS, "minecraft:diamond");
-            GameTestScaffold.check(config.reload().disableItems().contains("minecraft:diamond"),
+            ServerConfig.addListEntry(ServerConfig.DISABLE_ITEMS, "minecraft:diamond");
+            GameTestScaffold.check(
+                    config.reload().disableItems().contains("minecraft:diamond"),
                     "Command edit did not reach native config values");
-            GameTestScaffold.check(Files.readString(config.path()).contains("minecraft:diamond"),
+            GameTestScaffold.check(
+                    Files.readString(config.path()).contains("minecraft:diamond"),
                     "Command edit did not reach the loader-managed TOML");
         } catch (IOException e) {
             throw new GameTestAssertException("Could not read native config: " + e);
@@ -95,5 +98,4 @@ public final class ConfigurationGameTests {
         }
         helper.succeed();
     }
-
 }

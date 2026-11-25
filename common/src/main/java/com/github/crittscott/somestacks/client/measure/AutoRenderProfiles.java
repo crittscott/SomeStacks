@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -24,13 +25,14 @@ import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.phys.AABB;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.annotation.Nullable;
 
 /**
  * Per-item cache of measured render profiles, persisted client-side so each item is normally
@@ -39,10 +41,10 @@ import java.util.TreeMap;
  * <p>Measurements describe baked models and are invalidated with them:
  *
  * <ul>
- *   <li>A measurement-format change rejects the previous algorithm's entries.</li>
- *   <li>A mod-version change drops entries from that mod's namespace.</li>
- *   <li>A manual resource reload drops the entire cache.</li>
- *   <li>A different resource-pack selection between sessions rejects the persisted cache.</li>
+ *   <li>A measurement-format change rejects the previous algorithm's entries.
+ *   <li>A mod-version change drops entries from that mod's namespace.
+ *   <li>A manual resource reload drops the entire cache.
+ *   <li>A different resource-pack selection between sessions rejects the persisted cache.
  * </ul>
  *
  * The initial resource reload must preserve the persisted cache long enough to compare its recorded
@@ -65,6 +67,7 @@ public final class AutoRenderProfiles {
      * models that report gui3d but draw no real depth.
      */
     private static final float FLAT_RATIO = 0.1f;
+
     private static final float MIN_EXTENT = 0.001f;
     private static final float BUTTON_FIT_SCALE = 0.75f;
 
@@ -91,9 +94,9 @@ public final class AutoRenderProfiles {
     }
 
     /**
-     * The first invocation is the initial resource load and keeps the persisted cache;
-     * any later invocation is a genuine reload that may have changed models, so both
-     * the in-memory cache and the file are discarded.
+     * The first invocation is the initial resource load and keeps the persisted cache; any later
+     * invocation is a genuine reload that may have changed models, so both the in-memory cache and
+     * the file are discarded.
      */
     public static void onResourceReload() {
         if (!initialResourceLoadSeen) {
@@ -129,9 +132,11 @@ public final class AutoRenderProfiles {
         for (Map.Entry<Item, RenderProfile> entry : CACHE.entrySet()) {
             ResourceLocation id = BuiltInRegistries.ITEM.getKey(entry.getKey());
             RenderProfile profile = entry.getValue();
-            entries.put(id, new ItemRenderConfig(profile.mode(), profile.scale(), profile.offset()));
+            entries.put(
+                    id, new ItemRenderConfig(profile.mode(), profile.scale(), profile.offset()));
             if (!versions.has(id.getNamespace())) {
-                versions.addProperty(id.getNamespace(), PlatformServices.modVersion(id.getNamespace()));
+                versions.addProperty(
+                        id.getNamespace(), PlatformServices.modVersion(id.getNamespace()));
             }
         }
 
@@ -183,9 +188,10 @@ public final class AutoRenderProfiles {
                 return;
             }
 
-            JsonObject versions = root.has(FIELD_VERSIONS)
-                    ? root.getAsJsonObject(FIELD_VERSIONS)
-                    : new JsonObject();
+            JsonObject versions =
+                    root.has(FIELD_VERSIONS)
+                            ? root.getAsJsonObject(FIELD_VERSIONS)
+                            : new JsonObject();
 
             JsonObject encodedEntries = root.getAsJsonObject(FIELD_ENTRIES);
             Map<ResourceLocation, ItemRenderConfig> entries =
@@ -201,7 +207,8 @@ public final class AutoRenderProfiles {
                 }
                 JsonElement recorded = versions.get(id.getNamespace());
                 if (recorded == null
-                        || !recorded.getAsString().equals(PlatformServices.modVersion(id.getNamespace()))) {
+                        || !recorded.getAsString()
+                                .equals(PlatformServices.modVersion(id.getNamespace()))) {
                     dirty = true;
                     skipped++;
                     continue;
@@ -216,7 +223,9 @@ public final class AutoRenderProfiles {
             }
             SomeStacksCommon.LOGGER.info(
                     "Loaded {} measured render profile(s) from {}; skipped {} stale or invalid cache entries",
-                    CACHE.size(), cacheFile, skipped);
+                    CACHE.size(),
+                    cacheFile,
+                    skipped);
         } catch (Exception e) {
             SomeStacksCommon.LOGGER.warn("Failed to read {}: {}", cacheFile, e.getMessage());
         }
@@ -239,7 +248,8 @@ public final class AutoRenderProfiles {
 
     /** The enabled resource packs in application order, which determines the baked models. */
     private static String selectedPackIds() {
-        return String.join("\n", Minecraft.getInstance().getResourcePackRepository().getSelectedIds());
+        return String.join(
+                "\n", Minecraft.getInstance().getResourcePackRepository().getSelectedIds());
     }
 
     private static RenderProfile compute(ItemStack stack) {
@@ -294,31 +304,34 @@ public final class AutoRenderProfiles {
     }
 
     /**
-     * Fits measured bounds to a stack cell. Returns null when the measurement produced
-     * nothing usable, leaving the caller to fall back.
+     * Fits measured bounds to a stack cell. Returns null when the measurement produced nothing
+     * usable, leaving the caller to fall back.
      */
     @Nullable
-    private static RenderProfile fit(ModelMeasurement.Result result, RenderMode mode, float scaleFactor) {
+    private static RenderProfile fit(
+            ModelMeasurement.Result result, RenderMode mode, float scaleFactor) {
         AABB bounds = result.bounds();
         if (bounds == null) {
             return null;
         }
 
-        double maxExtent = Math.max(bounds.getXsize(), Math.max(bounds.getYsize(), bounds.getZsize()));
+        double maxExtent =
+                Math.max(bounds.getXsize(), Math.max(bounds.getYsize(), bounds.getZsize()));
         if (maxExtent < MIN_EXTENT) {
             return null;
         }
 
-        float scale = (float) (TARGET_FILL * scaleFactor * CubeRenderHelper.CELL_LOCAL_SIZE / maxExtent);
+        float scale =
+                (float) (TARGET_FILL * scaleFactor * CubeRenderHelper.CELL_LOCAL_SIZE / maxExtent);
         scale = Math.max(OverrideJsonCodec.MIN_SCALE, Math.min(OverrideJsonCodec.MAX_SCALE, scale));
 
         // The measured bounds already include the renderer's -0.5 shift, so the geometry
         // center directly gives the offset that recenters it on the cell center.
-        RenderOffset offset = new RenderOffset(
-                (float) (-scale * (bounds.minX + bounds.maxX) * 0.5),
-                (float) (-scale * (bounds.minY + bounds.maxY) * 0.5),
-                (float) (-scale * (bounds.minZ + bounds.maxZ) * 0.5)
-        );
+        RenderOffset offset =
+                new RenderOffset(
+                        (float) (-scale * (bounds.minX + bounds.maxX) * 0.5),
+                        (float) (-scale * (bounds.minY + bounds.maxY) * 0.5),
+                        (float) (-scale * (bounds.minZ + bounds.maxZ) * 0.5));
 
         return new RenderProfile(mode, scale, offset);
     }
@@ -340,7 +353,6 @@ public final class AutoRenderProfiles {
             return false;
         }
         Block block = blockItem.getBlock();
-        return block instanceof BasePressurePlateBlock
-                || block instanceof CarpetBlock;
+        return block instanceof BasePressurePlateBlock || block instanceof CarpetBlock;
     }
 }

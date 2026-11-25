@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.client.ClientEvents;
 import com.github.crittscott.somestacks.client.KeyMappings;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.Commands;
 import net.minecraft.world.InteractionResult;
@@ -18,6 +19,7 @@ public final class ClientCallbackGameTests {
     private ClientCallbackGameTests() {}
 
     /** Registers the local /ssclienttest smoke command in a client running the test mod. */
+    // spotless:off
     @SubscribeEvent
     public static void register(RegisterClientCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("ssclienttest").executes(ctx ->
@@ -30,4 +32,5 @@ public final class ClientCallbackGameTests {
                             click.getUseBlock() == TriState.FALSE, click.getUseItem() == TriState.FALSE);
                 })));
     }
+    // spotless:on
 }

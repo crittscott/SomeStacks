@@ -282,14 +282,14 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
- through item automation; it accepts nothing and creates no block.</div>
+<div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and
+ insert through item automation; it accepts nothing and creates no block.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">To reproduce in-game: stand in the growth space above a full Singles column and insert through
- item automation; it accepts nothing and does not grow into the entity.</div>
+<div class="block">To reproduce in-game: stand in the growth space above a full Singles column and insert
+ through item automation; it accepts nothing and does not grow into the entity.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -364,7 +364,8 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <h3>automationGrowthConsultsProtectionWithoutSyntheticClick</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">automationGrowthConsultsProtectionWithoutSyntheticClick</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce in-game: deny [SomeStacks] placement in a Common Protection API claim, then
- insert into a full Storage pile through automation. Growth accepts nothing and keeps the input.</div>
+ insert into a full Storage pile through automation. Growth accepts nothing and keeps the
+ input.</div>
 </section>
 </li>
 <li>
@@ -420,9 +421,10 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <section class="detail" id="adjacentConsultationHonorsProtectionQuery(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>adjacentConsultationHonorsProtectionQuery</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">adjacentConsultationHonorsProtectionQuery</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">A Common Protection API denial vetoes an adjacent-stack consultation. To reproduce in-game: deny
- item use at a claimed destination, then hold the modifier and right-click the neighboring
- block toward it. No item is deposited and no stack is placed in the denied position.</div>
+<div class="block">A Common Protection API denial vetoes an adjacent-stack consultation. To reproduce in-game:
+ deny item use at a claimed destination, then hold the modifier and right-click the
+ neighboring block toward it. No item is deposited and no stack is placed in the denied
+ position.</div>
 </section>
 </li>
 <li>
@@ -475,8 +477,8 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <h3>adjacentDepositsHonorBlockUseCallbacks</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">adjacentDepositsHonorBlockUseCallbacks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Destination block-use callbacks can refuse neighboring deposits with or without Common
- Protection API. To reproduce in-game: deny block use at a stack with a protection mod,
- then modifier-click its support through an empty cell. No item moves.</div>
+ Protection API. To reproduce in-game: deny block use at a stack with a protection mod, then
+ modifier-click its support through an empty cell. No item moves.</div>
 </section>
 </li>
 <li>
@@ -505,8 +507,8 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <section class="detail" id="singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>singlesGrowthAnswersToProtectionInSimulationAndCommit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesGrowthAnswersToProtectionInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
- through item automation; it accepts nothing and creates no block.</div>
+<div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and
+ insert through item automation; it accepts nothing and creates no block.</div>
 </section>
 </li>
 <li>
@@ -529,8 +531,8 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <section class="detail" id="singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: stand in the growth space above a full Singles column and insert through
- item automation; it accepts nothing and does not grow into the entity.</div>
+<div class="block">To reproduce in-game: stand in the growth space above a full Singles column and insert
+ through item automation; it accepts nothing and does not grow into the entity.</div>
 </section>
 </li>
 <li>

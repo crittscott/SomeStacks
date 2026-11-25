@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.network.ModNetworking;
+
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
@@ -26,12 +27,11 @@ public final class ClientSetup {
         modBus.addListener(ClientSetup::onRegisterRenderers);
         modBus.addListener(ClientSetup::onRegisterKeys);
         modBus.addListener(ClientSetup::onRegisterReloadListeners);
-        NeoForge.EVENT_BUS.addListener(
-                (ClientPlayerNetworkEvent.LoggingOut evt) -> {
-                    ClientGestures.resetSync();
-                    ClientRenderPacketSink.clear();
-                    AutoRenderProfiles.saveCache();
-                });
+        NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut evt) -> {
+            ClientGestures.resetSync();
+            ClientRenderPacketSink.clear();
+            AutoRenderProfiles.saveCache();
+        });
         NeoForge.EVENT_BUS.addListener(
                 (GameShuttingDownEvent evt) -> AutoRenderProfiles.saveCache());
     }
@@ -50,9 +50,10 @@ public final class ClientSetup {
         evt.registerReloadListener(new ItemRenderOverrides());
         evt.registerReloadListener(new BarTextureStore());
         evt.registerReloadListener(
-                (ResourceManagerReloadListener) manager -> {
-                    AutoRenderProfiles.onResourceReload();
-                    CubeRenderHelper.onResourceReload();
-                });
+                (ResourceManagerReloadListener)
+                        manager -> {
+                            AutoRenderProfiles.onResourceReload();
+                            CubeRenderHelper.onResourceReload();
+                        });
     }
 }

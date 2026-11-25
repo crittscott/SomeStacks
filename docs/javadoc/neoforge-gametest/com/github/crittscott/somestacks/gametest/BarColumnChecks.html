@@ -91,9 +91,9 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">BarColumnChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Bar support and collapse in a live level that does not touch loader-native automation directly:
- item validity, grounding at the bottom of a column, footprint overlap deciding support across
- the alternating layer orientations, and player extraction dropping what it unsupports.
- Loader-native automation and protection-event tests stay in each loader's GameTest classes.</div>
+ item validity, grounding at the bottom of a column, footprint overlap deciding support across the
+ alternating layer orientations, and player extraction dropping what it unsupports. Loader-native
+ automation and protection-event tests stay in each loader's GameTest classes.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -225,8 +225,8 @@ loadScripts(document, 'script');</script>
 <h3>bricksAreBarItemsButBrickBlocksAreNot</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">bricksAreBarItemsButBrickBlocksAreNot</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Bar holds brick items on every loader but not blocks built from bricks. To reproduce in-game:
- deposit a brick and a nether brick into a Bar Stack, then try a bricks block and
- brick stairs. Only the two brick items are stored.</div>
+ deposit a brick and a nether brick into a Bar Stack, then try a bricks block and brick
+ stairs. Only the two brick items are stored.</div>
 </section>
 </li>
 <li>
@@ -296,8 +296,8 @@ loadScripts(document, 'script');</script>
 <h3>playerCascadeConsolidatesAcrossBlocks</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCascadeConsolidatesAcrossBlocks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">A player-triggered cascade consolidates matching drops across block boundaries. To reproduce
- in-game: build a dense supported Bar column spanning two blocks and remove its lowest support.
- All unsupported Bars are returned in consolidated item entities.</div>
+ in-game: build a dense supported Bar column spanning two blocks and remove its lowest
+ support. All unsupported Bars are returned in consolidated item entities.</div>
 </section>
 </li>
 <li>
@@ -316,8 +316,8 @@ loadScripts(document, 'script');</script>
 <div class="block">The comparator range reserves 0 for an empty column, as a vanilla container's does, and a
  position holds one bar, so full means every position of every block occupied.
 
- <p>To reproduce in-game: compare an empty Bar column, the same column with one Bar, and a full
- column. Their comparator outputs are 0, at least 1, and 15 respectively.</div>
+ <p>To reproduce in-game: compare an empty Bar column, the same column with one Bar, and a
+ full column. Their comparator outputs are 0, at least 1, and 15 respectively.</div>
 </section>
 </li>
 <li>
@@ -325,8 +325,8 @@ loadScripts(document, 'script');</script>
 <h3>comparatorReadsTheWholeColumnFromEveryBlock</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReadsTheWholeColumnFromEveryBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Every block in a Bar column reports the same whole-column fill. To reproduce in-game: make a
- two-block column with one block full and the other empty, then place comparators against both.
- Their outputs match.</div>
+ two-block column with one block full and the other empty, then place comparators against
+ both. Their outputs match.</div>
 </section>
 </li>
 <li>

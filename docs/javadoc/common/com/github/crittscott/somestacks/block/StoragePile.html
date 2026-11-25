@@ -102,8 +102,8 @@ loadScripts(document, 'script');</script>
  <p>Every operation on a Storage Stack resolves the pile it belongs to and acts on the whole
  column: deposits fill from the base upward whatever block or slot they were aimed at, the
  capability exposes every block's slots as one flat range, and settling consolidates, sorts and
- packs the entire height down. The base block's <code>permanent</code> flag is the pile's, and
- settling propagates it, so a pile that is split or joined returns to a consistent state.
+ packs the entire height down. The base block's <code>permanent</code> flag is the pile's, and settling
+ propagates it, so a pile that is split or joined returns to a consistent state.
 
  <p>An instance describes the run bounds at resolution time. Block entities cache it for the
  current tick, and placement or removal invalidates every affected cache immediately.</div>
@@ -135,15 +135,15 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&nbsp;placed)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it
- from the block below when there is one and otherwise from the block above.</div>
+<div class="block">Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it from
+ the block below when there is one and otherwise from the block above.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">at</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Resolves the pile containing <code>pos</code>, or <code>null</code> when that position holds no
- Storage Stack.</div>
+<div class="block">Resolves the pile containing <code>pos</code>, or <code>null</code> when that position holds no Storage
+ Stack.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
@@ -164,16 +164,16 @@ loadScripts(document, 'script');</script>
  int&nbsp;amount,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Extracts up to <code>amount</code> items from one pile slot and schedules the settle that packs the
- rest down over it.</div>
+<div class="block">Extracts up to <code>amount</code> items from one pile slot and schedules the settle that packs
+ the rest down over it.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;flatSlot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Puts what it can of <code>stack</code> into the one slot at <code>flatSlot</code>, growing the pile when
- that slot lies in the block above it.</div>
+<div class="block">Puts what it can of <code>stack</code> into the one slot at <code>flatSlot</code>, growing the pile
+ when that slot lies in the block above it.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isPermanent()" class="member-name-link">isPermanent</a>()</code></div>
@@ -224,9 +224,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations">@Nullable
 </span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></span>&nbsp;<span class="element-name">at</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Resolves the pile containing <code>pos</code>, or <code>null</code> when that position holds no
- Storage Stack. Client-side levels never resolve a pile: the pile is server state, and
- reading its bounds would consult the server config.</div>
+<div class="block">Resolves the pile containing <code>pos</code>, or <code>null</code> when that position holds no Storage
+ Stack. Client-side levels never resolve a pile: the pile is server state, and reading its
+ bounds would consult the server config.</div>
 </section>
 </li>
 <li>
@@ -235,9 +235,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">columnHasRoomFor</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 <div class="block">Whether a Storage Stack may be created at <code>pos</code>: the contiguous column it would form,
- counting the runs both below and above it, must fit the configured maximum. Testing the
- whole resulting column rather than one neighboring pile is what stops a block placed into
- the gap between two piles from joining them into an over-tall one.</div>
+ counting the runs both below and above it, must fit the configured maximum. Testing the whole
+ resulting column rather than one neighboring pile is what stops a block placed into the gap
+ between two piles from joining them into an over-tall one.</div>
 </section>
 </li>
 <li>
@@ -246,10 +246,10 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">adoptNeighbourState</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&nbsp;placed)</span></div>
-<div class="block">Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it
- from the block below when there is one and otherwise from the block above. Placing a block
- beneath a permanent pile makes it the new base, so without this the pile would silently
- become temporary.</div>
+<div class="block">Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it from
+ the block below when there is one and otherwise from the block above. Placing a block beneath
+ a permanent pile makes it the new base, so without this the pile would silently become
+ temporary.</div>
 </section>
 </li>
 <li>
@@ -281,8 +281,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extract</span><wbr><span class="parameters">(int&nbsp;flatSlot,
  int&nbsp;amount,
  boolean&nbsp;simulate)</span></div>
-<div class="block">Extracts up to <code>amount</code> items from one pile slot and schedules the settle that packs the
- rest down over it.</div>
+<div class="block">Extracts up to <code>amount</code> items from one pile slot and schedules the settle that packs
+ the rest down over it.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>flatSlot</code> - the pile slot to extract, numbered from the bottom block upward</dd>
@@ -303,8 +303,8 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>placer</code> - the player responsible for any block this deposit creates, or null for
-               automation, whose growth is attributed to the automation actor and checked
-               against the same protections</dd>
+     automation, whose growth is attributed to the automation actor and checked against the
+     same protections</dd>
 <dt>Returns:</dt>
 <dd>how many items were taken from <code>fromHand</code>, which is shrunk by that amount</dd>
 </dl>
@@ -316,8 +316,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">insertAt</span><wbr><span class="parameters">(int&nbsp;flatSlot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</span></div>
-<div class="block">Puts what it can of <code>stack</code> into the one slot at <code>flatSlot</code>, growing the pile when
- that slot lies in the block above it.
+<div class="block">Puts what it can of <code>stack</code> into the one slot at <code>flatSlot</code>, growing the pile
+ when that slot lies in the block above it.
 
  <p>A pile is genuinely a bag, so unlike the two structures its automated insertion is an
  ordinary positional one: the slot named takes what a slot takes, and the settle scheduled

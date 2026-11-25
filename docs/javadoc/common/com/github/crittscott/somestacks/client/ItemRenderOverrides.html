@@ -98,13 +98,13 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ItemRenderOverrides</span>
 <span class="extends-implements">extends net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&gt;</span></div>
 <div class="block">The client's item render configuration, layered by authority. The first matching entry owns the
- entire presentation: the user's override file, then bundled
- resource overrides. Items absent from every layer use measured profiles.
+ entire presentation: the user's override file, then bundled resource overrides. Items absent from
+ every layer use measured profiles.
 
  <p>A bundled resource-override file is named for the namespace whose items it covers, and covers
- no other. The bundled data spans mods, most of which any one client cannot use, so a
- file naming a namespace this client does not have is skipped without parsing or retention. A file
- whose name is not a namespace therefore applies to nothing.</div>
+ no other. The bundled data spans mods, most of which any one client cannot use, so a file naming
+ a namespace this client does not have is skipped without parsing or retention. A file whose name
+ is not a namespace therefore applies to nothing.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -175,8 +175,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#handleWriteRequest()" class="member-name-link">handleWriteRequest</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Writes the user layer to the user override file and reports the result to the
- player.</div>
+<div class="block">Writes the user layer to the user override file and reports the result to the player.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#prepare(net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">prepare</a><wbr>(net.minecraft.server.packs.resources.ResourceManager&nbsp;resourceManager,
@@ -299,10 +298,9 @@ loadScripts(document, 'script');</script>
 <h3>resolve</h3>
 <div class="member-signature"><span class="annotations">@Nullable
 </span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="RenderProfile.html" title="class in com.github.crittscott.somestacks.client">RenderProfile</a></span>&nbsp;<span class="element-name">resolve</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
-<div class="block">Resolves the item's presentation through the override layers. The first layer
- with an entry owns the presentation: only a missing mode is measured, because
- scale and offset mean different things from one mode to the next; missing scale
- and offset take plain defaults.</div>
+<div class="block">Resolves the item's presentation through the override layers. The first layer with an entry
+ owns the presentation: only a missing mode is measured, because scale and offset mean
+ different things from one mode to the next; missing scale and offset take plain defaults.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the complete profile, or null for an empty stack.</dd>
@@ -313,9 +311,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="handleWriteRequest()">
 <h3>handleWriteRequest</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleWriteRequest</span>()</div>
-<div class="block">Writes the user layer to the user override file and reports the result to the
- player. The map contains only entries the user explicitly set, so the file never
- accumulates measured or bundled values, and reset entries disappear from it.</div>
+<div class="block">Writes the user layer to the user override file and reports the result to the player. The map
+ contains only entries the user explicitly set, so the file never accumulates measured or
+ bundled values, and reset entries disappear from it.</div>
 </section>
 </li>
 <li>

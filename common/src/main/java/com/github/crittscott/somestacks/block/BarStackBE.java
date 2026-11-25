@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -19,10 +20,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 /**
  * One Bar Stack: 64 bars laid in eight alternating layers of eight.
@@ -42,8 +43,8 @@ public class BarStackBE extends StackBlockEntity {
     private VoxelShape cachedShape = null;
 
     /**
-     * Set when a cascade is removing this block, so {@link BarStackBlock#onRemove} knows the
-     * column above is already being walked and does not start a second collapse of it.
+     * Set when a cascade is removing this block, so {@link BarStackBlock#onRemove} knows the column
+     * above is already being walked and does not start a second collapse of it.
      */
     private boolean removedByCascade = false;
 
@@ -68,8 +69,8 @@ public class BarStackBE extends StackBlockEntity {
 
     /** Reloadable data-pack classification of items that belong in Bar rather than Singles. */
     public static final TagKey<Item> INGOTS =
-            TagKey.create(Registries.ITEM,
-                    ResourceLocation.fromNamespaceAndPath("somestacks", "ingots"));
+            TagKey.create(
+                    Registries.ITEM, ResourceLocation.fromNamespaceAndPath("somestacks", "ingots"));
 
     /** Accepts nonempty tagged items whose namespaces are not disabled by server policy. */
     public static boolean isValidBarItem(ItemStack stack) {
@@ -85,8 +86,9 @@ public class BarStackBE extends StackBlockEntity {
     /**
      * The column this block belongs to, or null on the client and for a block being removed.
      *
-     * <p>Resolved once a tick and held, because a machine reading this block's item handler resolves
-     * the column once per slot it walks. See {@link StorageStackBE#pile()} for the full reasoning.
+     * <p>Resolved once a tick and held, because a machine reading this block's item handler
+     * resolves the column once per slot it walks. See {@link StorageStackBE#pile()} for the full
+     * reasoning.
      */
     @Nullable
     public BarColumn column() {
@@ -173,8 +175,13 @@ public class BarStackBE extends StackBlockEntity {
             extracted = items.extractItem(index, 1, false);
 
             if (!extracted.isEmpty()) {
-                cascadeFrom(serverLevel, this,
-                        supportSeamBeneath(level, getBlockPos()), topBefore, drops, actor);
+                cascadeFrom(
+                        serverLevel,
+                        this,
+                        supportSeamBeneath(level, getBlockPos()),
+                        topBefore,
+                        drops,
+                        actor);
             }
         } finally {
             endBatch();
@@ -186,9 +193,9 @@ public class BarStackBE extends StackBlockEntity {
 
     /**
      * Writes a bar the column already holds into an empty position, without the validity test an
-     * insertion runs. The caller owns the bar and the position it goes to; see
-     * {@link BarColumn#extract}, the one place a bar changes position in place, for why validity has
-     * no say in it.
+     * insertion runs. The caller owns the bar and the position it goes to; see {@link
+     * BarColumn#extract}, the one place a bar changes position in place, for why validity has no
+     * say in it.
      */
     void relocateInto(int index, ItemStack bar) {
         items.setStackInSlot(index, bar);
@@ -200,8 +207,11 @@ public class BarStackBE extends StackBlockEntity {
                 && index < SLOTS
                 && items.getStackInSlot(index).isEmpty()
                 && BarCubeIdx.isGrounded(
-                        index, items, index < BarCubeIdx.LAYER_SIZE
-                                ? supportSeamBeneath(level, getBlockPos()) : null);
+                        index,
+                        items,
+                        index < BarCubeIdx.LAYER_SIZE
+                                ? supportSeamBeneath(level, getBlockPos())
+                                : null);
     }
 
     /** Whether an empty Bar block at {@code pos} supports its first bar. */
@@ -212,8 +222,8 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     /**
-     * Top-layer occupancy of the Bar Stack below {@code pos}, or null when no Bar Stack is beneath it.
-     * A null seam grounds a bottom-layer deposit directly on the world.
+     * Top-layer occupancy of the Bar Stack below {@code pos}, or null when no Bar Stack is beneath
+     * it. A null seam grounds a bottom-layer deposit directly on the world.
      */
     @Nullable
     public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
@@ -226,16 +236,20 @@ public class BarStackBE extends StackBlockEntity {
     /**
      * Settles {@code start} against the seam beneath it, then carries the result up the column so a
      * vertical run of Bar Stacks behaves as one stack. Support crosses the seam per footprint, so a
-     * block above loses only the bars whose support went away rather than collapsing wholesale. Only
-     * the top layer can hold up the block above, so a block whose top layer survives intact ends the
-     * walk. A block emptied along the way removes itself and passes on its now-empty top layer,
-     * which is why an emptied or vanished block needs no case of its own: nothing overlaps an empty
-     * seam. {@code topBefore} is {@code start}'s top layer as it stood before the edit that prompted
-     * the settle, which the edit itself may already have changed.
+     * block above loses only the bars whose support went away rather than collapsing wholesale.
+     * Only the top layer can hold up the block above, so a block whose top layer survives intact
+     * ends the walk. A block emptied along the way removes itself and passes on its now-empty top
+     * layer, which is why an emptied or vanished block needs no case of its own: nothing overlaps
+     * an empty seam. {@code topBefore} is {@code start}'s top layer as it stood before the edit
+     * that prompted the settle, which the edit itself may already have changed.
      */
-    static void cascadeFrom(ServerLevel columnLevel, BarStackBE start,
-                            @Nullable boolean[] seamBelow, boolean[] topBefore,
-                            BarDropBatch drops, @Nullable ServerPlayer actor) {
+    static void cascadeFrom(
+            ServerLevel columnLevel,
+            BarStackBE start,
+            @Nullable boolean[] seamBelow,
+            boolean[] topBefore,
+            BarDropBatch drops,
+            @Nullable ServerPlayer actor) {
         BarStackBE be = start;
         boolean[] seam = seamBelow;
         boolean[] before = topBefore;
@@ -259,9 +273,10 @@ public class BarStackBE extends StackBlockEntity {
             // the cascade is already walking its own way up, and lowered again if nothing went.
             if (be.isEmpty()) {
                 be.removedByCascade = true;
-                boolean removed = actor == null
-                        ? WorldEdits.removeChecked(columnLevel, be.getBlockPos())
-                        : WorldEdits.removeChecked(actor, columnLevel, be.getBlockPos());
+                boolean removed =
+                        actor == null
+                                ? WorldEdits.removeChecked(columnLevel, be.getBlockPos())
+                                : WorldEdits.removeChecked(actor, columnLevel, be.getBlockPos());
                 if (!removed) {
                     be.removedByCascade = false;
                 }
@@ -287,8 +302,13 @@ public class BarStackBE extends StackBlockEntity {
      */
     static void collapseAbove(ServerLevel level, BlockPos removed, BarDropBatch drops) {
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {
-            cascadeFrom(level, above, BarCubeIdx.emptySeam(),
-                    BarCubeIdx.topLayerOccupancy(above.items), drops, null);
+            cascadeFrom(
+                    level,
+                    above,
+                    BarCubeIdx.emptySeam(),
+                    BarCubeIdx.topLayerOccupancy(above.items),
+                    drops,
+                    null);
         }
     }
 

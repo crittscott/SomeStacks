@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.fabric.FabricPlatformServices;
 import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.network.ProtocolPkt;
 import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -20,16 +21,17 @@ public final class SomeStacksFabric implements ModInitializer {
     public void onInitialize() {
         FabricPlatformServices platform = new FabricPlatformServices();
         PlatformServices.install(platform);
-        ServerConfig.install(new TomlServerConfig(net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir()));
+        ServerConfig.install(
+                new TomlServerConfig(
+                        net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir()));
         FabricRegistry.init();
         FabricItemStorage.init();
         FabricStackInteractionEvents.init();
         FabricNetworking.registerPayloads();
         FabricNetworking.initServer();
 
-        CommandRegistrationCallback.EVENT.register(
-                (dispatcher, registryAccess, environment) ->
-                        SomeStacksServer.registerCommands(dispatcher, registryAccess));
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+                SomeStacksServer.registerCommands(dispatcher, registryAccess));
         ServerTickEvents.END_SERVER_TICK.register(server -> SomeStacksServer.onServerTickEnd());
 
         ServerLifecycleEvents.SERVER_STARTING.register(SomeStacksServer::onServerStarting);
@@ -42,10 +44,10 @@ public final class SomeStacksFabric implements ModInitializer {
                 handler.disconnect(Component.translatable("somestacks.disconnect.protocol"));
             }
         });
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
-                SomeStacksServer.onPlayerJoined(handler.player));
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
-                SomeStacksServer.onPlayerLeft(handler.player.getUUID()));
+        ServerPlayConnectionEvents.JOIN.register(
+                (handler, sender, server) -> SomeStacksServer.onPlayerJoined(handler.player));
+        ServerPlayConnectionEvents.DISCONNECT.register(
+                (handler, server) -> SomeStacksServer.onPlayerLeft(handler.player.getUUID()));
 
         SomeStacksCommon.LOGGER.info(
                 "Some Stacks v{} initialized for Fabric",

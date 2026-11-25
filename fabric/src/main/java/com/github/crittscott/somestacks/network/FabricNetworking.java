@@ -8,7 +8,9 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.function.BiConsumer;
 
-/** Fabric payload registration and server receivers around the shared packet codecs and handlers. */
+/**
+ * Fabric payload registration and server receivers around the shared packet codecs and handlers.
+ */
 public final class FabricNetworking {
     private FabricNetworking() {}
 
@@ -17,10 +19,8 @@ public final class FabricNetworking {
      * common initializer on the physical client and dedicated server before either side connects.
      */
     public static void registerPayloads() {
-        PayloadTypeRegistry.configurationC2S().register(
-                ProtocolPkt.TYPE, ProtocolPkt.STREAM_CODEC);
-        PayloadTypeRegistry.configurationS2C().register(
-                ProtocolPkt.TYPE, ProtocolPkt.STREAM_CODEC);
+        PayloadTypeRegistry.configurationC2S().register(ProtocolPkt.TYPE, ProtocolPkt.STREAM_CODEC);
+        PayloadTypeRegistry.configurationS2C().register(ProtocolPkt.TYPE, ProtocolPkt.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(GestureStatePkt.TYPE, GestureStatePkt.STREAM_CODEC);
 
         PayloadTypeRegistry.playS2C().register(ConfigSyncPkt.TYPE, ConfigSyncPkt.STREAM_CODEC);
@@ -28,7 +28,7 @@ public final class FabricNetworking {
 
     public static void initServer() {
         ServerConfigurationNetworking.registerGlobalReceiver(
-                ProtocolPkt.TYPE, (payload, context) -> { });
+                ProtocolPkt.TYPE, (payload, context) -> {});
         registerServer(GestureStatePkt.TYPE, GestureStatePkt::handleServer);
     }
 
@@ -38,7 +38,7 @@ public final class FabricNetworking {
 
     private static <T extends CustomPacketPayload> void registerServer(
             CustomPacketPayload.Type<T> type, BiConsumer<T, ServerPlayer> handler) {
-        ServerPlayNetworking.registerGlobalReceiver(type,
-                (payload, context) -> handler.accept(payload, context.player()));
+        ServerPlayNetworking.registerGlobalReceiver(
+                type, (payload, context) -> handler.accept(payload, context.player()));
     }
 }

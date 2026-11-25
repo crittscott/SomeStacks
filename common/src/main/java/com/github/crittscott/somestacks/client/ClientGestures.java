@@ -3,14 +3,16 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.util.StackMode;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.HitResult;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import javax.annotation.Nullable;
 
 /** Shared client gesture state and its loader-specific state-sync sender. */
 public final class ClientGestures {
@@ -28,7 +30,8 @@ public final class ClientGestures {
 
     /** Replaces the loader sender and returns its predecessor; null detaches the sender. */
     @Nullable
-    public static Consumer<CustomPacketPayload> setSender(@Nullable Consumer<CustomPacketPayload> sender) {
+    public static Consumer<CustomPacketPayload> setSender(
+            @Nullable Consumer<CustomPacketPayload> sender) {
         Consumer<CustomPacketPayload> previous = ClientGestures.sender;
         ClientGestures.sender = sender;
         return previous;
@@ -42,9 +45,11 @@ public final class ClientGestures {
     public static void cycleMode() {
         StackMode startMode = stackMode;
         do {
-            stackMode = StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
+            stackMode =
+                    StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
             if (stackMode == StackMode.TOGGLE_PERMANENT) break;
-            if (stackMode.isBlockType() && StackState.isBlockTypeEnabled(stackMode.toBlockType())) break;
+            if (stackMode.isBlockType() && StackState.isBlockTypeEnabled(stackMode.toBlockType()))
+                break;
             if (stackMode == startMode) break;
         } while (true);
     }

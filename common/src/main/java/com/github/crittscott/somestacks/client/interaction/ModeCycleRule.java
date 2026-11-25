@@ -10,9 +10,7 @@ import com.github.crittscott.somestacks.client.ClientGestures;
 public final class ModeCycleRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {
-        return ctx.isMainHand()
-                && ctx.isVDown()
-                && !ctx.isHittingBlock();
+        return ctx.isMainHand() && ctx.isVDown() && !ctx.isHittingBlock();
     }
 
     @Override

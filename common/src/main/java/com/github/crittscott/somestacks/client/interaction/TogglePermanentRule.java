@@ -9,7 +9,7 @@ import com.github.crittscott.somestacks.util.StackMode;
 public final class TogglePermanentRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {
-        return  ctx.isVDown()
+        return ctx.isVDown()
                 && !ctx.hasItemInHand()
                 && ctx.getCurrentMode() == StackMode.TOGGLE_PERMANENT
                 && ctx.isStorageStack();

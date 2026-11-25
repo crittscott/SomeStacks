@@ -1,6 +1,8 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.server.SyntheticPlayer;
+import com.mojang.authlib.GameProfile;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -10,14 +12,13 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import com.mojang.authlib.GameProfile;
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import java.util.function.Function;
 
 /**
@@ -36,28 +37,31 @@ public final class FabricGameTestSupport {
      */
     @SuppressWarnings("unchecked")
     public static SlottedStorage<ItemVariant> storage(BlockEntity blockEntity) {
-        Storage<ItemVariant> storage = ItemStorage.SIDED.find(
-                (ServerLevel) blockEntity.getLevel(),
-                blockEntity.getBlockPos(),
-                blockEntity.getBlockState(),
-                blockEntity,
-                null);
-        GameTestScaffold.check(storage instanceof SlottedStorage,
+        Storage<ItemVariant> storage =
+                ItemStorage.SIDED.find(
+                        (ServerLevel) blockEntity.getLevel(),
+                        blockEntity.getBlockPos(),
+                        blockEntity.getBlockState(),
+                        blockEntity,
+                        null);
+        GameTestScaffold.check(
+                storage instanceof SlottedStorage,
                 "Missing item storage at " + blockEntity.getBlockPos());
         return (SlottedStorage<ItemVariant>) storage;
     }
 
     /**
-     * Inserts {@code stack} into {@code slot}, mirroring Forge's
-     * {@code IItemHandler.insertItem(slot, stack, simulate)}: returns the remainder left over, and
-     * a {@code simulate} transaction is opened and never committed.
+     * Inserts {@code stack} into {@code slot}, mirroring Forge's {@code
+     * IItemHandler.insertItem(slot, stack, simulate)}: returns the remainder left over, and a
+     * {@code simulate} transaction is opened and never committed.
      */
     public static ItemStack insertAt(
             SlottedStorage<ItemVariant> storage, int slot, ItemStack stack, boolean simulate) {
         long inserted;
         try (Transaction transaction = Transaction.openOuter()) {
-            inserted = storage.getSlot(slot).insert(
-                    ItemVariant.of(stack), stack.getCount(), transaction);
+            inserted =
+                    storage.getSlot(slot)
+                            .insert(ItemVariant.of(stack), stack.getCount(), transaction);
             if (!simulate) {
                 transaction.commit();
             }
@@ -68,8 +72,8 @@ public final class FabricGameTestSupport {
     }
 
     /**
-     * Extracts up to {@code amount} from {@code slot}, mirroring Forge's
-     * {@code IItemHandler.extractItem(slot, amount, simulate)}.
+     * Extracts up to {@code amount} from {@code slot}, mirroring Forge's {@code
+     * IItemHandler.extractItem(slot, amount, simulate)}.
      */
     public static ItemStack extractAt(
             SlottedStorage<ItemVariant> storage, int slot, int amount, boolean simulate) {
@@ -122,8 +126,11 @@ public final class FabricGameTestSupport {
 
     /** A connection-safe test player distinct from the automation identity. */
     public static ServerPlayer player(ServerLevel level) {
-        GameProfile profile = new GameProfile(UUID.nameUUIDFromBytes(
-                "somestacks:gametest".getBytes(StandardCharsets.UTF_8)), "[SomeStacksGameTest]");
+        GameProfile profile =
+                new GameProfile(
+                        UUID.nameUUIDFromBytes(
+                                "somestacks:gametest".getBytes(StandardCharsets.UTF_8)),
+                        "[SomeStacksGameTest]");
         return new SyntheticPlayer(level, profile);
     }
 }

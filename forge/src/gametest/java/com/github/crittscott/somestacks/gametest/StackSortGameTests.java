@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.SomeStacks;
+
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraftforge.gametest.GameTestHolder;

@@ -1,8 +1,10 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.PlatformServices;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+
 import java.util.function.Consumer;
 
 /** Loader-specific delivery for the cached server configuration snapshot. */

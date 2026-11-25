@@ -1,8 +1,16 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -21,31 +29,30 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
-
 /** Fabric-native transaction behavior exercised through the complete Transfer API storage. */
 public final class FabricTransferGameTests implements FabricGameTest {
     /**
-     * No in-game reproduction applies: Fabric automation stages an insertion without publishing
-     * it to the block entity, then publishes the complete edit when the transaction commits.
+     * No in-game reproduction applies: Fabric automation stages an insertion without publishing it
+     * to the block entity, then publishes the complete edit when the transaction commits.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void stagedInsertionIsInvisibleUntilCommit(GameTestHelper helper) {
         StorageStackBE blockEntity = placeStorage(helper, ORIGIN);
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
         try (Transaction transaction = Transaction.openOuter()) {
-            checkEquals(4L, storage.insert(
-                    ItemVariant.of(Items.STONE), 4, transaction), "Staged insertion");
-            checkEquals(0, GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
+            checkEquals(
+                    4L,
+                    storage.insert(ItemVariant.of(Items.STONE), 4, transaction),
+                    "Staged insertion");
+            checkEquals(
+                    0,
+                    GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
                     "Uncommitted insertion reached the world");
             transaction.commit();
         }
-        checkEquals(4, GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
+        checkEquals(
+                4,
+                GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
                 "Committed insertion did not reach the world");
         helper.succeed();
     }
@@ -68,9 +75,13 @@ public final class FabricTransferGameTests implements FabricGameTest {
                 nested.commit();
             }
         }
-        checkEquals(0, FabricGameTestSupport.count(storage, Items.STONE),
+        checkEquals(
+                0,
+                FabricGameTestSupport.count(storage, Items.STONE),
                 "Aborted outer transaction kept stone");
-        checkEquals(0, FabricGameTestSupport.count(storage, Items.DIRT),
+        checkEquals(
+                0,
+                FabricGameTestSupport.count(storage, Items.DIRT),
                 "Aborted outer transaction kept nested dirt");
 
         try (Transaction outer = Transaction.openOuter()) {
@@ -80,17 +91,17 @@ public final class FabricTransferGameTests implements FabricGameTest {
             }
             outer.commit();
         }
-        checkEquals(12, FabricGameTestSupport.count(storage, Items.STONE),
-                "Committed stone count");
-        checkEquals(0, FabricGameTestSupport.count(storage, Items.DIRT),
-                "Aborted nested dirt count");
+        checkEquals(12, FabricGameTestSupport.count(storage, Items.STONE), "Committed stone count");
+        checkEquals(
+                0, FabricGameTestSupport.count(storage, Items.DIRT), "Aborted nested dirt count");
 
         try (Transaction transaction = Transaction.openOuter()) {
-            checkEquals(5L, storage.extract(stone, 5, transaction),
-                    "Whole-storage extraction");
+            checkEquals(5L, storage.extract(stone, 5, transaction), "Whole-storage extraction");
             transaction.commit();
         }
-        checkEquals(7, FabricGameTestSupport.count(storage, Items.STONE),
+        checkEquals(
+                7,
+                FabricGameTestSupport.count(storage, Items.STONE),
                 "Count after whole-storage extraction");
         helper.succeed();
     }
@@ -109,20 +120,25 @@ public final class FabricTransferGameTests implements FabricGameTest {
         ChestBlockEntity chest = (ChestBlockEntity) level.getBlockEntity(chestPos);
         check(chest != null, "Chest block entity was not created");
         chest.setItem(0, new ItemStack(Items.APPLE, 6));
-        Storage<ItemVariant> source = ItemStorage.SIDED.find(
-                level, chestPos, chest.getBlockState(), chest, Direction.UP);
+        Storage<ItemVariant> source =
+                ItemStorage.SIDED.find(level, chestPos, chest.getBlockState(), chest, Direction.UP);
         check(source != null, "Chest storage was not exposed");
 
         try (Transaction transaction = Transaction.openOuter()) {
-            long moved = StorageUtil.move(
-                    source, destination, variant -> variant.isOf(Items.APPLE), 4, transaction);
+            long moved =
+                    StorageUtil.move(
+                            source,
+                            destination,
+                            variant -> variant.isOf(Items.APPLE),
+                            4,
+                            transaction);
             checkEquals(4L, moved, "Moved apple count");
             transaction.commit();
         }
 
         checkEquals(2, chest.getItem(0).getCount(), "Apples left in chest");
-        checkEquals(4, FabricGameTestSupport.count(destination, Items.APPLE),
-                "Apples moved into run");
+        checkEquals(
+                4, FabricGameTestSupport.count(destination, Items.APPLE), "Apples moved into run");
         helper.succeed();
     }
 
@@ -140,18 +156,26 @@ public final class FabricTransferGameTests implements FabricGameTest {
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
 
         try (Transaction transaction = Transaction.openOuter()) {
-            checkEquals(1L, storage.getSlot(firstSlot).extract(
-                    ItemVariant.of(Items.STICK), 1, transaction), "First extraction");
-            checkEquals(0L, storage.getSlot(secondSlot).extract(
-                    ItemVariant.of(Items.PAPER), 1, transaction), "Second extraction");
+            checkEquals(
+                    1L,
+                    storage.getSlot(firstSlot).extract(ItemVariant.of(Items.STICK), 1, transaction),
+                    "First extraction");
+            checkEquals(
+                    0L,
+                    storage.getSlot(secondSlot)
+                            .extract(ItemVariant.of(Items.PAPER), 1, transaction),
+                    "Second extraction");
             transaction.commit();
         }
 
         checkEquals(1, occupied(singles.getItems()), "Occupancy after structural extraction");
-        checkEquals(Items.PAPER, singles.getItems().getStackInSlot(secondSlot).getItem(),
+        checkEquals(
+                Items.PAPER,
+                singles.getItems().getStackInSlot(secondSlot).getItem(),
                 "Refused second position changed");
         helper.succeed();
     }
+
     /**
      * No in-game reproduction applies: repeated sided lookups and different blocks in a run must
      * observe the same staged contents, including nested rollback and outer abort.
@@ -162,8 +186,14 @@ public final class FabricTransferGameTests implements FabricGameTest {
         StorageStackBE top = placeStorage(helper, ORIGIN.above());
         base.getItems().insertItem(0, new ItemStack(Items.STONE, 4), false);
         SlottedStorage<ItemVariant> first = FabricGameTestSupport.storage(base);
-        SlottedStorage<ItemVariant> second = (SlottedStorage<ItemVariant>) ItemStorage.SIDED.find(
-                helper.getLevel(), base.getBlockPos(), base.getBlockState(), base, Direction.DOWN);
+        SlottedStorage<ItemVariant> second =
+                (SlottedStorage<ItemVariant>)
+                        ItemStorage.SIDED.find(
+                                helper.getLevel(),
+                                base.getBlockPos(),
+                                base.getBlockState(),
+                                base,
+                                Direction.DOWN);
         SlottedStorage<ItemVariant> above = FabricGameTestSupport.storage(top);
         check(first == second, "Sided lookup did not retain the adapter");
         ItemVariant stone = ItemVariant.of(Items.STONE);
@@ -176,8 +206,10 @@ public final class FabricTransferGameTests implements FabricGameTest {
         }
         checkEquals(4L, first.getSlot(0).getAmount(), "Outer abort remainder");
         try (Transaction outer = Transaction.openOuter()) {
-            checkEquals(3L, first.getSlot(0).extract(stone, 3, outer), "Committed first extraction");
-            checkEquals(1L, above.getSlot(0).extract(stone, 3, outer), "Committed shared remainder");
+            checkEquals(
+                    3L, first.getSlot(0).extract(stone, 3, outer), "Committed first extraction");
+            checkEquals(
+                    1L, above.getSlot(0).extract(stone, 3, outer), "Committed shared remainder");
             outer.commit();
         }
         checkEquals(0L, first.getSlot(0).getAmount(), "Extraction committed twice");
@@ -190,5 +222,4 @@ public final class FabricTransferGameTests implements FabricGameTest {
         checkEquals(64L, first.getSlot(0).getAmount(), "Committed insertion count");
         helper.succeed();
     }
-
 }

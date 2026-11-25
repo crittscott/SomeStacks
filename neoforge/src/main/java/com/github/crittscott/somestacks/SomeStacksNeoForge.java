@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.block.NeoForgeItemHandlers;
 import com.github.crittscott.somestacks.client.ClientSetup;
 import com.github.crittscott.somestacks.neoforge.NeoForgePlatformServices;
 import com.github.crittscott.somestacks.network.ModNetworking;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -21,8 +22,8 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 /**
  * NeoForge entry point: registers the blocks and block entities, the network payloads, the
  * loader-native item-handler capability, and the listeners behind server config loading, login
- * sync, and commands. Client registration is deferred to {@link ClientSetup} so the
- * dedicated server never touches it.
+ * sync, and commands. Client registration is deferred to {@link ClientSetup} so the dedicated
+ * server never touches it.
  */
 @Mod(SomeStacksNeoForge.MODID)
 public class SomeStacksNeoForge {

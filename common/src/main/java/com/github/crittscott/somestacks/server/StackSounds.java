@@ -13,13 +13,16 @@ public final class StackSounds {
     private static final float ROTATION_PITCH_BASE = 0.9f;
     private static final float ROTATION_PITCH_SPREAD = 0.2f;
 
-    /** Broadcasts a slightly pitch-varied rotation sound if the player's sound throttle permits it. */
+    /**
+     * Broadcasts a slightly pitch-varied rotation sound if the player's sound throttle permits it.
+     */
     public static void playRotation(ServerPlayer sp, BlockPos pos, SoundEvent sound) {
         if (!RotationSoundThrottle.claim(sp)) {
             return;
         }
-        float pitch = ROTATION_PITCH_BASE
-                + sp.serverLevel().getRandom().nextFloat() * ROTATION_PITCH_SPREAD;
+        float pitch =
+                ROTATION_PITCH_BASE
+                        + sp.serverLevel().getRandom().nextFloat() * ROTATION_PITCH_SPREAD;
         sp.serverLevel().playSound(null, pos, sound, SoundSource.BLOCKS, VOLUME, pitch);
     }
 }

@@ -95,11 +95,10 @@ loadScripts(document, 'script');</script>
  entity reads any of it. Vanilla's chunk upgrade does not reach into block entity types it does
  not know, so the item stacks these block entities hold are run through the DataFixerUpper here.
 
- <p>Every save carries a <code>DataVersion</code>. Unversioned saves use either Data Components or
- the preceding release's 1.20.1 item NBT; each item identifies that format by its count field.
- The immediately preceding release also stored an
- outer block's <code>Rotation</code> in block-entity data; that field is consumed into block state on
- load and is never written again.</div>
+ <p>Every save carries a <code>DataVersion</code>. Unversioned saves use either Data Components or the
+ preceding release's 1.20.1 item NBT; each item identifies that format by its count field. The
+ immediately preceding release also stored an outer block's <code>Rotation</code> in block-entity data;
+ that field is consumed into block state on load and is never written again.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

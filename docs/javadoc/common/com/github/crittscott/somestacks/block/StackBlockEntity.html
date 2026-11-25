@@ -143,7 +143,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  int&nbsp;slots)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Creates fixed local storage whose mutations refresh fill, notify the subtype, and batch publication.</div>
+<div class="block">Creates fixed local storage whose mutations refresh fill, notify the subtype, and batch
+ publication.</div>
 </div>
 </div>
 </section>
@@ -250,7 +251,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLocalContentsChanged(int)" class="member-name-link">onLocalContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt; getItems().getSlots()</code>.</div>
+<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt;
+ getItems().getSlots()</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;serverLevel)</code></div>
@@ -270,7 +272,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#schedulePublish()" class="member-name-link">schedulePublish</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Marks local publication pending and coalesces a run tick; unattached/client entities do nothing.</div>
+<div class="block">Marks local publication pending and coalesces a run tick; unattached/client entities do
+ nothing.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBlockRotation(int)" class="member-name-link">setBlockRotation</a><wbr>(int&nbsp;rotation)</code></div>
@@ -331,7 +334,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  int&nbsp;slots)</span></div>
-<div class="block">Creates fixed local storage whose mutations refresh fill, notify the subtype, and batch publication.</div>
+<div class="block">Creates fixed local storage whose mutations refresh fill, notify the subtype, and batch
+ publication.</div>
 </section>
 </li>
 </ul>
@@ -383,9 +387,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onLocalContentsChanged(int)">
 <h3>onLocalContentsChanged</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onLocalContentsChanged</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
-<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt; getItems().getSlots()</code>.
- Runs on either side after dirty/fill updates, even inside a batch, before deferred publication.
- Disk and client snapshot loads bypass this hook and must refresh subtype state in loadStackData.</div>
+<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt;
+ getItems().getSlots()</code>. Runs on either side after dirty/fill updates, even inside a batch,
+ before deferred publication. Disk and client snapshot loads bypass this hook and must refresh
+ subtype state in loadStackData.</div>
 </section>
 </li>
 <li>
@@ -410,7 +415,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">saveStackData</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;tag,
  net.minecraft.core.HolderLookup.Provider&nbsp;registries)</span></div>
 <div class="block">Adds current subtype metadata after version and inventory serialization. Used for both disk
- saves and update tags; remove private fields in stripServerOnlyUpdateData before transmission.</div>
+ saves and update tags; remove private fields in stripServerOnlyUpdateData before
+ transmission.</div>
 </section>
 </li>
 <li>
@@ -480,7 +486,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="schedulePublish()">
 <h3>schedulePublish</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">schedulePublish</span>()</div>
-<div class="block">Marks local publication pending and coalesces a run tick; unattached/client entities do nothing.</div>
+<div class="block">Marks local publication pending and coalesces a run tick; unattached/client entities do
+ nothing.</div>
 </section>
 </li>
 <li>

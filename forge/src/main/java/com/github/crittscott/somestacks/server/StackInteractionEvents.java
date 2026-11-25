@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.SomeStacks;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -16,18 +17,26 @@ public final class StackInteractionEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getLevel().isClientSide()
-                || event.isCanceled()) {
+        if (event.getLevel().isClientSide() || event.isCanceled()) {
             return;
         }
 
         ServerPlayer player = (ServerPlayer) event.getEntity();
         boolean blockAllowed = event.getUseBlock() != Event.Result.DENY;
         boolean itemAllowed = event.getUseItem() != Event.Result.DENY;
-        boolean handled = StackInteractions.handleSneakingRotation(
-                player, event.getHand(), event.getHitVec(), blockAllowed, itemAllowed)
-                || StackInteractions.handleAdjacentClick(
-                        player, event.getHand(), event.getHitVec(), blockAllowed, itemAllowed);
+        boolean handled =
+                StackInteractions.handleSneakingRotation(
+                                player,
+                                event.getHand(),
+                                event.getHitVec(),
+                                blockAllowed,
+                                itemAllowed)
+                        || StackInteractions.handleAdjacentClick(
+                                player,
+                                event.getHand(),
+                                event.getHitVec(),
+                                blockAllowed,
+                                itemAllowed);
         if (handled) {
             event.setCanceled(true);
             event.setUseBlock(Event.Result.DENY);

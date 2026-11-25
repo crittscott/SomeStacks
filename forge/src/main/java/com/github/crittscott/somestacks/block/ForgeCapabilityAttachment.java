@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.SomeStacks;
+
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,8 +30,7 @@ public final class ForgeCapabilityAttachment {
     private static final ResourceLocation ITEM_HANDLER_ID =
             ResourceLocation.fromNamespaceAndPath(SomeStacks.MODID, "item_handler");
 
-    private ForgeCapabilityAttachment() {
-    }
+    private ForgeCapabilityAttachment() {}
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
@@ -39,16 +39,22 @@ public final class ForgeCapabilityAttachment {
         }
     }
 
-    private static void attach(AttachCapabilitiesEvent<BlockEntity> event, NonNullSupplier<IItemHandler> handler) {
+    private static void attach(
+            AttachCapabilitiesEvent<BlockEntity> event, NonNullSupplier<IItemHandler> handler) {
         LazyOptional<IItemHandler> lazy = LazyOptional.of(handler);
 
-        event.addCapability(ITEM_HANDLER_ID, new ICapabilityProvider() {
-            @Nonnull
-            @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-                return cap == ForgeCapabilities.ITEM_HANDLER ? lazy.cast() : LazyOptional.empty();
-            }
-        });
+        event.addCapability(
+                ITEM_HANDLER_ID,
+                new ICapabilityProvider() {
+                    @Nonnull
+                    @Override
+                    public <T> LazyOptional<T> getCapability(
+                            @Nonnull Capability<T> cap, @Nullable Direction side) {
+                        return cap == ForgeCapabilities.ITEM_HANDLER
+                                ? lazy.cast()
+                                : LazyOptional.empty();
+                    }
+                });
         event.addListener(lazy::invalidate);
     }
 }

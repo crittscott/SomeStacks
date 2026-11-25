@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.client.FabricClientEvents;
 import com.github.crittscott.somestacks.client.FabricKeyMappings;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -11,6 +12,7 @@ import net.minecraft.world.InteractionResult;
 /** Fabric development-client registration for {@link ClientCallbackChecks#run}. */
 public final class ClientCallbackGameTests implements ClientModInitializer {
     /** Registers the local /ssclienttest smoke command in a client running the test mod. */
+    // spotless:off
     @Override
     public void onInitializeClient() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) ->
@@ -22,4 +24,5 @@ public final class ClientCallbackGameTests implements ClientModInitializer {
                             return new ClientCallbackChecks.Result(consumed, consumed, consumed);
                         }))));
     }
+    // spotless:on
 }

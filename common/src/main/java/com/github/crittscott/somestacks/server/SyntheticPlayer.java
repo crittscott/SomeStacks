@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import com.mojang.authlib.GameProfile;
+
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.PacketSendListener;
@@ -19,16 +20,22 @@ import javax.annotation.Nullable;
 public final class SyntheticPlayer extends ServerPlayer {
     public SyntheticPlayer(ServerLevel level, GameProfile profile) {
         super(level.getServer(), level, profile, ClientInformation.createDefault());
-        connection = new ServerGamePacketListenerImpl(level.getServer(), new Connection(PacketFlow.SERVERBOUND) {
-            @Override
-            public void setListenerForServerboundHandshake(PacketListener listener) {}
-        }, this, CommonListenerCookie.createInitial(profile, false)) {
-            @Override
-            public void send(Packet<?> packet) {}
+        connection =
+                new ServerGamePacketListenerImpl(
+                        level.getServer(),
+                        new Connection(PacketFlow.SERVERBOUND) {
+                            @Override
+                            public void setListenerForServerboundHandshake(
+                                    PacketListener listener) {}
+                        },
+                        this,
+                        CommonListenerCookie.createInitial(profile, false)) {
+                    @Override
+                    public void send(Packet<?> packet) {}
 
-            @Override
-            public void send(Packet<?> packet, @Nullable PacketSendListener listener) {}
-        };
+                    @Override
+                    public void send(Packet<?> packet, @Nullable PacketSendListener listener) {}
+                };
     }
 
     @Override

@@ -98,9 +98,8 @@ loadScripts(document, 'script');</script>
 <div class="block">One Singles Stack: 64 single items drawn as a rotatable 4 x 4 x 4 grid.
 
  <p>A slot index is a cell, not a place in a bag, and every item must sit on one directly below it
- or on the seam with the Singles Stack beneath. A vertical run of these is a <a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block"><code>SinglesColumn</code></a>,
- which is what automation addresses; this class owns one block's cells, its shape, its layout
- rotation, and a rotation for each rendered item.
+ or on the seam with the Singles Stack beneath. A vertical run of these is a <a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block"><code>SinglesColumn</code></a>, which is what automation addresses; this class owns one block's cells, its shape,
+ its layout rotation, and a rotation for each rendered item.
 
  <p>Capability exposure is loader-specific and lives outside this class; <a href="StackBlockEntity.html#getItems()"><code>StackBlockEntity.getItems()</code></a> is
  what a loader-specific capability view adapts.</div>
@@ -242,7 +241,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLocalContentsChanged(int)" class="member-name-link">onLocalContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt; getItems().getSlots()</code>.</div>
+<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt;
+ getItems().getSlots()</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;serverLevel)</code></div>
@@ -363,9 +363,10 @@ loadScripts(document, 'script');</script>
 <h3>onLocalContentsChanged</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onLocalContentsChanged</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="StackBlockEntity.html#onLocalContentsChanged(int)">StackBlockEntity</a></code></span></div>
-<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt; getItems().getSlots()</code>.
- Runs on either side after dirty/fill updates, even inside a batch, before deferred publication.
- Disk and client snapshot loads bypass this hook and must refresh subtype state in loadStackData.</div>
+<div class="block">Invalidates subtype-derived local state after a mutation to <code>0 &lt;= slot &lt;
+ getItems().getSlots()</code>. Runs on either side after dirty/fill updates, even inside a batch,
+ before deferred publication. Disk and client snapshot loads bypass this hook and must refresh
+ subtype state in loadStackData.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="StackBlockEntity.html#onLocalContentsChanged(int)">onLocalContentsChanged</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
@@ -379,8 +380,9 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></span>&nbsp;<span class="element-name">column</span>()</div>
 <div class="block">The column this block belongs to, or null on the client and for a block being removed.
 
- <p>Resolved once a tick and held, because a machine reading this block's item handler resolves
- the column once per slot it walks. See <a href="StorageStackBE.html#pile()"><code>StorageStackBE.pile()</code></a> for the full reasoning.</div>
+ <p>Resolved once a tick and held, because a machine reading this block's item handler
+ resolves the column once per slot it walks. See <a href="StorageStackBE.html#pile()"><code>StorageStackBE.pile()</code></a> for the full
+ reasoning.</div>
 </section>
 </li>
 <li>
@@ -400,7 +402,8 @@ loadScripts(document, 'script');</script>
 <h3>isValidSinglesItem</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isValidSinglesItem</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
 <div class="block">Whether Singles accepts this item. Items from disabled namespaces and items accepted by Bar
- are excluded, so widening the reloadable <code>somestacks:ingots</code> item tag narrows what Singles accepts.</div>
+ are excluded, so widening the reloadable <code>somestacks:ingots</code> item tag narrows what
+ Singles accepts.</div>
 </section>
 </li>
 <li>
@@ -413,8 +416,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setRotation(int)">
 <h3>setRotation</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRotation</span><wbr><span class="parameters">(int&nbsp;rotation)</span></div>
-<div class="block">Invalidates the local shape and requests <a href="StackBlockEntity.html#setBlockRotation(int)"><code>StackBlockEntity.setBlockRotation(int)</code></a> modulo four.
- The outer block-state update applies immediately on a server level, including during an inventory batch.</div>
+<div class="block">Invalidates the local shape and requests <a href="StackBlockEntity.html#setBlockRotation(int)"><code>StackBlockEntity.setBlockRotation(int)</code></a> modulo four. The
+ outer block-state update applies immediately on a server level, including during an inventory
+ batch.</div>
 </section>
 </li>
 <li>
@@ -445,7 +449,8 @@ loadScripts(document, 'script');</script>
 <h3>getCachedShape</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.phys.shapes.VoxelShape</span>&nbsp;<span class="element-name">getCachedShape</span>()</div>
 <div class="block">Returns the occupied-cell shape, rebuilding it only after contents or rotation invalidates
- the cache. Shape queries occur frequently enough that they must not rebuild it unconditionally.</div>
+ the cache. Shape queries occur frequently enough that they must not rebuild it
+ unconditionally.</div>
 </section>
 </li>
 <li>
@@ -548,7 +553,8 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.HolderLookup.Provider&nbsp;registries)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="StackBlockEntity.html#saveStackData(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">StackBlockEntity</a></code></span></div>
 <div class="block">Adds current subtype metadata after version and inventory serialization. Used for both disk
- saves and update tags; remove private fields in stripServerOnlyUpdateData before transmission.</div>
+ saves and update tags; remove private fields in stripServerOnlyUpdateData before
+ transmission.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="StackBlockEntity.html#saveStackData(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">saveStackData</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>

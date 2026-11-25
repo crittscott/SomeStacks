@@ -91,9 +91,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">CapabilityAndPersistenceChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Disk persistence, client render tags, saved-world migration/recovery, and block shape contracts.
- The
- automation-surface half (whole-run capability/Transfer-API presence and headroom) stays in each
- loader's own <code>CapabilityAndPersistenceGameTests</code>, since it addresses the loader-native
+ The automation-surface half (whole-run capability/Transfer-API presence and headroom) stays in
+ each loader's own <code>CapabilityAndPersistenceGameTests</code>, since it addresses the loader-native
  storage view directly.</div>
 </section>
 <section class="summary">
@@ -202,16 +201,16 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesDiskSaveRoundTripsItemsAndBothRotations</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Singles disk data preserves contents plus block-state and per-item rotations. To reproduce
  in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
- chunk after it has saved and unloaded, or restart the world. Both orientations and the item remain unchanged.</div>
+ chunk after it has saved and unloaded, or restart the world. Both orientations and the item
+ remain unchanged.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>barDiskSaveRoundTripsItems</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barDiskSaveRoundTripsItems</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Bar disk data preserves the item in each position. To reproduce in-game: deposit Bars,
- save and restart the world, and verify the same Bar positions
- remain occupied.</div>
+<div class="block">Bar disk data preserves the item in each position. To reproduce in-game: deposit Bars, save
+ and restart the world, and verify the same Bar positions remain occupied.</div>
 </section>
 </li>
 <li>
@@ -277,12 +276,12 @@ loadScripts(document, 'script');</script>
 <h3>cachedShapesInvalidateWhenContentsChange</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">cachedShapesInvalidateWhenContentsChange</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Singles and Bar targeting, outlines, and collision follow occupied contents.
- To reproduce in-game: use /setblock to place an empty Singles or Bar block, then deposit and
- extract items in different bottom-layer positions. The outline follows the occupied positions;
- aim through empty space at an occupied cell in another stack behind it to target that stack.
- Empty blocks have no outline, collision, or camera fog. Mobs avoid both types.
- Exact shape and path-type assertions require the GameTest.</div>
+<div class="block">Singles and Bar targeting, outlines, and collision follow occupied contents. To reproduce
+ in-game: use /setblock to place an empty Singles or Bar block, then deposit and extract items
+ in different bottom-layer positions. The outline follows the occupied positions; aim through
+ empty space at an occupied cell in another stack behind it to target that stack. Empty blocks
+ have no outline, collision, or camera fog. Mobs avoid both types. Exact shape and path-type
+ assertions require the GameTest.</div>
 </section>
 </li>
 <li>

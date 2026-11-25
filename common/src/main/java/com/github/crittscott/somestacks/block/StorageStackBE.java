@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -31,8 +32,7 @@ public class StorageStackBE extends StackBlockEntity {
     private static final String TAG_PERMANENT = "Permanent";
 
     private boolean permanent = false;
-    @Nullable
-    private ServerPlayer pendingCleanupActor;
+    @Nullable private ServerPlayer pendingCleanupActor;
     private boolean pendingCleanupUsesAutomation;
 
     public StorageStackBE(BlockPos pos, BlockState state) {
@@ -41,7 +41,8 @@ public class StorageStackBE extends StackBlockEntity {
 
     /**
      * Whether Storage accepts this item. The broadest of the three rules: anything nonempty from a
-     * namespace the server has not disabled. The per-item deny list applies to player deposits only.
+     * namespace the server has not disabled. The per-item deny list applies to player deposits
+     * only.
      */
     public static boolean isValidStorageItem(ItemStack stack) {
         if (stack.isEmpty()) {
@@ -64,8 +65,8 @@ public class StorageStackBE extends StackBlockEntity {
      * <p>Resolved once a tick and held. A machine reading this block's item handler resolves the
      * pile once per slot it walks, which is hundreds of times a tick for one attached storage
      * network, and the run cannot change between two of those reads without passing through the
-     * block's own place or remove hook. Those hooks drop the cache; the tick it was taken on is what
-     * drops it for anything that edits the world without them.
+     * block's own place or remove hook. Those hooks drop the cache; the tick it was taken on is
+     * what drops it for anything that edits the world without them.
      */
     @Nullable
     public StoragePile pile() {
@@ -140,7 +141,7 @@ public class StorageStackBE extends StackBlockEntity {
      * column if it must. Which block of the pile the items were offered to makes no difference.
      *
      * @param placer the player responsible for any block this deposit creates, or null for
-     *               automation. See {@link StoragePile#deposit}.
+     *     automation. See {@link StoragePile#deposit}.
      */
     public int deposit(ItemStack fromHand, @Nullable ServerPlayer placer) {
         StoragePile pile = pile();
@@ -149,10 +150,11 @@ public class StorageStackBE extends StackBlockEntity {
 
     /**
      * Takes from one of this block's own slots, the cell the player targeted, and schedules the
-     * settle that packs the rest of the pile down over the gap. A null actor selects automation cleanup.
+     * settle that packs the rest of the pile down over the gap. A null actor selects automation
+     * cleanup.
      */
-    public ItemStack extractAt(int index, int maxCount, @Nullable ItemStack playerHand,
-                               @Nullable ServerPlayer actor) {
+    public ItemStack extractAt(
+            int index, int maxCount, @Nullable ItemStack playerHand, @Nullable ServerPlayer actor) {
         if (index < 0 || index >= items.getSlots()) {
             return ItemStack.EMPTY;
         }
@@ -188,7 +190,8 @@ public class StorageStackBE extends StackBlockEntity {
         if (current.isEmpty() && desired.isEmpty()) {
             return;
         }
-        if (current.getCount() == desired.getCount() && ItemStack.isSameItemSameComponents(current, desired)) {
+        if (current.getCount() == desired.getCount()
+                && ItemStack.isSameItemSameComponents(current, desired)) {
             return;
         }
         items.setStackInSlot(slot, desired);

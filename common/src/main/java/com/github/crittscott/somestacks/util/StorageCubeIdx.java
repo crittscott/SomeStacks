@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.StorageStackBE;
+
 import net.minecraft.core.BlockPos;
 
 /**
@@ -12,10 +13,11 @@ import net.minecraft.core.BlockPos;
  * the grid's center rather than moving the contents between slots.
  */
 public final class StorageCubeIdx {
-    private StorageCubeIdx(){}
+    private StorageCubeIdx() {}
 
     /** Cell width in model pixels, shared by targeting and rendering. */
     public static final double CELL_PIXELS = 4.5;
+
     public static final CubeGrid GRID = new CubeGrid(3, CELL_PIXELS, 1, 6, 11);
 
     /** Cells along one axis of the grid. */

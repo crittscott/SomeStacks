@@ -1,6 +1,11 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+
 import com.github.crittscott.somestacks.block.StorageStackBE;
+
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -8,12 +13,6 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 
 /**
  * Storage pile behavior in a live level: deposits filling partial stacks before empty ones, growth
@@ -82,12 +81,15 @@ public final class StoragePileGameTests implements FabricGameTest {
         SlottedStorage<ItemVariant> lowerStorage = FabricGameTestSupport.storage(lower);
         SlottedStorage<ItemVariant> upperStorage = FabricGameTestSupport.storage(upper);
 
-        checkEquals(12, FabricGameTestSupport.stackAt(lowerStorage, 0).getCount(),
+        checkEquals(
+                12,
+                FabricGameTestSupport.stackAt(lowerStorage, 0).getCount(),
                 "Lower storage count");
-        checkEquals(12, FabricGameTestSupport.stackAt(upperStorage, 0).getCount(),
+        checkEquals(
+                12,
+                FabricGameTestSupport.stackAt(upperStorage, 0).getCount(),
                 "Upper storage count");
-        checkEquals(lowerStorage.getSlotCount(), upperStorage.getSlotCount(),
-                "Storage shape");
+        checkEquals(lowerStorage.getSlotCount(), upperStorage.getSlotCount(), "Storage shape");
         helper.succeed();
     }
 
@@ -114,10 +116,10 @@ public final class StoragePileGameTests implements FabricGameTest {
     public void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
         StoragePileChecks.comparatorReservesZeroForAnEmptyPile(helper);
     }
+
     /** See {@link StoragePileChecks#comparatorContributionLoadsAndTracksMutations}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void comparatorContributionLoadsAndTracksMutations(GameTestHelper helper) {
         StoragePileChecks.comparatorContributionLoadsAndTracksMutations(helper);
     }
-
 }

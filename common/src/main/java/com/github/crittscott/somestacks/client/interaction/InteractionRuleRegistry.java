@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client.interaction;
 
 import java.util.List;
+
 import javax.annotation.Nullable;
 
 /**
@@ -15,25 +16,23 @@ import javax.annotation.Nullable;
 public final class InteractionRuleRegistry {
     private InteractionRuleRegistry() {}
 
-    private static final List<InteractionRule> EMPTY_HAND_RULES = List.of(
-            new ModeCycleRule()
-    );
+    private static final List<InteractionRule> EMPTY_HAND_RULES = List.of(new ModeCycleRule());
 
-    private static final List<InteractionRule> ITEM_RULES = List.of(
-            new ModeCycleRule()
-    );
+    private static final List<InteractionRule> ITEM_RULES = List.of(new ModeCycleRule());
 
-    private static final List<InteractionRule> BLOCK_RULES = List.of(
-            new TogglePermanentRule(),
-            new RotateBlockWithRedstoneTorchRule(),
-            new RotateItemWithSoulTorchRule(),
-            new DepositIntoClickedStackRule(),
-            new DepositIntoAdjacentStackRule(),
-            new PlaceAdjacentGenericRule(),
-            new ExtractionRule()
-    );
+    private static final List<InteractionRule> BLOCK_RULES =
+            List.of(
+                    new TogglePermanentRule(),
+                    new RotateBlockWithRedstoneTorchRule(),
+                    new RotateItemWithSoulTorchRule(),
+                    new DepositIntoClickedStackRule(),
+                    new DepositIntoAdjacentStackRule(),
+                    new PlaceAdjacentGenericRule(),
+                    new ExtractionRule());
 
-    /** Runs the first matching main-hand air rule; returns that rule or null when none claims it. */
+    /**
+     * Runs the first matching main-hand air rule; returns that rule or null when none claims it.
+     */
     @Nullable
     public static InteractionRule processEmptyHandRules(InteractionContext ctx) {
         return processFirstMatch(EMPTY_HAND_RULES, ctx);
@@ -52,7 +51,8 @@ public final class InteractionRuleRegistry {
     }
 
     @Nullable
-    private static InteractionRule processFirstMatch(List<InteractionRule> rules, InteractionContext ctx) {
+    private static InteractionRule processFirstMatch(
+            List<InteractionRule> rules, InteractionContext ctx) {
         if (!ctx.isMainHand()) return null;
         for (InteractionRule rule : rules) {
             if (rule.matches(ctx)) {
