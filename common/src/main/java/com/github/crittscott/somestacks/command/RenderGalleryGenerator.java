@@ -47,39 +47,46 @@ public final class RenderGalleryGenerator {
      */
     public enum Kind {
         /** Storage Stacks showing nine items each. */
-        STORAGE(
-                "somestacks.command.gallery.storage_stacks",
-                "somestacks.command.gallery.items",
-                StorageCubeIdx.LAYER_SIZE),
+        STORAGE("storage", "items", StorageCubeIdx.LAYER_SIZE),
 
         /**
          * Bar Stacks showing eight ingots each, one bar per ingot. Only items a Bar Stack accepts
          * qualify, tested by the block entity itself so that a gallery shows what a player could
          * actually deposit rather than a second opinion about it.
          */
-        BAR(
-                "somestacks.command.gallery.bar_stacks",
-                "somestacks.command.gallery.ingots",
-                BarCubeIdx.LAYER_SIZE);
+        BAR("bar", "ingots", BarCubeIdx.LAYER_SIZE);
 
-        private final String stackLabelKey;
-        private final String itemLabelKey;
+        private final String id;
+        private final String contents;
         private final int itemsPerStack;
 
-        Kind(String stackLabelKey, String itemLabelKey, int itemsPerStack) {
-            this.stackLabelKey = stackLabelKey;
-            this.itemLabelKey = itemLabelKey;
+        Kind(String id, String contents, int itemsPerStack) {
+            this.id = id;
+            this.contents = contents;
             this.itemsPerStack = itemsPerStack;
         }
 
-        /** Translation key naming this kind's blocks in a message to the player. */
-        public String stackLabelKey() {
-            return stackLabelKey;
+        /** "No namespace of the gen mod list can be shown", taking the two skip counts. */
+        public String genModsUnusableKey() {
+            return "somestacks.command.gen_mods_unusable." + contents;
         }
 
-        /** Translation key naming this kind's contents in a message to the player. */
-        public String itemLabelKey() {
-            return itemLabelKey;
+        /**
+         * Gallery progress sentence for one phase ({@code building}, {@code created}, or {@code
+         * created_partial}) and subject ({@code mod}, {@code mods}, or {@code list}).
+         */
+        public String messageKey(String phase, String subject) {
+            return "somestacks.command.gallery." + id + "." + phase + "." + subject;
+        }
+
+        /** "Skipped namespaces not loaded or with nothing to show", taking count and list. */
+        public String skippedUnusableModsKey() {
+            return "somestacks.command.skipped.mods_without_" + contents;
+        }
+
+        /** "A namespace is not loaded or has nothing to show", taking the namespace. */
+        public String unusableModKey() {
+            return "somestacks.command.mod_unusable." + contents;
         }
 
         /** Namespaces holding at least one item this kind can show. */
@@ -88,7 +95,7 @@ public final class RenderGalleryGenerator {
         }
 
         /**
-         * The items of one namespace this kind can show, in registry order. Items the server
+         * The items of one namespace this kind can show, in id order. Items the server
          * disabled by id are left out, so a gallery never hands players an item barred from stacks.
          */
         public List<Item> itemsIn(String modId) {
@@ -122,14 +129,6 @@ public final class RenderGalleryGenerator {
     private static Map<String, List<Item>> itemsByNamespace;
 
     /**
-     * The ingot subset of {@link #itemsByNamespace}, holding only namespaces that have one.
-     * Membership is the Bar Stack's own validity test rather than the registry, so unlike the
-     * registry grouping this one is rebuilt whenever Bar validity can have changed.
-     */
-
-    /** The ingot generation {@link #barItemsByNamespace} was grouped under. */
-
-    /**
      * Queued galleries. Server thread only: appended by the command, drained by the tick handler.
      */
     private static final Deque<Job> jobs = new ArrayDeque<>();
@@ -151,6 +150,11 @@ public final class RenderGalleryGenerator {
         return itemsByNamespace;
     }
 
+    /**
+     * The ingot subset of {@link #itemsByNamespace()}, holding only namespaces that have one.
+     * Membership is the Bar Stack's own validity test, which follows reloadable data, so it is
+     * grouped afresh on each call rather than cached.
+     */
     private static Map<String, List<Item>> barItemsByNamespace() {
         Map<String, List<Item>> map = new TreeMap<>();
         itemsByNamespace()
@@ -223,7 +227,7 @@ public final class RenderGalleryGenerator {
             return;
         }
 
-        int budget = ServerConfig.renderGalleryPlacementsPerTick();
+        int budget = ServerConfig.settings().renderGalleryPlacementsPerTick();
         while (budget > 0 && !jobs.isEmpty()) {
             Job job = jobs.peek();
 

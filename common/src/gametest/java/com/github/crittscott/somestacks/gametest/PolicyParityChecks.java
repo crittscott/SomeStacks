@@ -2,18 +2,21 @@ package com.github.crittscott.somestacks.gametest;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.policy;
 
 import com.github.crittscott.somestacks.ServerConfig;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
-/**
- * Checks shared command help and atomic namespace-policy validation through the registered
- * GameTests.
- */
+/** Shared command help and atomic namespace-policy validation. */
 public final class PolicyParityChecks {
     private PolicyParityChecks() {}
 
@@ -23,7 +26,7 @@ public final class PolicyParityChecks {
      * invalid namespace and a 257-character name, and fill the list to 256 unique entries. Rejected
      * additions leave it intact. Reload an over-limit policy: the current policy remains active.
      */
-    public static void verify(GameTestHelper helper) {
+    public static void commandHelpAndNamespaceLimits(GameTestHelper helper) {
         ServerConfig.Settings original = ServerConfig.settings();
         try {
             apply(withMods(original, List.of(" MineCraft ", "minecraft", "ExampleMod")));
@@ -57,8 +60,7 @@ public final class PolicyParityChecks {
             try {
                 ServerConfig.install(
                         new ServerConfig.Backend() {
-                            public ServerConfig.Settings loadFor(
-                                    net.minecraft.server.MinecraftServer server) {
+                            public ServerConfig.Settings loadFor(MinecraftServer server) {
                                 return withMods(original, excessive);
                             }
 
@@ -93,30 +95,22 @@ public final class PolicyParityChecks {
                         server.getCommands().getDispatcher().execute("ss help " + topic, source),
                         "Help failed for " + topic);
             }
-        } catch (com.mojang.brigadier.exceptions.CommandSyntaxException failure) {
-            throw new AssertionError("Registered command help failed", failure);
+        } catch (CommandSyntaxException failure) {
+            throw new GameTestAssertException(
+                    Component.literal("Registered command help failed: " + failure.getMessage()),
+                    0);
         } finally {
             apply(original);
         }
+        helper.succeed();
     }
 
     private static void apply(ServerConfig.Settings policy) {
         ServerConfig.apply(policy);
     }
 
-    private static ServerConfig.Settings withMods(ServerConfig.Settings policy, List<String> mods) {
-        return new ServerConfig.Settings(
-                policy.maxPileHeight(),
-                policy.enableStorageStackBlock(),
-                policy.enableSinglesStackBlock(),
-                policy.enableBarStackBlock(),
-                policy.disableMods(),
-                policy.disableItems(),
-                policy.renderGalleryPlacementsPerTick(),
-                policy.galleryEnabled(),
-                policy.galleryPermissionLevel(),
-                mods,
-                policy.genItems());
+    private static ServerConfig.Settings withMods(ServerConfig.Settings base, List<String> mods) {
+        return policy(base, Map.of(ServerConfig.Setting.GEN_MODS, mods));
     }
 
     private static void refuses(Runnable action) {

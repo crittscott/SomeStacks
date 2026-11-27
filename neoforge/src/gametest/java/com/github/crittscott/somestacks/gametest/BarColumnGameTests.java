@@ -1,16 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
-
-import com.github.crittscott.somestacks.block.BarStackBE;
-
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
 
 /**
  * Bar support and collapse in a live level: item validity, grounding at the bottom of a column,
@@ -38,12 +28,14 @@ public final class BarColumnGameTests {
 
     /** See {@link BarColumnChecks#playerExtractionDropsUnsupportedBars}. */
     public static void playerExtractionDropsUnsupportedBars(GameTestHelper helper) {
-        BarColumnChecks.playerExtractionDropsUnsupportedBars(helper);
+        BarColumnChecks.playerExtractionDropsUnsupportedBars(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link BarColumnChecks#supportedNeighborSurvivesPlayerExtraction}. */
     public static void supportedNeighborSurvivesPlayerExtraction(GameTestHelper helper) {
-        BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(helper);
+        BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link BarColumnChecks#differentlyOrientedSeamUsesFootprintOverlap}. */
@@ -56,56 +48,26 @@ public final class BarColumnGameTests {
         BarColumnChecks.depositTraceStopsAtLastEmptyBeforeOccupiedBar(helper);
     }
 
-    /**
-     * To reproduce in-game: fill a supported Bar column, let item automation extract a lower
-     * position, and verify the top bar fills the hole without dropping an item.
-     */
+    /** See {@link AutomationChecks#barAutomationBackfillsWithoutDropping}. */
     public static void automationBackfillsWithoutDropping(GameTestHelper helper) {
-        AutomationChecks.barAutomationBackfillsWithoutDropping(helper);
+        AutomationChecks.barAutomationBackfillsWithoutDropping(helper, GameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
-     * positions; unsupported positions refuse insertion while a supported empty position accepts
-     * it.
-     */
+    /** See {@link AutomationChecks#barInsertionAnswersForThePositionItIsGiven}. */
     public static void capabilityInsertionAnswersForThePositionItIsGiven(GameTestHelper helper) {
-        AutomationChecks.barInsertionAnswersForThePositionItIsGiven(helper);
+        AutomationChecks.barInsertionAnswersForThePositionItIsGiven(
+                helper, GameTestSupport::automation);
     }
 
-    /**
-     * Validity gates insertion only, so a bar stored before a data pack reload narrowed the rule
-     * has to survive the backfill an automated extraction moves it through. A stick stands in for
-     * such a bar: a Bar Stack refuses one from a deposit, but may be holding contents the current
-     * ingot set no longer covers.
-     *
-     * <p>To reproduce in-game: fill a Bar Stack, narrow the ingot rule so one stored bar is no
-     * longer accepted, then automate extraction below it. Backfill retains or drops that legacy bar
-     * without deleting or changing it.
-     */
+    /** See {@link AutomationChecks#barBackfillKeepsAStoredItemNoLongerAccepted}. */
     public static void backfillKeepsABarItWouldNoLongerAccept(GameTestHelper helper) {
-        AutomationChecks.barBackfillKeepsAStoredItemNoLongerAccepted(helper);
+        AutomationChecks.barBackfillKeepsAStoredItemNoLongerAccepted(
+                helper, GameTestSupport::automation);
     }
 
-    /**
-     * No in-game reproduction applies: this verifies the loader capability simulation contract; a
-     * simulated Bar extraction reports the result without changing the stored bar.
-     */
+    /** See {@link AutomationChecks#barSimulationDoesNotMutateExtraction}. */
     public static void capabilitySimulationDoesNotMutateExtraction(GameTestHelper helper) {
-        BarStackBE bars = placeBar(helper, ORIGIN);
-        Item barItem = firstBarItem();
-        bars.depositAt(0, new ItemStack(barItem));
-        IItemHandler capability = GameTestSupport.capability(bars);
-
-        ItemStack simulated = capability.extractItem(0, 64, true);
-
-        checkEquals(barItem, simulated.getItem(), "Simulated item");
-        checkEquals(1, simulated.getCount(), "Simulated count");
-        checkEquals(
-                barItem,
-                bars.getItems().getStackInSlot(0).getItem(),
-                "Simulation mutated contents");
-        helper.succeed();
+        AutomationChecks.barSimulationDoesNotMutateExtraction(helper, GameTestSupport::automation);
     }
 
     /** See {@link BarColumnChecks#breakingLowerBlockCollapsesDependentUpperBlock}. */
@@ -120,12 +82,14 @@ public final class BarColumnGameTests {
 
     /** See {@link BarColumnChecks#playerCascadeConsolidatesAcrossBlocks}. */
     public static void playerCascadeConsolidatesAcrossBlocks(GameTestHelper helper) {
-        BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(helper);
+        BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link BarColumnChecks#collapseDoesNotMergeDifferentComponents}. */
     public static void collapseDoesNotMergeDifferentComponents(GameTestHelper helper) {
-        BarColumnChecks.collapseDoesNotMergeDifferentComponents(helper);
+        BarColumnChecks.collapseDoesNotMergeDifferentComponents(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link BarColumnChecks#comparatorReservesZeroForAnEmptyColumn}. */

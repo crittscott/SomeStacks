@@ -19,8 +19,6 @@ import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -33,12 +31,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
 /**
- * The server-side {@code ss} command: render gallery generation, server list editing, and override
- * reloading. Client-local render authoring lives in {@code ClientRenderCommands}.
+ * The server-side {@code ss} command: render gallery generation, server list editing, and server
+ * policy reloading. Client-local render authoring lives in {@code ClientRenderCommands}.
  *
  * <p>Everything here is an administrative tool, so every subcommand but {@code help} requires a
  * vanilla permission level. The two gallery generators need a player because a gallery is built
@@ -50,8 +50,12 @@ import javax.annotation.Nullable;
  * of subcommands gated by server config rather than a fixed level: {@code render_gallery.enabled}
  * (off by default) and {@code render_gallery.required_permission_level} (default 3).
  *
- * <p>{@link SsHelp} derives server forms from this tree, supplies the two client-only forms, and
- * describes each gate. {@code ss help} is gated by nothing.
+ * <p>{@link SsHelp} carries each subcommand's forms, gate, and summary, and {@code ss help} is
+ * gated by nothing, so a player who cannot run a subcommand can still read what it needs.
+ *
+ * <p>The subcommand names are declared here for this tree and {@link SsHelp}, taking the ones the
+ * client tree also registers from {@link ClientRenderCommandSyntax}; the messages both trees send
+ * are declared here.
  */
 public final class SsCommand {
     /** Vanilla's gamerule and world-editing level, the gate on the administrative subcommands. */
@@ -67,13 +71,26 @@ public final class SsCommand {
     static final String COMMAND_DENY = "deny";
     static final String COMMAND_HELP = "help";
 
-    private static final String ARG_ITEM = "item";
-    private static final String ARG_MODID = "modid";
+    private static final String ARG_ITEM = ClientRenderCommandSyntax.ARG_ITEM;
+    private static final String ARG_MODID = ClientRenderCommandSyntax.ARG_MODID;
 
-    private static final String DISABLED_MODS_LABEL = "somestacks.command.label.disabled_mods";
-    private static final String DISABLED_ITEMS_LABEL = "somestacks.command.label.disabled_items";
-    private static final String GEN_MODS_LABEL = "somestacks.command.label.gen_mods";
-    private static final String GEN_ITEMS_LABEL = "somestacks.command.label.gen_items";
+    /** Messages both this tree and the client tree in {@code ClientRenderCommands} send. */
+    public static final String ALL_MODS_DISABLED = "somestacks.command.all_mods_disabled";
+
+    public static final String GEN_MODS_EMPTY = "somestacks.command.gen_mods_empty";
+    public static final String MOD_DISABLED = "somestacks.command.mod_disabled";
+    public static final String SKIPPED_DISABLED_MODS = "somestacks.command.skipped.disabled_mods";
+
+    /**
+     * Prefixes of the messages about each server list. Each message is a whole sentence naming its
+     * list, keyed by the prefix plus {@code .added}, {@code .contains}, {@code .empty}, {@code
+     * .entries}, {@code .missing}, or {@code .removed}.
+     */
+    private static final String DISABLED_MODS_LIST = "somestacks.command.list.disabled_mods";
+
+    private static final String DISABLED_ITEMS_LIST = "somestacks.command.list.disabled_items";
+    private static final String GEN_MODS_LIST = "somestacks.command.list.gen_mods";
+    private static final String GEN_ITEMS_LIST = "somestacks.command.list.gen_items";
 
     private SsCommand() {}
 
@@ -97,17 +114,21 @@ public final class SsCommand {
     // spotless:on
 
     /**
-     * Builds the {@code <modid>|all|list} subtree for one gallery kind. Storage adds the separate
-     * {@code items} form; Bar galleries are selected by namespace. Gallery commands require a
-     * player location and the higher world-editing permission because they overwrite blocks without
-     * ordinary placement protection.
+     * Builds the {@code <modid>|all|list} subtree for one gallery kind; the caller adds Storage's
+     * separate {@code items} form, and Bar galleries are selected by namespace. Gallery commands
+     * require a player, {@code render_gallery.enabled}, and {@code
+     * render_gallery.required_permission_level}, because they overwrite blocks without ordinary
+     * placement protection.
      */
     // spotless:off
     private static LiteralArgumentBuilder<CommandSourceStack> galleryTree(
             String name, RenderGalleryGenerator.Kind kind) {
         return Commands.literal(name)
-                .requires(source -> source.isPlayer() && ServerConfig.galleryEnabled()
-                        && source.hasPermission(ServerConfig.galleryRequiredPermissionLevel()))
+                .requires(source -> {
+                    ServerConfig.Settings policy = ServerConfig.settings();
+                    return source.isPlayer() && policy.galleryEnabled()
+                            && source.hasPermission(policy.galleryPermissionLevel());
+                })
                 .then(Commands.literal("all")
                         .executes(ctx -> galleryAll(ctx, kind)))
                 .then(Commands.literal("list")
@@ -141,37 +162,36 @@ public final class SsCommand {
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                                 RenderGalleryGenerator.Kind.STORAGE.modIds(), builder))
-                                        .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL,
+                                        .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LIST,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.GEN_MODS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL,
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LIST,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL, false))))
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LIST))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
                                 .then(Commands.argument(
                                                 ARG_ITEM,
                                                 ResourceArgument.resource(buildContext, Registries.ITEM))
                                         .executes(ctx -> addItemEntry(
-                                                ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL))))
+                                                ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LIST))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
                                         .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.GEN_ITEMS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL,
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LIST,
                                                 ResourceLocationArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL, true))));
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LIST))));
     }
     // spotless:on
 
     /**
-     * The {@code ss deny} subtree, editing the two compatibility lists. A namespace is taken as
-     * typed because the shipped defaults name mods that need not be installed, so the list is
-     * expected to hold namespaces the registry cannot confirm; an item id is checked against the
-     * registry, where a typo would otherwise sit in the list looking effective.
+     * The {@code ss deny} subtree, editing the two compatibility lists. A namespace is lowercased and
+     * syntax-checked but need not be installed, since a server may bar a mod it does not have yet;
+     * an item id is checked against the registry, where a typo would otherwise sit in the list looking effective.
      */
     // spotless:off
     private static LiteralArgumentBuilder<CommandSourceStack> denyTree(
@@ -183,29 +203,29 @@ public final class SsCommand {
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                                 RenderGalleryGenerator.Kind.STORAGE.modIds(), builder))
-                                        .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL,
+                                        .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LIST,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.DISABLE_MODS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL,
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LIST,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL, true))))
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LIST))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
                                 .then(Commands.argument(
                                                 ARG_ITEM,
                                                 ResourceArgument.resource(buildContext, Registries.ITEM))
                                         .executes(ctx -> addItemEntry(
-                                                ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL))))
+                                                ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LIST))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
                                         .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.DISABLE_ITEMS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL,
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LIST,
                                                 ResourceLocationArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LIST))));
     }
     // spotless:on
 
@@ -218,8 +238,38 @@ public final class SsCommand {
         return SharedSuggestionProvider.suggest(List.copyOf(list.get()), builder);
     }
 
-    /** Entries omitted from one request, grouped by reason. */
-    private record Skips(Component reason, List<String> entries) {}
+    /**
+     * Entries a bulk form left out for one reason. {@code key} is a whole sentence taking the count
+     * and the comma-separated entries.
+     */
+    public record Skips(String key, List<String> entries) {
+        /** Sends one sentence for each reason that left anything out. */
+        public static void report(List<Skips> skips, Consumer<Component> send) {
+            for (Skips skip : skips) {
+                if (!skip.entries().isEmpty()) {
+                    send.accept(
+                            Component.translatable(
+                                    skip.key(),
+                                    skip.entries().size(),
+                                    String.join(", ", skip.entries())));
+                }
+            }
+        }
+    }
+
+    /**
+     * What one gallery covers, as the last part of its progress messages: one named namespace,
+     * several namespaces counted, or the gen item list.
+     */
+    private record Subject(String id, List<Object> args) {
+        private static final Subject GEN_ITEMS = new Subject("list", List.of());
+
+        private static Subject of(List<String> modIds) {
+            return modIds.size() == 1
+                    ? new Subject("mod", List.of(modIds.get(0)))
+                    : new Subject("mods", List.of(modIds.size()));
+        }
+    }
 
     /**
      * The namespaces one gallery invocation acts on, with the ones dropped from the request and
@@ -232,14 +282,8 @@ public final class SsCommand {
             List<String> unusableMods) {
         private List<Skips> skips() {
             return List.of(
-                    new Skips(
-                            Component.translatable("somestacks.command.skip.disabled"),
-                            disabledMods),
-                    new Skips(
-                            Component.translatable(
-                                    "somestacks.command.skip.not_loaded",
-                                    Component.translatable(kind.itemLabelKey())),
-                            unusableMods));
+                    new Skips(SKIPPED_DISABLED_MODS, disabledMods),
+                    new Skips(kind.skippedUnusableModsKey(), unusableMods));
         }
 
         private List<List<Item>> groups() {
@@ -261,18 +305,12 @@ public final class SsCommand {
             RenderGalleryGenerator.Kind kind,
             String modId) {
         if (ServerConfig.isModDisabled(modId)) {
-            ctx.getSource()
-                    .sendFailure(Component.translatable("somestacks.command.mod_disabled", modId));
+            ctx.getSource().sendFailure(Component.translatable(MOD_DISABLED, modId));
             return null;
         }
 
         if (kind.itemsIn(modId).isEmpty()) {
-            ctx.getSource()
-                    .sendFailure(
-                            Component.translatable(
-                                    "somestacks.command.mod_unusable",
-                                    modId,
-                                    Component.translatable(kind.itemLabelKey())));
+            ctx.getSource().sendFailure(Component.translatable(kind.unusableModKey(), modId));
             return null;
         }
 
@@ -298,8 +336,7 @@ public final class SsCommand {
         });
 
         if (modIds.isEmpty()) {
-            ctx.getSource()
-                    .sendFailure(Component.translatable("somestacks.command.all_mods_disabled"));
+            ctx.getSource().sendFailure(Component.translatable(ALL_MODS_DISABLED));
             return null;
         }
 
@@ -341,13 +378,9 @@ public final class SsCommand {
             ctx.getSource()
                     .sendFailure(
                             seen.isEmpty()
-                                    ? Component.translatable(
-                                            "somestacks.command.gen_mods_empty",
-                                            Component.translatable(GEN_MODS_LABEL))
+                                    ? Component.translatable(GEN_MODS_EMPTY)
                                     : Component.translatable(
-                                            "somestacks.command.gen_mods_unusable",
-                                            Component.translatable(GEN_MODS_LABEL),
-                                            Component.translatable(kind.itemLabelKey()),
+                                            kind.genModsUnusableKey(),
                                             disabledMods.size(),
                                             unusableMods.size()));
             return null;
@@ -393,12 +426,9 @@ public final class SsCommand {
             ctx.getSource()
                     .sendFailure(
                             seen.isEmpty()
-                                    ? Component.translatable(
-                                            "somestacks.command.gen_items_empty",
-                                            Component.translatable(GEN_ITEMS_LABEL))
+                                    ? Component.translatable("somestacks.command.gen_items_empty")
                                     : Component.translatable(
                                             "somestacks.command.gen_items_unusable",
-                                            Component.translatable(GEN_ITEMS_LABEL),
                                             disabledItems.size(),
                                             unknownItems.size()));
             return null;
@@ -411,12 +441,8 @@ public final class SsCommand {
         return new ItemSelection(
                 itemIds.stream().map(BuiltInRegistries.ITEM::getValue).toList(),
                 List.of(
-                        new Skips(
-                                Component.translatable("somestacks.command.skip.disabled"),
-                                disabledItems),
-                        new Skips(
-                                Component.translatable("somestacks.command.skip.unknown"),
-                                unknownItems)));
+                        new Skips("somestacks.command.skipped.disabled_items", disabledItems),
+                        new Skips("somestacks.command.skipped.unknown_items", unknownItems)));
     }
 
     private static int gallerySingle(
@@ -462,32 +488,8 @@ public final class SsCommand {
                         player,
                         RenderGalleryGenerator.Kind.STORAGE,
                         List.of(selection.items()),
-                        Component.translatable(
-                                "somestacks.command.subject.list",
-                                Component.translatable(GEN_ITEMS_LABEL)),
+                        Subject.GEN_ITEMS,
                         selection.skips());
-    }
-
-    private static Component subject(List<String> modIds) {
-        return modIds.size() == 1
-                ? Component.translatable("somestacks.command.subject.mod", modIds.get(0))
-                : Component.translatable("somestacks.command.subject.mods", modIds.size());
-    }
-
-    /**
-     * Reports what a bulk form dropped, one clause per reason and none for a reason with nothing.
-     */
-    private static void appendSkips(MutableComponent message, List<Skips> skips) {
-        for (Skips skip : skips) {
-            if (!skip.entries().isEmpty()) {
-                message.append(
-                        Component.translatable(
-                                "somestacks.command.skipped",
-                                skip.entries().size(),
-                                skip.reason(),
-                                ComponentUtils.formatList(skip.entries(), Component::literal)));
-            }
-        }
     }
 
     private static int generate(
@@ -497,60 +499,56 @@ public final class SsCommand {
                 player,
                 selection.kind(),
                 selection.groups(),
-                subject(selection.modIds()),
+                Subject.of(selection.modIds()),
                 selection.skips());
     }
 
     /**
-     * Queues one gallery, reports its planned contents immediately, and reports the actual result
-     * when the tick-budgeted generator finishes.
+     * Queues one gallery, reports its planned contents and what was left out immediately, and
+     * reports the actual result when the tick-budgeted generator finishes.
      */
     private static int generate(
             CommandContext<CommandSourceStack> ctx,
             ServerPlayer player,
             RenderGalleryGenerator.Kind kind,
             List<List<Item>> groups,
-            Component subject,
+            Subject subject,
             List<Skips> skips) {
         RenderGalleryGenerator.Plan plan =
                 RenderGalleryGenerator.enqueue(
                         player,
                         kind,
                         groups,
-                        result -> {
-                            MutableComponent done =
-                                    Component.translatable(
-                                            "somestacks.command.gallery_created",
-                                            result.totalStacks(),
-                                            Component.translatable(kind.stackLabelKey()),
-                                            result.totalItems(),
-                                            Component.translatable(kind.itemLabelKey()),
-                                            subject);
+                        result ->
+                                player.sendSystemMessage(
+                                        result.totalStacks() < result.expectedStacks()
+                                                ? galleryMessage(
+                                                        kind,
+                                                        "created_partial",
+                                                        subject,
+                                                        result.totalStacks(),
+                                                        result.expectedStacks(),
+                                                        result.totalItems())
+                                                : galleryMessage(
+                                                        kind,
+                                                        "created",
+                                                        subject,
+                                                        result.totalStacks(),
+                                                        result.totalItems())));
 
-                            if (result.totalStacks() < result.expectedStacks()) {
-                                done.append(
-                                        Component.translatable(
-                                                "somestacks.command.gallery_warning",
-                                                result.expectedStacks() - result.totalStacks(),
-                                                result.expectedStacks()));
-                            }
-
-                            player.sendSystemMessage(done);
-                        });
-
-        MutableComponent message =
-                Component.translatable(
-                        "somestacks.command.gallery_building",
-                        plan.expectedStacks(),
-                        Component.translatable(kind.stackLabelKey()),
-                        plan.totalItems(),
-                        Component.translatable(kind.itemLabelKey()),
-                        subject);
-
-        appendSkips(message, skips);
-
-        ctx.getSource().sendSuccess(() -> message, true);
+        Component building =
+                galleryMessage(kind, "building", subject, plan.expectedStacks(), plan.totalItems());
+        ctx.getSource().sendSuccess(() -> building, true);
+        Skips.report(skips, line -> ctx.getSource().sendSuccess(() -> line, true));
         return 1;
+    }
+
+    /** One gallery progress sentence: the counts, then whatever names the subject. */
+    private static Component galleryMessage(
+            RenderGalleryGenerator.Kind kind, String phase, Subject subject, Object... counts) {
+        Object[] args =
+                Stream.concat(Stream.of(counts), subject.args().stream()).toArray(Object[]::new);
+        return Component.translatable(kind.messageKey(phase, subject.id()), args);
     }
 
     private static int reload(CommandContext<CommandSourceStack> ctx) {
@@ -572,10 +570,12 @@ public final class SsCommand {
      * nothing or showing nothing.
      */
     private static int addItemEntry(
-            CommandContext<CommandSourceStack> ctx, ServerConfig.ListSetting list, String label)
+            CommandContext<CommandSourceStack> ctx,
+            ServerConfig.ListSetting list,
+            String listKey)
             throws CommandSyntaxException {
         ResourceLocation itemId = resourceItemId(ctx);
-        return addEntry(ctx, list, label, itemId.toString());
+        return addEntry(ctx, list, listKey, itemId.toString());
     }
 
     private static ResourceLocation resourceItemId(CommandContext<CommandSourceStack> ctx)
@@ -586,7 +586,7 @@ public final class SsCommand {
     private static int addEntry(
             CommandContext<CommandSourceStack> ctx,
             ServerConfig.ListSetting list,
-            String label,
+            String listKey,
             String entry) {
         boolean added;
         try {
@@ -603,22 +603,14 @@ public final class SsCommand {
         }
         if (!added) {
             ctx.getSource()
-                    .sendFailure(
-                            Component.translatable(
-                                    "somestacks.command.list_contains",
-                                    Component.translatable(label),
-                                    entry));
+                    .sendFailure(Component.translatable(listKey + ".contains", entry));
             return 0;
         }
 
         ctx.getSource()
                 .sendSuccess(
-                        () ->
-                                Component.translatable(
-                                        "somestacks.command.list_added",
-                                        entry,
-                                        Component.translatable(label)),
-                        true);
+                        () -> Component.translatable(listKey + ".added", entry), true);
+        // Keeps client-local `ss write list` inputs current.
         SomeStacksServer.publishPolicy(ctx.getSource().getServer());
         return 1;
     }
@@ -626,62 +618,41 @@ public final class SsCommand {
     private static int removeEntry(
             CommandContext<CommandSourceStack> ctx,
             ServerConfig.ListSetting list,
-            String label,
+            String listKey,
             String entry) {
         if (!ServerConfig.removeListEntry(list, entry)) {
             ctx.getSource()
-                    .sendFailure(
-                            Component.translatable(
-                                    "somestacks.command.list_missing",
-                                    Component.translatable(label),
-                                    entry));
+                    .sendFailure(Component.translatable(listKey + ".missing", entry));
             return 0;
         }
 
         ctx.getSource()
                 .sendSuccess(
-                        () ->
-                                Component.translatable(
-                                        "somestacks.command.list_removed",
-                                        entry,
-                                        Component.translatable(label)),
-                        true);
+                        () -> Component.translatable(listKey + ".removed", entry), true);
+        // Keeps client-local `ss write list` inputs current.
         SomeStacksServer.publishPolicy(ctx.getSource().getServer());
         return 1;
     }
 
-    /**
-     * Reports one of the server's text lists. Sorting is for the lists whose order means nothing;
-     * the gen mod list is shown as stored, because that order is the order of a gallery's columns.
-     */
+    /** Reports one of the server's text lists, sorted, since no list's order means anything. */
     private static int listEntries(
             CommandContext<CommandSourceStack> ctx,
             ServerConfig.ListSetting list,
-            String label,
-            boolean sort) {
+            String listKey) {
         List<String> entries = new ArrayList<>(list.get());
         if (entries.isEmpty()) {
-            ctx.getSource()
-                    .sendSuccess(
-                            () ->
-                                    Component.translatable(
-                                            "somestacks.command.list_empty",
-                                            Component.translatable(label)),
-                            false);
+            ctx.getSource().sendSuccess(() -> Component.translatable(listKey + ".empty"), false);
             return 0;
         }
 
-        if (sort) {
-            Collections.sort(entries);
-        }
+        Collections.sort(entries);
         ctx.getSource()
                 .sendSuccess(
                         () ->
                                 Component.translatable(
-                                        "somestacks.command.list_entries",
-                                        Component.translatable(label),
+                                        listKey + ".entries",
                                         entries.size(),
-                                        ComponentUtils.formatList(entries, Component::literal)),
+                                        String.join(", ", entries)),
                         false);
         return entries.size();
     }

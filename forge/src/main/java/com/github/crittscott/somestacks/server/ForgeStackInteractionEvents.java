@@ -15,6 +15,12 @@ import net.minecraftforge.fml.common.Mod;
 public final class ForgeStackInteractionEvents {
     private ForgeStackInteractionEvents() {}
 
+    /**
+     * Handles sneaking torch rotation and clicks that reach a stack through a neighboring block,
+     * passing on the block and item denials earlier listeners set. Runs at {@code LOWEST} so
+     * protection mods and other listeners decide first; a click an earlier listener cancels never
+     * arrives.
+     */
     @SubscribeEvent(priority = Priority.LOWEST)
     public static boolean onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         if (event.getLevel().isClientSide()) {

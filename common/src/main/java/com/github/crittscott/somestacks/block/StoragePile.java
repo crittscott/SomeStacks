@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.StackSort;
 
@@ -15,7 +15,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.IntFunction;
@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  */
 public final class StoragePile extends StackRun<StorageStackBE> {
     private StoragePile(ServerLevel level, List<StorageStackBE> blocks) {
-        super(level, blocks, StorageStackBE.SLOTS, CommonRegistry.storageStackBlock());
+        super(level, blocks, StorageStackBE.SLOTS, BlockType.STORAGE_STACK);
     }
 
     /**
@@ -84,13 +84,25 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /**
-     * Whether a Storage Stack may be created at {@code pos}: the contiguous column it would form,
-     * counting the runs both below and above it, must fit the configured maximum. Testing the whole
-     * resulting column rather than one neighboring pile is what stops a block placed into the gap
-     * between two piles from joining them into an over-tall one.
+     * Notes {@code breaker} as responsible for the cleanup a player's break at {@code removed}
+     * causes: on the base of the pile below, and on the block above, which becomes the base of its
+     * own pile. It runs while the removed block's entity is still present; the settles the removal
+     * schedules on both sides take the note. A removal no player made notes nothing, so it leaves
+     * any pending cleanup actor as it was.
      */
-    public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.storageStackBlock());
+    static void noteBreakerAround(Level level, BlockPos removed, ServerPlayer breaker) {
+        StorageStackBE base = null;
+        for (BlockPos pos = removed.below();
+                level.getBlockEntity(pos) instanceof StorageStackBE below;
+                pos = pos.below()) {
+            base = below;
+        }
+        if (base != null) {
+            base.noteCleanupActor(breaker);
+        }
+        if (level.getBlockEntity(removed.above()) instanceof StorageStackBE above) {
+            above.noteCleanupActor(breaker);
+        }
     }
 
     /**
@@ -116,7 +128,10 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         return blocks.get(0).isPermanent();
     }
 
-    /** Changes permanence and attributes any resulting deferred cleanup to {@code actor}. */
+    /**
+     * Changes permanence and attributes any resulting deferred cleanup to {@code actor}; null means
+     * automation.
+     */
     public void setPermanent(boolean permanent, @Nullable ServerPlayer actor) {
         for (StorageStackBE sbe : blocks) {
             sbe.inheritPermanent(permanent);
@@ -175,7 +190,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * @return how many items were taken from {@code fromHand}, which is shrunk by that amount
      */
     public int deposit(ItemStack fromHand, @Nullable ServerPlayer placer) {
-        if (fromHand.isEmpty() || !StorageStackBE.isValidStorageItem(fromHand)) {
+        if (!StorageStackBE.isValidStorageItem(fromHand)) {
             return 0;
         }
 
@@ -253,7 +268,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      */
     @Override
     public int acceptsAt(int flatSlot, ItemStack stack, IntFunction<ItemStack> contents) {
-        if (stack.isEmpty() || !StorageStackBE.isValidStorageItem(stack)) {
+        if (!StorageStackBE.isValidStorageItem(stack)) {
             return 0;
         }
         if (flatSlot < 0 || flatSlot >= advertisedSlots()) {
@@ -308,8 +323,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * took.
      */
     private int fillSlot(int flatSlot, ItemStack from, int amount) {
-        ItemStack offer = from.copy();
-        offer.setCount(amount);
+        ItemStack offer = from.copyWithCount(amount);
         ItemStack rejected = handlerOf(flatSlot).insertItem(flatSlot % StorageStackBE.SLOTS, offer);
         int used = amount - rejected.getCount();
         from.shrink(used);
@@ -317,17 +331,16 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /**
-     * Whether growth is permitted and the space above the pile could take a block: height,
-     * enablement, build height, replaceability, and every protection check available without side
-     * effects. Planning and committing share this predicate so that a simulated deposit cannot
-     * promise a block the deposit itself would refuse.
+     * Whether the pile could grow a full block on top: {@link #canGrowBlock} and no entity in the
+     * way. Planning and committing share this predicate so that a simulated deposit cannot promise
+     * a block the deposit itself would refuse.
      *
      * <p>Spawn protection exempts operators, so the result depends on who is growing the pile: a
      * player's own deposit is checked against that player, and automation against the level's
      * automation actor, which is never exempt.
      */
     private boolean canGrow(@Nullable ServerPlayer placer) {
-        return canGrowBlock(ServerConfig.enableStorageStackBlock(), placer)
+        return canGrowBlock(placer)
                 && WorldEdits.isUnobstructed(level, topPos().above(), Shapes.block());
     }
 
@@ -358,28 +371,18 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      */
     public void settle() {
         ServerPlayer cleanupActor = blocks.get(0).takeCleanupActor();
-        Map<StackKey, SettlementGroup> groups = new LinkedHashMap<>();
+        List<ItemStack> stored = new ArrayList<>(totalSlots());
         for (int slot = 0; slot < totalSlots(); slot++) {
-            ItemStack stack = getSlot(slot);
-            if (!stack.isEmpty()) {
-                groups.computeIfAbsent(StackKey.of(stack), ignored -> new SettlementGroup(stack))
-                                .count +=
-                        stack.getCount();
-            }
+            stored.add(getSlot(slot));
         }
-        List<SettlementGroup> ordered = new ArrayList<>(groups.values());
-        ordered.sort(Comparator.comparing(group -> group.sortKey));
-        List<ItemStack> packed = new ArrayList<>();
-        for (SettlementGroup group : ordered) {
-            int remaining = group.count;
-            int limit = StackItemStorage.storageSlotLimit(group.model);
-            while (remaining > 0) {
-                ItemStack piece = group.model.copy();
-                piece.setCount(Math.min(remaining, limit));
-                packed.add(piece);
-                remaining -= piece.getCount();
-            }
-        }
+        // One sort key per identity: the comparator meets each first-seen stack many times.
+        Map<ItemStack, StackSort.SortKey> sortKeys = new IdentityHashMap<>();
+        List<StackKey.Piece> packed =
+                StackKey.consolidate(
+                        stored,
+                        Comparator.comparing(
+                                stack -> sortKeys.computeIfAbsent(stack, StackSort::key)),
+                        StackItemStorage::storageSlotLimit);
         // Preserve live contents when their legal packed form needs additional slots.
         if (packed.size() > totalSlots()) {
             publishPendingBlocks();
@@ -395,7 +398,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             int index = 0;
             for (StorageStackBE sbe : blocks) {
                 for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-                    ItemStack desired = index < packed.size() ? packed.get(index) : ItemStack.EMPTY;
+                    StackKey.Piece desired = index < packed.size() ? packed.get(index) : null;
                     index++;
                     sbe.setSlotIfChanged(slot, desired);
                 }
@@ -422,17 +425,5 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      */
     private void trimEmptyTop(@Nullable ServerPlayer actor) {
         trimEmptyTop(actor, StorageStackBE::isPermanent);
-    }
-
-    /** One exact identity, its precomputed sort fields, and its total stored count. */
-    private static final class SettlementGroup {
-        private final ItemStack model;
-        private final StackSort.SortKey sortKey;
-        private int count;
-
-        private SettlementGroup(ItemStack stack) {
-            model = stack;
-            sortKey = StackSort.key(stack);
-        }
     }
 }

@@ -32,11 +32,13 @@ import net.minecraftforge.network.PacketDistributor;
 public final class ForgeClientEvents {
     private ForgeClientEvents() {}
 
+    /** Installs the sender that carries gesture state to the server. Runs once at client setup. */
     public static void init() {
         ClientGestures.setSender(
                 payload -> ForgeNetworking.CHANNEL.send(payload, PacketDistributor.SERVER.noArg()));
     }
 
+    /** Registers the client-side {@code /ss} subcommands. */
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
         ClientRenderCommands.register(
@@ -54,25 +56,34 @@ public final class ForgeClientEvents {
                 });
     }
 
+    /**
+     * Classifies an empty-hand air click and syncs gesture state. {@code HIGHEST}, like the item
+     * click, so the gesture sees the click before any other mod's listener.
+     */
     @SubscribeEvent(priority = Priority.HIGHEST)
     public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty evt) {
         // RightClickEmpty is a pure notification: there is no vanilla action behind an empty-hand
         // air click to suppress, so the rules run but nothing is canceled.
-        ClientGestures.syncState(ForgeKeyMappings.STACK_MODE_KEY.isDown());
+        ClientGestures.syncState(ForgeClientSetup.STACK_MODE_KEY.isDown());
         if (ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult)) return;
         ClientGestures.processClick(
                 evt.getEntity(),
                 evt.getHand(),
                 null,
                 false,
-                ForgeKeyMappings.STACK_MODE_KEY.isDown());
+                ForgeClientSetup.STACK_MODE_KEY.isDown());
     }
 
+    /**
+     * Classifies an air click with a held item, syncs gesture state, and cancels the item use when
+     * the gesture claims the click. {@code HIGHEST}, so another mod's listener does not use the
+     * item before a claiming gesture cancels it.
+     */
     @SubscribeEvent(priority = Priority.HIGHEST)
     public static boolean onRightClickItem(PlayerInteractEvent.RightClickItem evt) {
         if (!evt.getLevel().isClientSide()) return false;
 
-        ClientGestures.syncState(ForgeKeyMappings.STACK_MODE_KEY.isDown());
+        ClientGestures.syncState(ForgeClientSetup.STACK_MODE_KEY.isDown());
         if (ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult)) return false;
         var gesture =
                 ClientGestures.processClick(
@@ -80,11 +91,28 @@ public final class ForgeClientEvents {
                         evt.getHand(),
                         null,
                         false,
-                        ForgeKeyMappings.STACK_MODE_KEY.isDown());
+                        ForgeClientSetup.STACK_MODE_KEY.isDown());
         return gesture.consumesLocalUse(evt.getEntity().getMainHandItem());
     }
 
+    /**
+     * Synchronizes gesture state for every client block click, including one a later listener
+     * cancels, because the vanilla block-use packet that follows still carries the action to the
+     * server. Forge's event bus does not deliver a canceled event to later listeners, so this runs
+     * apart from {@link #onRightClick}, first and without cancelling.
+     */
     @SubscribeEvent(priority = Priority.HIGHEST)
+    public static void onRightClickSync(PlayerInteractEvent.RightClickBlock evt) {
+        if (evt.getLevel().isClientSide()) {
+            ClientGestures.syncState(ForgeClientSetup.STACK_MODE_KEY.isDown());
+        }
+    }
+
+    /**
+     * Runs last, as the server listener and Fabric's gesture phase do, so a listener that handles
+     * the click earlier keeps it.
+     */
+    @SubscribeEvent(priority = Priority.LOWEST)
     public static boolean onRightClick(PlayerInteractEvent.RightClickBlock evt) {
         // Only the client-side firing drives the gesture rules. In single player the integrated
         // server shares this event bus, and adjacent protection consultation re-fires
@@ -92,16 +120,14 @@ public final class ForgeClientEvents {
         if (!evt.getLevel().isClientSide()) {
             return false;
         }
-        if (evt.getFace() == null) return false;
 
-        ClientGestures.syncState(ForgeKeyMappings.STACK_MODE_KEY.isDown());
         var gesture =
                 ClientGestures.processClick(
                         evt.getEntity(),
                         evt.getHand(),
                         BlockType.of(evt.getLevel().getBlockState(evt.getPos()).getBlock()),
                         true,
-                        ForgeKeyMappings.STACK_MODE_KEY.isDown());
+                        ForgeClientSetup.STACK_MODE_KEY.isDown());
 
         boolean cancel = gesture.consumesLocalUse(evt.getEntity().getMainHandItem());
         if (cancel) {

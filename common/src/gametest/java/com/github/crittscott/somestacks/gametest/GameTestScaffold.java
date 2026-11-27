@@ -1,13 +1,18 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,6 +27,7 @@ import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,6 +35,7 @@ import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -44,6 +51,34 @@ public final class GameTestScaffold {
     public static final BlockPos ORIGIN = new BlockPos(2, 1, 2);
 
     private GameTestScaffold() {}
+
+    /**
+     * A stack block's inventory as a hopper or pipe reaches it through the loader: Forge's and
+     * NeoForge's {@code IItemHandler} capability or Fabric's Transfer API storage. Each loader's
+     * support class supplies one, so a shared scenario drives the same automation surface on every
+     * loader. Insertion returns what was left over, and neither call changes the stack it is given.
+     */
+    public interface Automation {
+        ItemStack extract(int slot, int amount, boolean simulate);
+
+        ItemStack insert(int slot, ItemStack stack, boolean simulate);
+
+        /**
+         * Commits {@code stack} slot by slot from slot 0 upward, as a hopper filling the first slot
+         * with room does, and returns what no slot took.
+         */
+        default ItemStack insertWalking(ItemStack stack) {
+            ItemStack remaining = stack.copy();
+            for (int slot = 0; slot < slots() && !remaining.isEmpty(); slot++) {
+                remaining = insert(slot, remaining, false);
+            }
+            return remaining;
+        }
+
+        int slots();
+
+        ItemStack stackAt(int slot);
+    }
 
     public static StorageStackBE placeStorage(GameTestHelper helper, BlockPos relative) {
         return place(helper, relative, CommonRegistry.storageStackBlock(), StorageStackBE.class);
@@ -115,6 +150,25 @@ public final class GameTestScaffold {
         return type.cast(blockEntity);
     }
 
+    /**
+     * The unrotated block-local box of cell {@code slot} of {@code type}, where a fresh block lays
+     * it out.
+     */
+    public static AABB cellBox(BlockType type, int slot) {
+        return switch (type) {
+            case STORAGE_STACK -> StorageCubeIdx.GRID.localBox(slot, 0);
+            case SINGLES_STACK -> SinglesCubeIdx.GRID.localBox(slot, 0);
+            case BAR_STACK -> BarCubeIdx.localBox(slot);
+        };
+    }
+
+    /** Puts a full stack of {@code item} in every slot of {@code block}, bypassing admission. */
+    public static void fill(StackBlockEntity block, Item item) {
+        for (int slot = 0; slot < block.getItems().getSlots(); slot++) {
+            seedSlot(block.getItems(), slot, new ItemStack(item, block.slotLimit()));
+        }
+    }
+
     public static Item firstBarItem() {
         for (Item item : BuiltInRegistries.ITEM) {
             if (BarStackBE.isValidBarItem(new ItemStack(item))) {
@@ -147,6 +201,33 @@ public final class GameTestScaffold {
     }
 
     /**
+     * {@code base} with only the named settings replaced. Each value has its setting's {@link
+     * ServerConfig.Setting.Kind} type ({@code Integer}, {@code Boolean}, or {@code List<String>});
+     * naming settings rather than listing every record component keeps a swapped pair of same-typed
+     * values from compiling into the wrong policy.
+     */
+    public static ServerConfig.Settings policy(
+            ServerConfig.Settings base, Map<ServerConfig.Setting, ?> changes) {
+        return ServerConfig.Settings.from(
+                setting -> changes.containsKey(setting) ? changes.get(setting) : setting.get(base));
+    }
+
+    /**
+     * Runs {@code body} with the applied policy changed only by {@code changes}, then applies the
+     * previous policy again, including when {@code body} fails. The body runs synchronously on the
+     * server thread, so tests sharing the batch never observe the pinned policy.
+     */
+    public static void withPolicy(Map<ServerConfig.Setting, ?> changes, Runnable body) {
+        ServerConfig.Settings before = ServerConfig.settings();
+        ServerConfig.apply(policy(before, changes));
+        try {
+            body.run();
+        } finally {
+            ServerConfig.apply(before);
+        }
+    }
+
+    /**
      * Puts {@code stack} straight into a slot, bypassing the validity test an insertion runs.
      *
      * <p>This is how a test reaches the state an {@code ss deny mod} edit or a data pack reload
@@ -158,6 +239,15 @@ public final class GameTestScaffold {
      */
     public static void seedSlot(StackItemStorage handler, int slot, ItemStack stack) {
         handler.setStackInSlot(slot, stack);
+    }
+
+    /** An item {@code type} admits, for a scenario that needs only some valid content. */
+    public static Item sampleItem(BlockType type) {
+        return switch (type) {
+            case STORAGE_STACK -> Items.STONE;
+            case SINGLES_STACK -> Items.STICK;
+            case BAR_STACK -> firstBarItem();
+        };
     }
 
     /**

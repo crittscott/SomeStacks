@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -22,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -36,6 +39,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     private static boolean reportedClientUpdateRejection;
 
     protected final StackItemStorage items;
+    @Nullable private ServerPlayer breakingPlayer;
     @Nullable private StackDataMigration.LoadResult pendingLoadResult;
     private boolean pendingMigrationSave;
 
@@ -80,24 +84,72 @@ public abstract class StackBlockEntity extends BlockEntity {
 
                     @Override
                     protected int getSlotLimit(int slot) {
-                        return localSlotLimit();
+                        return slotLimit();
                     }
 
                     @Override
                     protected boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                        return isStoredItemValid(stack);
+                        return admits(stack);
                     }
                 };
     }
 
     /**
-     * Admission for new local/automation inserts, including current namespace and type policy.
-     * Existing saved or internally relocated items bypass this check; no slot is selected here.
+     * Admission for new player and automation inserts, including current namespace and type
+     * policy. Existing saved or internally relocated items bypass this check; it selects no slot
+     * and checks neither support nor growth authority.
      */
-    public abstract boolean isStoredItemValid(ItemStack stack);
+    public abstract boolean admits(ItemStack stack);
 
     /** Resolves the current server-side run without consulting the per-tick cache. */
     protected abstract StackRunItemAccess resolveRun(ServerLevel serverLevel);
+
+    /** The block-local box of the cell at {@code slot}, at this block's current layout. */
+    protected abstract AABB cellBox(int slot);
+
+    /**
+     * Whether a player's modified-item click on this block's top face along {@code ray} deposits
+     * here, rather than placing a new stack above.
+     */
+    public abstract boolean acceptsDepositAlong(ViewRay ray);
+
+    /**
+     * A player's deposit from {@code hand} into the cell or run {@code ray} targets, shrinking
+     * {@code hand} by what moved. Admission, support, and growth are this method's to check.
+     *
+     * @return how many items moved
+     */
+    public abstract int depositFromHand(ViewRay ray, ItemStack hand, ServerPlayer player);
+
+    /**
+     * A player's extraction from the occupied cell at {@code index} into a hand currently holding
+     * {@code hand}, taking only what that hand can hold. Structural cleanup is attributed to
+     * {@code player}.
+     *
+     * @return what was taken, or an empty stack
+     */
+    public abstract ItemStack extractIntoHand(int index, ItemStack hand, ServerPlayer player);
+
+    /**
+     * The cell a deposit along {@code ray} fills: the last empty cell before the first occupied
+     * one, or the farthest cell the ray crosses when it meets nothing occupied; -1 when it crosses
+     * none.
+     */
+    public final int depositTarget(ViewRay ray) {
+        return ray.lastEmptyBeforeOccupied(items.getSlots(), items, this::worldCellBox);
+    }
+
+    /**
+     * The occupied cell {@code ray} meets first, which extraction and item rotation act on, or -1.
+     */
+    public final int extractionTarget(ViewRay ray) {
+        return ray.nearestOccupied(items, this::worldCellBox);
+    }
+
+    private AABB worldCellBox(int slot) {
+        BlockPos pos = getBlockPos();
+        return cellBox(slot).move(pos.getX(), pos.getY(), pos.getZ());
+    }
 
     /** The current server-side run, or {@code null} on the client or during removal. */
     @Nullable
@@ -139,10 +191,32 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     /**
-     * Local slot capacity before the item's own stack limit, or one for positional display types.
+     * Per-slot capacity before the item's own stack limit, or one for positional display types.
+     * Automation views report the same capacity for every run position.
      */
-    public int localSlotLimit() {
+    public int slotLimit() {
         return StackItemStorage.STORAGE_SLOT_LIMIT;
+    }
+
+    /**
+     * Positions an automation view advertises: the run's positions, including headroom, when a
+     * server run resolves, otherwise this block's local slots.
+     */
+    public final int advertisedSlots() {
+        StackRunItemAccess run = itemRun();
+        return run != null ? run.advertisedSlots() : items.getSlots();
+    }
+
+    /**
+     * The read-only stack at an advertised position: the run's slot when a server run resolves,
+     * otherwise this block's local slot. Headroom and invalid positions are empty.
+     */
+    public final ItemStack advertisedStack(int slot) {
+        StackRunItemAccess run = itemRun();
+        if (run != null) {
+            return run.getSlot(slot);
+        }
+        return slot >= 0 && slot < items.getSlots() ? items.getStackInSlot(slot) : ItemStack.EMPTY;
     }
 
     /** Cached local numerator of the run's comparator fill fraction. */
@@ -167,13 +241,13 @@ public abstract class StackBlockEntity extends BlockEntity {
         slotContributions[slot] =
                 stack.isEmpty()
                         ? 0.0
-                        : localSlotLimit() == 1
+                        : slotLimit() == 1
                                 ? 1.0
                                 : Math.min(
                                         1.0,
                                         (double) stack.getCount()
                                                 / Math.min(
-                                                        localSlotLimit(), stack.getMaxStackSize()));
+                                                        slotLimit(), stack.getMaxStackSize()));
         comparatorDirty = true;
     }
 
@@ -243,6 +317,25 @@ public abstract class StackBlockEntity extends BlockEntity {
             BlockState state = getBlockState();
             level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
         }
+    }
+
+    /**
+     * Records the player whose break is about to remove this block, so cleanup the removal causes
+     * is attributed to that player. Only {@link StackBlock#playerWillDestroy} calls this.
+     */
+    final void noteBreakingPlayer(ServerPlayer player) {
+        breakingPlayer = player;
+    }
+
+    /**
+     * Takes the player recorded by {@link #noteBreakingPlayer}, or null when the removal was not a
+     * player's break (explosions, commands, other mods), which leaves cleanup to automation.
+     */
+    @Nullable
+    final ServerPlayer takeBreakingPlayer() {
+        ServerPlayer player = breakingPlayer;
+        breakingPlayer = null;
+        return player;
     }
 
     /** Records the last published comparator signal; returns true only when it changed. */
@@ -515,7 +608,9 @@ public abstract class StackBlockEntity extends BlockEntity {
     public final CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = saveWithoutMetadata(registries);
         tag.remove("Rotation");
-        tag.getCompound(TAG_ITEMS).ifPresent(StackItemStorage::stripSetAside);
+        // The saved inventory is replaced by the client form, which omits set-aside entries and
+        // item data no renderer draws.
+        tag.put(TAG_ITEMS, items.saveClientUpdate(registries));
         stripServerOnlyUpdateData(tag);
         return tag;
     }

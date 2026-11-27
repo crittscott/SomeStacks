@@ -18,6 +18,7 @@ import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.CommandDispatcher;
@@ -48,13 +49,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 /** Development-client assertions for the loader callback's cancellation result. */
 public final class ClientCallbackChecks {
     private ClientCallbackChecks() {}
 
-    /** Observable local callback outputs; none of these performs the server's world action. */
-    public record Result(boolean consumed, boolean blockDenied, boolean itemDenied) {}
+    /**
+     * Observable local callback outputs; none of these performs the server's world action. A
+     * loader whose callback reports separate block-use and item-use denial sets {@code
+     * denialsReported}; one that returns a single result reports only {@code consumed}.
+     */
+    public record Result(
+            boolean consumed, boolean denialsReported, boolean blockDenied, boolean itemDenied) {
+        /** A callback that reports only whether it consumed the click. */
+        public static Result consumedOnly(boolean consumed) {
+            return new Result(consumed, false, false, false);
+        }
+
+        /** A callback that also reports whether it denied block use and item use. */
+        public static Result withDenials(
+                boolean consumed, boolean blockDenied, boolean itemDenied) {
+            return new Result(consumed, true, blockDenied, itemDenied);
+        }
+    }
 
     /** Loader-native chunk or block update on an actual client-attached registered entity. */
     @FunctionalInterface
@@ -65,19 +83,21 @@ public final class ClientCallbackChecks {
     /**
      * To reproduce in-game: launch the loader's runClientGameTests client, join a world, aim at any
      * stack, release Shift and the Stack Modifier, and run /ssclienttest. It invokes the actual
-     * loader callback for main/off hand and checks consumption plus block/item suppression. It does
-     * not send a vanilla use packet or extract contents. A translated success/failure message
-     * reports the assertions; server GameTests cannot exercise this client-only boundary. It also
-     * checks Bar presentation reuse and invalidation, render-profile layer precedence and
-     * invalidation, and the profile commands. The command also feeds valid and malformed
-     * initial/subsequent updates through each loader's native client entry point on scratch
-     * entities, checking inventory and inherited components. Ordinary clients cannot reproduce
-     * malformed wire data through player actions.
+     * loader callback for main/off hand and checks consumption, plus block/item suppression where
+     * the loader's callback reports it separately. It does not send a vanilla use packet or extract
+     * contents. A translated success/failure message reports the assertions; server GameTests
+     * cannot exercise this client-only boundary. It then runs the loader's own checks against the
+     * same hit, and also checks Bar presentation reuse and invalidation, render-profile layer
+     * precedence and invalidation, and the profile commands. The command also feeds valid and
+     * malformed initial/subsequent updates through each loader's native client entry point on
+     * scratch entities, checking inventory and inherited components. Ordinary clients cannot
+     * reproduce malformed wire data through player actions.
      */
     public static int run(
             boolean modifierDown,
             BiFunction<InteractionHand, BlockHitResult, Result> callback,
-            ClientUpdate update) {
+            ClientUpdate update,
+            Consumer<BlockHitResult> loaderChecks) {
         Minecraft client = Minecraft.getInstance();
         try {
             if (client.player == null
@@ -92,20 +112,15 @@ public final class ClientCallbackChecks {
             }
             var main = client.player.getMainHandItem().copy();
             var off = client.player.getOffhandItem().copy();
-            GameTestScaffold.checkEquals(
-                    new Result(true, true, true),
-                    callback.apply(InteractionHand.MAIN_HAND, hit),
-                    "Main-hand callback outputs");
-            GameTestScaffold.checkEquals(
-                    new Result(false, false, false),
-                    callback.apply(InteractionHand.OFF_HAND, hit),
-                    "Off-hand callback outputs");
+            checkOutputs(true, callback.apply(InteractionHand.MAIN_HAND, hit), "Main-hand");
+            checkOutputs(false, callback.apply(InteractionHand.OFF_HAND, hit), "Off-hand");
             GameTestScaffold.check(
                     ItemStack.matches(main, client.player.getMainHandItem()),
                     "Local callback changed main-hand contents");
             GameTestScaffold.check(
                     ItemStack.matches(off, client.player.getOffhandItem()),
                     "Local callback changed off-hand contents");
+            loaderChecks.accept(hit);
             checkBarPresentationCache(client, hit);
             checkClientUpdateIngress(client, hit, update);
             checkProfileCommands();
@@ -317,6 +332,7 @@ public final class ClientCallbackChecks {
                 GameTestScaffold.check(
                         readUserFile(sandbox.userFile()).isEmpty(),
                         "Reset left its entry in the user file");
+                checkUnreadableUserFileIsKept(sandbox);
             }
         } catch (IOException | CommandSyntaxException e) {
             throw new IllegalStateException("Profile command check failed: " + e.getMessage(), e);
@@ -397,12 +413,102 @@ public final class ClientCallbackChecks {
         CubeRenderHelper.onResourceReload();
     }
 
+    /**
+     * Runs inside a sandbox; {@link ItemRenderOverrides.Sandbox#reloadUserFile} stands in for a
+     * restart. To reproduce in-game: quit, put a syntax error in {@code
+     * config/somestacks/item_overrides.json} (delete its last closing brace), start the game, and
+     * run {@code /ss item minecraft:apple gui} and then {@code /ss write changed}. The command
+     * fails, saying the file could not be read, and the file is unchanged. Restore the brace, add
+     * {@code "minecraft:dirt": {"mode": "flat"}}, and run {@code /ss write changed} again: it
+     * succeeds, the file gains the apple entry, and it keeps the dirt entry exactly as written
+     * along with every other entry. Then run {@code /ss item minecraft:dirt reset} and {@code /ss
+     * write changed}: the dirt entry is gone.
+     */
+    private static void checkUnreadableUserFileIsKept(ItemRenderOverrides.Sandbox sandbox)
+            throws IOException {
+        ResourceLocation apple = BuiltInRegistries.ITEM.getKey(Items.APPLE);
+        ResourceLocation dirt = BuiltInRegistries.ITEM.getKey(Items.DIRT);
+        ResourceLocation sand = BuiltInRegistries.ITEM.getKey(Items.SAND);
+        ItemRenderConfig gui = new ItemRenderConfig(RenderMode.GUI, 1.0f, RenderOffset.ZERO);
+        Path file = sandbox.userFile();
+        String broken = "{\"minecraft:stone\": {\"mode\": \"gui\"},";
+        Files.writeString(file, broken);
+        sandbox.reloadUserFile();
+        ItemRenderOverrides.putUser(apple, gui);
+        GameTestScaffold.check(
+                !ItemRenderOverrides.writeUserFile().written(), "Unreadable user file was written");
+        GameTestScaffold.checkEquals(
+                broken, Files.readString(file), "Unreadable user file changed");
+
+        JsonObject fixed =
+                JsonParser.parseString(
+                                """
+                                {
+                                  "minecraft:stone": {"mode": "gui"},
+                                  "minecraft:dirt": {"mode": "flat"},
+                                  "minecraft:sand": {"mode": "3d", "scale": "big"},
+                                  "Not An Item!": {"mode": "gui"},
+                                  "minecraft:gravel": 5
+                                }
+                                """)
+                        .getAsJsonObject();
+        Files.writeString(file, fixed.toString());
+        GameTestScaffold.check(
+                ItemRenderOverrides.writeUserFile().written(),
+                "Fixed user file was not read again and written");
+        JsonObject written = readJson(file);
+        GameTestScaffold.checkEquals(
+                fixed.get("minecraft:stone"), written.get("minecraft:stone"), "Valid entry");
+        GameTestScaffold.check(written.has(apple.toString()), "Session entry was not written");
+        for (String key :
+                List.of("minecraft:dirt", "minecraft:sand", "Not An Item!", "minecraft:gravel")) {
+            GameTestScaffold.checkEquals(
+                    fixed.get(key), written.get(key), "Malformed entry " + key);
+        }
+
+        ItemRenderOverrides.removeUser(dirt);
+        ItemRenderOverrides.putUser(sand, gui);
+        GameTestScaffold.check(
+                ItemRenderOverrides.writeUserFile().written(), "Second write failed");
+        written = readJson(file);
+        GameTestScaffold.check(
+                !written.has(dirt.toString()), "Reset kept the malformed dirt entry");
+        GameTestScaffold.checkEquals(
+                "gui",
+                written.getAsJsonObject(sand.toString()).get("mode").getAsString(),
+                "Session edit did not replace the malformed sand entry");
+        GameTestScaffold.checkEquals(
+                fixed.get("minecraft:gravel"),
+                written.get("minecraft:gravel"),
+                "Untouched malformed entry");
+        Files.delete(file);
+        sandbox.reloadUserFile();
+    }
+
+    private static JsonObject readJson(Path file) throws IOException {
+        return JsonParser.parseString(Files.readString(file)).getAsJsonObject();
+    }
+
     private static RenderProfile profileOf(ItemRenderConfig config) {
         return new RenderProfile(config.mode(), config.scale(), config.offset());
     }
 
     private static Map<?, ItemRenderConfig> readUserFile(Path file) throws IOException {
         JsonObject json = new Gson().fromJson(Files.readString(file), JsonObject.class);
-        return OverrideJsonCodec.parse(json, file.toString());
+        return OverrideJsonCodec.parse(json, file.toString()).entries();
+    }
+
+    /**
+     * Checks that a callback consumed the click exactly when {@code expected}, and, where it
+     * reports denials, that it denied block use and item use exactly then too.
+     */
+    private static void checkOutputs(boolean expected, Result result, String hand) {
+        GameTestScaffold.checkEquals(expected, result.consumed(), hand + " callback consumption");
+        if (result.denialsReported()) {
+            GameTestScaffold.checkEquals(
+                    expected, result.blockDenied(), hand + " callback block-use denial");
+            GameTestScaffold.checkEquals(
+                    expected, result.itemDenied(), hand + " callback item-use denial");
+        }
     }
 }

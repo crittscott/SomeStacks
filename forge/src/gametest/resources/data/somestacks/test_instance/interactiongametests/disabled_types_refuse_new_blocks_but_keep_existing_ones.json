@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:function",
+  "function": "somestacks:interactiongametests/disabled_types_refuse_new_blocks_but_keep_existing_ones",
+  "environment": "minecraft:default",
+  "structure": "somestacks:somestacks_empty",
+  "max_ticks": 100
+}

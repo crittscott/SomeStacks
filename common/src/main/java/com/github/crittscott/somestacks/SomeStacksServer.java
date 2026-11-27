@@ -6,6 +6,7 @@ import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.server.ServerGestureState;
+import com.github.crittscott.somestacks.server.StackInteractions;
 import com.mojang.brigadier.CommandDispatcher;
 
 import net.minecraft.commands.CommandBuildContext;
@@ -19,7 +20,6 @@ import java.util.UUID;
 public final class SomeStacksServer {
     private SomeStacksServer() {}
 
-    private static volatile MinecraftServer runningServer;
     private static ServerConfig.Settings publishedPolicy;
     private static ConfigSyncPkt clientSnapshot;
 
@@ -29,21 +29,22 @@ public final class SomeStacksServer {
      * before world loading and player joins.
      */
     public static synchronized void onServerStarting(MinecraftServer server) {
-        runningServer = server;
         StackDataMigration.beginSession();
-        if (!(ServerConfig.backend() instanceof TomlServerConfig))
-            ServerConfigMigration.reportLegacyIngots(server);
         ServerConfig.loadFor(server);
+        ServerConfigMigration.reportRetainedIngots(server);
         publishedPolicy = ServerConfig.settings();
         clientSnapshot = ConfigSyncPkt.fromSettings(publishedPolicy);
         logPolicy("Loaded");
     }
 
-    /** Records the enabled stack types, run height limit, gallery access, and deny-list sizes. */
+    /**
+     * Records the enabled stack types, run height limit, gallery access and pacing, and deny-list
+     * sizes.
+     */
     private static void logPolicy(String action) {
         ServerConfig.Settings policy = ServerConfig.settings();
         SomeStacksCommon.LOGGER.info(
-                "{} server policy: Storage {}, Singles {}, Bar {}; maximum run height {}; galleries {} at permission {}; {} disabled mods, {} disabled items",
+                "{} server policy: Storage {}, Singles {}, Bar {}; maximum run height {}; galleries {} at permission {}, {} placements per tick; {} disabled mods, {} disabled items",
                 action,
                 enabledLabel(policy.enableStorageStackBlock()),
                 enabledLabel(policy.enableSinglesStackBlock()),
@@ -51,6 +52,7 @@ public final class SomeStacksServer {
                 policy.maxPileHeight(),
                 enabledLabel(policy.galleryEnabled()),
                 policy.galleryPermissionLevel(),
+                policy.renderGalleryPlacementsPerTick(),
                 policy.disableMods().size(),
                 policy.disableItems().size());
     }
@@ -59,26 +61,17 @@ public final class SomeStacksServer {
         return enabled ? "enabled" : "disabled";
     }
 
-    /** Releases the stopped server and clears session diagnostics after world activity ends. */
+    /** Releases the session's policy record and diagnostics after world activity ends. */
     public static synchronized void onServerStopped() {
-        runningServer = null;
         publishedPolicy = null;
         clientSnapshot = null;
         StackDataMigration.endSession();
     }
 
     /**
-     * Queues a native policy reload on the running server thread; inactive sessions are ignored.
-     * Changed policy rebuilds the cached snapshot before synchronizing connected players.
+     * Rereads policy on the server thread and publishes it. Returns the number of players re-sent
+     * client settings (0 when no client-facing value changed), or -1 when the policy is rejected.
      */
-    public static void onPolicyReloaded() {
-        MinecraftServer server = runningServer;
-        if (server != null) {
-            server.execute(() -> reloadPolicy(server));
-        }
-    }
-
-    /** Refreshes policy on the server thread and synchronizes only changed policy. */
     public static int reloadPolicy(MinecraftServer server) {
         if (!ServerConfig.reload()) return -1;
         return publishPolicy(server);
@@ -114,6 +107,7 @@ public final class SomeStacksServer {
     /** Clears gesture and sound state when this player disconnects, before a later reconnect. */
     public static void onPlayerLeft(UUID playerId) {
         ServerGestureState.clear(playerId);
+        StackInteractions.clearRotationSoundPacing(playerId);
     }
 
     /** Advances queued gallery work once at the end of each server tick. */

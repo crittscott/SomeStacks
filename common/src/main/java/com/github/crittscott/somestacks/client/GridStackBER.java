@@ -19,10 +19,11 @@ import java.util.function.IntUnaryOperator;
 import java.util.function.ToIntFunction;
 
 /**
- * Loader-neutral renderer for the Storage and Singles cube grids. Each occupied cell is placed at
- * its corner, rotated with the block's layout, and handed to {@link CubeRenderHelper}, which
- * applies the item's own render profile. Singles items also carry a rotation of their own, applied
- * on top of the block's; rotations are read from the entity being rendered each frame.
+ * Loader-neutral renderer for the Storage and Singles cube grids. {@link
+ * CubeRenderHelper#renderGridItems} places each occupied cell at its corner, rotated with the
+ * block's layout, and applies the item's own render profile. Singles items also carry a rotation of
+ * their own, applied on top of the block's; rotations are read from the entity being rendered each
+ * frame.
  */
 public final class GridStackBER<T extends StackBlockEntity> implements BlockEntityRenderer<T> {
     private final BlockRenderDispatcher blockRenderer;

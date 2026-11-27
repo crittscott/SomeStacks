@@ -18,8 +18,7 @@ public abstract class RunItemHandlerBase {
      * a server run, returns only this block's local slot count.
      */
     public int getSlots() {
-        StackRunItemAccess run = blockEntity.itemRun();
-        return run != null ? run.advertisedSlots() : blockEntity.getItems().getSlots();
+        return blockEntity.advertisedSlots();
     }
 
     /**
@@ -28,13 +27,7 @@ public abstract class RunItemHandlerBase {
      */
     @Nonnull
     public ItemStack getStackInSlot(int slot) {
-        StackRunItemAccess run = blockEntity.itemRun();
-        if (run != null) {
-            return run.getSlot(slot);
-        }
-        return slot >= 0 && slot < blockEntity.getItems().getSlots()
-                ? blockEntity.getItems().getStackInSlot(slot)
-                : ItemStack.EMPTY;
+        return blockEntity.advertisedStack(slot);
     }
 
     /**
@@ -99,7 +92,7 @@ public abstract class RunItemHandlerBase {
      * occupancy.
      */
     public int getSlotLimit(int slot) {
-        return blockEntity.localSlotLimit();
+        return blockEntity.slotLimit();
     }
 
     /**
@@ -107,6 +100,6 @@ public abstract class RunItemHandlerBase {
      * authority.
      */
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return blockEntity.isStoredItemValid(stack);
+        return blockEntity.admits(stack);
     }
 }

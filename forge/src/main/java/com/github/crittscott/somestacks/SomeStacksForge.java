@@ -52,9 +52,7 @@ public class SomeStacksForge {
         ServerStoppedEvent.BUS.addListener(this::onServerStopped);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ForgeClientSetup.init(modBus));
 
-        SomeStacksCommon.LOGGER.info(
-                "Some Stacks v{} initialized for Forge",
-                PlatformServices.modVersion(SomeStacksCommon.MODID));
+        PlatformServices.logStartup("Forge");
     }
 
     /** Publishes the loader-managed server policy for this world. */
@@ -70,6 +68,7 @@ public class SomeStacksForge {
 
     private void onServerStopped(ServerStoppedEvent event) {
         SomeStacksServer.onServerStopped();
+        ForgeServerConfig.INSTANCE.stop();
         platform.editAuthority().clear();
     }
 

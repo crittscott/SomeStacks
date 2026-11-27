@@ -1,15 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
-
-import com.github.crittscott.somestacks.block.StorageStackBE;
-
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.items.IItemHandler;
 
 /**
  * Storage pile behavior in a live level: deposits filling partial stacks before empty ones, growth
@@ -26,23 +17,19 @@ public final class StoragePileGameTests {
 
     /** See {@link StoragePileChecks#fullPileGrowsByOneBlock}. */
     public static void fullPileGrowsByOneBlock(GameTestHelper helper) {
-        StoragePileChecks.fullPileGrowsByOneBlock(helper);
+        StoragePileChecks.fullPileGrowsByOneBlock(helper, GameTestSupport.playerFactory(helper));
     }
 
-    /**
-     * To reproduce in-game: target a named Storage slot with item automation; that slot accepts the
-     * item when compatible, and settling later packs it toward the base.
-     */
+    /** See {@link AutomationChecks#storageInsertionAnswersForTheSlotItIsGiven}. */
     public static void capabilityInsertionAnswersForTheSlotItIsGiven(GameTestHelper helper) {
-        AutomationChecks.storageInsertionAnswersForTheSlotItIsGiven(helper);
+        AutomationChecks.storageInsertionAnswersForTheSlotItIsGiven(
+                helper, GameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: fill a Storage pile, obstruct the space above it, and insert through
-     * item automation; it reports no room, accepts nothing, and leaves the obstruction intact.
-     */
+    /** See {@link AutomationChecks#storageObstructionPreventsGrowthAndSimulationReportsNoRoom}. */
     public static void obstructionPreventsGrowthAndSimulationReportsNoRoom(GameTestHelper helper) {
-        AutomationChecks.storageObstructionPreventsGrowthAndSimulationReportsNoRoom(helper);
+        AutomationChecks.storageObstructionPreventsGrowthAndSimulationReportsNoRoom(
+                helper, GameTestSupport::automation);
     }
 
     /** See {@link StoragePileChecks#settleConsolidatesExactIdentityAndPacksDown}. */
@@ -50,9 +37,20 @@ public final class StoragePileGameTests {
         StoragePileChecks.settleConsolidatesExactIdentityAndPacksDown(helper);
     }
 
+    /** See {@link StoragePileChecks#settleWritesOnlyChangedCellsWithFreshStacks}. */
+    public static void settleWritesOnlyChangedCellsWithFreshStacks(GameTestHelper helper) {
+        StoragePileChecks.settleWritesOnlyChangedCellsWithFreshStacks(helper);
+    }
+
+    /** See {@link StoragePileChecks#storedLightIsPerOccupiedSlotAndCapped}. */
+    public static void storedLightIsPerOccupiedSlotAndCapped(GameTestHelper helper) {
+        StoragePileChecks.storedLightIsPerOccupiedSlotAndCapped(helper);
+    }
+
     /** See {@link StoragePileChecks#extractionSettlesOnScheduledBlockTick}. */
     public static void extractionSettlesOnScheduledBlockTick(GameTestHelper helper) {
-        StoragePileChecks.extractionSettlesOnScheduledBlockTick(helper);
+        StoragePileChecks.extractionSettlesOnScheduledBlockTick(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link StoragePileChecks#emptyTemporaryPileDisappearsButPermanentPileRemains}. */
@@ -60,22 +58,10 @@ public final class StoragePileGameTests {
         StoragePileChecks.emptyTemporaryPileDisappearsButPermanentPileRemains(helper);
     }
 
-    /**
-     * To reproduce in-game: connect item automation separately to the lower and upper blocks of one
-     * Storage pile; both connections expose the same items and capacity.
-     */
+    /** See {@link AutomationChecks#storageFromEveryBlockAddressesTheSamePile}. */
     public static void capabilityFromEveryBlockAddressesTheSamePile(GameTestHelper helper) {
-        StorageStackBE lower = placeStorage(helper, ORIGIN);
-        StorageStackBE upper = placeStorage(helper, ORIGIN.above());
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12));
-
-        IItemHandler lowerCapability = GameTestSupport.capability(lower);
-        IItemHandler upperCapability = GameTestSupport.capability(upper);
-
-        checkEquals(12, lowerCapability.getStackInSlot(0).getCount(), "Lower capability count");
-        checkEquals(12, upperCapability.getStackInSlot(0).getCount(), "Upper capability count");
-        checkEquals(lowerCapability.getSlots(), upperCapability.getSlots(), "Capability shape");
-        helper.succeed();
+        AutomationChecks.storageFromEveryBlockAddressesTheSamePile(
+                helper, GameTestSupport::automation);
     }
 
     /** See {@link StoragePileChecks#comparatorReadsTheWholePileFromEveryBlock}. */
@@ -107,7 +93,7 @@ public final class StoragePileGameTests {
     /** See {@link StoragePileChecks#storageCapAppliesToPlayersAutomationAndSettlement}. */
     public static void storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper helper) {
         StoragePileChecks.storageCapAppliesToPlayersAutomationAndSettlement(
-                helper, GameTestSupport::offerAt);
+                helper, GameTestSupport::automation);
     }
 
     /** See {@link StoragePileChecks#storageDiskMigrationPreservesOverCapContents}. */

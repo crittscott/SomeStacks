@@ -10,6 +10,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 
 import com.github.crittscott.somestacks.client.ClientGestures;
 import com.github.crittscott.somestacks.client.ClientServerSettings;
+import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackGesture;
@@ -25,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public final class ClientGestureChecks {
             boolean consumed) {}
 
     /**
-     * Only the first matching main-hand rule claims a block click. To reproduce in-game: try plain
+     * Only main-hand clicks that name a gesture are consumed. To reproduce in-game: try plain
      * extraction, modified deposit, Shift torch rotation, and empty-hand permanence on each stack
      * type, then repeat with an off-hand item and on an ordinary block. Unclaimed clicks retain
      * ordinary use. Toggle Permanent reserves modified clicks against deposit and placement.
@@ -152,47 +152,31 @@ public final class ClientGestureChecks {
     }
 
     /**
-     * Modified top-face clicks are consumed for both full and partially filled stacks. To reproduce
-     * in-game: fill a Singles or Bar top cell and modifier-click its top face while holding an
-     * eligible item. Repeat with an empty supported cell. Both clicks consume the client gesture;
-     * server interaction checks cover the destination and resulting world edit.
+     * A modified top-face click on any stack is consumed whether its cells are empty, partly
+     * occupied, or full; the server deposits or places the selected type above. To reproduce
+     * in-game: modifier-click the top face of each stack type while holding an eligible item, with
+     * its cells empty and then full. The held item is never used against the block.
      */
-    public static void fullTopFacesFallThroughToPlacement(
+    public static void topFaceModifiedClicksAreConsumed(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         var storage = placeStorage(helper, ORIGIN);
         var singles = placeSingles(helper, ORIGIN.east(3));
         var bars = placeBar(helper, ORIGIN.east(6));
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.APPLE));
         boolean originalShift = player.isShiftKeyDown();
-        Vec3 originalPosition = player.position();
-        float originalXRot = player.getXRot();
-        float originalYRot = player.getYRot();
         try {
             player.setShiftKeyDown(false);
             for (var be : List.of(storage, singles, bars)) {
                 Item item = be == bars ? firstBarItem() : Items.APPLE;
                 player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item));
-                player.setPos(
-                        be.getBlockPos().getX() + 0.125,
-                        be.getBlockPos().getY() + 2,
-                        be.getBlockPos().getZ() + 0.125);
-                player.setXRot(90);
-                player.setYRot(0);
-                if (be != storage) {
-                    assertConsumed(player, be.getBlockPos());
-                    be.getItems().setStackInSlot(0, new ItemStack(item));
-                    assertConsumed(player, be.getBlockPos());
-                }
-                for (int slot = 0; slot < be.getItems().getSlots(); slot++) {
-                    be.getItems().setStackInSlot(slot, new ItemStack(item, be.localSlotLimit()));
-                }
+                assertConsumed(player, be.getBlockPos());
+                be.getItems().setStackInSlot(0, new ItemStack(item));
+                assertConsumed(player, be.getBlockPos());
+                GameTestScaffold.fill(be, item);
                 assertConsumed(player, be.getBlockPos());
             }
         } finally {
             player.setShiftKeyDown(originalShift);
-            player.setPos(originalPosition.x, originalPosition.y, originalPosition.z);
-            player.setXRot(originalXRot);
-            player.setYRot(originalYRot);
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         }
         helper.succeed();
@@ -208,19 +192,25 @@ public final class ClientGestureChecks {
                         player.getMainHandItem(),
                         true,
                         InteractionHand.MAIN_HAND);
-        check(gesture.consumesLocalUse(player.getMainHandItem()), "Claimed click not consumed");
+        check(
+                gesture.consumesLocalUse(player.getMainHandItem()),
+                "Modified click at " + pos + " was not consumed");
     }
 
     /**
      * Air cycling distinguishes hit type and hand, skips disabled types, and always retains
-     * permanence. To reproduce in-game: hold the modifier and click air with empty and occupied
-     * main hands, also holding an off-hand item. Modes cycle only from the main hand, and disabled
-     * types are skipped. Clicking a block must not cycle the mode.
+     * permanence; a published server policy moves the selection off a type it disables. To
+     * reproduce in-game: hold the modifier and click air with empty and occupied main hands, also
+     * holding an off-hand item. Modes cycle only from the main hand, and disabled types are
+     * skipped. Clicking a block must not cycle the mode. Then select Storage, have an operator
+     * disable Storage and run /ss reload: the hotbar shows Singles mode.
      */
     public static void airRulesAndDisabledModeCycling(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
         ItemStack originalOffhand = player.getOffhandItem().copy();
+        List<String> originalGallery = ClientServerSettings.genMods();
+        List<String> originalDenied = List.copyOf(ClientServerSettings.disabledMods());
         try (GestureStateScope scope = new GestureStateScope()) {
             player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.DIRT));
             for (boolean occupied : new boolean[] {false, true}) {
@@ -230,30 +220,28 @@ public final class ClientGestureChecks {
                 for (boolean hittingBlock : new boolean[] {false, true}) {
                     for (boolean modifier : new boolean[] {false, true}) {
                         for (InteractionHand hand : InteractionHand.values()) {
-                            for (boolean itemRules : new boolean[] {false, true}) {
-                                var before = ClientGestures.currentMode();
-                                var gesture =
-                                        hittingBlock
-                                                ? StackGesture.NONE
-                                                : ClientGestures.processClick(
-                                                        player, hand, null, false, modifier);
-                                boolean claimed =
-                                        hand == InteractionHand.MAIN_HAND
-                                                && modifier
-                                                && !hittingBlock;
-                                checkEquals(
-                                        claimed ? StackGesture.CYCLE_MODE : StackGesture.NONE,
-                                        gesture,
-                                        "Air intent");
-                                checkEquals(
-                                        claimed && occupied,
-                                        gesture.consumesLocalUse(player.getMainHandItem()),
-                                        "Air cancellation");
-                                checkEquals(
-                                        claimed,
-                                        before != ClientGestures.currentMode(),
-                                        "Air mode change");
-                            }
+                            var before = ClientGestures.currentMode();
+                            var gesture =
+                                    hittingBlock
+                                            ? StackGesture.NONE
+                                            : ClientGestures.processClick(
+                                                    player, hand, null, false, modifier);
+                            boolean claimed =
+                                    hand == InteractionHand.MAIN_HAND
+                                            && modifier
+                                            && !hittingBlock;
+                            checkEquals(
+                                    claimed ? StackGesture.CYCLE_MODE : StackGesture.NONE,
+                                    gesture,
+                                    "Air intent");
+                            checkEquals(
+                                    claimed && occupied,
+                                    gesture.consumesLocalUse(player.getMainHandItem()),
+                                    "Air cancellation");
+                            checkEquals(
+                                    claimed,
+                                    before != ClientGestures.currentMode(),
+                                    "Air mode change");
                         }
                     }
                 }
@@ -279,7 +267,23 @@ public final class ClientGestureChecks {
                 ClientGestures.cycleMode();
                 checkEquals(expected.get(0), ClientGestures.currentMode(), "Cycle wrap " + mask);
             }
+            for (BlockType type : BlockType.values())
+                ClientServerSettings.setBlockEnabled(type, true);
+            selectMode(StackMode.STORAGE_STACK);
+            ClientServerSettings.apply(
+                    new ConfigSyncPkt(false, true, true, List.of(), List.of()), null);
+            checkEquals(
+                    StackMode.SINGLES_STACK,
+                    ClientGestures.currentMode(),
+                    "Published policy kept a disabled mode");
+            ClientServerSettings.apply(
+                    new ConfigSyncPkt(true, true, true, List.of(), List.of()), null);
+            checkEquals(
+                    StackMode.SINGLES_STACK,
+                    ClientGestures.currentMode(),
+                    "Published policy changed an enabled mode");
         } finally {
+            ClientServerSettings.replace(originalGallery, originalDenied);
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             player.setItemInHand(InteractionHand.OFF_HAND, originalOffhand);
         }

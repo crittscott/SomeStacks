@@ -2,7 +2,6 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -90,8 +89,8 @@ public final class BarCubeIdx {
             int count = 0;
             for (int i = 0; i < LAYER_SIZE; i++) {
                 int[] belowXYZ = xyzFromIndex(belowLayerStart + i);
-                if (footprintsOverlap(
-                        footprint, getBarFootprint(belowXYZ[0], belowXYZ[1], belowXYZ[2]))) {
+                if (footprint.intersects(
+                        getBarFootprint(belowXYZ[0], belowXYZ[1], belowXYZ[2]))) {
                     found[count++] = belowLayerStart + i;
                 }
             }
@@ -119,10 +118,10 @@ public final class BarCubeIdx {
         return isGrounded(index, slot -> false, seamBelow);
     }
 
-    private static AABB getBarBox(int index, BlockPos blockPos) {
-        return localBox(index).move(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-    }
-
+    /**
+     * A bar's horizontal footprint in model pixels. Every footprint spans the same Y range, so
+     * intersecting two compares X and Z only.
+     */
     private static AABB getBarFootprint(int x, int y, int z) {
         double minX = startPixelX(x, y);
         double minZ = startPixelZ(z, y);
@@ -190,31 +189,6 @@ public final class BarCubeIdx {
     }
 
     /**
-     * Finds the deposit target for a Bar Stack that does not yet exist and therefore has no
-     * occupied slots. Placement uses this to validate the initial deposit and its resulting
-     * collision shape before adding the block to the world.
-     */
-    public static int traceAllPositions(ViewRay ray, BlockPos blockPos) {
-        return traceAllPositions(ray, blockPos, null);
-    }
-
-    /**
-     * Finds the slot a deposit targets: the last empty slot along the view ray before the first
-     * occupied one, or the farthest intersected slot if the ray meets no occupied bar. A null
-     * handler describes a prospective, entirely empty block.
-     */
-    public static int traceAllPositions(
-            ViewRay ray, BlockPos blockPos, @Nullable SlotAccess handler) {
-        return ray.lastEmptyBeforeOccupied(
-                BarStackBE.SLOTS, handler, slot -> getBarBox(slot, blockPos));
-    }
-
-    /** Returns the nearest occupied bar intersected by the view ray, or {@code -1} on a miss. */
-    public static int traceCubes(ViewRay ray, BlockPos blockPos, BarStackBE be) {
-        return ray.nearestOccupied(be.getItems(), slot -> getBarBox(slot, blockPos));
-    }
-
-    /**
      * Converts a slot index to its within-layer X and Z indexes and its bottom-based layer index.
      */
     public static int[] xyzFromIndex(int idx) {
@@ -251,11 +225,11 @@ public final class BarCubeIdx {
         return new boolean[LAYER_SIZE];
     }
 
-    private static boolean footprintsOverlap(AABB a, AABB b) {
-        return !(a.maxX <= b.minX || a.minX >= b.maxX || a.maxZ <= b.minZ || a.minZ >= b.maxZ);
-    }
-
-    private static boolean isEWLayer(int y) {
+    /**
+     * Whether layer {@code y} lays its bars east-west, along X; the other layers lay them
+     * north-south, along Z.
+     */
+    public static boolean isEWLayer(int y) {
         return y % 2 == 0;
     }
 

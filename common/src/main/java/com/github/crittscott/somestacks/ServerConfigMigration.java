@@ -6,6 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.storage.LevelResource;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,23 +16,52 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/** One-time migration of the preceding release's world JSON policy into documented TOML. */
+/**
+ * One-time migration of the preceding release's world JSON policy into documented TOML, and the
+ * report of custom ingot entries in a JSON policy that stays in the world.
+ */
 public final class ServerConfigMigration {
     private ServerConfigMigration() {}
 
     private static final Set<String> DEFAULT_INGOTS =
             Set.of("#forge:ingots*", "#c:ingots*", "#somestacks:ingots");
 
-    /** Reports a retained JSON ingot list on native loaders that already use TOML. */
-    public static void reportLegacyIngots(net.minecraft.server.MinecraftServer server) {
-        Path file =
-                server.getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT)
-                        .resolve("serverconfig")
-                        .resolve(SomeStacksCommon.MODID + "-server.json");
+    /**
+     * Converts the world policy before the loader selects its TOML override.
+     *
+     * @return the world's TOML override path, which may not exist
+     * @throws IllegalStateException when a JSON policy exists but could not be converted
+     */
+    public static Path prepareWorld(MinecraftServer server) {
+        Path directory = worldPolicyDirectory(server);
+        Path json = directory.resolve(SomeStacksCommon.MODID + "-server.json");
+        Path toml = directory.resolve(SomeStacksCommon.MODID + "-server.toml");
+        convertJson(json, toml, ServerConfig.defaults());
+        if (Files.exists(json) && !Files.exists(toml)) {
+            throw new IllegalStateException(
+                    "Repair the JSON server policy before migration: " + json);
+        }
+        return toml;
+    }
+
+    /** Converts the JSON and keeps it as an archive; an existing TOML file is authoritative. */
+    public static void convertJson(Path json, Path toml, ServerConfig.Settings defaults) {
+        if (Files.exists(toml) || !Files.exists(json)) return;
+        ServerConfig.Settings migrated = readJson(json, defaults);
+        if (migrated != null && new TomlPolicyFile(toml).write(migrated)) archive(json);
+    }
+
+    /**
+     * Reports custom ingot entries in a world JSON policy still present after the loader read its
+     * policy: one kept beside an authoritative world TOML, or one that only {@link #prepareWorld}
+     * would have converted on a loader whose native config does not call it.
+     */
+    public static void reportRetainedIngots(MinecraftServer server) {
+        Path file = worldPolicyDirectory(server).resolve(SomeStacksCommon.MODID + "-server.json");
         if (!Files.exists(file)) return;
         try {
             JsonObject root = JsonParser.parseString(Files.readString(file)).getAsJsonObject();
-            JsonElement section = root.get("compatibility");
+            JsonElement section = root.get(ServerConfig.Section.COMPATIBILITY.key());
             if (section != null && section.isJsonObject()) {
                 JsonElement ingots = section.getAsJsonObject().get("ingots");
                 if (ingots != null) reportIngots(file, ingots);
@@ -40,29 +72,23 @@ public final class ServerConfigMigration {
         }
     }
 
-    /** Keeps the JSON as an archive; an existing TOML file is authoritative. */
-    public static void convertJson(Path json, Path toml, ServerConfig.Settings defaults) {
-        if (Files.exists(toml) || !Files.exists(json)) return;
-        ServerConfig.Settings migrated = readJson(json, defaults);
-        if (migrated != null && new TomlPolicyFile(toml).write(migrated)) archive(json);
-    }
-
     /** Reads the shipped JSON schema, reporting fields that now belong in an item tag. */
-    public static ServerConfig.Settings readJson(Path file, ServerConfig.Settings defaults) {
+    private static ServerConfig.Settings readJson(Path file, ServerConfig.Settings defaults) {
         try {
             JsonObject root = JsonParser.parseString(Files.readString(file)).getAsJsonObject();
             CommentedConfig converted = CommentedConfig.of(TomlFormat.instance());
-            for (String section : List.of("piles", "stacks", "compatibility", "render_gallery")) {
-                JsonElement element = root.get(section);
+            for (ServerConfig.Section section : ServerConfig.Section.values()) {
+                JsonElement element = root.get(section.key());
                 if (element == null) continue;
                 if (!element.isJsonObject()) {
                     SomeStacksCommon.LOGGER.warn(
-                            "Ignoring non-object section {} in {}", section, file);
+                            "Ignoring non-object section {} in {}", section.key(), file);
                     continue;
                 }
                 for (var entry : element.getAsJsonObject().entrySet()) {
-                    String key = section + "." + entry.getKey();
-                    if (key.equals("compatibility.ingots")) {
+                    String key = section.key() + "." + entry.getKey();
+                    if (section == ServerConfig.Section.COMPATIBILITY
+                            && entry.getKey().equals("ingots")) {
                         reportIngots(file, entry.getValue());
                         continue;
                     }
@@ -73,7 +99,7 @@ public final class ServerConfigMigration {
                                 "Ignoring invalid JSON policy field {} in {}", key, file);
                 }
             }
-            return TomlPolicyFile.decode(converted, defaults);
+            return TomlPolicyFile.decode(converted, defaults, file);
         } catch (IOException | RuntimeException exception) {
             SomeStacksCommon.LOGGER.warn(
                     "Cannot migrate server policy {}; leaving it intact for repair",
@@ -122,7 +148,7 @@ public final class ServerConfigMigration {
     }
 
     /** Called only after TOML persistence has succeeded. */
-    public static void archive(Path file) {
+    private static void archive(Path file) {
         try {
             Files.move(file, file.resolveSibling(file.getFileName() + ".migrated"));
             SomeStacksCommon.LOGGER.info(
@@ -131,5 +157,9 @@ public final class ServerConfigMigration {
             SomeStacksCommon.LOGGER.warn(
                     "TOML saved but could not archive JSON policy {}", file, exception);
         }
+    }
+
+    private static Path worldPolicyDirectory(MinecraftServer server) {
+        return server.getWorldPath(LevelResource.ROOT).resolve("serverconfig");
     }
 }

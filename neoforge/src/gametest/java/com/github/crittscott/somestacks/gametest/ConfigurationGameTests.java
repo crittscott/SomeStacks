@@ -13,6 +13,11 @@ import java.nio.file.Files;
 public final class ConfigurationGameTests {
     private ConfigurationGameTests() {}
 
+    /** See {@link PolicyParityChecks#commandHelpAndNamespaceLimits}. */
+    public static void commandHelpAndNamespaceLimits(GameTestHelper helper) {
+        PolicyParityChecks.commandHelpAndNamespaceLimits(helper);
+    }
+
     /** See {@link ConfigurationChecks#overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes}. */
     public static void overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(
             GameTestHelper helper) {
@@ -50,6 +55,11 @@ public final class ConfigurationGameTests {
     /** See {@link ConfigurationChecks#ingotTagControlsBarAndSinglesAdmission}. */
     public static void ingotTagControlsBarAndSinglesAdmission(GameTestHelper helper) {
         ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(helper);
+    }
+
+    /** See {@link TomlPolicyChecks#tomlPolicyParsesRoundTripsAndMigrates}. */
+    public static void tomlPolicyParsesRoundTripsAndMigrates(GameTestHelper helper) {
+        TomlPolicyChecks.tomlPolicyParsesRoundTripsAndMigrates(helper);
     }
 
     /**

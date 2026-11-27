@@ -38,7 +38,7 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 
 Forge/NeoForge allow deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination block-use callbacks and also Common Protection API when installed.
 
-Only the main hand acts; off-hand items do not block cycling. Torches are not spent. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures. Modified clicks with no stack gesture keep ordinary use; plain extraction attempts stay consumed.
+Only the main hand acts; torches are not spent. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures. Modified clicks with no stack gesture keep ordinary use; plain extraction attempts stay consumed.
 
 ## Depositing and placing
 
@@ -134,7 +134,7 @@ Forge and NeoForge use loader-managed `somestacks-server.toml`, with per-world o
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
 | `render_gallery.gen_mods` / `gen_items` | empty | Namespace and item lists used by the `list` and `items` gallery forms |
 
-Disabling types, items, mods, or ingot categories preserves existing contents. Clients receive enable flags on login and skip disabled types when cycling. Data-pack tags refresh on reload.
+Disabling types, items, mods, or ingot categories preserves existing contents. Clients receive enable flags on login and reload, skip disabled types when cycling, and leave a selected type that becomes disabled. Data-pack tags refresh on reload.
 
 ## Commands
 
@@ -149,7 +149,7 @@ Disabling types, items, mods, or ingot categories preserves existing contents. C
 | `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
 | `/ss reload` | level 2 | Refresh policy and resync changed client settings; Fabric rereads TOML |
 
-Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed TOML fields; Forge/NeoForge validate TOML. Gallery access changes refresh connected players' command suggestions. Edit `somestacks:ingots` and use `/reload` for ingot classification.
+Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed TOML fields; Forge/NeoForge validate TOML. Edit `somestacks:ingots` and use `/reload` for ingot classification.
 
 ## Item appearance
 
@@ -157,7 +157,7 @@ Storage and Singles show items in four modes: `2d` (flat art), `3d` (the FIXED r
 
 Resolution order is local override, resource-pack data, then automatic measurement. A server can distribute profiles through its server resource pack; local overrides keep priority. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by pack, mod-version, or reload changes.
 
-`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`. Namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only. Servers cannot invoke them or request client writes.
+`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json` and refuses while the file is unreadable. Namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only. Servers cannot invoke them or request client writes.
 
 Resource packs map Bar item ids to textures and tints under `assets/<namespace>/textures/bars/*.json`, with missing tints derived from the item's sprite and color. Bar mappings are not synchronized, so players with different packs may see different bars.
 

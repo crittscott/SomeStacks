@@ -4,10 +4,6 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
-import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
 import com.github.crittscott.somestacks.server.WorldEdits;
 
@@ -17,14 +13,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.common.util.Result;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.listener.EventListener;
-import net.minecraftforge.items.IItemHandler;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -40,6 +32,12 @@ import java.util.function.Predicate;
  */
 public final class ProtectionGameTests {
     public ProtectionGameTests() {}
+
+    /** See {@link ProtectionChecks#adventureExtractionKeepsEmptyBlock}. */
+    public static void adventureExtractionKeepsEmptyBlock(GameTestHelper helper) {
+        ProtectionChecks.adventureExtractionKeepsEmptyBlock(
+                helper, GameTestSupport.playerFactory(helper));
+    }
 
     /** See {@link ProtectionChecks#automationUsesSharedIdentity}. */
     public static void automationUsesSharedIdentity(GameTestHelper helper) {
@@ -186,7 +184,29 @@ public final class ProtectionGameTests {
     /** See {@link ProtectionChecks#mixedStorageSettlementUsesAutomationForCleanup}. */
     public static void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
         ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(
+                helper,
+                GameTestSupport.playerFactory(helper),
+                GameTestSupport::automation,
+                ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link ProtectionChecks#breakingAStackChargesItsCleanupToTheBreaker}. */
+    public static void breakingAStackChargesItsCleanupToTheBreaker(GameTestHelper helper) {
+        ProtectionChecks.breakingAStackChargesItsCleanupToTheBreaker(
                 helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    /** Denies block use at {@code pos} from a default-priority listener, as a claim mod does. */
+    private static Runnable denyBlockUse(ServerLevel level, BlockPos pos) {
+        Predicate<PlayerInteractEvent.RightClickBlock> listener =
+                event -> {
+                    if (event.getLevel() == level && event.getPos().equals(pos)) {
+                        event.setUseBlock(Result.DENY);
+                    }
+                    return false;
+                };
+        var registration = PlayerInteractEvent.RightClickBlock.BUS.addListener(listener);
+        return () -> PlayerInteractEvent.RightClickBlock.BUS.removeListener(registration);
     }
 
     private static Runnable observeRemoval(
@@ -232,107 +252,47 @@ public final class ProtectionGameTests {
     public static void storageGrowthAnswersToProtectionInSimulationAndCommit(
             GameTestHelper helper) {
         ProtectionChecks.storageGrowthAnswersToProtectionInSimulationAndCommit(
-                helper, GameTestSupport::offerAt);
+                helper, GameTestSupport::automation);
     }
 
     /** See {@link ProtectionChecks#singlesGrowthAnswersToProtectionInSimulationAndCommit}. */
     public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(
             GameTestHelper helper) {
         ProtectionChecks.singlesGrowthAnswersToProtectionInSimulationAndCommit(
-                helper, GameTestSupport::offerAt);
+                helper, GameTestSupport::automation);
     }
 
     /** See {@link ProtectionChecks#barGrowthAnswersToProtectionInSimulationAndCommit}. */
     public static void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         ProtectionChecks.barGrowthAnswersToProtectionInSimulationAndCommit(
-                helper, GameTestSupport::offerAt);
+                helper, GameTestSupport::automation);
     }
 
     // Growth through entities
 
     /**
-     * To reproduce in-game: stand in the growth space above a full Storage pile and insert through
-     * item automation; it accepts nothing and does not grow into the entity.
+     * See {@link ProtectionChecks#storageGrowthRejectsAnObstructingEntityInSimulationAndCommit}.
      */
     public static void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
-        }
-        IItemHandler capability = GameTestSupport.capability(storage);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = StorageStackBE.SLOTS;
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
     /**
-     * To reproduce in-game: stand in the growth space above a full Singles column and insert
-     * through item automation; it accepts nothing and does not grow into the entity.
+     * See {@link ProtectionChecks#singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit}.
      */
     public static void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE));
-        }
-        IItemHandler capability = GameTestSupport.capability(singles);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = SinglesStackBE.SLOTS;
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: stand in the growth space above a full Bar column and insert through
-     * item automation; it accepts nothing and does not grow into the entity.
-     */
+    /** See {@link ProtectionChecks#barGrowthRejectsAnObstructingEntityInSimulationAndCommit}. */
     public static void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
-        Item bar = GameTestScaffold.firstBarItem();
-        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar));
-        }
-        IItemHandler capability = GameTestSupport.capability(bars);
-        ItemStack offered = new ItemStack(bar, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = BarStackBE.SLOTS;
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.barStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
     /** See {@link InteractionChecks#deniedCleanupEmitsOnlyBlockChange}. */
@@ -341,15 +301,21 @@ public final class ProtectionGameTests {
                 helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
     }
 
-    /** See {@link ProtectionChecks#refusedRemovalStillLetsTheBarsAboveComeDown}. */
-    public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
-        ProtectionChecks.refusedRemovalStillLetsTheBarsAboveComeDown(
-                helper, ProtectionGameTests::observeRemoval);
-    }
-
     /** See {@link ProtectionChecks#placementReplacesClickedVegetation}. */
     public static void placementReplacesClickedVegetation(GameTestHelper helper) {
         ProtectionChecks.placementReplacesClickedVegetation(
                 helper, GameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ProtectionChecks#refusedRemovalStillLetsTheBarsAboveComeDown}. */
+    public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
+        ProtectionChecks.refusedRemovalStillLetsTheBarsAboveComeDown(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link InteractionChecks#blockUseDenialFreezesStackGestures}. */
+    public static void blockUseDenialFreezesStackGestures(GameTestHelper helper) {
+        InteractionChecks.blockUseDenialFreezesStackGestures(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::denyBlockUse);
     }
 }

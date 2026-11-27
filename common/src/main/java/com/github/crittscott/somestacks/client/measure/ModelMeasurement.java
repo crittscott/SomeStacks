@@ -23,6 +23,8 @@ public final class ModelMeasurement {
     /**
      * @param flatProjectionAvailable whether the shared 2-D renderer can draw the geometry that
      *     produced these bounds
+     * @param bounds the drawn geometry's bounds, or null when nothing was drawn
+     * @param failure why no usable bounds were measured, or null on success
      */
     public record Result(
             boolean flatProjectionAvailable, @Nullable AABB bounds, @Nullable String failure) {}

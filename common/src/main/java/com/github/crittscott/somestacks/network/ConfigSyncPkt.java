@@ -57,7 +57,7 @@ public record ConfigSyncPkt(
         for (String namespace : namespaces) {
             if (namespace.isEmpty()
                     || namespace.length() > MAX_NAMESPACE_LENGTH
-                    || !ResourceLocation.isValidNamespace(namespace)
+                    || !ServerConfig.isValidNamespace(namespace)
                     || !unique.add(namespace)) {
                 throw new DecoderException("Invalid or duplicate synchronized namespace");
             }
@@ -82,7 +82,7 @@ public record ConfigSyncPkt(
             String namespace = ServerConfig.normalizeNamespace(entry);
             if (namespace.isEmpty()) continue;
             if (namespace.length() > MAX_NAMESPACE_LENGTH
-                    || !ResourceLocation.isValidNamespace(namespace)) {
+                    || !ServerConfig.isValidNamespace(namespace)) {
                 SomeStacksCommon.LOGGER.warn(
                         "Ignoring invalid {} namespace '{}' in client policy", label, entry);
             } else if (result.contains(namespace)) {

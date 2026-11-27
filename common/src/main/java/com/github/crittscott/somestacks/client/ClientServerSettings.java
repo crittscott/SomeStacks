@@ -4,8 +4,12 @@ import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.util.BlockType;
 
+import net.minecraft.world.entity.player.Player;
+
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 /** Connection-owned server policy, published as one immutable value on the client thread. */
 public final class ClientServerSettings {
@@ -19,10 +23,26 @@ public final class ClientServerSettings {
         return new Policy(new ConfigSyncPkt(true, true, true, List.of(), List.of()), Set.of());
     }
 
-    public static void apply(ConfigSyncPkt snapshot) {
+    /**
+     * Publishes a snapshot the server sent, then moves the selected placement mode off a block type
+     * it disables and, when a local player exists, shows the new mode.
+     */
+    public static void apply(ConfigSyncPkt snapshot, @Nullable Player localPlayer) {
+        publish(snapshot);
+        if (ClientGestures.leaveDisabledMode() && localPlayer != null) {
+            ClientGestures.displayModeMessage(localPlayer);
+        }
+    }
+
+    private static void publish(ConfigSyncPkt snapshot) {
         policy = new Policy(snapshot, Set.copyOf(snapshot.disabledMods()));
     }
 
+    /**
+     * Whether the server enables a stack type. It decides only which modes the placement-mode
+     * gesture may select; the server enforces the setting itself, so a stale copy here cannot
+     * create a block the server has disabled.
+     */
     public static boolean isBlockTypeEnabled(BlockType type) {
         ConfigSyncPkt snapshot = policy.snapshot();
         return switch (type) {
@@ -35,7 +55,7 @@ public final class ClientServerSettings {
     /** Changes a flag through the same complete publication used by received snapshots. */
     public static void setBlockEnabled(BlockType type, boolean enabled) {
         ConfigSyncPkt previous = policy.snapshot();
-        apply(
+        publish(
                 new ConfigSyncPkt(
                         type == BlockType.STORAGE_STACK ? enabled : previous.enableStorage(),
                         type == BlockType.SINGLES_STACK ? enabled : previous.enableSingles(),
@@ -59,7 +79,7 @@ public final class ClientServerSettings {
     /** Replaces authoring lists without changing the enabled stack types. */
     public static void replace(List<String> genMods, List<String> disabledMods) {
         ConfigSyncPkt previous = policy.snapshot();
-        apply(
+        publish(
                 new ConfigSyncPkt(
                         previous.enableStorage(),
                         previous.enableSingles(),

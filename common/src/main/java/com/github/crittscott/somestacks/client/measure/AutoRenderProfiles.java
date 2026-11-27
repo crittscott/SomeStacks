@@ -43,7 +43,7 @@ import javax.annotation.Nullable;
  * <ul>
  *   <li>A measurement-format change rejects the previous algorithm's entries.
  *   <li>A mod-version change drops entries from that mod's namespace.
- *   <li>A manual resource reload drops the entire cache.
+ *   <li>Any resource reload after the initial one drops the entire cache and its file.
  *   <li>A different resource-pack selection between sessions rejects the persisted cache.
  * </ul>
  *
@@ -118,7 +118,10 @@ public final class AutoRenderProfiles {
         }
     }
 
-    /** Writes the measured cache only when a profile has changed since its last load or save. */
+    /**
+     * Writes the measured cache only when it differs from the file: new measurements, or entries
+     * dropped on load.
+     */
     public static void saveCache() {
         if (!dirty) {
             return;
@@ -192,7 +195,7 @@ public final class AutoRenderProfiles {
 
             JsonObject encodedEntries = root.getAsJsonObject(FIELD_ENTRIES);
             Map<ResourceLocation, ItemRenderConfig> entries =
-                    OverrideJsonCodec.parse(encodedEntries, cacheFile.toString());
+                    OverrideJsonCodec.parse(encodedEntries, cacheFile.toString()).entries();
             int skipped = encodedEntries.size() - entries.size();
             for (Map.Entry<ResourceLocation, ItemRenderConfig> entry : entries.entrySet()) {
                 ResourceLocation id = entry.getKey();

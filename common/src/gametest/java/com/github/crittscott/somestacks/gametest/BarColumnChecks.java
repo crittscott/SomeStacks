@@ -11,12 +11,17 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlo
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalAt;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,12 +33,13 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 /**
- * Bar support and collapse in a live level that does not touch loader-native automation directly:
- * item validity, grounding at the bottom of a column, footprint overlap deciding support across the
- * alternating layer orientations, and player extraction dropping what it unsupports. Loader-native
- * automation and protection-event tests stay in each loader's GameTest classes.
+ * Bar support and collapse in a live level: item validity, grounding at the bottom of a column,
+ * footprint overlap deciding support across the alternating layer orientations, and player
+ * extraction dropping what it unsupports. Player scenarios click through the loader; automation
+ * scenarios are in {@link AutomationChecks} and protection scenarios in {@link ProtectionChecks}.
  */
 public final class BarColumnChecks {
     private BarColumnChecks() {}
@@ -140,14 +146,15 @@ public final class BarColumnChecks {
      * Player extraction cascades through Bars that lose support. To reproduce in-game: build a
      * vertical chain of supported Bars and extract its bottom Bar. The unsupported Bars above drop.
      */
-    public static void playerExtractionDropsUnsupportedBars(GameTestHelper helper) {
+    public static void playerExtractionDropsUnsupportedBars(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
         int upper = firstSupportedBy(0, 8, 16);
         bars.depositAt(0, new ItemStack(barItem));
         bars.depositAt(upper, new ItemStack(barItem));
 
-        ItemStack extracted = bars.extractAt(0, null);
+        ItemStack extracted = extractFirstBar(playerFactory, bars.getBlockPos());
 
         checkEquals(barItem, extracted.getItem(), "Extracted item");
         checkEquals(1, extracted.getCount(), "Extracted count");
@@ -164,7 +171,8 @@ public final class BarColumnChecks {
      * in-game: support an upper Bar with two lower Bars, then extract one lower support. The upper
      * Bar remains on the other.
      */
-    public static void supportedNeighborSurvivesPlayerExtraction(GameTestHelper helper) {
+    public static void supportedNeighborSurvivesPlayerExtraction(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
         int removedSupport = 0;
@@ -174,7 +182,7 @@ public final class BarColumnChecks {
         bars.depositAt(survivingSupport, new ItemStack(barItem));
         bars.depositAt(upper, new ItemStack(barItem));
 
-        bars.extractAt(removedSupport, null);
+        extractFirstBar(playerFactory, bars.getBlockPos());
 
         checkEquals(
                 barItem,
@@ -183,6 +191,26 @@ public final class BarColumnChecks {
         checkEquals(
                 0, droppedNear(helper, bars.getBlockPos(), barItem), "A supported bar was dropped");
         helper.succeed();
+    }
+
+    /**
+     * Plain-clicks bar position 0 of the Bar Stack at {@code pos} from the west with an empty hand
+     * and returns what the hand took.
+     */
+    private static ItemStack extractFirstBar(
+            Function<ItemStack, ServerPlayer> playerFactory, BlockPos pos) {
+        ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+        ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+        try {
+            InteractionChecks.use(
+                    player,
+                    InteractionChecks.aimAt(
+                            player, pos, GameTestScaffold.cellBox(BlockType.BAR_STACK, 0)));
+            return player.getMainHandItem().copy();
+        } finally {
+            ServerGestureState.clear(player.getUUID());
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        }
     }
 
     /**
@@ -219,10 +247,7 @@ public final class BarColumnChecks {
         ViewRay ray =
                 new ViewRay(new Vec3(pos.getX() - 1.0, y, z), new Vec3(pos.getX() + 2.0, y, z));
 
-        checkEquals(
-                0,
-                BarCubeIdx.traceAllPositions(ray, pos, bars.getItems()),
-                "Bar trace deposit index");
+        checkEquals(0, bars.depositTarget(ray), "Bar trace deposit index");
         helper.succeed();
     }
 
@@ -314,7 +339,8 @@ public final class BarColumnChecks {
      * in-game: build a dense supported Bar column spanning two blocks and remove its lowest
      * support. All unsupported Bars are returned in consolidated item entities.
      */
-    public static void playerCascadeConsolidatesAcrossBlocks(GameTestHelper helper) {
+    public static void playerCascadeConsolidatesAcrossBlocks(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
         Item barItem = firstBarItem();
@@ -335,7 +361,7 @@ public final class BarColumnChecks {
             seedSlot(upper.getItems(), slot, new ItemStack(barItem));
         }
 
-        ItemStack extracted = lower.extractAt(0, null);
+        ItemStack extracted = extractFirstBar(playerFactory, lowerPos);
 
         checkEquals(barItem, extracted.getItem(), "Extracted support item");
         checkEquals(1, extracted.getCount(), "Extracted support count");
@@ -368,7 +394,8 @@ public final class BarColumnChecks {
      * build a supported Bar chain from otherwise identical items carrying distinct components, then
      * remove the support. Each component identity remains a separate drop.
      */
-    public static void collapseDoesNotMergeDifferentComponents(GameTestHelper helper) {
+    public static void collapseDoesNotMergeDifferentComponents(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
         BlockPos pos = bars.getBlockPos();
@@ -385,7 +412,7 @@ public final class BarColumnChecks {
         seedSlot(bars.getItems(), upper[0], first);
         seedSlot(bars.getItems(), upper[1], second);
 
-        bars.extractAt(0, null);
+        extractFirstBar(playerFactory, pos);
 
         List<ItemEntity> drops =
                 droppedInColumn(helper, pos, pos).stream()
