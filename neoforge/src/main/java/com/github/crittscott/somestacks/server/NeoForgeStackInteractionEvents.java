@@ -15,6 +15,12 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 public final class NeoForgeStackInteractionEvents {
     private NeoForgeStackInteractionEvents() {}
 
+    /**
+     * Handles sneaking torch rotation and clicks that reach a stack through a neighboring block,
+     * passing on the block and item denials earlier listeners set. Runs at {@code LOWEST} so
+     * protection mods and other listeners decide first; a click an earlier listener cancels never
+     * arrives.
+     */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         if (event.getLevel().isClientSide()) {

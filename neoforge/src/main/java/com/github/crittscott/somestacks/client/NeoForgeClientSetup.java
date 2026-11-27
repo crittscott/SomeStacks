@@ -4,7 +4,9 @@ import com.github.crittscott.somestacks.NeoForgeRegistry;
 import com.github.crittscott.somestacks.NeoForgeServerConfig;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
+import com.mojang.blaze3d.platform.InputConstants;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.bus.api.IEventBus;
@@ -14,8 +16,11 @@ import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.GameShuttingDownEvent;
+
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Client-side registration: the three block entity renderers, the key binding, the resource reload
@@ -23,8 +28,30 @@ import net.neoforged.neoforge.event.GameShuttingDownEvent;
  * for the native synchronized configuration.
  */
 public final class NeoForgeClientSetup {
+    /** The mod's key-binding category, registered through {@code RegisterKeyMappingsEvent}. */
+    private static final KeyMapping.Category CATEGORY =
+            new KeyMapping.Category(ClientGestures.KEY_CATEGORY_ID);
+
+    /**
+     * The stack modifier, {@code V} by default and rebindable. Held rather than pressed: every
+     * gesture asks whether it is down at the moment of the click.
+     */
+    public static final KeyMapping STACK_MODE_KEY =
+            new KeyMapping(
+                    ClientGestures.STACK_MODE_KEY_TRANSLATION_KEY,
+                    KeyConflictContext.IN_GAME,
+                    InputConstants.Type.KEYSYM,
+                    GLFW.GLFW_KEY_V,
+                    CATEGORY);
+
     private NeoForgeClientSetup() {}
 
+    /**
+     * Runs once from the mod constructor on the physical client: publishes policy from the native
+     * config load and reload events, installs the gesture-state sender, subscribes the renderer,
+     * key, and reload-listener registrations to the mod bus, and hands join, disconnect, and
+     * shutdown to {@link SomeStacksClient}.
+     */
     public static void init(IEventBus modBus) {
         modBus.addListener((ModConfigEvent.Loading event) -> applyPolicy(event.getConfig()));
         modBus.addListener((ModConfigEvent.Reloading event) -> applyPolicy(event.getConfig()));
@@ -45,7 +72,8 @@ public final class NeoForgeClientSetup {
         NeoForgeServerConfig backend = NeoForgeServerConfig.INSTANCE;
         if (config.getSpec() != backend.spec) return;
         ConfigSyncPkt snapshot = ConfigSyncPkt.fromSettings(backend.reload());
-        Minecraft.getInstance().execute(() -> ClientServerSettings.apply(snapshot));
+        Minecraft client = Minecraft.getInstance();
+        client.execute(() -> ClientServerSettings.apply(snapshot, client.player));
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers evt) {
@@ -57,8 +85,8 @@ public final class NeoForgeClientSetup {
     }
 
     private static void onRegisterKeys(RegisterKeyMappingsEvent evt) {
-        evt.registerCategory(NeoForgeKeyMappings.CATEGORY);
-        evt.register(NeoForgeKeyMappings.STACK_MODE_KEY);
+        evt.registerCategory(CATEGORY);
+        evt.register(STACK_MODE_KEY);
     }
 
     private static void onRegisterReloadListeners(AddClientReloadListenersEvent evt) {

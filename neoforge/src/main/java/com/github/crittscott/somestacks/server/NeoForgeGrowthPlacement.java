@@ -22,7 +22,7 @@ public record NeoForgeGrowthPlacement(ServerLevel level, BlockPos pos, BlockStat
             ServerLevel level, BlockPos pos, BlockState state) {
         if (level.captureBlockSnapshots
                 || level.restoringBlockSnapshots
-                || !WorldEdits.mayPlace(null, level, pos)) {
+                || !WorldEdits.mayPlace(null, level, pos, Direction.DOWN)) {
             return null;
         }
         List<BlockSnapshot> snapshots = new ArrayList<>();

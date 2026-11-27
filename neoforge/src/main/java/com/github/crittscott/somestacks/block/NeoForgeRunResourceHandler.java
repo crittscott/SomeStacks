@@ -74,20 +74,20 @@ public final class NeoForgeRunResourceHandler
         return index >= 0
                 && index < size()
                 && !resource.isEmpty()
-                && blockEntity.isStoredItemValid(resource.toStack());
+                && blockEntity.admits(resource.toStack());
     }
 
     @Override
     public long getCapacityAsLong(int index, ItemResource resource) {
         if (index < 0 || index >= size()) return 0;
-        if (resource.isEmpty()) return blockEntity.localSlotLimit();
+        if (resource.isEmpty()) return blockEntity.slotLimit();
         return isValid(index, resource)
-                ? Math.min(blockEntity.localSlotLimit(), resource.getMaxStackSize())
+                ? Math.min(blockEntity.slotLimit(), resource.getMaxStackSize())
                 : 0;
     }
 
     private boolean structural() {
-        return blockEntity.localSlotLimit() == 1;
+        return blockEntity.slotLimit() == 1;
     }
 
     @Override

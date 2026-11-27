@@ -3,14 +3,12 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.client.ClientGestures;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.BlockHitResult;
@@ -24,6 +22,25 @@ public final class InteractionGameTests {
     @GameTest(structure = TEMPLATE, maxTicks = 100)
     public void playerPlacementAwardsCriterionAfterDeposit(GameTestHelper helper) {
         InteractionChecks.playerPlacementAwardsCriterionAfterDeposit(helper);
+    }
+
+    /** See {@link InteractionChecks#fullMaxHeightDepositExplainsRefusal}. */
+    @GameTest(structure = TEMPLATE, maxTicks = 100)
+    public void fullMaxHeightDepositExplainsRefusal(GameTestHelper helper) {
+        InteractionChecks.fullMaxHeightDepositExplainsRefusal(helper);
+    }
+
+    /** See {@link InteractionChecks#adventurePlacementAndGrowthShareTheBuildCheck}. */
+    @GameTest(structure = TEMPLATE, maxTicks = 100)
+    public void adventurePlacementAndGrowthShareTheBuildCheck(GameTestHelper helper) {
+        InteractionChecks.adventurePlacementAndGrowthShareTheBuildCheck(helper);
+    }
+
+    /** See {@link InteractionChecks#barGestureDepositRefusesNonIngots}. */
+    @GameTest(structure = TEMPLATE, maxTicks = 100)
+    public void barGestureDepositRefusesNonIngots(GameTestHelper helper) {
+        InteractionChecks.barGestureDepositRefusesNonIngots(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link InteractionChecks#malformedGestureStateFailsDuringDecoding}. */
@@ -68,20 +85,6 @@ public final class InteractionGameTests {
     public void rotationValidatesHeldItemAndBlockType(GameTestHelper helper) {
         InteractionChecks.rotationValidatesHeldItemAndBlockType(
                 helper, FabricGameTestSupport.playerFactory(helper));
-    }
-
-    /** See {@link InteractionChecks#sneakingRotationsReachTheLoaderHook}. */
-    @GameTest(structure = TEMPLATE, maxTicks = 100)
-    public void sneakingRotationsReachTheLoaderHook(GameTestHelper helper) {
-        InteractionChecks.sneakingRotationsReachTheLoaderHook(
-                helper,
-                FabricGameTestSupport.playerFactory(helper),
-                (player, hit) ->
-                        UseBlockCallback.EVENT
-                                        .invoker()
-                                        .interact(
-                                                player, player.level(), InteractionChecks.HAND, hit)
-                                == InteractionResult.SUCCESS);
     }
 
     /** See {@link InteractionChecks#vanillaInteractionReachesDepositExtractAndPlacement}. */
@@ -165,10 +168,10 @@ public final class InteractionGameTests {
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
-    /** See {@link ClientGestureChecks#fullTopFacesFallThroughToPlacement}. */
+    /** See {@link ClientGestureChecks#topFaceModifiedClicksAreConsumed}. */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
-    public void fullTopFacesFallThroughToPlacement(GameTestHelper helper) {
-        ClientGestureChecks.fullTopFacesFallThroughToPlacement(
+    public void topFaceModifiedClicksAreConsumed(GameTestHelper helper) {
+        ClientGestureChecks.topFaceModifiedClicksAreConsumed(
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
@@ -183,5 +186,26 @@ public final class InteractionGameTests {
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void gestureSyncSendsChangesAndResets(GameTestHelper helper) {
         ClientGestureChecks.gestureSyncSendsChangesAndResets(helper);
+    }
+
+    /** See {@link InteractionChecks#disabledTypesRefuseNewBlocksButKeepExistingOnes}. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void disabledTypesRefuseNewBlocksButKeepExistingOnes(GameTestHelper helper) {
+        InteractionChecks.disabledTypesRefuseNewBlocksButKeepExistingOnes(
+                helper, FabricGameTestSupport::automation);
+    }
+
+    /** See {@link InteractionChecks#maximumHeightRefusesGrowthAndHidesHeadroom}. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void maximumHeightRefusesGrowthAndHidesHeadroom(GameTestHelper helper) {
+        InteractionChecks.maximumHeightRefusesGrowthAndHidesHeadroom(
+                helper, FabricGameTestSupport::automation);
+    }
+
+    /** See {@link InteractionChecks#deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation}. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(GameTestHelper helper) {
+        InteractionChecks.deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(
+                helper, FabricGameTestSupport::automation);
     }
 }

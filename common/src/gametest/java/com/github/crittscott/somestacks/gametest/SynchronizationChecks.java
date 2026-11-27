@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.gametest;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.policy;
 
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /** Wire boundaries, independent of forgiving saved-world recovery. */
@@ -66,7 +68,7 @@ public final class SynchronizationChecks {
                     var decoded = ConfigSyncPkt.STREAM_CODEC.decode(buf);
                     checkEquals(packet, decoded, "Snapshot codec round trip");
                     checkEquals(0, raw.readableBytes(), "Snapshot decoder left fields unread");
-                    ClientServerSettings.apply(decoded);
+                    ClientServerSettings.apply(decoded, null);
                 } finally {
                     raw.release();
                 }
@@ -79,21 +81,15 @@ public final class SynchronizationChecks {
                         Arrays.equals(new boolean[] {size == 0, size == 1, size > 1}, flags()),
                         "Published flags");
             }
-            var defaults = ServerConfig.defaults();
             var normalized =
                     ConfigSyncPkt.fromSettings(
-                            new ServerConfig.Settings(
-                                    defaults.maxPileHeight(),
-                                    true,
-                                    true,
-                                    true,
-                                    List.of(" Minecraft ", "minecraft"),
-                                    defaults.disableItems(),
-                                    defaults.renderGalleryPlacementsPerTick(),
-                                    false,
-                                    defaults.galleryPermissionLevel(),
-                                    List.of(" SomeStacks ", "somestacks"),
-                                    List.of()));
+                            policy(
+                                    ServerConfig.defaults(),
+                                    Map.of(
+                                            ServerConfig.Setting.DISABLE_MODS,
+                                            List.of(" Minecraft ", "minecraft"),
+                                            ServerConfig.Setting.GEN_MODS,
+                                            List.of(" SomeStacks ", "somestacks"))));
             checkEquals(List.of("minecraft"), normalized.disabledMods(), "Deny normalization");
             checkEquals(List.of("somestacks"), normalized.genMods(), "Gallery normalization");
             ClientServerSettings.clear();
