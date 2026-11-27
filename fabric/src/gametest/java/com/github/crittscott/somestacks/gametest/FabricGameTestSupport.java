@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.block.StackBlockEntity;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -21,19 +20,42 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.function.Function;
 
 /**
- * Fabric-native scaffolding for the GameTests: the namespaced template name and Transfer API
- * storage access and the small transaction helpers used by adapter-specific tests. Everything
- * loader-neutral lives in {@link GameTestScaffold}.
+ * Fabric-native scaffolding for the GameTests: the namespaced template name, Transfer API storage
+ * access and the shared scenarios' automation view of it, and the small transaction helpers used
+ * by adapter-specific tests. Everything loader-neutral lives in {@link GameTestScaffold}.
  */
 public final class FabricGameTestSupport {
     public static final String TEMPLATE = "somestacks:somestacks_empty";
 
     private FabricGameTestSupport() {}
 
-    /** Shared scenario adapter: accepted count, with an explicit commit flag. */
-    public static int offerAt(
-            StackBlockEntity blockEntity, int slot, ItemStack stack, boolean commit) {
-        return stack.getCount() - insertAt(storage(blockEntity), slot, stack, !commit).getCount();
+    /**
+     * The {@link GameTestScaffold.Automation} view of {@code blockEntity}'s registered Transfer API
+     * storage, as a hopper or pipe reaches it; each call runs in its own outer transaction.
+     */
+    public static GameTestScaffold.Automation automation(BlockEntity blockEntity) {
+        SlottedStorage<ItemVariant> storage = storage(blockEntity);
+        return new GameTestScaffold.Automation() {
+            @Override
+            public ItemStack extract(int slot, int amount, boolean simulate) {
+                return extractAt(storage, slot, amount, simulate);
+            }
+
+            @Override
+            public ItemStack insert(int slot, ItemStack stack, boolean simulate) {
+                return insertAt(storage, slot, stack, simulate);
+            }
+
+            @Override
+            public int slots() {
+                return storage.getSlotCount();
+            }
+
+            @Override
+            public ItemStack stackAt(int slot) {
+                return FabricGameTestSupport.stackAt(storage, slot);
+            }
+        };
     }
 
     /**
@@ -104,16 +126,6 @@ public final class FabricGameTestSupport {
             ItemStack stack = stackAt(storage, slot);
             if (stack.is(item)) {
                 total += stack.getCount();
-            }
-        }
-        return total;
-    }
-
-    public static int occupied(SlottedStorage<ItemVariant> storage) {
-        int total = 0;
-        for (int slot = 0; slot < storage.getSlotCount(); slot++) {
-            if (!storage.getSlot(slot).isResourceBlank()) {
-                total++;
             }
         }
         return total;

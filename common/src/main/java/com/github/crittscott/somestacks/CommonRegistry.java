@@ -22,16 +22,37 @@ public final class CommonRegistry {
     public static final Identifier STORAGE_STACK_BE = id("stack_be");
     public static final Identifier SINGLES_STACK_BE = id("singles_stack_be");
     public static final Identifier BAR_STACK_BE = id("bar_stack_be");
-    public static final Identifier STORAGE_DEPOSIT_SOUND = id("block.storage_stack.deposit");
-    public static final Identifier STORAGE_EXTRACT_SOUND = id("block.storage_stack.extract");
-    public static final Identifier STORAGE_ROTATE_SOUND = id("block.storage_stack.rotate");
-    public static final Identifier SINGLES_DEPOSIT_SOUND = id("block.singles_stack.deposit");
-    public static final Identifier SINGLES_EXTRACT_SOUND = id("block.singles_stack.extract");
-    public static final Identifier SINGLES_ROTATE_SOUND = id("block.singles_stack.rotate");
-    public static final Identifier SINGLES_ROTATE_ITEM_SOUND =
-            id("block.singles_stack.rotate_item");
-    public static final Identifier BAR_DEPOSIT_SOUND = id("block.bar_stack.deposit");
-    public static final Identifier BAR_EXTRACT_SOUND = id("block.bar_stack.extract");
+
+    /**
+     * The mod's sound events, declared once. Each loader registers every entry under its {@link
+     * #id()}, and common code plays {@link #get()}.
+     */
+    public enum Sound {
+        BAR_DEPOSIT("block.bar_stack.deposit"),
+        BAR_EXTRACT("block.bar_stack.extract"),
+        SINGLES_DEPOSIT("block.singles_stack.deposit"),
+        SINGLES_EXTRACT("block.singles_stack.extract"),
+        SINGLES_ROTATE("block.singles_stack.rotate"),
+        SINGLES_ROTATE_ITEM("block.singles_stack.rotate_item"),
+        STORAGE_DEPOSIT("block.storage_stack.deposit"),
+        STORAGE_EXTRACT("block.storage_stack.extract"),
+        STORAGE_ROTATE("block.storage_stack.rotate");
+
+        private final Identifier id;
+
+        Sound(String path) {
+            id = CommonRegistry.id(path);
+        }
+
+        /** The registered event, available once the loader has registered sounds. */
+        public SoundEvent get() {
+            return lookup(BuiltInRegistries.SOUND_EVENT, id);
+        }
+
+        public Identifier id() {
+            return id;
+        }
+    }
 
     public static Block storageStackBlock() {
         return lookup(BuiltInRegistries.BLOCK, STORAGE_STACK_BLOCK);
@@ -55,42 +76,6 @@ public final class CommonRegistry {
 
     public static BlockEntityType<BarStackBE> barStackBe() {
         return blockEntityType(BAR_STACK_BE);
-    }
-
-    public static SoundEvent storageDepositSound() {
-        return lookup(BuiltInRegistries.SOUND_EVENT, STORAGE_DEPOSIT_SOUND);
-    }
-
-    public static SoundEvent storageExtractSound() {
-        return lookup(BuiltInRegistries.SOUND_EVENT, STORAGE_EXTRACT_SOUND);
-    }
-
-    public static SoundEvent storageRotateSound() {
-        return lookup(BuiltInRegistries.SOUND_EVENT, STORAGE_ROTATE_SOUND);
-    }
-
-    public static SoundEvent singlesDepositSound() {
-        return lookup(BuiltInRegistries.SOUND_EVENT, SINGLES_DEPOSIT_SOUND);
-    }
-
-    public static SoundEvent singlesExtractSound() {
-        return lookup(BuiltInRegistries.SOUND_EVENT, SINGLES_EXTRACT_SOUND);
-    }
-
-    public static SoundEvent singlesRotateSound() {
-        return lookup(BuiltInRegistries.SOUND_EVENT, SINGLES_ROTATE_SOUND);
-    }
-
-    public static SoundEvent singlesRotateItemSound() {
-        return lookup(BuiltInRegistries.SOUND_EVENT, SINGLES_ROTATE_ITEM_SOUND);
-    }
-
-    public static SoundEvent barDepositSound() {
-        return lookup(BuiltInRegistries.SOUND_EVENT, BAR_DEPOSIT_SOUND);
-    }
-
-    public static SoundEvent barExtractSound() {
-        return lookup(BuiltInRegistries.SOUND_EVENT, BAR_EXTRACT_SOUND);
     }
 
     private static Identifier id(String path) {

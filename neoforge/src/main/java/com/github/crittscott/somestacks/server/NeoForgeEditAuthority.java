@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.NeoForge;
@@ -47,9 +46,17 @@ public final class NeoForgeEditAuthority implements EditAuthority {
 
     private boolean placing;
 
+    /**
+     * Places under NeoForge's snapshot capture, the way NeoForge's own item placement does, rather
+     * than with the shorter snapshot, {@code setBlock}, place event, restore-on-veto pattern.
+     * Outside capture, {@code setBlock} runs the new block's {@code onPlace} and notifies neighbors
+     * before the event can veto, so neighbors would react to a block that is then rolled back.
+     * Under capture those side effects are held back and published only after the event allows
+     * the placement.
+     */
     @Override
     public boolean place(
-            Player placer,
+            ServerPlayer placer,
             ServerLevel level,
             BlockPos pos,
             BlockState state,

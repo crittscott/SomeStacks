@@ -30,6 +30,7 @@ public record GestureStatePkt(StackMode mode, boolean modifierDown) implements C
         return TYPE;
     }
 
+    /** Records the sender's reported state; loaders call this on the server thread. */
     public static void handleServer(GestureStatePkt packet, ServerPlayer player) {
         ServerGestureState.set(player, packet.mode, packet.modifierDown);
     }

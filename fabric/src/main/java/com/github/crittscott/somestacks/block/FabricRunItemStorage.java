@@ -1,5 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.FabricRegistry;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
@@ -34,8 +36,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
 
     @Override
     public int getSlotCount() {
-        StackRunItemAccess run = blockEntity.isRemoved() ? null : blockEntity.itemRun();
-        return run != null ? run.advertisedSlots() : 0;
+        return blockEntity.isRemoved() ? 0 : blockEntity.advertisedSlots();
     }
 
     @Override
@@ -79,6 +80,9 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
         StoragePreconditions.notBlankNotNegative(resource, maxAmount);
         FabricRunItemStorage ledger = ledger();
         if (ledger != this) return ledger.insert(resource, maxAmount, transaction);
+        // Admission does not depend on the position, so a refused resource is turned away once
+        // here instead of at every position of the sweep, which a stuck hopper repeats each tick.
+        if (!blockEntity.admits(resource.toStack())) return 0;
         if (!(blockEntity.itemRun() instanceof StackRun<?> run)) return 0;
         try (var query = run.growthQuery()) {
             return StorageUtil.insertStacking(getSlots(), resource, maxAmount, transaction);
@@ -105,7 +109,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
         if (access instanceof StackRun<?> run) {
             StackBlockEntity base = run.baseBlockEntity();
             if (base == blockEntity) return this;
-            return FabricItemStorage.of(base);
+            return FabricRegistry.itemStorage(base);
         }
         return this;
     }
@@ -116,11 +120,14 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
             return ledger.currentStack(slot);
         }
         if (slot < 0 || slot >= getSlotCount()) return ItemStack.EMPTY;
-        return changes.current(slot, blockEntity.itemRun());
+        StackRunItemAccess run = blockEntity.itemRun();
+        // Without a server run (on the client) the view is read-only over the local slots.
+        return run != null ? changes.current(slot, run) : blockEntity.advertisedStack(slot);
     }
 
     /**
-     * How much of {@code stack} the slot accepts given the contents this transaction has staged.
+     * How much of {@code stack} the slot accepts given the contents this transaction has staged. The
+     * run's answer also applies admission.
      */
     private int acceptedAt(int slot, ItemStack stack) {
         if (blockEntity.isRemoved()) return 0;
@@ -128,16 +135,12 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
         return run != null ? run.acceptsAt(slot, stack, this::currentStack) : 0;
     }
 
-    private boolean isValid(ItemStack stack) {
-        return blockEntity.isStoredItemValid(stack);
-    }
-
     private int capacity(ItemVariant resource) {
-        return Math.min(blockEntity.localSlotLimit(), resource.toStack().getMaxStackSize());
+        return Math.min(blockEntity.slotLimit(), resource.toStack().getMaxStackSize());
     }
 
     private boolean isStructural() {
-        return blockEntity.localSlotLimit() == 1;
+        return blockEntity.slotLimit() == 1;
     }
 
     /** Records a slot's original live value once, then replaces its transaction-visible value. */
@@ -196,7 +199,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
             }
 
             int amount = (int) Math.min(maxAmount, capacity(resource) - current.getCount());
-            if (amount <= 0 || !isValid(resource.toStack(amount))) {
+            if (amount <= 0) {
                 return 0;
             }
             amount = Math.min(amount, acceptedAt(slot, resource.toStack(amount)));
@@ -224,6 +227,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
             StoragePreconditions.notBlankNotNegative(resource, maxAmount);
             if (maxAmount == 0
                     || RunEdit.isInProgress()
+                    || run() == null
                     || isStructural() && !changes.mayExtract(slot)) return 0;
 
             ItemStack current = currentStack(slot);
@@ -264,7 +268,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<RunTransferL
         public long getCapacity() {
             ItemVariant resource = getResource();
             return resource.isBlank() && !isStructural()
-                    ? blockEntity.localSlotLimit()
+                    ? blockEntity.slotLimit()
                     : capacity(resource);
         }
     }

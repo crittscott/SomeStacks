@@ -14,8 +14,6 @@ import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.github.crittscott.somestacks.server.ServerGestureState;
-import com.github.crittscott.somestacks.server.StackInteractions;
-import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -48,7 +46,8 @@ public final class ConfigurationChecks {
 
     /**
      * Valid render-override fields round-trip in stable item-id order while malformed entries and
-     * fields are skipped independently. No in-game reproduction applies: this directly verifies the
+     * fields are skipped independently, and every entry with an unusable part is reported verbatim
+     * for a writer to keep. No in-game reproduction applies: this directly verifies the
      * JSON codec rather than a player-visible action.
      */
     public static void overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(
@@ -72,9 +71,13 @@ public final class ConfigurationChecks {
                                 """)
                         .getAsJsonObject();
 
-        Map<Identifier, ItemRenderConfig> parsed =
-                OverrideJsonCodec.parse(root, "GameTest fixture");
+        OverrideJsonCodec.Document document = OverrideJsonCodec.parse(root, "GameTest fixture");
+        Map<Identifier, ItemRenderConfig> parsed = document.entries();
         checkEquals(2, parsed.size(), "Parsed override count");
+        checkEquals(
+                List.of("minecraft:dirt", "minecraft:stick", "not an item id"),
+                new ArrayList<>(document.malformed().keySet()),
+                "Entries kept verbatim as malformed");
 
         ItemRenderConfig stone = parsed.get(Identifier.parse("minecraft:stone"));
         check(stone != null, "Stone override was skipped");
@@ -93,7 +96,7 @@ public final class ConfigurationChecks {
                 new ArrayList<>(serialized.keySet()),
                 "Serialized item-id order");
         Map<Identifier, ItemRenderConfig> reparsed =
-                OverrideJsonCodec.parse(serialized, "GameTest round trip");
+                OverrideJsonCodec.parse(serialized, "GameTest round trip").entries();
         checkConfigEquals(
                 stone, reparsed.get(Identifier.parse("minecraft:stone")), "Stone round trip");
         checkConfigEquals(
@@ -146,7 +149,7 @@ public final class ConfigurationChecks {
                                 """)
                         .getAsJsonObject();
         Map<Identifier, ItemRenderConfig> parsed =
-                OverrideJsonCodec.parse(root, "GameTest bounds fixture");
+                OverrideJsonCodec.parse(root, "GameTest bounds fixture").entries();
         checkEquals(
                 OverrideJsonCodec.MIN_SCALE,
                 parsed.get(Identifier.parse("minecraft:stone")).scale(),
@@ -198,11 +201,7 @@ public final class ConfigurationChecks {
         try {
             ServerConfig.apply(policy(8, true, true, true, List.of(), List.of("minecraft:stone")));
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
-            StackInteractions.handleExistingStack(
-                    player,
-                    InteractionHand.MAIN_HAND,
-                    centerHit(storage.getBlockPos()),
-                    BlockType.STORAGE_STACK);
+            InteractionChecks.use(player, centerHit(storage.getBlockPos()));
             checkEquals(
                     4,
                     player.getMainHandItem().getCount(),
@@ -257,12 +256,18 @@ public final class ConfigurationChecks {
                     storage.itemRun()
                             .insertAt(StorageStackBE.SLOTS, new ItemStack(Items.STONE), false),
                     "Height-capped automation grew the run");
-            ItemStack deposit = new ItemStack(Items.STONE);
-            checkEquals(
-                    0,
-                    storage.deposit(deposit, playerFactory.apply(ItemStack.EMPTY)),
-                    "Height-capped player deposit grew the run");
-            checkEquals(1, deposit.getCount(), "Rejected deposit spent its input");
+            ServerPlayer depositor = playerFactory.apply(new ItemStack(Items.STONE));
+            ServerGestureState.set(depositor, StackMode.STORAGE_STACK, true);
+            try {
+                InteractionChecks.use(depositor, centerHit(storage.getBlockPos()));
+                checkEquals(
+                        1,
+                        depositor.getMainHandItem().getCount(),
+                        "Height-capped player deposit spent its input");
+            } finally {
+                depositor.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                ServerGestureState.clear(depositor.getUUID());
+            }
             helper.assertBlockNotPresent(
                     CommonRegistry.storageStackBlock(), GameTestScaffold.ORIGIN.above());
 
@@ -273,9 +278,8 @@ public final class ConfigurationChecks {
             ServerPlayer player = playerFactory.apply(new ItemStack(barItem, 3));
             ServerGestureState.set(player, StackMode.BAR_STACK, true);
             try {
-                StackInteractions.handleAdjacentClick(
+                InteractionChecks.use(
                         player,
-                        InteractionHand.MAIN_HAND,
                         new BlockHitResult(
                                 new Vec3(
                                         support.getX() + 0.5,
@@ -283,9 +287,7 @@ public final class ConfigurationChecks {
                                         support.getZ() + 0.5),
                                 Direction.UP,
                                 support,
-                                false),
-                        true,
-                        true);
+                                false));
                 checkEquals(
                         3,
                         player.getMainHandItem().getCount(),
@@ -311,12 +313,9 @@ public final class ConfigurationChecks {
             ServerPlayer invalidPlayer = playerFactory.apply(new ItemStack(Items.STICK, 2));
             ServerGestureState.set(invalidPlayer, StackMode.BAR_STACK, true);
             try {
-                StackInteractions.handleAdjacentClick(
+                InteractionChecks.use(
                         invalidPlayer,
-                        InteractionHand.MAIN_HAND,
-                        new BlockHitResult(Vec3.atCenterOf(support), Direction.UP, support, false),
-                        true,
-                        true);
+                        new BlockHitResult(Vec3.atCenterOf(support), Direction.UP, support, false));
                 checkEquals(
                         2,
                         invalidPlayer.getMainHandItem().getCount(),
@@ -342,7 +341,6 @@ public final class ConfigurationChecks {
      */
     public static void serverCommandsEnforcePermissionsAndPersistEdits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
-        PolicyParityChecks.verify(helper);
         ServerConfig.Settings original = ServerConfig.settings();
         MinecraftServer server = helper.getLevel().getServer();
         try {

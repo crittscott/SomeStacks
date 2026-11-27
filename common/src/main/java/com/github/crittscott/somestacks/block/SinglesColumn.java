@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 
 import net.minecraft.core.BlockPos;
@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  */
 public final class SinglesColumn extends StackRun<SinglesStackBE> {
     private SinglesColumn(ServerLevel level, List<SinglesStackBE> blocks) {
-        super(level, blocks, SinglesStackBE.SLOTS, CommonRegistry.singlesStackBlock());
+        super(level, blocks, SinglesStackBE.SLOTS, BlockType.SINGLES_STACK);
     }
 
     /**
@@ -87,14 +87,6 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         StackRun.markDirtyAt(level, pos, SinglesColumn::at);
     }
 
-    /**
-     * Whether a Singles Stack may be created at {@code pos}: the contiguous column it would form,
-     * counting the runs both below and above it, must fit the configured maximum.
-     */
-    public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.singlesStackBlock());
-    }
-
     // Insertion
 
     /**
@@ -142,7 +134,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      */
     @Override
     public int acceptsAt(int flatSlot, ItemStack stack, IntFunction<ItemStack> contents) {
-        if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)) {
+        if (!SinglesStackBE.isValidSinglesItem(stack)) {
             return 0;
         }
         if (flatSlot < 0 || flatSlot >= advertisedSlots() || !contents.apply(flatSlot).isEmpty()) {
@@ -189,7 +181,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        return canGrowBlock(ServerConfig.enableSinglesStackBlock(), null)
+        return canGrowBlock(null)
                 && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
     }
 
@@ -229,9 +221,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         }
 
         if (simulate) {
-            ItemStack taken = inSlot.copy();
-            taken.setCount(1);
-            return taken;
+            return inSlot.copyWithCount(1);
         }
 
         return blocks.get(flatSlot / SinglesStackBE.SLOTS)

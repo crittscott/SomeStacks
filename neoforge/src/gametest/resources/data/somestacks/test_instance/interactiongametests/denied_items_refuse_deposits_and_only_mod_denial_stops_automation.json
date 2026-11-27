@@ -1,6 +1,6 @@
 {
   "type": "minecraft:function",
-  "function": "somestacks:itemopsgametests/hand_compatibility_uses_exact_item_components_and_capacity",
+  "function": "somestacks:interactiongametests/denied_items_refuse_deposits_and_only_mod_denial_stops_automation",
   "environment": "minecraft:default",
   "structure": "somestacks:somestacks_empty",
   "max_ticks": 100

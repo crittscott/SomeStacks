@@ -1,22 +1,23 @@
-package com.github.crittscott.somestacks.network;
+package com.github.crittscott.somestacks.client;
 
-import com.github.crittscott.somestacks.client.ClientGestures;
-import com.github.crittscott.somestacks.client.ClientServerSettings;
-import com.github.crittscott.somestacks.client.SomeStacksClient;
+import com.github.crittscott.somestacks.network.ConfigSyncPkt;
+import com.github.crittscott.somestacks.network.ProtocolPkt;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-
-import java.util.function.Consumer;
 
 /** Fabric client receivers and the packet sender used by the shared gesture rules. */
 public final class FabricClientNetworking {
     private FabricClientNetworking() {}
 
+    /**
+     * Installs the gesture-state sender, answers the configuration-phase protocol marker and
+     * disconnects from a server that lacks it, receives the config snapshot, and hands join and
+     * disconnect to {@link SomeStacksClient}. Runs once from the client entry point.
+     */
     public static void init() {
         ClientGestures.setSender(packet -> ClientPlayNetworking.send(packet));
 
@@ -28,7 +29,9 @@ public final class FabricClientNetworking {
                         .disconnect(Component.translatable("somestacks.disconnect.protocol"));
             }
         });
-        registerClient(ConfigSyncPkt.TYPE, ClientServerSettings::apply);
+        ClientPlayNetworking.registerGlobalReceiver(
+                ConfigSyncPkt.TYPE,
+                (payload, context) -> ClientServerSettings.apply(payload, context.player()));
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             SomeStacksClient.onJoin();
@@ -36,11 +39,5 @@ public final class FabricClientNetworking {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             SomeStacksClient.onDisconnect();
         });
-    }
-
-    private static <T extends CustomPacketPayload> void registerClient(
-            CustomPacketPayload.Type<T> type, Consumer<T> handler) {
-        ClientPlayNetworking.registerGlobalReceiver(
-                type, (payload, context) -> handler.accept(payload));
     }
 }

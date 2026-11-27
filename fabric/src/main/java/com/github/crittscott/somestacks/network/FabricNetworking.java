@@ -30,6 +30,11 @@ public final class FabricNetworking {
                 .register(ConfigSyncPkt.TYPE, ConfigSyncPkt.STREAM_CODEC);
     }
 
+    /**
+     * Registers the server receivers: the configuration-phase protocol marker, whose presence the
+     * common entry point checks before play, and the gesture-state payload, handed to {@link
+     * GestureStatePkt#handleServer} with its sender.
+     */
     public static void initServer() {
         ServerConfigurationNetworking.registerGlobalReceiver(
                 ProtocolPkt.TYPE, (payload, context) -> {});
