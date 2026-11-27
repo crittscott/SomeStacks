@@ -31,8 +31,35 @@ import java.util.Map;
  * texture runs along each bar's long axis whichever way its layer lies.
  */
 public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
+    /**
+     * Units of the bar texture's layout grid per model pixel of bar face. Declared first because
+     * the face sizes below are computed from it.
+     */
+    private static final float GRID_UNITS_PER_PIXEL = 4f;
+
+    // Every bar has the same shape, whichever way its layer runs; layer 0 merely names one. The
+    // texture lays the top (length x width), a long side (length x height), and an end cap
+    // (width x height) one below another from the grid's top-left corner.
+
+    /** A bar's height, in layout grid units. */
+    private static final float BAR_GRID_HEIGHT =
+            (float) BarCubeIdx.barHeight(0) * GRID_UNITS_PER_PIXEL;
+
+    /** A bar's long-axis length, in layout grid units. */
+    private static final float BAR_GRID_LENGTH =
+            (float) Math.max(BarCubeIdx.barWidth(0), BarCubeIdx.barDepth(0))
+                    * GRID_UNITS_PER_PIXEL;
+
+    /** A bar's short horizontal span, in layout grid units. */
+    private static final float BAR_GRID_WIDTH =
+            (float) Math.min(BarCubeIdx.barWidth(0), BarCubeIdx.barDepth(0))
+                    * GRID_UNITS_PER_PIXEL;
+
     private static final Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS =
             new IdentityHashMap<>();
+
+    /** Units along each edge of the bar texture's layout grid, which spans the whole sprite. */
+    private static final float TEXTURE_GRID = 32f;
 
     static void onResourceReload() {
         SPRITE_REGIONS.clear();
@@ -100,18 +127,35 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
                         sprite -> {
                             float u0 = sprite.getU0(), v0 = sprite.getV0();
                             float uRange = sprite.getU1() - u0, vRange = sprite.getV1() - v0;
-                            // Top/bottom, long side, and end cap on the sprite's 32-unit grid.
+                            float longSideV0 = BAR_GRID_WIDTH;
+                            float endCapV0 = longSideV0 + BAR_GRID_HEIGHT;
                             return new UvRegion[] {
-                                region(u0, v0, uRange, vRange, 0f, 0f, 24f, 12f),
-                                region(u0, v0, uRange, vRange, 0f, 12f, 24f, 20f),
-                                region(u0, v0, uRange, vRange, 0f, 20f, 12f, 28f)
+                                region(u0, v0, uRange, vRange, 0f, 0f, BAR_GRID_LENGTH, longSideV0),
+                                region(
+                                        u0,
+                                        v0,
+                                        uRange,
+                                        vRange,
+                                        0f,
+                                        longSideV0,
+                                        BAR_GRID_LENGTH,
+                                        endCapV0),
+                                region(
+                                        u0,
+                                        v0,
+                                        uRange,
+                                        vRange,
+                                        0f,
+                                        endCapV0,
+                                        BAR_GRID_WIDTH,
+                                        endCapV0 + BAR_GRID_HEIGHT)
                             };
                         });
         UvRegion top = regions[0], longSide = regions[1], endCap = regions[2];
 
-        // Even layers lay their bars along X (6x2x3), so the Z faces are the long sides and
-        // the X faces the end caps. Odd layers lay them along Z (3x2x6) and the two trade places.
-        boolean rotated = (layer % 2) == 1;
+        // East-west layers lay their bars along X, so the Z faces are the long sides and the X
+        // faces the end caps. North-south layers lay them along Z and the two trade places.
+        boolean rotated = !BarCubeIdx.isEWLayer(layer);
         UvRegion zFace = rotated ? endCap : longSide;
         UvRegion xFace = rotated ? longSide : endCap;
 
@@ -261,7 +305,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
     /** A sub-rectangle of a sprite, in atlas UV coordinates. */
     private record UvRegion(float u0, float v0, float u1, float v1) {}
 
-    /** Maps a rectangle of the sprite's 32-unit grid onto its place in the atlas. */
+    /** Maps a rectangle of the sprite's layout grid onto its place in the atlas. */
     private static UvRegion region(
             float u0,
             float v0,
@@ -272,10 +316,10 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
             float gridU1,
             float gridV1) {
         return new UvRegion(
-                u0 + uRange * (gridU0 / 32f),
-                v0 + vRange * (gridV0 / 32f),
-                u0 + uRange * (gridU1 / 32f),
-                v0 + vRange * (gridV1 / 32f));
+                u0 + uRange * (gridU0 / TEXTURE_GRID),
+                v0 + vRange * (gridV0 / TEXTURE_GRID),
+                u0 + uRange * (gridU1 / TEXTURE_GRID),
+                v0 + vRange * (gridV1 / TEXTURE_GRID));
     }
 
     private static void quad(

@@ -4,9 +4,8 @@ import com.github.crittscott.somestacks.util.BlockType;
 
 /**
  * The loader-neutral client copy of which stack types the server has enabled, delivered by the
- * configuration sync. It decides only what the placement-mode gesture will cycle through; the
- * server enforces the setting itself, so a stale copy here cannot create a block the server has
- * disabled.
+ * configuration sync. It decides only which modes the placement-mode gesture may select; the server
+ * enforces the setting itself, so a stale copy here cannot create a block the server has disabled.
  */
 public final class StackState {
     private StackState() {}

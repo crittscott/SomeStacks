@@ -7,7 +7,7 @@ For Fabric, Forge, and NeoForge.
 ### Changed
 
 - Stack gestures use vanilla block interactions, with deposit, extraction, and rotation targets selected by the server from the clicked point and line of sight. Only the main hand acts.
-- Placement, neighboring-stack deposits, growth, and cleanup respect protection checks. Automated edits use `[SomeStacks]`; cleanup caused by a player retains that player's attribution.
+- Placement, neighboring-stack deposits, growth, and cleanup respect protection checks. Automated edits use `[SomeStacks]`; cleanup caused by a player, including the collapse or trimming that breaking a stack causes, retains that player's attribution.
 - `/ss item` and `/ss write` run locally without operator permission. Item render profiles resolve local overrides first, then resource packs, then automatic measurement. Servers distribute profiles through their server resource pack instead of server override files.
 - Stack actions use registered sound events with subtitles, customizable through resource-pack `sounds.json`. The old data-pack sound mappings are removed.
 - Server policy uses `somestacks-server.toml` on every loader. Existing world JSON policy migrates automatically; the original is retained as `somestacks-server.json.migrated`. Existing TOML takes precedence.
@@ -20,12 +20,20 @@ For Fabric, Forge, and NeoForge.
 - Stack placement, removal, and content changes emit vibrations for sculk sensors.
 - Saved items record their data version and migrate on load. Unreadable items remain in saved recovery data and retry on later loads; cleanup preserves blocks containing recovery data.
 - Singles and Bar selection outlines follow occupied cells, allowing clicks through empty space.
+- Stacks no longer send nearby players the contents of stored containers such as shulker boxes, or the pages of stored books; neither is drawn, and both stay saved.
+- A selected placement type the server disables is replaced by the next enabled mode when the policy arrives, and placing a disabled type or depositing into a full Storage pile at maximum height now explains the refusal.
+- Placing a stack and growing one by depositing answer to the same build check. In Adventure mode, growing a Storage pile now needs a held item whose `can_place_on` names the pile's top block, just as placing a stack does.
+- Forge and NeoForge let another mod's earlier right-click handling on a block take precedence on the client, as it already did on the server and on Fabric.
+- On Fabric, the empty-hand mode cycle no longer fires while mining a block or steering a boat.
 - Item rendering caches prepared profiles and presentations, refreshes them after edits or resource reloads, and displays a red "ERR" cube when a flat item model fails to render.
+- `/ss write changed` no longer replaces `config/somestacks/item_overrides.json` when the file cannot be read; it fails, and the log names the file and the problem. Entries in the file that cannot be used are kept exactly as written instead of being dropped on the next save.
+- `/ss gen mod list` shows the list in alphabetical order, the order galleries use. Command messages are whole sentences, so they can be translated, and `/ss help` states list limits and the default scale from the values the mod uses.
 - Expanded loader GameTest coverage for interactions, protection, automation, persistence, and migration.
 
 ### Protection integrations
 
 - Fabric supports optional Common Protection API queries and direct FTB Chunks placement/growth checks. NeoForge retains direct FTB Chunks placement checks; Forge and NeoForge also use native protection hooks.
+- The startup log names the mod version, network protocol, and the protection mods queried directly.
 
 ## 0.8.2 — Minecraft 1.21.1 port 
 

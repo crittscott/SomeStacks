@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 /**
  * Measures the geometry an item actually draws, by capturing a vanilla draw of it: the item model
  * the stack resolves to, its display transform, the renderer's -0.5 origin shift, every layer, and
- * whatever a special model renderer emits.
+ * whatever a {@code BlockEntityWithoutLevelRenderer} emits.
  */
 public final class ModelMeasurement {
     private ModelMeasurement() {}
@@ -22,6 +22,8 @@ public final class ModelMeasurement {
      * @param gui3d the resolved item model's own dimensionality signal
      * @param flatProjectionAvailable whether the shared 2-D renderer can draw the geometry that
      *     produced these bounds
+     * @param bounds the drawn geometry's bounds, or null when nothing was drawn
+     * @param failure why no usable bounds were measured, or null on success
      */
     public record Result(
             boolean gui3d,

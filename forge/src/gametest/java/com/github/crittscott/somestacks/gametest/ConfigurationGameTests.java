@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.ForgeServerConfig;
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
@@ -13,9 +13,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 /** Forge delegates for loader-neutral JSON and server-policy checks. */
-@GameTestHolder(SomeStacks.MODID)
+@GameTestHolder(SomeStacksCommon.MODID)
 public final class ConfigurationGameTests {
     private ConfigurationGameTests() {}
+
+    /** See {@link PolicyParityChecks#commandHelpAndNamespaceLimits}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void commandHelpAndNamespaceLimits(GameTestHelper helper) {
+        PolicyParityChecks.commandHelpAndNamespaceLimits(helper);
+    }
 
     /** See {@link ConfigurationChecks#overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
@@ -66,6 +72,12 @@ public final class ConfigurationGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void ingotTagControlsBarAndSinglesAdmission(GameTestHelper helper) {
         ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(helper);
+    }
+
+    /** See {@link TomlPolicyChecks#tomlPolicyParsesRoundTripsAndMigrates}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void tomlPolicyParsesRoundTripsAndMigrates(GameTestHelper helper) {
+        TomlPolicyChecks.tomlPolicyParsesRoundTripsAndMigrates(helper);
     }
 
     /**

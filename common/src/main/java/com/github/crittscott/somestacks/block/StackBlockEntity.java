@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.SomeStacksServer;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
@@ -12,12 +13,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,6 +30,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     static final String TAG_ITEMS = "Items";
 
     protected final StackItemStorage items;
+    @Nullable private ServerPlayer breakingPlayer;
     @Nullable private Integer pendingBlockRotation;
     private boolean migrationDirty;
     @Nullable private StackItemStorage.LoadResult pendingLoadResult;
@@ -63,26 +67,77 @@ public abstract class StackBlockEntity extends BlockEntity {
 
                     @Override
                     public int getSlotLimit(int slot) {
-                        return localSlotLimit();
+                        return slotLimit();
                     }
 
                     @Override
                     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                        return isStoredItemValid(stack);
+                        return admits(stack);
                     }
                 };
     }
 
     /**
-     * Admission for new local/automation inserts, including current namespace and type policy.
-     * Existing saved or internally relocated items bypass this check; no slot is selected here.
+     * Admission for new player and automation inserts, including current namespace and type
+     * policy. Existing saved or internally relocated items bypass this check; it selects no slot
+     * and checks neither support nor growth authority.
      */
-    protected abstract boolean isStoredItemValid(ItemStack stack);
+    public abstract boolean admits(ItemStack stack);
 
     /** Resolves the current server-side run without consulting the per-tick cache. */
     protected abstract StackRunItemAccess resolveRun(ServerLevel serverLevel);
 
-    /** The current server-side run, or {@code null} on the client or during removal. */
+    /** The block-local box of the cell at {@code slot}, at this block's current layout. */
+    protected abstract AABB cellBox(int slot);
+
+    /**
+     * Whether a player's modified-item click on this block's top face along {@code ray} deposits
+     * here, rather than placing a new stack above.
+     */
+    public abstract boolean acceptsDepositAlong(ViewRay ray);
+
+    /**
+     * A player's deposit from {@code hand} into the cell or run {@code ray} targets, shrinking
+     * {@code hand} by what moved. Admission, support, and growth are this method's to check.
+     *
+     * @return how many items moved
+     */
+    public abstract int depositFromHand(ViewRay ray, ItemStack hand, ServerPlayer player);
+
+    /**
+     * A player's extraction from the occupied cell at {@code index} into a hand currently holding
+     * {@code hand}, taking only what that hand can hold. Structural cleanup is attributed to
+     * {@code player}.
+     *
+     * @return what was taken, or an empty stack
+     */
+    public abstract ItemStack extractIntoHand(int index, ItemStack hand, ServerPlayer player);
+
+    /**
+     * The cell a deposit along {@code ray} fills: the last empty cell before the first occupied
+     * one, or the farthest cell the ray crosses when it meets nothing occupied; -1 when it crosses
+     * none.
+     */
+    public final int depositTarget(ViewRay ray) {
+        return ray.lastEmptyBeforeOccupied(items.getSlots(), items, this::worldCellBox);
+    }
+
+    /**
+     * The occupied cell {@code ray} meets first, which extraction and item rotation act on, or -1.
+     */
+    public final int extractionTarget(ViewRay ray) {
+        return ray.nearestOccupied(items, this::worldCellBox);
+    }
+
+    private AABB worldCellBox(int slot) {
+        BlockPos pos = getBlockPos();
+        return cellBox(slot).move(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    /**
+     * The current server-side run, or {@code null} on the client. A block whose entity is gone
+     * resolves to an empty run.
+     */
     @Nullable
     public final StackRunItemAccess itemRun() {
         if (!(level instanceof ServerLevel serverLevel)) {
@@ -111,10 +166,32 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     /**
-     * Local slot capacity before the item's own stack limit, or one for positional display types.
+     * Per-slot capacity before the item's own stack limit, or one for positional display types.
+     * Automation views report the same capacity for every run position.
      */
-    protected int localSlotLimit() {
-        return 64;
+    public int slotLimit() {
+        return StackItemStorage.DEFAULT_SLOT_LIMIT;
+    }
+
+    /**
+     * Positions an automation view advertises: the run's positions, including headroom, when a
+     * server run resolves, otherwise this block's local slots.
+     */
+    public final int advertisedSlots() {
+        StackRunItemAccess run = itemRun();
+        return run != null ? run.advertisedSlots() : items.getSlots();
+    }
+
+    /**
+     * The read-only stack at an advertised position: the run's slot when a server run resolves,
+     * otherwise this block's local slot. Headroom and invalid positions are empty.
+     */
+    public final ItemStack advertisedStack(int slot) {
+        StackRunItemAccess run = itemRun();
+        if (run != null) {
+            return run.getSlot(slot);
+        }
+        return slot >= 0 && slot < items.getSlots() ? items.getStackInSlot(slot) : ItemStack.EMPTY;
     }
 
     /** Cached local numerator of the run's comparator fill fraction. */
@@ -139,7 +216,7 @@ public abstract class StackBlockEntity extends BlockEntity {
         slotContributions[slot] =
                 stack.isEmpty()
                         ? 0.0
-                        : localSlotLimit() == 1
+                        : slotLimit() == 1
                                 ? 1.0
                                 : (double) stack.getCount() / stack.getMaxStackSize();
         comparatorDirty = true;
@@ -210,26 +287,29 @@ public abstract class StackBlockEntity extends BlockEntity {
         finishOrQueueMigration();
     }
 
-    /** Per-position automation capacity before the offered item's own stack limit. */
-    public final int automationSlotLimit() {
-        return localSlotLimit();
-    }
-
-    /**
-     * Checks new automation admission without choosing a slot or checking support/growth authority.
-     */
-    public final boolean acceptsAutomation(ItemStack stack) {
-        return isStoredItemValid(stack);
-    }
-
-    /**
-     * Immediately notifies block updates when attached; server callers send the local render state.
-     */
+    /** Immediately sends this block's local render state to tracking clients. */
     public final void syncToClients() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
-        }
+        BlockState state = getBlockState();
+        level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
+    }
+
+    /**
+     * Records the player whose break is about to remove this block, so cleanup the removal causes
+     * is attributed to that player. Only {@link StackBlock#playerWillDestroy} calls this.
+     */
+    final void noteBreakingPlayer(ServerPlayer player) {
+        breakingPlayer = player;
+    }
+
+    /**
+     * Takes the player recorded by {@link #noteBreakingPlayer}, or null when the removal was not a
+     * player's break (explosions, commands, other mods), which leaves cleanup to automation.
+     */
+    @Nullable
+    final ServerPlayer takeBreakingPlayer() {
+        ServerPlayer player = breakingPlayer;
+        breakingPlayer = null;
+        return player;
     }
 
     /** Records the last published comparator signal; returns true only when it changed. */
@@ -316,7 +396,11 @@ public abstract class StackBlockEntity extends BlockEntity {
         }
     }
 
-    /** Finishes only after chunk attachment; never requests a chunk that is still loading. */
+    /**
+     * Applies pending migration once this block entity is attached to its loaded chunk; never
+     * requests a chunk that is still loading. Returns false when it must be retried later, true
+     * when nothing remains (including for a removed or client-side block entity).
+     */
     public final boolean finishPendingMigration() {
         if (pendingBlockRotation == null && !migrationDirty) return true;
         if (!(level instanceof ServerLevel serverLevel) || isRemoved()) return true;
@@ -423,8 +507,13 @@ public abstract class StackBlockEntity extends BlockEntity {
     @Override
     protected final void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        saveWith(tag, registries, items.serializeNBT(registries));
+    }
+
+    private void saveWith(
+            CompoundTag tag, HolderLookup.Provider registries, CompoundTag serializedItems) {
         StackDataMigration.stampVersion(tag);
-        tag.put(TAG_ITEMS, items.serializeNBT(registries));
+        tag.put(TAG_ITEMS, serializedItems);
         saveStackData(tag, registries);
     }
 
@@ -436,8 +525,8 @@ public abstract class StackBlockEntity extends BlockEntity {
     @Override
     public final CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        StackItemStorage.stripSetAside(tag.getCompound(TAG_ITEMS));
+        super.saveAdditional(tag, registries);
+        saveWith(tag, registries, items.serializeClientUpdate(registries));
         stripServerOnlyUpdateData(tag);
         return tag;
     }

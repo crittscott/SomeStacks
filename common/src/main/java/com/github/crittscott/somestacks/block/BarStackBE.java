@@ -4,6 +4,8 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
+import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -16,12 +18,17 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -33,8 +40,9 @@ import javax.annotation.Nullable;
  * is what automation addresses; this class owns one block's slots, its shape, and the player-facing
  * cascade that drops whatever an extracted bar was holding up.
  *
- * <p>Capability exposure is loader-specific and lives outside this class; {@link #getItems()} is
- * what a loader-specific capability view adapts.
+ * <p>Automation exposure is loader-specific and lives outside this class; those views adapt this
+ * block's whole column through {@link #itemRun()}, and {@link #getItems()} is only this block's
+ * local storage.
  */
 public class BarStackBE extends StackBlockEntity {
     /** Positions in one block. The column's flat range is this times its height. */
@@ -52,13 +60,45 @@ public class BarStackBE extends StackBlockEntity {
         super(CommonRegistry.barStackBe(), pos, state, SLOTS);
     }
 
+    /**
+     * The drops produced by one Bar collapse, kept per block they fell from and packed by exact
+     * identity when they spawn.
+     */
+    static final class DropBatch {
+        private final Map<BlockPos, List<ItemStack>> dropsByPosition = new LinkedHashMap<>();
+
+        /** Adds a copy of {@code stack}, so later edits to its source cannot change the drop. */
+        void add(BlockPos pos, ItemStack stack) {
+            if (!stack.isEmpty()) {
+                dropsByPosition
+                        .computeIfAbsent(pos.immutable(), ignored -> new ArrayList<>())
+                        .add(stack.copy());
+            }
+        }
+
+        void addAll(BlockPos pos, SlotAccess handler) {
+            for (int slot = 0; slot < handler.getSlots(); slot++) {
+                add(pos, handler.getStackInSlot(slot));
+            }
+        }
+
+        void spawn(ServerLevel level) {
+            dropsByPosition.forEach(
+                    (pos, drops) -> {
+                        for (StackKey.Piece piece : StackKey.consolidate(drops, null)) {
+                            Block.popResource(level, pos, piece.toStack());
+                        }
+                    });
+        }
+    }
+
     @Override
-    protected boolean isStoredItemValid(ItemStack stack) {
+    public boolean admits(ItemStack stack) {
         return isValidBarItem(stack);
     }
 
     @Override
-    protected int localSlotLimit() {
+    public int slotLimit() {
         return 1;
     }
 
@@ -84,7 +124,7 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     /**
-     * The column this block belongs to, or null on the client and for a block being removed.
+     * The column this block belongs to, or null on the client.
      *
      * <p>Resolved once a tick and held, because a machine reading this block's item handler
      * resolves the column once per slot it walks. See {@link StorageStackBE#pile()} for the full
@@ -98,6 +138,11 @@ public class BarStackBE extends StackBlockEntity {
     @Override
     protected StackRunItemAccess resolveRun(ServerLevel serverLevel) {
         return BarColumn.resolve(serverLevel, getBlockPos());
+    }
+
+    @Override
+    protected AABB cellBox(int slot) {
+        return BarCubeIdx.localBox(slot);
     }
 
     /** Builds the union of the occupied bars' boxes. */
@@ -125,29 +170,41 @@ public class BarStackBE extends StackBlockEntity {
         return cachedShape;
     }
 
+    @Override
+    public boolean acceptsDepositAlong(ViewRay ray) {
+        int index = depositTarget(ray);
+        return index >= 0 && canDepositAt(index);
+    }
+
+    /** Puts one bar into the position the ray targets; see {@link #depositAt}. */
+    @Override
+    public int depositFromHand(ViewRay ray, ItemStack hand, ServerPlayer player) {
+        int index = depositTarget(ray);
+        return index >= 0 && depositAt(index, hand) ? 1 : 0;
+    }
+
+    /** Takes the one bar only when the hand can hold it; see {@link #extractAt}. */
+    @Override
+    public ItemStack extractIntoHand(int index, ItemStack hand, ServerPlayer player) {
+        return ItemOps.canTakeIntoHand(hand, items.getStackInSlot(index))
+                ? extractAt(index, player)
+                : ItemStack.EMPTY;
+    }
+
     /**
-     * Puts one bar from the given stack into the named position, if that position is empty, valid,
-     * and overlapping a bar below. Refuses rather than redirecting the item elsewhere, so a caller
-     * walking positions from the bottom fills the supported ones in order.
+     * Puts one bar from the given stack into the named position, if that position is empty and
+     * overlapping a bar below and the item is admitted. Refuses rather than redirecting the item
+     * elsewhere, so a caller walking positions from the bottom fills the supported ones in order.
      *
      * @param index the position to fill, in {@code [0, SLOTS)}
      * @return whether the bar moved; the hand shrinks by one only then
      */
     public boolean depositAt(int index, ItemStack fromHand) {
-        if (fromHand.isEmpty()) {
+        if (fromHand.isEmpty() || !canDepositAt(index)) {
             return false;
         }
 
-        if (!isValidBarItem(fromHand)) {
-            return false;
-        }
-        if (!canDepositAt(index)) {
-            return false;
-        }
-
-        ItemStack toInsert = fromHand.copy();
-        toInsert.setCount(1);
-        ItemStack remainder = items.insertItem(index, toInsert, false);
+        ItemStack remainder = items.insertItem(index, fromHand.copyWithCount(1), false);
 
         if (remainder.isEmpty()) {
             fromHand.shrink(1);
@@ -159,15 +216,15 @@ public class BarStackBE extends StackBlockEntity {
 
     /**
      * The player's extraction: takes one bar and lets go of whatever it was holding up. Automation
-     * takes a different path — see {@link BarColumn#extract}, which backfills instead.
+     * takes a different path: {@link BarColumn#extract} backfills instead.
      *
      * @param index the position to empty, in {@code [0, SLOTS)}
      * @param actor the player responsible for cleanup, or null for automation
      */
     public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
-        ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
+        ServerLevel serverLevel = (ServerLevel) level;
         boolean[] topBefore = BarCubeIdx.topLayerOccupancy(items);
-        BarDropBatch drops = new BarDropBatch();
+        DropBatch drops = new DropBatch();
 
         ItemStack extracted;
         beginBatch();
@@ -194,18 +251,15 @@ public class BarStackBE extends StackBlockEntity {
     /**
      * Writes a bar the column already holds into an empty position, without the validity test an
      * insertion runs. The caller owns the bar and the position it goes to; see {@link
-     * BarColumn#extract}, the one place a bar changes position in place, for why validity has no
-     * say in it.
+     * BarColumn#extract} for why validity has no say in a relocation.
      */
     void relocateInto(int index, ItemStack bar) {
         items.setStackInSlot(index, bar);
     }
 
-    /** Whether this local position is valid, empty, and supported by the layer or seam below. */
+    /** Whether this local position is empty and supported by the layer or seam below. */
     public boolean canDepositAt(int index) {
-        return index >= 0
-                && index < SLOTS
-                && items.getStackInSlot(index).isEmpty()
+        return items.getStackInSlot(index).isEmpty()
                 && BarCubeIdx.isGrounded(
                         index,
                         items,
@@ -214,20 +268,13 @@ public class BarStackBE extends StackBlockEntity {
                                 : null);
     }
 
-    /** Whether an empty Bar block at {@code pos} supports its first bar. */
-    public static boolean supportsFreshDeposit(Level level, BlockPos pos, int index) {
-        return index >= 0
-                && index < SLOTS
-                && BarCubeIdx.freshBlockSupports(index, supportSeamBeneath(level, pos));
-    }
-
     /**
      * Top-layer occupancy of the Bar Stack below {@code pos}, or null when no Bar Stack is beneath
      * it. A null seam grounds a bottom-layer deposit directly on the world.
      */
     @Nullable
-    public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
-        if (level != null && level.getBlockEntity(pos.below()) instanceof BarStackBE below) {
+    public static boolean[] supportSeamBeneath(Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos.below()) instanceof BarStackBE below) {
             return BarCubeIdx.topLayerOccupancy(below.items);
         }
         return null;
@@ -248,7 +295,7 @@ public class BarStackBE extends StackBlockEntity {
             BarStackBE start,
             @Nullable boolean[] seamBelow,
             boolean[] topBefore,
-            BarDropBatch drops,
+            DropBatch drops,
             @Nullable ServerPlayer actor) {
         BarStackBE be = start;
         boolean[] seam = seamBelow;
@@ -273,10 +320,7 @@ public class BarStackBE extends StackBlockEntity {
             // the cascade is already walking its own way up, and lowered again if nothing went.
             if (be.isEmpty()) {
                 be.removedByCascade = true;
-                boolean removed =
-                        actor == null
-                                ? WorldEdits.removeChecked(columnLevel, be.getBlockPos())
-                                : WorldEdits.removeChecked(actor, columnLevel, be.getBlockPos());
+                boolean removed = WorldEdits.removeChecked(actor, columnLevel, be.getBlockPos());
                 if (!removed) {
                     be.removedByCascade = false;
                 }
@@ -298,9 +342,11 @@ public class BarStackBE extends StackBlockEntity {
 
     /**
      * Propagates an empty support seam above a removed Bar block on the server. Unsupported bars
-     * enter the supplied drop batch, and emptied blocks are removed through automation authority.
+     * enter the supplied drop batch, and emptied blocks are removed on behalf of {@code actor}, the
+     * player who broke the block, or through automation authority when null.
      */
-    static void collapseAbove(ServerLevel level, BlockPos removed, BarDropBatch drops) {
+    static void collapseAbove(
+            ServerLevel level, BlockPos removed, DropBatch drops, @Nullable ServerPlayer actor) {
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {
             cascadeFrom(
                     level,
@@ -308,7 +354,7 @@ public class BarStackBE extends StackBlockEntity {
                     BarCubeIdx.emptySeam(),
                     BarCubeIdx.topLayerOccupancy(above.items),
                     drops,
-                    null);
+                    actor);
         }
     }
 
@@ -322,7 +368,7 @@ public class BarStackBE extends StackBlockEntity {
      * the time a layer is reached, the layer it rests on is final, whether that is the layer below
      * it here or the seam. Callers batch; this does not publish.
      */
-    private void dropUnsupported(@Nullable boolean[] seamBelow, BarDropBatch drops) {
+    private void dropUnsupported(@Nullable boolean[] seamBelow, DropBatch drops) {
         boolean[] occupancy = BarCubeIdx.occupancyOf(items);
 
         for (int i = 0; i < SLOTS; i++) {

@@ -4,12 +4,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
-import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.SomeStacksNeoForge;
-import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StoragePile;
-import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.WorldEdits;
 
 import net.minecraft.core.BlockPos;
@@ -18,19 +13,14 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
-import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -79,107 +69,25 @@ public final class ProtectionGameTests {
     // An unattended settle has no player actor, so it uses the level's automation player exactly
     // as growth does. A refusal must leave the block and the run model in step.
 
-    /**
-     * To reproduce in-game: have a claim deny SomeStacks permission to remove an empty top Storage
-     * block, trigger settling, and verify the protected block remains.
-     */
+    /** See {@link ProtectionChecks#settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper) {
-        BlockPos topRelative = ORIGIN.above();
-        StorageStackBE base = GameTestScaffold.placeStorage(helper, ORIGIN);
-        GameTestScaffold.placeStorage(helper, topRelative);
-        base.getItems().insertItem(0, new ItemStack(Items.DIRT, 1), false);
-
-        BlockPos top = helper.absolutePos(topRelative);
-        Consumer<BlockEvent.BreakEvent> denyTop =
-                event -> {
-                    if (event.getPos().equals(top)) {
-                        event.setCanceled(true);
-                    }
-                };
-
-        NeoForge.EVENT_BUS.addListener(denyTop);
-        try {
-            StoragePile pile = base.pile();
-            check(pile != null, "Pile did not resolve");
-            pile.settle();
-            helper.assertBlockPresent(CommonRegistry.storageStackBlock(), topRelative);
-            checkEquals(2, pile.height(), "The pile dropped a block it never removed");
-        } finally {
-            NeoForge.EVENT_BUS.unregister(denyTop);
-        }
-
-        // With nothing refusing it, the same settle takes the block down.
-        StoragePile pile = base.pile();
-        check(pile != null, "Pile did not resolve after the refusal");
-        pile.settle();
-        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), topRelative);
-        helper.succeed();
+        ProtectionChecks.settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(
+                helper, ProtectionGameTests::observeRemoval);
     }
 
-    /**
-     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
-     * extract the last Single. Player-attributed cleanup removes the empty block.
-     */
+    /** See {@link ProtectionChecks#playerExtractionUsesPlayerForCleanup}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void playerExtractionUsesPlayerForCleanup(GameTestHelper helper) {
-        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        singles.getItems().insertItem(0, new ItemStack(Items.STONE), false);
-        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
-        BlockPos target = helper.absolutePos(ORIGIN);
-        AtomicReference<Player> observedActor = new AtomicReference<>();
-        Consumer<BlockEvent.BreakEvent> captureActor =
-                event -> {
-                    if (event.getPos().equals(target)) {
-                        observedActor.set(event.getPlayer());
-                    }
-                };
-
-        NeoForge.EVENT_BUS.addListener(captureActor);
-        try {
-            check(!singles.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
-        } finally {
-            NeoForge.EVENT_BUS.unregister(captureActor);
-        }
-
-        check(observedActor.get() == player, "Cleanup break event did not carry the player");
-        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN);
-        helper.succeed();
+        ProtectionChecks.playerExtractionUsesPlayerForCleanup(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
     }
 
-    /**
-     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
-     * extract the last Storage item. Deferred cleanup retains the player and removes the block.
-     */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    /** See {@link ProtectionChecks#playerStorageSettlementUsesPlayerForCleanup}. */
+    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
     public static void playerStorageSettlementUsesPlayerForCleanup(GameTestHelper helper) {
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        storage.getItems().insertItem(0, new ItemStack(Items.STONE), false);
-        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
-        BlockPos target = helper.absolutePos(ORIGIN);
-        AtomicReference<Player> observedActor = new AtomicReference<>();
-        Consumer<BlockEvent.BreakEvent> captureActor =
-                event -> {
-                    if (event.getPos().equals(target)) {
-                        observedActor.set(event.getPlayer());
-                    }
-                };
-
-        NeoForge.EVENT_BUS.addListener(captureActor);
-        try {
-            check(
-                    !storage.extractAt(0, 64, ItemStack.EMPTY, player).isEmpty(),
-                    "Player extraction returned nothing");
-            StoragePile pile = storage.pile();
-            check(pile != null, "Pile did not resolve before settlement");
-            pile.settle();
-        } finally {
-            NeoForge.EVENT_BUS.unregister(captureActor);
-        }
-
-        check(observedActor.get() == player, "Deferred cleanup did not retain the player");
-        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN);
-        helper.succeed();
+        ProtectionChecks.playerStorageSettlementUsesPlayerForCleanup(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
     }
 
     // Waterlogging
@@ -272,7 +180,29 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
         ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(
+                helper,
+                GameTestSupport.playerFactory(helper),
+                GameTestSupport::automation,
+                ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link ProtectionChecks#breakingAStackChargesItsCleanupToTheBreaker}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void breakingAStackChargesItsCleanupToTheBreaker(GameTestHelper helper) {
+        ProtectionChecks.breakingAStackChargesItsCleanupToTheBreaker(
                 helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    /** Denies block use at {@code pos} from a default-priority listener, as a claim mod does. */
+    private static Runnable denyBlockUse(ServerLevel level, BlockPos pos) {
+        Consumer<PlayerInteractEvent.RightClickBlock> listener =
+                event -> {
+                    if (event.getLevel() == level && event.getPos().equals(pos)) {
+                        event.setUseBlock(TriState.FALSE);
+                    }
+                };
+        NeoForge.EVENT_BUS.addListener(listener);
+        return () -> NeoForge.EVENT_BUS.unregister(listener);
     }
 
     private static Runnable observeRemoval(
@@ -307,224 +237,55 @@ public final class ProtectionGameTests {
                 () -> NeoForge.EVENT_BUS.unregister(listener));
     }
 
-    // Growth under protection
-    //
-    // A capability insertion aimed at a slot past what the run holds is the one that grows it, and
-    // it
-    // checks the position above the run before promising the caller anything, so a simulation and
-    // the
-    // commit that follows agree about a position growth cannot have. The three tests below stage
-    // that
-    // with the world border. Spawn protection, the other half of the same predicate, cannot be
-    // staged
-    // here: it is implemented on DedicatedServer, and the server running these tests is not one.
-
-    /**
-     * To reproduce in-game: protect the space above a full Storage pile from SomeStacks and insert
-     * through item automation; it accepts nothing and creates no block.
-     */
+    /** See {@link ProtectionChecks#storageGrowthAnswersToProtectionInSimulationAndCommit}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageGrowthAnswersToProtectionInSimulationAndCommit(
             GameTestHelper helper) {
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(storage);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-
-        int headroom = StorageStackBE.SLOTS;
-        check(
-                capability.insertItem(headroom, offered, true).isEmpty(),
-                "A full pile with free headroom did not credit growth");
-
-        GameTestScaffold.outsideWorldBorder(
-                helper,
-                ORIGIN.above(),
-                () -> {
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, true).getCount(),
-                            "Simulated remainder");
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, false).getCount(),
-                            "Committed remainder");
-                });
-
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.storageGrowthAnswersToProtectionInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: protect the space above a full Singles column from SomeStacks and
-     * insert through item automation; it accepts nothing and creates no block.
-     */
+    /** See {@link ProtectionChecks#singlesGrowthAnswersToProtectionInSimulationAndCommit}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(
             GameTestHelper helper) {
-        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(singles);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-
-        // A cell takes one item, so a credited growth leaves three of the four behind.
-        int headroom = SinglesStackBE.SLOTS;
-        checkEquals(
-                3,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "A full column with free headroom did not credit growth");
-
-        GameTestScaffold.outsideWorldBorder(
-                helper,
-                ORIGIN.above(),
-                () -> {
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, true).getCount(),
-                            "Simulated remainder");
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, false).getCount(),
-                            "Committed remainder");
-                });
-
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.singlesGrowthAnswersToProtectionInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: protect the space above a full Bar column from SomeStacks and insert
-     * through item automation; it accepts nothing and creates no block.
-     */
+    /** See {@link ProtectionChecks#barGrowthAnswersToProtectionInSimulationAndCommit}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
-        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
-        Item bar = GameTestScaffold.firstBarItem();
-        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar, 1), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(bars);
-        ItemStack offered = new ItemStack(bar, 4);
-
-        // A position takes one bar, so a credited growth leaves three of the four behind.
-        int headroom = BarStackBE.SLOTS;
-        checkEquals(
-                3,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "A full column with free headroom did not credit growth");
-
-        GameTestScaffold.outsideWorldBorder(
-                helper,
-                ORIGIN.above(),
-                () -> {
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, true).getCount(),
-                            "Simulated remainder");
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, false).getCount(),
-                            "Committed remainder");
-                });
-
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.barStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.barGrowthAnswersToProtectionInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
-    // Growth through entities
-
     /**
-     * To reproduce in-game: stand in the growth space above a full Storage pile and insert through
-     * item automation; it accepts nothing and does not grow into the entity.
+     * See {@link ProtectionChecks#storageGrowthRejectsAnObstructingEntityInSimulationAndCommit}.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(storage);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = StorageStackBE.SLOTS;
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
     /**
-     * To reproduce in-game: stand in the growth space above a full Singles column and insert
-     * through item automation; it accepts nothing and does not grow into the entity.
+     * See {@link ProtectionChecks#singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit}.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(singles);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = SinglesStackBE.SLOTS;
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: stand in the growth space above a full Bar column and insert through
-     * item automation; it accepts nothing and does not grow into the entity.
-     */
+    /** See {@link ProtectionChecks#barGrowthRejectsAnObstructingEntityInSimulationAndCommit}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
-        Item bar = GameTestScaffold.firstBarItem();
-        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(bars);
-        ItemStack offered = new ItemStack(bar, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = BarStackBE.SLOTS;
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.barStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
     /** See {@link InteractionChecks#deniedCleanupEmitsOnlyBlockChange}. */
@@ -532,5 +293,19 @@ public final class ProtectionGameTests {
     public static void deniedCleanupEmitsOnlyBlockChange(GameTestHelper helper) {
         InteractionChecks.deniedCleanupEmitsOnlyBlockChange(
                 helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link ProtectionChecks#refusedRemovalStillLetsTheBarsAboveComeDown}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
+        ProtectionChecks.refusedRemovalStillLetsTheBarsAboveComeDown(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link InteractionChecks#blockUseDenialFreezesStackGestures}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void blockUseDenialFreezesStackGestures(GameTestHelper helper) {
+        InteractionChecks.blockUseDenialFreezesStackGestures(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::denyBlockUse);
     }
 }

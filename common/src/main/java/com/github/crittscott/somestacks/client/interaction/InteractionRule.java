@@ -6,8 +6,9 @@ package com.github.crittscott.somestacks.client.interaction;
  * in that list to settle overlaps with broader rules behind it.
  *
  * <p>Rules run on the client, which owns gesture recognition. They only decide whether to consume
- * the local click; the vanilla block-use packet carries the action and the server decides whether
- * the gesture is allowed.
+ * the local click. For a block rule the vanilla block-use packet carries the action and the server
+ * decides whether the gesture is allowed; the air rule's mode change reaches the server in the
+ * gesture-state sync.
  */
 public interface InteractionRule {
     /**

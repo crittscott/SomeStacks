@@ -6,6 +6,7 @@ import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.server.FabricEditAuthority;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.nio.file.Path;
@@ -13,6 +14,11 @@ import java.nio.file.Path;
 /** Fabric implementations of the common platform services. */
 public final class FabricPlatformServices implements PlatformServices.Backend {
     private final FabricEditAuthority editAuthority = new FabricEditAuthority();
+
+    @Override
+    public void broadcastConfig(MinecraftServer server, ConfigSyncPkt packet) {
+        FabricNetworking.broadcast(server, packet);
+    }
 
     @Override
     public Path configFolder() {

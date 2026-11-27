@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -11,7 +11,7 @@ import net.minecraftforge.gametest.GameTestHolder;
  * The render-gallery world builder: that a queued gallery lays out its floor and rows as described
  * and reports the totals it finished with, spread across ticks by the configured placement limit.
  */
-@GameTestHolder(SomeStacks.MODID)
+@GameTestHolder(SomeStacksCommon.MODID)
 public final class RenderGalleryGameTests {
     private RenderGalleryGameTests() {}
 

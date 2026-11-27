@@ -31,58 +31,56 @@ public final class SinglesColumnGameTests implements FabricGameTest {
     /** See {@link SinglesColumnChecks#extractionShiftsOneColumnAndCarriesItemRotation}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void extractionShiftsOneColumnAndCarriesItemRotation(GameTestHelper helper) {
-        SinglesColumnChecks.extractionShiftsOneColumnAndCarriesItemRotation(helper);
+        SinglesColumnChecks.extractionShiftsOneColumnAndCarriesItemRotation(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link SinglesColumnChecks#shiftKeepsAnItemItWouldNoLongerAccept}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void shiftKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
-        SinglesColumnChecks.shiftKeepsAnItemItWouldNoLongerAccept(helper);
+        SinglesColumnChecks.shiftKeepsAnItemItWouldNoLongerAccept(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link SinglesColumnChecks#drawDownKeepsAnItemItWouldNoLongerAccept}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void drawDownKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
-        SinglesColumnChecks.drawDownKeepsAnItemItWouldNoLongerAccept(helper);
+        SinglesColumnChecks.drawDownKeepsAnItemItWouldNoLongerAccept(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link SinglesColumnChecks#extractionPreservesAnExistingGap}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void extractionPreservesAnExistingGap(GameTestHelper helper) {
-        SinglesColumnChecks.extractionPreservesAnExistingGap(helper);
+        SinglesColumnChecks.extractionPreservesAnExistingGap(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link SinglesColumnChecks#extractionDrawsAcrossDifferentlyRotatedBlockBoundary}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper helper) {
-        SinglesColumnChecks.extractionDrawsAcrossDifferentlyRotatedBlockBoundary(helper);
+        SinglesColumnChecks.extractionDrawsAcrossDifferentlyRotatedBlockBoundary(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
-    /**
-     * To reproduce in-game: target individual Singles cells with item automation; only the named
-     * supported empty cell accepts the item, without redirecting it elsewhere.
-     */
+    /** See {@link AutomationChecks#singlesInsertionAnswersForTheCellItIsGiven}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageInsertionAnswersForTheCellItIsGiven(GameTestHelper helper) {
-        AutomationChecks.singlesInsertionAnswersForTheCellItIsGiven(helper);
+        AutomationChecks.singlesInsertionAnswersForTheCellItIsGiven(
+                helper, FabricGameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: let item automation walk the advertised Singles cells in order and
-     * verify the column fills from the lowest supported cell upward.
-     */
+    /** See {@link AutomationChecks#singlesWalkFillsFromTheBottom}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageWalkFillsTheColumnFromTheBottom(GameTestHelper helper) {
-        AutomationChecks.singlesWalkFillsFromTheBottom(helper);
+        AutomationChecks.singlesWalkFillsFromTheBottom(helper, FabricGameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: extract a lower Singles cell through item automation and verify the
-     * item above shifts down with its rotation, just as it does after player extraction.
-     */
+    /** See {@link AutomationChecks#singlesExtractionUsesThePlayerGravityPath}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageExtractionUsesThePlayerGravityPath(GameTestHelper helper) {
-        AutomationChecks.singlesExtractionUsesThePlayerGravityPath(helper);
+        AutomationChecks.singlesExtractionUsesThePlayerGravityPath(
+                helper, FabricGameTestSupport::automation);
     }
 
     /** See {@link SinglesColumnChecks#depositTraceStopsAtLastEmptyBeforeOccupiedCell}. */

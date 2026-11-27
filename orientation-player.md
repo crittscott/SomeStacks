@@ -134,7 +134,7 @@ Forge and NeoForge use loader-managed `somestacks-server.toml`, with per-world o
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
 | `render_gallery.gen_mods` / `gen_items` | empty | Namespace and item lists used by the `list` and `items` gallery forms |
 
-Disabling a type, item, mod, or ingot category never removes or ejects existing contents. The client receives the enable flags on login and skips disabled types when cycling modes. Data-pack tag changes are picked up on reload.
+Disabling a type, item, mod, or ingot category never removes or ejects existing contents. The client receives the enable flags on login and reload, skips disabled types when cycling modes, and moves off a selected type that becomes disabled; placing a disabled type is refused with a message. Data-pack tag changes are picked up on reload.
 
 ## Commands
 
@@ -157,7 +157,7 @@ Storage and Singles show items in four modes: `2d` (flat art), `3d` (the FIXED r
 
 Resolution order is local override, resource-pack data, then automatic measurement. A server can distribute profiles through its server resource pack; local overrides keep priority. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by pack, mod-version, or reload changes.
 
-`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`. Namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only. Servers cannot invoke these commands or request client writes.
+`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`, keeping file entries it cannot use verbatim and refusing while the file cannot be read. Namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only. Servers cannot invoke these commands or request client writes.
 
 For Bar appearance, resource packs map item ids to textures and tints under `assets/<namespace>/textures/bars/*.json`, with missing tints derived from the item's sprite and color. Bar mappings are not synchronized, so players with different packs may see different bars.
 

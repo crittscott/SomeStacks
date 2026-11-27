@@ -10,13 +10,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -42,6 +43,15 @@ public final class FabricEditAuthority implements EditAuthority {
         actors.clear();
     }
 
+    /** Common Protection API's presence does not show that a claim mod registered a provider. */
+    @Override
+    public List<String> detectedIntegrations() {
+        List<String> names = new ArrayList<>();
+        if (protectionQueries != null) names.add("Common Protection API");
+        if (FtbChunksProtection.isLoaded()) names.add("FTB Chunks");
+        return names;
+    }
+
     @Override
     public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
         if (protectionQueries != null && !protectionQueries.mayUseAdjacent(player, pos)) {
@@ -58,21 +68,20 @@ public final class FabricEditAuthority implements EditAuthority {
     }
 
     @Override
-    public boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
+    public boolean mayPlace(ServerPlayer placer, ServerLevel level, BlockPos pos) {
         return (protectionQueries == null || protectionQueries.mayPlace(placer, level, pos))
-                && !(placer instanceof ServerPlayer actor
-                        && FtbChunksProtection.isLoaded()
-                        && FtbChunksProtection.prevents(actor, pos));
+                && !(FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(placer, pos));
     }
 
+    /** Fabric has no placement event; the protection queries already ran in {@link #mayPlace}. */
     @Override
     public boolean place(
-            Player placer,
+            ServerPlayer placer,
             ServerLevel level,
             BlockPos pos,
             BlockState state,
             Direction placedAgainst) {
-        return mayPlace(placer, level, pos) && level.setBlock(pos, state, Block.UPDATE_ALL);
+        return level.setBlock(pos, state, Block.UPDATE_ALL);
     }
 
     @Override

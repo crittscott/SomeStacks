@@ -5,12 +5,11 @@ import eu.pb4.common.protection.api.CommonProtection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 
 /** Common Protection API calls are confined to this class, loaded only when the mod is present. */
 final class CommonProtectionQueries implements FabricProtectionQueries {
     @Override
-    public boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
+    public boolean mayPlace(ServerPlayer placer, ServerLevel level, BlockPos pos) {
         return CommonProtection.canPlaceBlock(level, pos, placer.getGameProfile(), placer);
     }
 

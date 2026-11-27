@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,6 +17,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -47,26 +47,36 @@ public final class NeoForgeEditAuthority implements EditAuthority {
     }
 
     @Override
-    public boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
-        return !(placer instanceof ServerPlayer actor
-                && FtbChunksProtection.isLoaded()
-                && FtbChunksProtection.prevents(actor, pos));
+    public List<String> detectedIntegrations() {
+        return FtbChunksProtection.isLoaded() ? List.of("FTB Chunks") : List.of();
     }
 
+    @Override
+    public boolean mayPlace(ServerPlayer placer, ServerLevel level, BlockPos pos) {
+        return !(FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(placer, pos));
+    }
+
+    /** The update depth vanilla's {@code Level.setBlock(pos, state, flags)} passes on. */
     private static final int UPDATE_RECURSION_LIMIT = 512;
     private boolean placing;
 
+    /**
+     * Places under NeoForge's snapshot capture, the way NeoForge's own item placement does, rather
+     * than with the shorter snapshot, {@code setBlock}, place event, restore-on-veto pattern.
+     * Outside capture, {@code setBlock} runs the new block's {@code onPlace} and notifies neighbors
+     * before the event can veto: a Storage stack would adopt its pile's state and schedule
+     * settlement, a Singles or Bar run would republish, and neighbors would react to a block that
+     * is then rolled back. Under capture those side effects are held back, so they run here only
+     * after the event allows the placement.
+     */
     @Override
     public boolean place(
-            Player placer,
+            ServerPlayer placer,
             ServerLevel level,
             BlockPos pos,
             BlockState state,
             Direction placedAgainst) {
-        if (!mayPlace(placer, level, pos)
-                || placing
-                || level.captureBlockSnapshots
-                || level.restoringBlockSnapshots) {
+        if (placing || level.captureBlockSnapshots || level.restoringBlockSnapshots) {
             return false;
         }
         placing = true;

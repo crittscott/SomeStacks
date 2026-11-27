@@ -5,7 +5,6 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -16,8 +15,9 @@ import java.util.function.Function;
 
 /**
  * NeoForge-native scaffolding for the GameTests: the unprefixed template name, {@code IItemHandler}
- * capability access through {@code Capabilities.ItemHandler.BLOCK}, and the level's fake player.
- * Everything loader-neutral lives in {@link GameTestScaffold}.
+ * capability access through {@code Capabilities.ItemHandler.BLOCK} and the shared scenarios'
+ * automation view of it, and the level's fake player. Everything loader-neutral lives in {@link
+ * GameTestScaffold}.
  */
 public final class GameTestSupport {
     /**
@@ -28,6 +28,35 @@ public final class GameTestSupport {
     public static final String TEMPLATE = "somestacks_empty";
 
     private GameTestSupport() {}
+
+    /**
+     * The {@link GameTestScaffold.Automation} view of {@code blockEntity}'s item-handler
+     * capability, as a hopper or pipe reaches it.
+     */
+    public static GameTestScaffold.Automation automation(BlockEntity blockEntity) {
+        IItemHandler handler = capability(blockEntity);
+        return new GameTestScaffold.Automation() {
+            @Override
+            public ItemStack extract(int slot, int amount, boolean simulate) {
+                return handler.extractItem(slot, amount, simulate);
+            }
+
+            @Override
+            public ItemStack insert(int slot, ItemStack stack, boolean simulate) {
+                return handler.insertItem(slot, stack, simulate);
+            }
+
+            @Override
+            public int slots() {
+                return handler.getSlots();
+            }
+
+            @Override
+            public ItemStack stackAt(int slot) {
+                return handler.getStackInSlot(slot);
+            }
+        };
+    }
 
     public static IItemHandler capability(BlockEntity blockEntity) {
         IItemHandler handler = handlerOn(blockEntity, null);
@@ -52,21 +81,6 @@ public final class GameTestSupport {
                         blockEntity.getBlockState(),
                         blockEntity,
                         side);
-    }
-
-    /**
-     * {@link GameTestScaffold#count} for a real NeoForge capability, as {@link #capability}
-     * returns.
-     */
-    public static int count(IItemHandler handler, Item item) {
-        int total = 0;
-        for (int slot = 0; slot < handler.getSlots(); slot++) {
-            ItemStack stack = handler.getStackInSlot(slot);
-            if (stack.is(item)) {
-                total += stack.getCount();
-            }
-        }
-        return total;
     }
 
     /**

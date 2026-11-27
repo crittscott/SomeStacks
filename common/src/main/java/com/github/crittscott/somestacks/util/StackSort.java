@@ -5,30 +5,56 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-/** Comparator used to lay out the contents of a settled Storage pile. */
+import javax.annotation.Nullable;
+
+/** Sort key that orders the contents of a settled Storage pile. */
 public final class StackSort {
     private StackSort() {}
 
-    /** Computes the identity's sortable fields once for a settlement group. */
+    /**
+     * The identity's sortable fields: item id, then damage, then untagged before component-bearing,
+     * then the component patch's text. The patch is immutable, so the key stays valid whatever
+     * later happens to the stack.
+     */
     public static SortKey key(ItemStack stack) {
-        DataComponentPatch patch = stack.getComponentsPatch();
         return new SortKey(
                 BuiltInRegistries.ITEM.getKey(stack.getItem()),
                 stack.getDamageValue(),
-                patch.isEmpty() ? null : patch.toString());
+                stack.getComponentsPatch());
     }
 
-    public record SortKey(ResourceLocation itemId, int damage, String components)
-            implements Comparable<SortKey> {
+    /**
+     * Sort fields for one identity. The patch's text is computed only when two keys tie on item
+     * and damage, and at most once per key, since most piles never compare by components.
+     */
+    public static final class SortKey implements Comparable<SortKey> {
+        private final ResourceLocation itemId;
+        private final int damage;
+        private final DataComponentPatch components;
+        @Nullable private String componentText;
+
+        private SortKey(ResourceLocation itemId, int damage, DataComponentPatch components) {
+            this.itemId = itemId;
+            this.damage = damage;
+            this.components = components;
+        }
+
         @Override
         public int compareTo(SortKey other) {
             int order = itemId.compareTo(other.itemId);
             if (order != 0) return order;
             order = Integer.compare(damage, other.damage);
             if (order != 0) return order;
-            if (components == null) return other.components == null ? 0 : -1;
-            if (other.components == null) return 1;
-            return components.compareTo(other.components);
+            if (components.isEmpty()) return other.components.isEmpty() ? 0 : -1;
+            if (other.components.isEmpty()) return 1;
+            return componentText().compareTo(other.componentText());
+        }
+
+        private String componentText() {
+            if (componentText == null) {
+                componentText = components.toString();
+            }
+            return componentText;
         }
     }
 }

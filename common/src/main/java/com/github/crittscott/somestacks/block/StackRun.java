@@ -1,37 +1,50 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.util.StackPlacement;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import javax.annotation.Nullable;
+
 /**
- * Mechanics shared by every maximal vertical run of one stack type. Concrete runs retain their
- * distinct insertion, extraction, growth, settlement, and collapse rules.
+ * Mechanics shared by every maximal vertical run of one stack type, including the one gate on
+ * growing a run one block taller. Concrete runs retain their distinct insertion, extraction,
+ * settlement, and collapse rules, and what a grown block must hold clear.
  */
 public abstract class StackRun<BE extends StackBlockEntity> implements StackRunItemAccess {
     protected final ServerLevel level;
     protected final List<BE> blocks;
 
-    private final int slotsPerBlock;
     private final Block block;
+    private final int slotsPerBlock;
+    private final BlockType type;
 
-    /** Creates a server-only run over a nonempty bottom-to-top list of same-type block entities. */
-    protected StackRun(ServerLevel level, List<BE> blocks, int slotsPerBlock, Block block) {
+    /**
+     * Creates a server-only run over a bottom-to-top list of same-type block entities, empty when
+     * the resolving block's entity is gone.
+     */
+    protected StackRun(ServerLevel level, List<BE> blocks, int slotsPerBlock, BlockType type) {
         this.level = level;
         this.blocks = blocks;
         this.slotsPerBlock = slotsPerBlock;
-        this.block = block;
+        this.type = type;
+        this.block = type.getBlock();
     }
 
     /** Walks the maximal run containing {@code pos}, from its bottom block upward. */
@@ -101,13 +114,17 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
     }
 
     /**
-     * Tests the height of the same-type run a block at pos would join, including both neighbors.
+     * Whether a block of {@code type} may be created at {@code pos}: the contiguous column it would
+     * form, counting the runs both below and above it, must fit the configured maximum. Testing the
+     * whole resulting column rather than one neighboring run is what stops a block placed into the
+     * gap between two runs from joining them into an over-tall one.
      */
-    protected static boolean columnHasRoomFor(Level level, BlockPos pos, Block block) {
+    public static boolean columnHasRoomFor(Level level, BlockPos pos, BlockType type) {
+        Block block = type.getBlock();
         return 1
                         + runLength(level, pos, Direction.DOWN, block)
                         + runLength(level, pos, Direction.UP, block)
-                <= ServerConfig.maxPileHeight();
+                <= ServerConfig.settings().maxPileHeight();
     }
 
     private static int runLength(Level level, BlockPos from, Direction direction, Block block) {
@@ -142,9 +159,47 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
 
     @Override
     public final int advertisedSlots() {
-        int levels =
-                blocks.size() < ServerConfig.maxPileHeight() ? blocks.size() + 1 : blocks.size();
+        int levels = isBelowMaximumHeight() ? blocks.size() + 1 : blocks.size();
         return slotsPerBlock * levels;
+    }
+
+    /**
+     * Whether the run may grow one block taller as far as anything without side effects can tell:
+     * the height limit, the type's enablement, and {@link WorldEdits#mayPlace} for the space above,
+     * checked against {@code actor} or, when null, the automation identity. Simulating and
+     * committing share this predicate with {@link #placeOnTop}, so a simulated insertion cannot
+     * promise a block the insertion itself would refuse.
+     */
+    protected final boolean canGrowSpace(@Nullable ServerPlayer actor) {
+        return mayGrowTaller()
+                && WorldEdits.mayPlace(actor, level, topPos().above(), Direction.DOWN);
+    }
+
+    /**
+     * Places a new block of this run's type on top through {@link WorldEdits#placeChecked}, which
+     * applies the placement gate and obstruction by {@code finalCollision}. The caller adds the new
+     * block entity to the run.
+     *
+     * @param actor the player responsible for the new block, or null for automation
+     */
+    protected final boolean placeOnTop(@Nullable ServerPlayer actor, VoxelShape finalCollision) {
+        BlockPos above = topPos().above();
+        return mayGrowTaller()
+                && WorldEdits.placeChecked(
+                        actor,
+                        level,
+                        above,
+                        StackPlacement.stateFor(block, level, above),
+                        Direction.DOWN,
+                        finalCollision);
+    }
+
+    private boolean isBelowMaximumHeight() {
+        return blocks.size() < ServerConfig.settings().maxPileHeight();
+    }
+
+    private boolean mayGrowTaller() {
+        return isBelowMaximumHeight() && type.isEnabled();
     }
 
     @Override

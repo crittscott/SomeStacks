@@ -35,6 +35,11 @@ loom {
             source sourceSets.gametest
         }
     }
+
+    forge {
+        // Register the server-policy migration before Forge selects the world's config.
+        mixinConfig 'somestacks-migration.mixins.json'
+    }
 }
 
 configurations {
@@ -105,6 +110,5 @@ remapJar {
     inputFile.set shadowJar.archiveFile
 }
 
-// Register the server-policy migration before Forge selects the world's config.
-loom { forge { mixinConfig "somestacks-migration.mixins.json" } }
+// Declares the same server-policy migration Mixin config (see loom.forge above) in the jar manifest.
 jar { manifest { attributes 'MixinConfigs': 'somestacks-migration.mixins.json' } }

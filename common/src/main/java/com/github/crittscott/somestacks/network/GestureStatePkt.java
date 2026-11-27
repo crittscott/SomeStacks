@@ -21,15 +21,16 @@ public record GestureStatePkt(StackMode mode, boolean modifierDown) implements C
     public static final StreamCodec<ByteBuf, GestureStatePkt> STREAM_CODEC =
             StreamCodec.of(
                     (buf, packet) -> {
-                        buf.writeByte(packet.mode.ordinal());
+                        buf.writeByte(packet.mode.id());
                         buf.writeBoolean(packet.modifierDown);
                     },
                     buf -> {
                         int id = buf.readUnsignedByte();
-                        if (id >= StackMode.values().length) {
+                        StackMode mode = StackMode.byId(id);
+                        if (mode == null) {
                             throw new DecoderException("Invalid stack mode: " + id);
                         }
-                        return new GestureStatePkt(StackMode.values()[id], buf.readBoolean());
+                        return new GestureStatePkt(mode, buf.readBoolean());
                     });
 
     @Override
@@ -37,6 +38,7 @@ public record GestureStatePkt(StackMode mode, boolean modifierDown) implements C
         return TYPE;
     }
 
+    /** Records the sender's reported state; loaders call this on the server thread. */
     public static void handleServer(GestureStatePkt packet, ServerPlayer player) {
         ServerGestureState.set(player, packet.mode, packet.modifierDown);
     }

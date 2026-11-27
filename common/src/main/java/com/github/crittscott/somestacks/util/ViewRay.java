@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
  * attribute rather than a fixed distance, so a player whose reach has been raised finds the cells
  * of the block they are looking at.
  *
- * <p>{@link ViewRays#of} defines the segment's length and reach allowance.
+ * <p>{@link ViewRays} defines the segment's length and reach allowance.
  */
 public record ViewRay(Vec3 eye, Vec3 end) {
     /** Nearest occupied hit; equal distances retain ascending slot order. */

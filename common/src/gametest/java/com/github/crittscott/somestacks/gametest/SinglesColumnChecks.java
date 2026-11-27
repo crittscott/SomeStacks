@@ -11,23 +11,28 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlo
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalAt;
 
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.function.Function;
+
 /**
- * Singles support and gravity in a live level that does not touch loader-native automation
- * directly: grounding at the bottom of a column, a cell resting on the one below it, visual columns
- * lining up across differently rotated blocks, and extraction shifting a column down while carrying
- * each item's rotation with it. Capability/Transfer-API-facing tests stay in each loader's own
- * {@code SinglesColumnGameTests}.
+ * Singles support and gravity in a live level: grounding at the bottom of a column, a cell resting
+ * on the one below it, visual columns lining up across differently rotated blocks, and extraction
+ * shifting a column down while carrying each item's rotation with it. Player scenarios click
+ * through the loader; automation scenarios are in {@link AutomationChecks}.
  */
 public final class SinglesColumnChecks {
     private SinglesColumnChecks() {}
@@ -101,7 +106,8 @@ public final class SinglesColumnChecks {
      * reproduce in-game: make a three-item vertical Singles column, rotate the upper two items, and
      * extract the bottom item. The other two descend with their orientations unchanged.
      */
-    public static void extractionShiftsOneColumnAndCarriesItemRotation(GameTestHelper helper) {
+    public static void extractionShiftsOneColumnAndCarriesItemRotation(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int column = 3;
         int bottom = SinglesCubeIdx.indexFromColumn(column, 0);
@@ -113,7 +119,7 @@ public final class SinglesColumnChecks {
         singles.setCubeRotation(middle, 1);
         singles.setCubeRotation(top, 3);
 
-        ItemStack extracted = singles.extractAt(bottom);
+        ItemStack extracted = extractCell(playerFactory, singles, bottom);
 
         checkEquals(Items.STICK, extracted.getItem(), "Extracted item");
         checkEquals(
@@ -143,7 +149,8 @@ public final class SinglesColumnChecks {
      * reject it, place another item below it, and extract the lower item. The newly rejected stored
      * item moves down rather than being lost.
      */
-    public static void shiftKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
+    public static void shiftKeepsAnItemItWouldNoLongerAccept(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BlockPos pos = singles.getBlockPos();
         Item legacy = firstBarItem();
@@ -155,7 +162,7 @@ public final class SinglesColumnChecks {
         singles.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);
         seedSlot(singles.getItems(), second, new ItemStack(legacy));
 
-        ItemStack extracted = singles.extractAt(bottom);
+        ItemStack extracted = extractCell(playerFactory, singles, bottom);
 
         checkEquals(Items.APPLE, extracted.getItem(), "Extracted item");
         int accounted = heldAt(helper, pos, legacy) + droppedNear(helper, pos, legacy);
@@ -171,7 +178,8 @@ public final class SinglesColumnChecks {
      * the ingot list so Singles rejects it, and extract the aligned top item below. The stored item
      * crosses the seam rather than being lost.
      */
-    public static void drawDownKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
+    public static void drawDownKeepsAnItemItWouldNoLongerAccept(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
         SinglesStackBE upper = placeSingles(helper, ORIGIN.above());
         BlockPos lowerPos = lower.getBlockPos();
@@ -184,7 +192,7 @@ public final class SinglesColumnChecks {
         lower.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);
         seedSlot(upper.getItems(), bottom, new ItemStack(legacy));
 
-        ItemStack extracted = lower.extractAt(bottom);
+        ItemStack extracted = extractCell(playerFactory, lower, bottom);
 
         checkEquals(Items.APPLE, extracted.getItem(), "Extracted item");
         int accounted =
@@ -200,7 +208,8 @@ public final class SinglesColumnChecks {
      * gap. To reproduce in-game: use automation to leave a gap between two items in one column,
      * then extract the bottom item. The gap remains and the upper item descends only one layer.
      */
-    public static void extractionPreservesAnExistingGap(GameTestHelper helper) {
+    public static void extractionPreservesAnExistingGap(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int column = 2;
         int bottom = SinglesCubeIdx.indexFromColumn(column, 0);
@@ -209,7 +218,7 @@ public final class SinglesColumnChecks {
         singles.getItems().insertItem(bottom, new ItemStack(Items.STICK), false);
         singles.getItems().insertItem(third, new ItemStack(Items.PAPER), false);
 
-        singles.extractAt(bottom);
+        extractCell(playerFactory, singles, bottom);
 
         check(
                 singles.getItems().getStackInSlot(bottom).isEmpty(),
@@ -227,7 +236,8 @@ public final class SinglesColumnChecks {
      * seam column, rotate the upper item, and extract the lower item. The upper item crosses the
      * seam with its item rotation intact and its emptied block disappears.
      */
-    public static void extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper helper) {
+    public static void extractionDrawsAcrossDifferentlyRotatedBlockBoundary(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
         SinglesStackBE upper = placeSingles(helper, ORIGIN.above());
         lower.setRotation(1);
@@ -241,7 +251,7 @@ public final class SinglesColumnChecks {
         upper.getItems().insertItem(upperBottom, new ItemStack(Items.PAPER), false);
         upper.setCubeRotation(upperBottom, 3);
 
-        lower.extractAt(lowerTop);
+        extractCell(playerFactory, lower, lowerTop);
 
         checkEquals(
                 Items.PAPER,
@@ -255,6 +265,28 @@ public final class SinglesColumnChecks {
     }
 
     /**
+     * Plain-clicks cell {@code index} of {@code singles} from the west with an empty hand, aiming
+     * through the cell where the block's rotation puts it, and returns what the hand took.
+     */
+    private static ItemStack extractCell(
+            Function<ItemStack, ServerPlayer> playerFactory, SinglesStackBE singles, int index) {
+        ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+        ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+        try {
+            InteractionChecks.use(
+                    player,
+                    InteractionChecks.aimAt(
+                            player,
+                            singles.getBlockPos(),
+                            SinglesCubeIdx.GRID.localBox(index, singles.getRotation())));
+            return player.getMainHandItem().copy();
+        } finally {
+            ServerGestureState.clear(player.getUUID());
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        }
+    }
+
+    /**
      * A deposit ray stops at the last empty cell before an occupied cell. To reproduce in-game:
      * place an item deeper in a Singles row and aim through the empty cells toward it. The new item
      * occupies the empty cell immediately in front of the stored item.
@@ -264,9 +296,7 @@ public final class SinglesColumnChecks {
         singles.getItems().insertItem(8, new ItemStack(Items.STICK), false);
         BlockPos blockPos = singles.getBlockPos();
 
-        int result =
-                SinglesCubeIdx.traceAllPositions(
-                        traceThroughBlock(blockPos), blockPos, singles.getItems(), 0);
+        int result = singles.depositTarget(traceThroughBlock(blockPos));
 
         checkEquals(4, result, "Trace deposit index");
         helper.succeed();
@@ -281,9 +311,7 @@ public final class SinglesColumnChecks {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BlockPos blockPos = singles.getBlockPos();
 
-        int result =
-                SinglesCubeIdx.traceAllPositions(
-                        traceThroughBlock(blockPos), blockPos, singles.getItems(), 0);
+        int result = singles.depositTarget(traceThroughBlock(blockPos));
 
         checkEquals(12, result, "Trace deposit index");
         helper.succeed();

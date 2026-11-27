@@ -54,8 +54,7 @@ public class SomeStacks {
         MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
 
-        SomeStacksCommon.LOGGER.info(
-                "Some Stacks v{} initialized for Forge", PlatformServices.modVersion(MODID));
+        PlatformServices.logStartup("Forge");
     }
 
     /** Publishes the loader-managed server policy for this world. */

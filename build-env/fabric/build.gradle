@@ -63,18 +63,25 @@ configurations {
 }
 
 repositories {
-    maven { url = 'https://maven.nucleoid.xyz/' }
+    // Hosts FTB's Fabric mods, including the optional ftb-chunks-fabric compile-time dependency below.
     maven { url = 'https://maven.ftb.dev/releases' }
+    // Hosts the optional common-protection-api compile-time dependency below.
+    maven { url = 'https://maven.nucleoid.xyz/' }
+    // Hosts the bundled NightConfig TOML library below.
+    mavenCentral()
 }
 
 def withCommonProtectionApi = providers.gradleProperty('withCommonProtectionApi')
         .map { it.toBoolean() }.getOrElse(false)
 
 dependencies {
-    modCompileOnly "dev.ftb.mods:ftb-chunks-fabric:$rootProject.ftb_chunks_version"
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+
+    // Optional: lets FtbChunksProtection compile against FTB Chunks' claim API. Never bundled and
+    // not required at runtime; consulted only when the mod is actually installed.
+    modCompileOnly "dev.ftb.mods:ftb-chunks-fabric:$rootProject.ftb_chunks_version"
 
     modCompileOnly("eu.pb4:common-protection-api:$rootProject.common_protection_api_version") {
         transitive = false
@@ -87,6 +94,12 @@ dependencies {
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
+
+    // Bundle and relocate the TOML library: users install only Some Stacks.
+    implementation "com.electronwill.night-config:core:$rootProject.night_config_version"
+    implementation "com.electronwill.night-config:toml:$rootProject.night_config_version"
+    shadowBundle "com.electronwill.night-config:core:$rootProject.night_config_version"
+    shadowBundle "com.electronwill.night-config:toml:$rootProject.night_config_version"
 }
 
 // Expands ${...} placeholders in fabric.mod.json (this module's own resource).
@@ -104,17 +117,26 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 // Expands ${...} placeholders in the gametest fabric.mod.json (this module's own resource).
+// ProtectionApiGameTests references Common Protection API classes, which are absent unless
+// withCommonProtectionApi is set, so exactly one of the two protection-API holders is registered.
 tasks.named('processGametestResources', ProcessResources).configure {
+    def gameTestHolders = [
+            'ConfigurationGameTests',
+            'RenderGalleryGameTests',
+            'InteractionGameTests',
+            'StorageAndPersistenceGameTests',
+            'FabricTransferGameTests',
+            'StoragePileGameTests',
+            'SinglesColumnGameTests',
+            'BarColumnGameTests',
+            'ProtectionGameTests',
+            withCommonProtectionApi ? 'ProtectionApiGameTests' : 'NoProtectionApiGameTests',
+    ].collect { "com.github.crittscott.somestacks.gametest.${it}".toString() }
     var replaceProperties = [
-            mod_version          : mod_version,
-            fabric_loader_version: fabric_loader_version,
-            fabric_api_version   : fabric_api_version,
-            protection_api_gametest_entrypoint: withCommonProtectionApi
-                    ? ',\n      "com.github.crittscott.somestacks.gametest.ProtectionApiGameTests"'
-                    : '',
-            no_protection_api_gametest_entrypoint: withCommonProtectionApi
-                    ? ''
-                    : ',\n      "com.github.crittscott.somestacks.gametest.NoProtectionApiGameTests"',
+            mod_version                : mod_version,
+            fabric_loader_version      : fabric_loader_version,
+            fabric_api_version         : fabric_api_version,
+            fabric_gametest_entrypoints: groovy.json.JsonOutput.toJson(gameTestHolders),
     ]
     inputs.properties replaceProperties
 
@@ -126,6 +148,7 @@ tasks.named('processGametestResources', ProcessResources).configure {
 shadowJar {
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = 'dev-shadow'
+    relocate 'com.electronwill.nightconfig', 'com.github.crittscott.somestacks.internal.nightconfig'
 }
 
 // The production jar bundles common, so the sources jar carries common's sources as well.
@@ -138,16 +161,3 @@ sourcesJar {
 remapJar {
     inputFile.set shadowJar.archiveFile
 }
-
-// Bundle and relocate the TOML library: users install only Some Stacks.
-dependencies {
-    implementation "com.electronwill.night-config:core:$rootProject.night_config_version"
-    implementation "com.electronwill.night-config:toml:$rootProject.night_config_version"
-    shadowBundle "com.electronwill.night-config:core:$rootProject.night_config_version"
-    shadowBundle "com.electronwill.night-config:toml:$rootProject.night_config_version"
-}
-shadowJar {
-    relocate 'com.electronwill.nightconfig', 'com.github.crittscott.somestacks.internal.nightconfig'
-}
-
-repositories { mavenCentral() }

@@ -15,8 +15,8 @@ public final class StackPlacement {
      * A stack block's default state, waterlogged when it is going into water.
      *
      * <p>Vanilla reads the fluid at the target through {@code getStateForPlacement}, which runs off
-     * a {@code BlockPlaceContext} the mod never builds: every stack block reaches the world through
-     * a vanilla interaction or a capability-driven growth instead. This is where those routes ask
+     * a {@code BlockPlaceContext} the mod never builds: a stack block reaches the world through a
+     * player gesture or an automation-driven growth instead. This is where those routes ask
      * the same question, so that a stack placed in water displaces it no more than a vanilla slab
      * does.
      */

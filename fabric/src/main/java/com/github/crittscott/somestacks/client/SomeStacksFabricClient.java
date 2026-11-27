@@ -1,11 +1,6 @@
-package com.github.crittscott.somestacks;
+package com.github.crittscott.somestacks.client;
 
-import com.github.crittscott.somestacks.client.ClientRenderCommands;
-import com.github.crittscott.somestacks.client.FabricClientEvents;
-import com.github.crittscott.somestacks.client.FabricClientRendering;
-import com.github.crittscott.somestacks.client.FabricKeyMappings;
 import com.github.crittscott.somestacks.command.ClientRenderCommandSyntax;
-import com.github.crittscott.somestacks.network.FabricClientNetworking;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -16,12 +11,14 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.network.chat.Component;
 
-/** Fabric's client entry point. */
+/**
+ * Fabric's client entry point: rendering and key registration, client networking, gesture
+ * callbacks, and the client {@code /ss} subcommands with pass-through of the server's forms.
+ */
 public final class SomeStacksFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         FabricClientRendering.init();
-        FabricKeyMappings.init();
         FabricClientNetworking.init();
         FabricClientEvents.init();
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {

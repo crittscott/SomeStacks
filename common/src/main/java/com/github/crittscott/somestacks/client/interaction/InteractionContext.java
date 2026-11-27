@@ -4,98 +4,99 @@ import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+
+import javax.annotation.Nullable;
 
 /**
- * One right-click, in the terms the rules ask about: who clicked, what they hit, which modifiers
- * were held, and the placement mode in force. A context built from an empty-hand or held-item click
- * has no clicked position, block, or face, so block-specific queries return false.
+ * One right-click, in the terms the rules ask about: who clicked, with which hand, which stack type
+ * they hit, whether the Stack Modifier and sneak were held, and the placement mode in force. A
+ * context built from an air or held-item click has no clicked block, so its clicked type is null.
  *
  * <p>The context also carries the rules' one output, {@link #cancelEvent()}, which the event
  * handler reads back after the walk to decide whether the click is taken from vanilla.
  */
 public final class InteractionContext {
-    private final Player player;
-    private final Level level;
-    private final InteractionHand hand;
-    private final BlockPos clickedPos;
-    private final Block clickedBlock;
-    private final Direction face;
+    @Nullable private final BlockType clickedType;
     private final StackMode currentMode;
-    private final boolean modeKeyDown;
+    private final InteractionHand hand;
     private final boolean hittingBlock;
+    private final boolean modifierDown;
+    private final Player player;
 
     private boolean shouldCancel = false;
 
     private InteractionContext(
             Player player,
-            Level level,
             InteractionHand hand,
-            BlockPos clickedPos,
-            Block clickedBlock,
-            Direction face,
+            @Nullable BlockType clickedType,
             StackMode currentMode,
-            boolean modeKeyDown,
+            boolean modifierDown,
             boolean hittingBlock) {
         this.player = player;
-        this.level = level;
         this.hand = hand;
-        this.clickedPos = clickedPos;
-        this.clickedBlock = clickedBlock;
-        this.face = face;
+        this.clickedType = clickedType;
         this.currentMode = currentMode;
-        this.modeKeyDown = modeKeyDown;
+        this.modifierDown = modifierDown;
         this.hittingBlock = hittingBlock;
+    }
+
+    public void cancelEvent() {
+        shouldCancel = true;
     }
 
     /** Builds an air/item event context with the loader's explicit crosshair classification. */
     public static InteractionContext forAirClick(
             Player player,
-            Level level,
             InteractionHand hand,
             StackMode currentMode,
-            boolean modeKeyDown,
+            boolean modifierDown,
             boolean hittingBlock) {
         return new InteractionContext(
-                player, level, hand, null, null, null, currentMode, modeKeyDown, hittingBlock);
+                player, hand, null, currentMode, modifierDown, hittingBlock);
     }
 
-    /**
-     * Builds a block context from the clicked position and face; its hit classification is always
-     * block.
-     */
+    /** Builds a block context from the clicked position; its hit classification is always block. */
     public static InteractionContext forBlockClick(
             Player player,
             Level level,
             InteractionHand hand,
             BlockPos pos,
-            Direction face,
             StackMode currentMode,
-            boolean modeKeyDown) {
-        Block block = level.getBlockState(pos).getBlock();
-
+            boolean modifierDown) {
         return new InteractionContext(
-                player, level, hand, pos, block, face, currentMode, modeKeyDown, true);
+                player,
+                hand,
+                BlockType.of(level.getBlockState(pos).getBlock()),
+                currentMode,
+                modifierDown,
+                true);
     }
 
-    public boolean isShift() {
-        return player.isShiftKeyDown();
+    /** The clicked block's stack type, or null for an ordinary block or an air click. */
+    @Nullable
+    public BlockType getClickedType() {
+        return clickedType;
     }
 
-    public boolean isVDown() {
-        return modeKeyDown;
+    public StackMode getCurrentMode() {
+        return currentMode;
+    }
+
+    /** The main-hand item, which every gesture reads whichever hand the click came from. */
+    public ItemStack getHeld() {
+        return player.getMainHandItem();
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     public boolean hasItemInHand() {
         return !player.getMainHandItem().isEmpty();
-    }
-
-    public boolean isMainHand() {
-        return hand == InteractionHand.MAIN_HAND;
     }
 
     /**
@@ -106,62 +107,16 @@ public final class InteractionContext {
         return hittingBlock;
     }
 
-    public boolean isAnyStackBlock() {
-        return clickedBlock != null && BlockType.of(clickedBlock) != null;
+    public boolean isMainHand() {
+        return hand == InteractionHand.MAIN_HAND;
     }
 
-    public boolean isStorageStack() {
-        return clickedBlock != null && BlockType.of(clickedBlock) == BlockType.STORAGE_STACK;
+    public boolean isModifierDown() {
+        return modifierDown;
     }
 
-    /** The stacks that rotate as a whole block; a Bar Stack's bars are fixed to their layer. */
-    public boolean isRotatableStack() {
-        if (clickedBlock == null) {
-            return false;
-        }
-        BlockType type = BlockType.of(clickedBlock);
-        return type == BlockType.STORAGE_STACK || type == BlockType.SINGLES_STACK;
-    }
-
-    public boolean isSinglesStack() {
-        return clickedBlock != null && BlockType.of(clickedBlock) == BlockType.SINGLES_STACK;
-    }
-
-    public boolean isSinglesOrBarStack(Block block) {
-        BlockType type = BlockType.of(block);
-        return type == BlockType.SINGLES_STACK || type == BlockType.BAR_STACK;
-    }
-
-    /**
-     * Whether the placement and deposit rules may claim this click. Holding the modifier in Toggle
-     * Permanent mode is reserved for the toggle gesture, which would otherwise be shadowed by them.
-     */
-    public boolean canPlaceOrDeposit() {
-        return currentMode != StackMode.TOGGLE_PERMANENT || !isVDown();
-    }
-
-    public StackMode getCurrentMode() {
-        return currentMode;
-    }
-
-    public BlockPos getClickedPos() {
-        return clickedPos;
-    }
-
-    public Direction getFace() {
-        return face;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public Level getLevel() {
-        return level;
-    }
-
-    public void cancelEvent() {
-        shouldCancel = true;
+    public boolean isShift() {
+        return player.isShiftKeyDown();
     }
 
     public boolean shouldCancel() {

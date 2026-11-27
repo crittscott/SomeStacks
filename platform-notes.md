@@ -25,10 +25,13 @@ Upgrade the mark when a build or test settles a fact, and correct or delete a fa
 ### Interaction and items
 
 - 1.20.1: `Player.mayUseItemAt(pos, face, stack)` tests the block at `pos.relative(face.getOpposite())`. Callers pass the position next to the clicked block: `clicked.relative(face)`. [tested]
+- 1.21.1: `Player.mayUseItemAt(pos, face, stack)` is true when `abilities.mayBuild`, and otherwise tests the stack's `can_place_on` component (`DataComponents.CAN_PLACE_ON`, an `AdventureModePredicate` of `BlockPredicate`s) against the block at `pos.relative(face.getOpposite())`. [recalled]
 - 1.20.1: `ServerPlayer.canHarmPlayer` already includes the server's PvP setting. [tested]
 - 1.20.1: the server swings the arm when the interaction result is `SUCCESS`, not `CONSUME`. Server paths return `CONSUME`. [recalled]
 - `ItemStack.useOn` awards `Stats.ITEM_USED`, and `ServerPlayerGameMode.useItemOn` fires `ITEM_USED_ON_BLOCK`. A cancelled click event returns before both, so a handler that takes over must award them itself. [recalled]
+- 1.21.1: `Block.playerWillDestroy(Level, BlockPos, BlockState, Player)` returns `BlockState` and runs on both sides before a player's break removes the block, reached from `ServerPlayerGameMode.destroyBlock(BlockPos)` (Forge/NeoForge through `onDestroyedByPlayer`). Explosions, commands, and `Level.destroyBlock` never call it. [recalled]
 - `LivingEntity.heal` is called without a health check by some vanilla code, for example horse regeneration. [recalled]
+- 1.21.1: `Minecraft.startUseItem` acts only when `!gameMode.isDestroying()` and walks the hands only when `!player.isHandsBusy()` (true while steering a boat); a `HEAD` injection runs before both gates. It reaches `MultiPlayerGameMode.useItem`, where Fabric fires `UseItemCallback`, only for a nonempty hand. [recalled]
 - `Player` overrides `LivingEntity.actuallyHurt` without calling super, so an injection on `LivingEntity` misses players. [tested]
 - 1.21.1: a hit a shield blocks still reaches `actuallyHurt`, with its amount set to zero. [recalled]
 - `dropCustomDeathLoot` and the loot table drop run only inside the `shouldDropLoot() && doMobLoot` gate in `dropAllDeathLoot`. A drop rolled by mod code is not covered by that gate. [tested]
@@ -39,6 +42,7 @@ Upgrade the mark when a build or test settles a fact, and correct or delete a fa
 ### Data and block entities
 
 - 1.21.x: the client ignores a block-entity data packet whose tag is empty (vanilla's handler and NeoForge's `onDataPacket` both check `isEmpty`), so state that clears to "save nothing" must still put something in the update tag or clients keep the old state. 1.20.1 behaves the same: an empty update tag reaches its client as no tag, which the client skips. [recalled; matches in-game head-shearing behavior on 1.21.1/1.21.4]
+- 1.21.1: container items keep their contents in `DataComponents.CONTAINER` and books their pages in `WRITABLE_BOOK_CONTENT`/`WRITTEN_BOOK_CONTENT`; vanilla item models do not read them (a bundle's model reads `BUNDLE_CONTENTS`). `ItemStack.remove(type)` on a copy leaves a stack that still encodes and decodes through `ItemStack.CODEC`. [recalled]
 - 1.21.1: an item's data component values are immutable; `ItemStack.set` stores a new value, and `get` returns the stored instance until then, so a weak identity-keyed cache by component value goes stale only by losing its key. [recalled]
 - 1.20.1: `ResourceLocation.isValidNamespace` is private [tested on 1.20.1: compile error]; its visibility on 1.21.1 has not been checked, so namespaces are tested with `ResourceLocation.tryBuild(namespace, "x") != null`.
 - 1.20.1: `BlockItem` merges a stack's `BlockEntityTag` into the block entity and calls `load`, and heads are not an op-only block entity. A creative player needs no operator rights to supply that NBT, so a `load` that keeps a whole compound stores and rebroadcasts whatever was sent. [recalled]
@@ -57,6 +61,8 @@ Upgrade the mark when a build or test settles a fact, and correct or delete a fa
 
 ## Forge
 
+- 1.21.1: The JVM verifier loads a client class such as `LocalPlayer` when a method passes it where a supertype such as `Player` is expected. If that call sits in a lambda inside a class that the server loads, the dedicated server fails with "invalid dist DEDICATED_SERVER", even when `DistExecutor` guards the call. Put the call in a separate class. [tested: Forge `runGameTestServer` crash]
+
 - 1.20.1: `LivingDropsEvent` fires after the loot gate in `dropAllDeathLoot`, whatever `doMobLoot` says, because it also carries equipment drops. A listener must check the game rule itself. [tested]
 - 1.20.1: `LivingDamageEvent` fires from both `actuallyHurt` implementations. `LivingHealEvent` fires before the heal. [tested]
 - 1.20.1: `ForgeEventFactory.onLivingConvert` is patched into the hand-built lightning conversions, so `LivingConversionEvent` covers them. [tested]
@@ -70,6 +76,12 @@ Upgrade the mark when a build or test settles a fact, and correct or delete a fa
 - 1.20.1: a loot modifier is the normal way to change existing loot, because Forge has no way to add a function to an existing pool. [recalled]
 - 1.20.1: `AddLayers.getRenderer` casts generically and throws `ClassCastException` for non-living renderers. Walk `EntityRenderDispatcher.renderers`, widened by an access widener, instead. [tested]
 - There is no Forge `FakePlayer` after 1.20.1.
+- 1.21.1 (Forge 52): `SimpleChannel.send(payload, PacketDistributor.ALL.noArg())` sends one packet to every player. [recalled; the same call compiled in this project's 1.21.3 waypoint]
+
+## NeoForge
+
+- 1.21.1: `PacketDistributor.sendToAllPlayers(payload)` builds one clientbound packet and broadcasts it to the current server's players. [recalled; the call compiled in this project's 1.21.3 waypoint]
+- 1.21.1 Forge and NeoForge: a listener without `receiveCanceled = true` is skipped once an earlier listener cancels the event; `addListener(priority, receiveCanceled, eventClass, consumer)` and `unregister(consumer)` add and remove a temporary listener. A canceled client `RightClickBlock` still lets vanilla send the block-use packet. [recalled]
 
 ## Fabric
 
@@ -84,8 +96,10 @@ Upgrade the mark when a build or test settles a fact, and correct or delete a fa
 - For a tracking broadcast, build one packet with `ServerPlayNetworking.createS2CPacket` and send it with `ServerChunkCache.broadcastAndSend`, the mechanism Forge's `TRACKING_ENTITY_AND_SELF` uses. [tested]
 - 1.21.1: `EntityTrackingEvents.START_TRACKING` fires at the head of `ServerEntity.addPairing` (fabric-networking-api-v1 `EntityTrackerEntryMixin`), before the entity's spawn packet is sent. A packet about the entity sent from it reaches the client before the entity exists there. [source]
 - Fabric API 0.102.1+1.21.1: `LootTableEvents` declares only `REPLACE`, `MODIFY`, and `ALL_LOADED`; there is no `MODIFY_DROPS`, so a loot function added through `MODIFY` applies to every item its pool rolls. [source]
+- 1.21.1: `ServerPlayNetworking.createS2CPacket(CustomPacketPayload)` wraps a registered payload in one vanilla packet that `PlayerList.broadcastAll` can send to everyone; the payload is still encoded per connection by the pipeline. [recalled]
 - 1.21.1 `ByteBufCodecs` has no fixed-width `LONG` (only `VAR_LONG`); an eight-byte long field uses `StreamCodec.of(ByteBuf::writeLong, ByteBuf::readLong)`. [compiled]
 - `ClientPlayConnectionEvents.JOIN` passes the live `ClientPacketListener`; use it instead of looking one up. [tested]
+- 1.21.1: a play-phase `ClientPlayNetworking` receiver's context supplies `player()`, the local player. [recalled]
 - A login query reply can carry a version, which distinguishes a version mismatch from a missing mod. [tested]
 
 ## Mixin

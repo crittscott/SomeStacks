@@ -1,6 +1,8 @@
 package com.github.crittscott.somestacks.util;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -9,7 +11,9 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 import javax.annotation.Nonnull;
 
@@ -30,8 +34,18 @@ public class StackItemStorage implements SlotAccess {
     public static final String TAG_ITEMS = "Items";
     public static final String TAG_SET_ASIDE = "SetAside";
 
-    /** Per-slot max-stack-size cap used by the Forge and NeoForge item-handler contracts. */
-    private static final int DEFAULT_SLOT_LIMIT = 64;
+    /**
+     * Item data no renderer draws that can be large: the contents of container items and book
+     * pages. Client updates leave it out, as a chest sends nearby players none of its contents.
+     */
+    private static final List<DataComponentType<?>> UNDRAWN_COMPONENTS =
+            List.of(
+                    DataComponents.CONTAINER,
+                    DataComponents.WRITABLE_BOOK_CONTENT,
+                    DataComponents.WRITTEN_BOOK_CONTENT);
+
+    /** Per-slot capacity before the item's own stack limit, unless a subclass narrows it. */
+    public static final int DEFAULT_SLOT_LIMIT = 64;
 
     private final ItemStack[] stacks;
     private final ListTag setAside = new ListTag();
@@ -145,21 +159,49 @@ public class StackItemStorage implements SlotAccess {
     /** Called after a slot's contents change, including a direct {@link #setStackInSlot}. */
     protected void onContentsChanged(int slot) {}
 
+    /** The saved form: every nonempty slot, plus {@code SetAside} when anything is set aside. */
     public CompoundTag serializeNBT(HolderLookup.Provider registries) {
+        CompoundTag nbt = serializeSlots(registries, UnaryOperator.identity());
+        if (!setAside.isEmpty()) {
+            nbt.put(TAG_SET_ASIDE, setAside.copy());
+        }
+        return nbt;
+    }
+
+    /**
+     * The client update form: every nonempty slot without its {@code UNDRAWN_COMPONENTS}, and no
+     * set-aside data, which clients have no use for. Stored stacks are not changed.
+     */
+    public CompoundTag serializeClientUpdate(HolderLookup.Provider registries) {
+        return serializeSlots(registries, StackItemStorage::withoutUndrawnData);
+    }
+
+    private CompoundTag serializeSlots(
+            HolderLookup.Provider registries, UnaryOperator<ItemStack> view) {
         ListTag list = new ListTag();
         for (int i = 0; i < stacks.length; i++) {
             if (!stacks[i].isEmpty()) {
                 CompoundTag itemTag = new CompoundTag();
                 itemTag.putInt(TAG_SLOT, i);
-                list.add(stacks[i].save(registries, itemTag));
+                list.add(view.apply(stacks[i]).save(registries, itemTag));
             }
         }
         CompoundTag nbt = new CompoundTag();
         nbt.put(TAG_ITEMS, list);
-        if (!setAside.isEmpty()) {
-            nbt.put(TAG_SET_ASIDE, setAside.copy());
-        }
         return nbt;
+    }
+
+    private static ItemStack withoutUndrawnData(ItemStack stack) {
+        ItemStack view = stack;
+        for (DataComponentType<?> type : UNDRAWN_COMPONENTS) {
+            if (view.has(type)) {
+                if (view == stack) {
+                    view = stack.copy();
+                }
+                view.remove(type);
+            }
+        }
+        return view;
     }
 
     /**
@@ -223,10 +265,5 @@ public class StackItemStorage implements SlotAccess {
     /** Whether disk recovery data still needs this block entity to remain in the world. */
     public boolean hasRetainedItems() {
         return !setAside.isEmpty();
-    }
-
-    /** Removes the set-aside tags from serialized storage, which clients have no use for. */
-    public static void stripSetAside(CompoundTag nbt) {
-        nbt.remove(TAG_SET_ASIDE);
     }
 }

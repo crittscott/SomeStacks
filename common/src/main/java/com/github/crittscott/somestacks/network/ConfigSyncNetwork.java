@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.function.Consumer;
 
-/** Loader-specific delivery for the cached server configuration snapshot. */
+/** Delivery of the cached server configuration snapshot through the platform backend. */
 public final class ConfigSyncNetwork {
     private ConfigSyncNetwork() {}
 
@@ -23,11 +23,12 @@ public final class ConfigSyncNetwork {
         }
     }
 
-    /** Sends the rebuilt snapshot to all connected players; returns the connected player count. */
+    /**
+     * Broadcasts each chunk of the rebuilt snapshot once to all connected players; returns the
+     * connected player count.
+     */
     public static int syncAllPlayers(MinecraftServer server) {
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            syncPlayer(player);
-        }
+        sendCurrent(packet -> PlatformServices.broadcastConfig(server, packet));
         return server.getPlayerList().getPlayerCount();
     }
 }

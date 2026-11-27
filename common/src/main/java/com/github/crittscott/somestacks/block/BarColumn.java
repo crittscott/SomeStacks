@@ -1,19 +1,13 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
-import com.github.crittscott.somestacks.util.StackPlacement;
+import com.github.crittscott.somestacks.util.BlockType;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 
@@ -39,7 +33,7 @@ import javax.annotation.Nullable;
  * </ul>
  *
  * <p>Both preserve density: a column whose bars occupy a contiguous run of positions still does
- * afterwards. The player's own extraction is deliberately not this â€” it drops whatever the
+ * afterwards. The player's own extraction is deliberately not this: it drops whatever the
  * removed bar was holding up.
  *
  * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
@@ -47,7 +41,7 @@ import javax.annotation.Nullable;
  */
 public final class BarColumn extends StackRun<BarStackBE> {
     private BarColumn(ServerLevel level, List<BarStackBE> blocks) {
-        super(level, blocks, BarStackBE.SLOTS, CommonRegistry.barStackBlock());
+        super(level, blocks, BarStackBE.SLOTS, BlockType.BAR_STACK);
     }
 
     /**
@@ -100,14 +94,6 @@ public final class BarColumn extends StackRun<BarStackBE> {
         StackRun.markDirtyAt(level, pos, BarColumn::at);
     }
 
-    /**
-     * Whether a Bar Stack may be created at {@code pos}: the contiguous column it would form,
-     * counting the runs both below and above it, must fit the configured maximum.
-     */
-    public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.barStackBlock());
-    }
-
     /** The highest occupied position in the column, or -1 when it holds no bars. */
     private int topmostOccupied() {
         for (int flatSlot = totalSlots() - 1; flatSlot >= 0; flatSlot--) {
@@ -138,7 +124,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
-        if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)) {
+        if (!BarStackBE.isValidBarItem(stack)) {
             return 0;
         }
         if (flatSlot < 0 || flatSlot >= advertisedSlots() || !positionAccepts(flatSlot)) {
@@ -151,8 +137,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
             return 0;
         }
 
-        ItemStack one = stack.copy();
-        one.setCount(1);
+        ItemStack one = stack.copyWithCount(1);
         return handlerOf(flatSlot).insertItem(flatSlot % BarStackBE.SLOTS, one, false).isEmpty()
                 ? 1
                 : 0;
@@ -165,9 +150,9 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * world.
      *
      * <p>A position in the block above the column is checked against the block growth would put
-     * there â€” empty and standing on the column's current top layer â€” and against the
-     * side-effect-free checks in {@link #canGrow(VoxelShape)}. A simulation therefore cannot
-     * promise a position the commit would refuse.
+     * there (empty and standing on the column's current top layer) and against {@link
+     * #canGrowSpace} for automation and obstruction by the bar's shape. A simulation therefore
+     * cannot promise a position the commit would refuse.
      */
     private boolean positionAccepts(int flatSlot) {
         int blockIndex = flatSlot / BarStackBE.SLOTS;
@@ -182,8 +167,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
                     slot, items, slot < BarCubeIdx.LAYER_SIZE ? seamUnder(blockIndex) : null);
         }
 
-        VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
-        return canGrow(finalCollision)
+        return canGrowSpace(null)
+                && WorldEdits.isUnobstructed(level, topPos().above(), BarCubeIdx.shapeFor(slot))
                 && BarCubeIdx.freshBlockSupports(slot, seamUnder(blockIndex));
     }
 
@@ -202,41 +187,14 @@ public final class BarColumn extends StackRun<BarStackBE> {
     }
 
     /**
-     * Whether growth is permitted and the space above the column could take a block: height,
-     * enablement, build height, replaceability, and every protection check available without side
-     * effects. Simulating and committing share this predicate, so a simulated insertion cannot
-     * promise a block the insertion itself would refuse. Growth carries no player, so protection is
-     * checked against the level's automation actor, which is never exempt from spawn protection.
-     */
-    private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= ServerConfig.maxPileHeight() || !ServerConfig.enableBarStackBlock()) {
-            return false;
-        }
-        BlockPos above = topPos().above();
-        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
-            return false;
-        }
-        return WorldEdits.mayPlace(level, above)
-                && WorldEdits.isUnobstructed(level, above, finalCollision);
-    }
-
-    /**
-     * Adds one block on top, attributing the automated placement to the level's automation actor.
+     * Adds one block on top for an automated insertion at {@code slot}, attributing the placement
+     * to the level's automation actor.
      */
     private boolean grow(int slot) {
-        VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
-        if (!canGrow(finalCollision)) {
+        if (!placeOnTop(null, BarCubeIdx.shapeFor(slot))) {
             return false;
         }
-
-        BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(level);
-        BlockState newStack = StackPlacement.stateFor(CommonRegistry.barStackBlock(), level, above);
-        if (!WorldEdits.placeChecked(
-                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
-            return false;
-        }
-        BarStackBE grown = (BarStackBE) level.getBlockEntity(above);
+        BarStackBE grown = (BarStackBE) level.getBlockEntity(topPos().above());
 
         blocks.add(grown);
         return true;
@@ -268,8 +226,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
             return ItemStack.EMPTY;
         }
 
-        ItemStack taken = inSlot.copy();
-        taken.setCount(1);
+        ItemStack taken = inSlot.copyWithCount(1);
         if (simulate) {
             return taken;
         }
@@ -310,7 +267,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
 
         int removedDownTo = blocks.size();
         for (int i = blocks.size() - 1; i >= keep; i--) {
-            if (!WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())) {
+            if (!WorldEdits.removeChecked(null, level, blocks.get(i).getBlockPos())) {
                 break;
             }
             removedDownTo = i;

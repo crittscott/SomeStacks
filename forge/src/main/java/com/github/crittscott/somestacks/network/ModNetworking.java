@@ -28,6 +28,10 @@ public final class ModNetworking {
             StreamCodec.of(
                     GestureStatePkt.STREAM_CODEC::encode, GestureStatePkt.STREAM_CODEC::decode);
 
+    /**
+     * Builds {@link #CHANNEL} and registers the gesture-state payload to the server and the config
+     * snapshot to the client. Runs once from the mod constructor, on both physical sides.
+     */
     public static void init() {
         CHANNEL =
                 ChannelBuilder.named(

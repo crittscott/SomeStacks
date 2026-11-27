@@ -28,17 +28,30 @@ import javax.annotation.Nullable;
 /**
  * Resolves a stack through vanilla's item model pipeline and records what drawing it would emit,
  * without drawing anything. Baked quads arrive whole, with the tint vanilla resolved for their
- * layer; geometry written vertex by vertex, as a special model renderer or a loader's own item
- * renderer writes it, counts toward the bounds but cannot be reproduced quad by quad.
+ * layer; geometry written vertex by vertex, as a {@code BlockEntityWithoutLevelRenderer} or a
+ * loader's own item renderer writes it, counts toward the bounds but cannot be reproduced quad by quad.
  *
  * <p>One instance serves the render thread, and each capture replaces the previous one, so a caller
  * must finish with a result before capturing again.
  */
 public final class ItemCapture {
+    /**
+     * Ints per vertex in a baked quad's vertex data, which is laid out in the block vertex format.
+     */
     static final int BLOCK_VERTEX_STRIDE =
             DefaultVertexFormat.BLOCK.getVertexSize() / Integer.BYTES;
+
+    /** Offset of a vertex's three position floats within its block-format data. */
     static final int BLOCK_POSITION_OFFSET = 0;
+
+    /**
+     * Offset of a vertex's texture coordinates within its block-format data: after the three
+     * position floats and the packed color.
+     */
     static final int BLOCK_UV_OFFSET = 4;
+
+    /** Vertices in one baked quad. */
+    static final int QUAD_VERTICES = 4;
 
     /** A baked quad together with the color vanilla multiplies into it. */
     public record TintedQuad(BakedQuad quad, int color) {}
@@ -112,7 +125,7 @@ public final class ItemCapture {
         return capture;
     }
 
-    /** Whether the stack resolved to nothing to draw. */
+    /** Whether no item model was resolved; geometry that draws nothing shows as null bounds. */
     public boolean isEmpty() {
         return model == null;
     }
@@ -168,7 +181,7 @@ public final class ItemCapture {
         if (!recordBounds) return;
         Matrix4f matrix = pose.pose();
         int[] vertices = quad.getVertices();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < QUAD_VERTICES; i++) {
             int base = i * BLOCK_VERTEX_STRIDE + BLOCK_POSITION_OFFSET;
             matrix.transformPosition(
                     Float.intBitsToFloat(vertices[base]),

@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.PlatformServices;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
@@ -10,14 +9,15 @@ import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -41,12 +41,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.annotation.Nullable;
 
 /**
  * The client's item render configuration, layered by authority. The first matching entry owns the
- * entire presentation: the user's override file, then bundled resource overrides. Items absent from
+ * presentation, and only a mode it omits is measured: the user's override file, then bundled
+ * resource overrides. Items absent from
  * every layer use measured profiles.
  *
  * <p>A bundled resource-override file is named for the namespace whose items it covers, and covers
@@ -66,17 +68,43 @@ public class ItemRenderOverrides
     private static final Path GENERATED_DIR =
             PlatformServices.modConfigFolder().resolve("generated_overrides");
 
+    /** Bundled override files: {@code assets/<namespace>/item_render_overrides/**.json}. */
+    private static final FileToIdConverter FILES = FileToIdConverter.json("item_render_overrides");
+
     /** Bundled resource overrides, from client resource reload. */
     public static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
 
     /** The user's own overrides: {@code ss item} changes plus the loaded user file. */
     private static final Map<ResourceLocation, ItemRenderConfig> USER_OVERRIDES = new HashMap<>();
 
-    private static boolean userFileLoaded = false;
+    /**
+     * User file entries that could not be fully used, verbatim under their own keys. A write puts
+     * each back unchanged unless this session set or reset that item.
+     */
+    private static final Map<String, JsonElement> USER_SET_ASIDE = new TreeMap<>();
+
+    /** Items this session set or reset, which outrank the user file's entries for them. */
+    private static final Set<ResourceLocation> SESSION_EDITS = new HashSet<>();
+
     private static final Map<Item, RenderProfile> RESOLVED_PROFILES = new HashMap<>();
 
     /** Counts discards of the resolved profiles, so prepared presentation can tell it is stale. */
     private static int generation;
+
+    private static UserFileState userFileState = UserFileState.UNREAD;
+
+    /**
+     * Whether the user file has been read. An unreadable file is never overwritten: rendering does
+     * not retry it, and each write retries it so a fixed file is picked up.
+     */
+    private enum UserFileState {
+        LOADED,
+        UNREAD,
+        UNREADABLE
+    }
+
+    /** Whether {@link #writeUserFile} wrote the file, and the message reporting it. */
+    public record WriteResult(boolean written, Component message) {}
 
     static void clearResolvedProfiles() {
         RESOLVED_PROFILES.clear();
@@ -95,10 +123,8 @@ public class ItemRenderOverrides
             ResourceManager resourceManager, ProfilerFiller profiler) {
         Map<ResourceLocation, ItemRenderConfig> configMap = new HashMap<>();
 
-        var resources =
-                resourceManager.listResources(
-                        "item_render_overrides", loc -> loc.getPath().endsWith(".json"));
-        Set<String> present = presentNamespaces();
+        Map<ResourceLocation, Resource> resources = FILES.listMatchingResources(resourceManager);
+        Set<String> present = installedNamespaces();
         int skipped = 0;
 
         // Read in file order so that two files covering one item resolve the same way every reload.
@@ -114,8 +140,11 @@ public class ItemRenderOverrides
                             new InputStreamReader(
                                     fileEntry.getValue().open(), StandardCharsets.UTF_8))) {
                 JsonObject json = GSON.fromJson(reader, JsonObject.class);
-                configMap.putAll(OverrideJsonCodec.parse(json, fileLocation.toString()));
-            } catch (Exception e) {
+                if (json != null) {
+                    configMap.putAll(
+                            OverrideJsonCodec.parse(json, fileLocation.toString()).entries());
+                }
+            } catch (IOException | JsonParseException e) {
                 SomeStacksCommon.LOGGER.warn(
                         "Failed to process file {}: {}", fileLocation, e.getMessage());
             }
@@ -129,19 +158,22 @@ public class ItemRenderOverrides
         return configMap;
     }
 
-    /** The namespace a bundled override file covers: its file name without the {@code .json}. */
+    /**
+     * The namespace a bundled override file covers: its file name without the {@code .json},
+     * wherever it sits under {@code item_render_overrides}.
+     */
     private static String coveredNamespace(ResourceLocation fileLocation) {
-        String path = fileLocation.getPath();
-        return path.substring(path.lastIndexOf('/') + 1, path.length() - ".json".length());
+        String path = FILES.fileToId(fileLocation).getPath();
+        return path.substring(path.lastIndexOf('/') + 1);
     }
 
     /**
-     * The namespaces represented in the item registry. Client resource reloads run after item
-     * registration, so a bundled override file outside this set covers nothing the client can
-     * render.
+     * The namespaces represented in the item registry, in id order. Client resource reloads run
+     * after item registration, so a bundled override file outside this set covers nothing the
+     * client can render, and a dump of a namespace outside it has nothing to write.
      */
-    private static Set<String> presentNamespaces() {
-        Set<String> namespaces = new HashSet<>();
+    public static Set<String> installedNamespaces() {
+        Set<String> namespaces = new TreeSet<>();
         for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet()) {
             namespaces.add(itemId.getNamespace());
         }
@@ -158,18 +190,26 @@ public class ItemRenderOverrides
         clearResolvedProfiles();
     }
 
-    /** Changes one in-memory user override; {@link #handleWriteRequest()} persists the layer. */
+    /** Changes one in-memory user override; {@link #writeUserFile()} persists the layer. */
     public static void putUser(ResourceLocation itemId, ItemRenderConfig config) {
         ensureUserFileLoaded();
         USER_OVERRIDES.put(itemId, config);
+        recordSessionEdit(itemId);
         clearResolvedProfiles();
     }
 
-    /** Removes one in-memory user override; {@link #handleWriteRequest()} persists the layer. */
+    /** Removes one in-memory user override; {@link #writeUserFile()} persists the layer. */
     public static void removeUser(ResourceLocation itemId) {
         ensureUserFileLoaded();
         USER_OVERRIDES.remove(itemId);
+        recordSessionEdit(itemId);
         clearResolvedProfiles();
+    }
+
+    /** Lets a session edit outrank the user file's entry for that item, set aside or not. */
+    private static void recordSessionEdit(ResourceLocation itemId) {
+        SESSION_EDITS.add(itemId);
+        USER_SET_ASIDE.keySet().removeIf(key -> itemId.equals(ResourceLocation.tryParse(key)));
     }
 
     /**
@@ -202,39 +242,51 @@ public class ItemRenderOverrides
 
         RenderMode mode =
                 entry.mode() != null ? entry.mode() : AutoRenderProfiles.get(stack).mode();
-        float scale = entry.scale() != null ? entry.scale() : 1.0f;
+        float scale = entry.scale() != null ? entry.scale() : OverrideJsonCodec.DEFAULT_SCALE;
         RenderOffset offset = entry.offset() != null ? entry.offset() : RenderOffset.ZERO;
         return new RenderProfile(mode, scale, offset);
     }
 
     /**
-     * Writes the user layer to the user override file and reports the result to the player. The map
-     * contains only entries the user explicitly set, so the file never accumulates measured or
-     * bundled values, and reset entries disappear from it.
+     * Writes the user layer to the user override file. The map contains only entries the user
+     * explicitly set, so the file never accumulates measured or bundled values, and reset entries
+     * disappear from it. Entries the file held but could not fully use are written back verbatim
+     * unless this session set or reset that item.
+     *
+     * <p>A file that could not be read is read again first, and is not written while it stays
+     * unreadable, so a typo in a hand-edited file never costs the player its contents.
      */
-    public static void handleWriteRequest() {
+    public static WriteResult writeUserFile() {
+        if (userFileState == UserFileState.UNREADABLE) {
+            userFileState = UserFileState.UNREAD;
+        }
         ensureUserFileLoaded();
+        if (userFileState == UserFileState.UNREADABLE) {
+            return new WriteResult(
+                    false,
+                    Component.translatable(
+                            "somestacks.command.write.unreadable", USER_FILE.toString()));
+        }
 
-        Component message;
+        // A set-aside entry under a full item id replaces the usable part parsed from it.
+        JsonObject root = OverrideJsonCodec.toJson(USER_OVERRIDES);
+        USER_SET_ASIDE.forEach(root::add);
         try {
             Files.createDirectories(USER_FILE.getParent());
-            Files.writeString(
-                    USER_FILE, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(USER_OVERRIDES)));
-            message =
-                    Component.translatable(
-                            "somestacks.command.write.success",
-                            USER_OVERRIDES.size(),
-                            USER_FILE.toString());
+            Files.writeString(USER_FILE, PRETTY_GSON.toJson(root));
         } catch (IOException e) {
             SomeStacksCommon.LOGGER.error("Failed to write {}", USER_FILE, e);
-            message =
+            return new WriteResult(
+                    false,
                     Component.translatable(
                             "somestacks.command.write.failure",
                             USER_FILE.toString(),
-                            e.getMessage());
+                            e.getMessage()));
         }
-
-        report(message);
+        return new WriteResult(
+                true,
+                Component.translatable(
+                        "somestacks.command.write.success", root.size(), USER_FILE.toString()));
     }
 
     /**
@@ -247,19 +299,12 @@ public class ItemRenderOverrides
      * <p>Every item a layer does not configure is measured here rather than at first sight of it,
      * so a dump of a large pack is the measurement pass for all of it. The results reach the
      * measured cache, which is saved once the dump is done rather than waiting for logout.
+     *
+     * @param namespaces members of {@link #installedNamespaces()} chosen by the client commands
      */
     public static void handleDumpRequest(List<String> namespaces) {
         Map<String, Map<ResourceLocation, ItemRenderConfig>> byNamespace = new LinkedHashMap<>();
-        List<String> rejected = new ArrayList<>();
         for (String namespace : namespaces) {
-            // A valid namespace contains no path separator, so it cannot escape the dump directory.
-            if (!ServerConfig.isValidNamespace(namespace)
-                    || namespace.length() > ServerConfig.MAX_NAMESPACE_LENGTH) {
-                SomeStacksCommon.LOGGER.warn(
-                        "Ignoring dump request for invalid namespace '{}'", namespace);
-                rejected.add(namespace);
-                continue;
-            }
             byNamespace.put(namespace, new HashMap<>());
         }
 
@@ -297,14 +342,8 @@ public class ItemRenderOverrides
 
         for (Map.Entry<String, Map<ResourceLocation, ItemRenderConfig>> entry :
                 byNamespace.entrySet()) {
-            Path file = GENERATED_DIR.resolve(entry.getKey() + ".json").normalize();
-            // Retain a path-containment check at the filesystem boundary as a final invariant.
-            if (!file.startsWith(GENERATED_DIR)) {
-                SomeStacksCommon.LOGGER.error(
-                        "Refusing to write dump outside {}: {}", GENERATED_DIR, file);
-                failed.add(entry.getKey());
-                continue;
-            }
+            // An installed namespace holds no path separator, so the file stays in the directory.
+            Path file = GENERATED_DIR.resolve(entry.getKey() + ".json");
             try {
                 Files.writeString(
                         file, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(entry.getValue())));
@@ -315,24 +354,20 @@ public class ItemRenderOverrides
             }
         }
 
-        MutableComponent message =
-                Component.translatable(
-                        "somestacks.command.dump.success",
-                        itemCount,
-                        byNamespace.size() - failed.size(),
-                        GENERATED_DIR.toString());
-        if (!failed.isEmpty()) {
-            message.append(
-                    Component.translatable(
-                            "somestacks.command.dump.failed",
-                            failed.size(),
-                            ComponentUtils.formatList(failed, Component::literal)));
-        }
-        if (!rejected.isEmpty()) {
-            message.append(
-                    Component.translatable("somestacks.command.dump.rejected", rejected.size()));
-        }
-        report(message);
+        report(
+                failed.isEmpty()
+                        ? Component.translatable(
+                                "somestacks.command.dump.success",
+                                itemCount,
+                                byNamespace.size(),
+                                GENERATED_DIR.toString())
+                        : Component.translatable(
+                                "somestacks.command.dump.partial",
+                                itemCount,
+                                byNamespace.size() - failed.size(),
+                                GENERATED_DIR.toString(),
+                                failed.size(),
+                                String.join(", ", failed)));
     }
 
     private static void report(Component message) {
@@ -342,22 +377,57 @@ public class ItemRenderOverrides
         }
     }
 
+    /**
+     * Reads the user file once. Edits this session made while the file was unreadable take
+     * precedence over its entries for the same items.
+     */
     private static void ensureUserFileLoaded() {
-        if (userFileLoaded) {
+        if (userFileState != UserFileState.UNREAD) {
             return;
         }
-        userFileLoaded = true;
-
         if (!Files.exists(USER_FILE)) {
+            userFileState = UserFileState.LOADED;
             return;
         }
+
+        JsonObject json;
         try {
-            JsonObject json = GSON.fromJson(Files.readString(USER_FILE), JsonObject.class);
-            if (json != null) {
-                USER_OVERRIDES.putAll(OverrideJsonCodec.parse(json, USER_FILE.toString()));
-            }
-        } catch (Exception e) {
-            SomeStacksCommon.LOGGER.error("Failed to read {}", USER_FILE, e);
+            json = GSON.fromJson(Files.readString(USER_FILE), JsonObject.class);
+        } catch (IOException | JsonParseException e) {
+            userFileState = UserFileState.UNREADABLE;
+            SomeStacksCommon.LOGGER.warn(
+                    "Ignoring user render overrides in {} until it is fixed: {}. Resource-pack and"
+                            + " measured profiles stay in effect, and /ss write changed will not"
+                            + " overwrite the file.",
+                    USER_FILE,
+                    e.getMessage());
+            return;
         }
+        userFileState = UserFileState.LOADED;
+
+        OverrideJsonCodec.Document document =
+                json == null
+                        ? new OverrideJsonCodec.Document(Map.of(), Map.of())
+                        : OverrideJsonCodec.parse(json, USER_FILE.toString());
+        document.entries()
+                .forEach((itemId, config) -> {
+                    if (!SESSION_EDITS.contains(itemId)) {
+                        USER_OVERRIDES.put(itemId, config);
+                    }
+                });
+        document.malformed()
+                .forEach((key, value) -> {
+                    ResourceLocation itemId = ResourceLocation.tryParse(key);
+                    if (itemId == null || !SESSION_EDITS.contains(itemId)) {
+                        USER_SET_ASIDE.put(key, value);
+                    }
+                });
+        clearResolvedProfiles();
+        SomeStacksCommon.LOGGER.info(
+                "Loaded {} user render override(s) from {}; {} malformed entr(ies) kept in the"
+                        + " file unchanged",
+                document.entries().size(),
+                USER_FILE,
+                USER_SET_ASIDE.size());
     }
 }

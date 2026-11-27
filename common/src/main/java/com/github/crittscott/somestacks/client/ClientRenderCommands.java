@@ -9,7 +9,10 @@ import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax
 import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_Z;
 
 import com.github.crittscott.somestacks.command.ClientRenderCommandSyntax;
+import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
+import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.mojang.brigadier.CommandDispatcher;
@@ -20,8 +23,6 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -30,10 +31,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-/** Client-only render-authoring commands; no server packet can invoke these operations. */
+/**
+ * Client-only render-authoring commands; no server packet can invoke these operations.
+ *
+ * <p>A dump covers every item of a namespace, which is what a Storage gallery shows, so the
+ * messages about namespaces that cannot be dumped are the Storage gallery's.
+ */
 public final class ClientRenderCommands {
     private ClientRenderCommands() {}
 
@@ -46,7 +51,7 @@ public final class ClientRenderCommands {
     // spotless:off
     public static <S> void register(CommandDispatcher<S> dispatcher, Feedback<S> feedback) {
         ClientRenderCommandSyntax.register(dispatcher, action -> ctx -> switch (action) {
-            case ITEM_DEFAULT -> setItem(ctx, feedback, 1.0f, RenderOffset.ZERO);
+            case ITEM_DEFAULT -> setItem(ctx, feedback, OverrideJsonCodec.DEFAULT_SCALE, RenderOffset.ZERO);
             case ITEM_SCALE -> setItem(ctx, feedback,
                     FloatArgumentType.getFloat(ctx, ARG_SCALE), RenderOffset.ZERO);
             case ITEM_XY, ITEM_XYZ -> setItem(ctx, feedback,
@@ -55,16 +60,14 @@ public final class ClientRenderCommands {
                             action == ClientRenderCommandSyntax.Action.ITEM_XYZ
                                     ? FloatArgumentType.getFloat(ctx, ARG_Z) : 0.0f));
             case RESET -> resetItem(ctx, feedback);
-            case WRITE_CHANGED -> {
-                ItemRenderOverrides.handleWriteRequest();
-                yield 1;
-            }
+            case WRITE_CHANGED -> writeChanged(ctx, feedback);
             case WRITE_ALL -> dumpAll(ctx, feedback);
             case WRITE_LIST -> dumpList(ctx, feedback);
             case WRITE_NAMESPACE -> dumpSingle(ctx, feedback);
         }, (ctx, builder) -> SharedSuggestionProvider.suggest(
                 BuiltInRegistries.ITEM.keySet().stream().map(ResourceLocation::toString), builder),
-                (ctx, builder) -> SharedSuggestionProvider.suggest(installedNamespaces(), builder));
+                (ctx, builder) -> SharedSuggestionProvider.suggest(
+                        ItemRenderOverrides.installedNamespaces(), builder));
     }
     // spotless:on
 
@@ -127,23 +130,21 @@ public final class ClientRenderCommands {
         if (ClientRenderToolState.isDisabled(namespace)) {
             feedback.failure(
                     ctx.getSource(),
-                    Component.translatable("somestacks.command.mod_disabled", namespace));
+                    Component.translatable(SsCommand.MOD_DISABLED, namespace));
             return 0;
         }
-        if (!installedNamespaces().contains(namespace)) {
+        if (!ItemRenderOverrides.installedNamespaces().contains(namespace)) {
             feedback.failure(
                     ctx.getSource(),
                     Component.translatable(
-                            "somestacks.command.mod_unusable",
-                            namespace,
-                            Component.translatable("somestacks.command.gallery.items")));
+                            RenderGalleryGenerator.Kind.STORAGE.unusableModKey(), namespace));
             return 0;
         }
         return dump(ctx, feedback, List.of(namespace), List.of(), List.of());
     }
 
     private static <S> int dumpAll(CommandContext<S> ctx, Feedback<S> feedback) {
-        List<String> namespaces = new ArrayList<>(installedNamespaces());
+        List<String> namespaces = new ArrayList<>(ItemRenderOverrides.installedNamespaces());
         List<String> disabled = new ArrayList<>();
         namespaces.removeIf(namespace -> {
             if (ClientRenderToolState.isDisabled(namespace)) {
@@ -153,9 +154,7 @@ public final class ClientRenderCommands {
             return false;
         });
         if (namespaces.isEmpty()) {
-            feedback.failure(
-                    ctx.getSource(),
-                    Component.translatable("somestacks.command.all_mods_disabled"));
+            feedback.failure(ctx.getSource(), Component.translatable(SsCommand.ALL_MODS_DISABLED));
             return 0;
         }
         return dump(ctx, feedback, namespaces, disabled, List.of());
@@ -165,7 +164,7 @@ public final class ClientRenderCommands {
         List<String> namespaces = new ArrayList<>();
         List<String> disabled = new ArrayList<>();
         List<String> unusable = new ArrayList<>();
-        Set<String> installed = installedNamespaces();
+        Set<String> installed = ItemRenderOverrides.installedNamespaces();
 
         for (String namespace : ClientRenderToolState.genMods()) {
             if (ClientRenderToolState.isDisabled(namespace)) {
@@ -180,13 +179,9 @@ public final class ClientRenderCommands {
             feedback.failure(
                     ctx.getSource(),
                     ClientRenderToolState.genMods().isEmpty()
-                            ? Component.translatable(
-                                    "somestacks.command.gen_mods_empty",
-                                    Component.translatable("somestacks.command.label.gen_mods"))
+                            ? Component.translatable(SsCommand.GEN_MODS_EMPTY)
                             : Component.translatable(
-                                    "somestacks.command.gen_mods_unusable",
-                                    Component.translatable("somestacks.command.label.gen_mods"),
-                                    Component.translatable("somestacks.command.gallery.items"),
+                                    RenderGalleryGenerator.Kind.STORAGE.genModsUnusableKey(),
                                     disabled.size(),
                                     unusable.size()));
             return 0;
@@ -195,46 +190,38 @@ public final class ClientRenderCommands {
         return dump(ctx, feedback, namespaces, disabled, unusable);
     }
 
+    /** Reports the namespaces being dumped and those skipped, then writes the dump files. */
     private static <S> int dump(
             CommandContext<S> ctx,
             Feedback<S> feedback,
             List<String> namespaces,
             List<String> disabled,
             List<String> unusable) {
-        MutableComponent message =
-                Component.translatable(
-                        "somestacks.command.dumping",
-                        Component.translatable(
-                                "somestacks.command.subject.mods", namespaces.size()));
-        appendSkips(message, disabled, Component.translatable("somestacks.command.skip.disabled"));
-        appendSkips(
-                message,
-                unusable,
-                Component.translatable(
-                        "somestacks.command.skip.not_loaded",
-                        Component.translatable("somestacks.command.gallery.items")));
-        feedback.success(ctx.getSource(), message);
+        feedback.success(
+                ctx.getSource(),
+                Component.translatable("somestacks.command.dumping", namespaces.size()));
+        SsCommand.Skips.report(
+                List.of(
+                        new SsCommand.Skips(SsCommand.SKIPPED_DISABLED_MODS, disabled),
+                        new SsCommand.Skips(
+                                RenderGalleryGenerator.Kind.STORAGE.skippedUnusableModsKey(),
+                                unusable)),
+                line -> feedback.success(ctx.getSource(), line));
         ItemRenderOverrides.handleDumpRequest(namespaces);
         return 1;
     }
 
-    private static void appendSkips(
-            MutableComponent message, List<String> entries, Component reason) {
-        if (!entries.isEmpty()) {
-            message.append(
-                    Component.translatable(
-                            "somestacks.command.skipped",
-                            entries.size(),
-                            reason,
-                            ComponentUtils.formatList(entries, Component::literal)));
+    /**
+     * Saves the user override layer, failing with nothing written while the file on disk cannot
+     * be read.
+     */
+    private static <S> int writeChanged(CommandContext<S> ctx, Feedback<S> feedback) {
+        ItemRenderOverrides.WriteResult result = ItemRenderOverrides.writeUserFile();
+        if (!result.written()) {
+            feedback.failure(ctx.getSource(), result.message());
+            return 0;
         }
-    }
-
-    private static Set<String> installedNamespaces() {
-        Set<String> namespaces = new TreeSet<>();
-        for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet()) {
-            namespaces.add(itemId.getNamespace());
-        }
-        return namespaces;
+        feedback.success(ctx.getSource(), result.message());
+        return 1;
     }
 }

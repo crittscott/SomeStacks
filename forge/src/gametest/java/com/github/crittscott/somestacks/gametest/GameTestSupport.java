@@ -7,7 +7,6 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -21,8 +20,8 @@ import java.util.function.Function;
 
 /**
  * Forge-native scaffolding for the GameTests: the unprefixed template name, {@code IItemHandler}
- * capability access, and a synthetic {@link ServerPlayer}. Everything loader-neutral lives in
- * {@link GameTestScaffold}.
+ * capability access and the shared scenarios' automation view of it, and a synthetic {@link
+ * ServerPlayer}. Everything loader-neutral lives in {@link GameTestScaffold}.
  */
 public final class GameTestSupport {
     /**
@@ -40,26 +39,41 @@ public final class GameTestSupport {
 
     private GameTestSupport() {}
 
+    /**
+     * The {@link GameTestScaffold.Automation} view of {@code blockEntity}'s item-handler
+     * capability, as a hopper or pipe reaches it.
+     */
+    public static GameTestScaffold.Automation automation(BlockEntity blockEntity) {
+        IItemHandler handler = capability(blockEntity);
+        return new GameTestScaffold.Automation() {
+            @Override
+            public ItemStack extract(int slot, int amount, boolean simulate) {
+                return handler.extractItem(slot, amount, simulate);
+            }
+
+            @Override
+            public ItemStack insert(int slot, ItemStack stack, boolean simulate) {
+                return handler.insertItem(slot, stack, simulate);
+            }
+
+            @Override
+            public int slots() {
+                return handler.getSlots();
+            }
+
+            @Override
+            public ItemStack stackAt(int slot) {
+                return handler.getStackInSlot(slot);
+            }
+        };
+    }
+
     public static IItemHandler capability(BlockEntity blockEntity) {
         IItemHandler handler =
                 blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         GameTestScaffold.check(
                 handler != null, "Missing item-handler capability at " + blockEntity.getBlockPos());
         return handler;
-    }
-
-    /**
-     * {@link GameTestScaffold#count} for a real Forge capability, as {@link #capability} returns.
-     */
-    public static int count(IItemHandler handler, Item item) {
-        int total = 0;
-        for (int slot = 0; slot < handler.getSlots(); slot++) {
-            ItemStack stack = handler.getStackInSlot(slot);
-            if (stack.is(item)) {
-                total += stack.getCount();
-            }
-        }
-        return total;
     }
 
     /**
