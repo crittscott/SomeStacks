@@ -57,16 +57,18 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#depositFillsCompatiblePartialBeforeEmptySlot(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">depositFillsCompatiblePartialBeforeEmptySlot(GameTestHelper)</a></li>
-<li><a href="#fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">fullPileGrowsByOneBlock(GameTestHelper)</a></li>
+<li><a href="#fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" tabindex="0">fullPileGrowsByOneBlock(GameTestHelper, Function)</a></li>
 <li><a href="#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">settleConsolidatesExactIdentityAndPacksDown(GameTestHelper)</a></li>
-<li><a href="#extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">extractionSettlesOnScheduledBlockTick(GameTestHelper)</a></li>
+<li><a href="#settleWritesOnlyChangedCellsWithFreshStacks(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">settleWritesOnlyChangedCellsWithFreshStacks(GameTestHelper)</a></li>
+<li><a href="#storedLightIsPerOccupiedSlotAndCapped(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">storedLightIsPerOccupiedSlotAndCapped(GameTestHelper)</a></li>
+<li><a href="#extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" tabindex="0">extractionSettlesOnScheduledBlockTick(GameTestHelper, Function)</a></li>
 <li><a href="#emptyTemporaryPileDisappearsButPermanentPileRemains(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">emptyTemporaryPileDisappearsButPermanentPileRemains(GameTestHelper)</a></li>
 <li><a href="#comparatorReadsTheWholePileFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">comparatorReadsTheWholePileFromEveryBlock(GameTestHelper)</a></li>
 <li><a href="#ordinaryPlacementBelowPermanentPileRepairsDerivedState(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">ordinaryPlacementBelowPermanentPileRepairsDerivedState(GameTestHelper)</a></li>
 <li><a href="#breakingMiddleBlockDropsItsContentsAndSplitsThePile(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">breakingMiddleBlockDropsItsContentsAndSplitsThePile(GameTestHelper)</a></li>
 <li><a href="#comparatorReservesZeroForAnEmptyPile(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">comparatorReservesZeroForAnEmptyPile(GameTestHelper)</a></li>
 <li><a href="#comparatorContributionLoadsAndTracksMutations(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">comparatorContributionLoadsAndTracksMutations(GameTestHelper)</a></li>
-<li><a href="#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)" tabindex="0">storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper, ProtectionChecks.OfferAt)</a></li>
+<li><a href="#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" tabindex="0">storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper, Function)</a></li>
 <li><a href="#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">storageDiskMigrationPreservesOverCapContents(GameTestHelper)</a></li>
 </ol>
 </li>
@@ -85,10 +87,9 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">StoragePileChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Storage pile behavior in a live level that does not touch loader-native automation directly:
-deposits filling partial stacks before empty ones, growth when a pile fills, and settling
-consolidating, packing, and sorting. Loader-automation-facing tests stay in each loader's own
-<code>StoragePileGameTests</code>.</div>
+<div class="block">Storage pile behavior in a live level: deposits filling partial stacks before empty ones,
+growth when a pile fills, and settling consolidating, packing, and sorting. Player scenarios
+click through the loader; automation scenarios are in <a href="AutomationChecks.html" title="class in com.github.crittscott.somestacks.gametest"><code>AutomationChecks</code></a>.</div>
 </div>
 </section>
 <section class="summary">
@@ -119,7 +120,7 @@ then extract an item.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReadsTheWholePileFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReadsTheWholePileFromEveryBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Every block in a Storage pile reports the same whole-pile comparator signal.</div>
+<div class="block">Every block in a Storage pile reports the same whole-pile fill.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReservesZeroForAnEmptyPile(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReservesZeroForAnEmptyPile</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -137,12 +138,14 @@ then extract an item.</div>
 <div class="block">Empty temporary piles disappear while permanent piles retain their blocks.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionSettlesOnScheduledBlockTick</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionSettlesOnScheduledBlockTick</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extraction schedules settlement instead of leaving a lasting gap.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">fullPileGrowsByOneBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">fullPileGrowsByOneBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Depositing into a full Storage pile grows it upward by one block.</div>
 </div>
@@ -155,20 +158,32 @@ base, and republishes comparator output.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Settlement merges only exact component identities, restores legal stack sizes, sorts, and
-packs downward.</div>
+<div class="block">Settlement merges only exact component identities, restores legal stack sizes, sorts by item
+id, then damage, then plain before component-bearing, and packs downward.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)" class="member-name-link">storageCapAppliesToPlayersAutomationAndSettlement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- <a href="ProtectionChecks.OfferAt.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.OfferAt</a>&nbsp;offer)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleWritesOnlyChangedCellsWithFreshStacks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleWritesOnlyChangedCellsWithFreshStacks</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Settlement rewrites only the cells whose contents change, and every cell it writes gets its
+own stack, leaving the stacks it read from untouched.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">storageCapAppliesToPlayersAutomationAndSettlement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity, <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: use an item with max_stack_size=99, fill Storage by hand and through
 automation, then let it settle.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskMigrationPreservesOverCapContents</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskMigrationPreservesOverCapContents</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: load a preceding-release Storage block containing stacks above 64.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storedLightIsPerOccupiedSlotAndCapped(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storedLightIsPerOccupiedSlotAndCapped</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A Storage Stack glows a quarter of each stored block's light per occupied slot, rounded down
+and independent of the stack's count, and the total caps at full light.</div>
 </div>
 </div>
 </div>
@@ -192,19 +207,23 @@ automation, then let it settle.</div>
 <h3>depositFillsCompatiblePartialBeforeEmptySlot</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">depositFillsCompatiblePartialBeforeEmptySlot</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">A deposit fills a compatible partial stack before using an empty slot. To reproduce in-game:
-leave a partial stack of one item in Storage, then deposit more of that item. The partial
-reaches its limit before any remainder appears in another cube.</div>
+<div class="block">A deposit fills a compatible partial stack before using an empty slot. Internal: this calls
+the pile's deposit directly to pin which slot fills first, which a click cannot observe
+slot by slot; <a href="#fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>fullPileGrowsByOneBlock(GameTestHelper, Function)</code></a> is the nearest real-click check. To reproduce
+in-game: leave a partial stack of one item in Storage, then deposit more of that item. The
+partial reaches its limit before any remainder appears in another cube.</div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>fullPileGrowsByOneBlock</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullPileGrowsByOneBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Depositing into a full Storage pile grows it upward by one block. To reproduce in-game: fill
-every slot in one Storage block, then deposit one more allowed item. A second Storage block
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullPileGrowsByOneBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Depositing into a full Storage pile grows it upward by one block. To reproduce in-game: with
+<code>max_pile_height</code> at 2 or more, fill every slot in one Storage block, then
+modifier-click it in Storage mode holding one more allowed item. A second Storage block
 appears above and holds the item.</div>
 </div>
 </section>
@@ -214,21 +233,49 @@ appears above and holds the item.</div>
 <h3>settleConsolidatesExactIdentityAndPacksDown</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">settleConsolidatesExactIdentityAndPacksDown</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Settlement merges only exact component identities, restores legal stack sizes, sorts, and
-packs downward. To reproduce in-game: put scattered compatible and component-distinct items
-in a Storage pile through automation, then let it settle. Compatible items merge at the base
-while distinct component or damage variants remain separate in stable order.</div>
+<div class="block">Settlement merges only exact component identities, restores legal stack sizes, sorts by item
+id, then damage, then plain before component-bearing, and packs downward. To reproduce
+in-game: put scattered dirt, plain stone, compatible and component-distinct stone, and
+damaged pickaxes in a Storage pile through automation, then let it settle. Dirt comes first
+and plain stone before the other stone; compatible items merge while distinct component or
+damage variants remain separate in stable order.</div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="settleWritesOnlyChangedCellsWithFreshStacks(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>settleWritesOnlyChangedCellsWithFreshStacks</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">settleWritesOnlyChangedCellsWithFreshStacks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Settlement rewrites only the cells whose contents change, and every cell it writes gets its
+own stack, leaving the stacks it read from untouched. No in-game form: this guards against
+two cells sharing one stack, which would make an edit to one cell change the other, and
+against resyncing cells that already hold what they should.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storedLightIsPerOccupiedSlotAndCapped(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>storedLightIsPerOccupiedSlotAndCapped</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storedLightIsPerOccupiedSlotAndCapped</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A Storage Stack glows a quarter of each stored block's light per occupied slot, rounded down
+and independent of the stack's count, and the total caps at full light. To reproduce
+in-game: deposit a full stack of glowstone into a Storage Stack in a dark room and read its
+light level with F3 (3); deposit five more full stacks of glowstone and read it again (15,
+not 18).</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>extractionSettlesOnScheduledBlockTick</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionSettlesOnScheduledBlockTick</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionSettlesOnScheduledBlockTick</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Extraction schedules settlement instead of leaving a lasting gap. To reproduce in-game: store
-two different stacks, extract the lower visible stack, and wait a moment. The remaining stack
-packs into the first Storage position.</div>
+two different stacks, plain-click the first one out with an empty hand, and wait a moment.
+The remaining stack packs into the first Storage position.</div>
 </div>
 </section>
 </li>
@@ -248,9 +295,9 @@ permanence mode and empty it. Only the permanent block remains.</div>
 <h3>comparatorReadsTheWholePileFromEveryBlock</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReadsTheWholePileFromEveryBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Every block in a Storage pile reports the same whole-pile comparator signal. To reproduce
-in-game: make a two-block pile with contents only in one block and place comparators against
-both blocks. Their outputs match.</div>
+<div class="block">Every block in a Storage pile reports the same whole-pile fill. To reproduce in-game: make a
+two-block pile, fill the lower block with full stacks and leave the upper empty, then place
+comparators against both blocks. Both report the half-full value.</div>
 </div>
 </section>
 </li>
@@ -305,11 +352,11 @@ after extraction, before the deferred settlement runs.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)">
+<section class="detail" id="storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>storageCapAppliesToPlayersAutomationAndSettlement</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageCapAppliesToPlayersAutomationAndSettlement</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- <a href="ProtectionChecks.OfferAt.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.OfferAt</a>&nbsp;offer)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity, <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
 <div class="block">To reproduce in-game: use an item with max_stack_size=99, fill Storage by hand and through
 automation, then let it settle. Every slot holds at most 64 and a fully filled pile gives
 comparator strength 15. An item with a smaller maximum still uses that smaller capacity.</div>

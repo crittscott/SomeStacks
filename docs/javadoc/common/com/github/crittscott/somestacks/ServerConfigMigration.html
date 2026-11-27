@@ -56,10 +56,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#reportLegacyIngots(net.minecraft.server.MinecraftServer)" tabindex="0">reportLegacyIngots(MinecraftServer)</a></li>
+<li><a href="#prepareWorld(net.minecraft.server.MinecraftServer)" tabindex="0">prepareWorld(MinecraftServer)</a></li>
 <li><a href="#convertJson(java.nio.file.Path,java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)" tabindex="0">convertJson(Path, Path, ServerConfig.Settings)</a></li>
-<li><a href="#readJson(java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)" tabindex="0">readJson(Path, ServerConfig.Settings)</a></li>
-<li><a href="#archive(java.nio.file.Path)" tabindex="0">archive(Path)</a></li>
+<li><a href="#reportRetainedIngots(net.minecraft.server.MinecraftServer)" tabindex="0">reportRetainedIngots(MinecraftServer)</a></li>
 </ol>
 </li>
 </ol>
@@ -77,7 +76,8 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ServerConfigMigration</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">One-time migration of the preceding release's world JSON policy into documented TOML.</div>
+<div class="block">One-time migration of the preceding release's world JSON policy into documented TOML, and the
+report of custom ingot entries in a JSON policy that stays in the world.</div>
 </div>
 </section>
 <section class="summary">
@@ -94,27 +94,23 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#archive(java.nio.file.Path)" class="member-name-link">archive</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;file)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Called only after TOML persistence has succeeded.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#convertJson(java.nio.file.Path,java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">convertJson</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;json,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#convertJson(java.nio.file.Path,java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">convertJson</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;json,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;toml,
  <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;defaults)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Keeps the JSON as an archive; an existing TOML file is authoritative.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#readJson(java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">readJson</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;file,
- <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;defaults)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Reads the shipped JSON schema, reporting fields that now belong in an item tag.</div>
+<div class="block">Converts the JSON and keeps it as an archive; an existing TOML file is authoritative.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reportLegacyIngots(net.minecraft.server.MinecraftServer)" class="member-name-link">reportLegacyIngots</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#prepareWorld(net.minecraft.server.MinecraftServer)" class="member-name-link">prepareWorld</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Reports a retained JSON ingot list on native loaders that already use TOML.</div>
+<div class="block">Converts the world policy before the loader selects its TOML override.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reportRetainedIngots(net.minecraft.server.MinecraftServer)" class="member-name-link">reportRetainedIngots</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Reports custom ingot entries in a world JSON policy still present after the loader read its
+policy: one kept beside an authoritative world TOML, or one that only <a href="#prepareWorld(net.minecraft.server.MinecraftServer)"><code>prepareWorld(MinecraftServer)</code></a>
+would have converted on a loader whose native config does not call it.</div>
 </div>
 </div>
 </div>
@@ -134,11 +130,17 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="reportLegacyIngots(net.minecraft.server.MinecraftServer)">
-<h3>reportLegacyIngots</h3>
+<section class="detail" id="prepareWorld(net.minecraft.server.MinecraftServer)">
+<h3>prepareWorld</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reportLegacyIngots</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server)</span></div>
-<div class="block">Reports a retained JSON ingot list on native loaders that already use TOML.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">prepareWorld</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server)</span></div>
+<div class="block">Converts the world policy before the loader selects its TOML override.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the world's TOML override path, which may not exist</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - when a JSON policy exists but could not be converted</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -149,26 +151,18 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">convertJson</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;json,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;toml,
  <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;defaults)</span></div>
-<div class="block">Keeps the JSON as an archive; an existing TOML file is authoritative.</div>
+<div class="block">Converts the JSON and keeps it as an archive; an existing TOML file is authoritative.</div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="readJson(java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)">
-<h3>readJson</h3>
+<section class="detail" id="reportRetainedIngots(net.minecraft.server.MinecraftServer)">
+<h3>reportRetainedIngots</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></span>&nbsp;<span class="element-name">readJson</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;file,
- <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;defaults)</span></div>
-<div class="block">Reads the shipped JSON schema, reporting fields that now belong in an item tag.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="archive(java.nio.file.Path)">
-<h3>archive</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">archive</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;file)</span></div>
-<div class="block">Called only after TOML persistence has succeeded.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reportRetainedIngots</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server)</span></div>
+<div class="block">Reports custom ingot entries in a world JSON policy still present after the loader read its
+policy: one kept beside an authoritative world TOML, or one that only <a href="#prepareWorld(net.minecraft.server.MinecraftServer)"><code>prepareWorld(MinecraftServer)</code></a>
+would have converted on a loader whose native config does not call it.</div>
 </div>
 </section>
 </li>

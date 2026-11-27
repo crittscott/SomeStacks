@@ -56,9 +56,11 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#claimRotationSound(net.minecraft.server.level.ServerPlayer)" tabindex="0">claimRotationSound(ServerPlayer)</a></li>
+<li><a href="#clearRotationSoundPacing(java.util.UUID)" tabindex="0">clearRotationSoundPacing(UUID)</a></li>
+<li><a href="#handleAdjacentClick(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,boolean,boolean)" tabindex="0">handleAdjacentClick(ServerPlayer, InteractionHand, BlockHitResult, boolean, boolean)</a></li>
 <li><a href="#handleExistingStack(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,com.github.crittscott.somestacks.util.BlockType)" tabindex="0">handleExistingStack(ServerPlayer, InteractionHand, BlockHitResult, BlockType)</a></li>
 <li><a href="#handleSneakingRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,boolean,boolean)" tabindex="0">handleSneakingRotation(ServerPlayer, InteractionHand, BlockHitResult, boolean, boolean)</a></li>
-<li><a href="#handleAdjacentClick(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,boolean,boolean)" tabindex="0">handleAdjacentClick(ServerPlayer, InteractionHand, BlockHitResult, boolean, boolean)</a></li>
 </ol>
 </li>
 </ol>
@@ -76,7 +78,9 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">StackInteractions</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Applies stack gestures carried by the vanilla right-click interaction.</div>
+<div class="block">Applies stack gestures carried by the vanilla right-click interaction: one deposit, one
+extraction, and one placement path for every stack type, the sounds they play, and the pacing of
+rotation sounds.</div>
 </div>
 </section>
 <section class="summary">
@@ -93,6 +97,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#claimRotationSound(net.minecraft.server.level.ServerPlayer)" class="member-name-link">claimRotationSound</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Claims the player's next rotation sound: true at most once per <code>ROTATION_SOUND_INTERVAL_TICKS</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clearRotationSoundPacing(java.util.UUID)" class="member-name-link">clearRotationSoundPacing</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Forgets a player's rotation sound pacing when that player disconnects.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#handleAdjacentClick(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,boolean,boolean)" class="member-name-link">handleAdjacentClick</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.world.InteractionHand&nbsp;hand,
  net.minecraft.world.phys.BlockHitResult&nbsp;hit,
@@ -100,7 +114,8 @@ loadScripts(document, 'script');</script>
  boolean&nbsp;itemAllowed)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Handles a loader-native server right-click against a non-stack block when the selected stack
-belongs in the adjacent position.</div>
+belongs in the adjacent position: deposits into a Singles or Bar stack there, otherwise places
+the selected type where vanilla would place a block for this click.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#handleExistingStack(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">handleExistingStack</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
@@ -137,28 +152,20 @@ belongs in the adjacent position.</div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="handleExistingStack(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,com.github.crittscott.somestacks.util.BlockType)">
-<h3>handleExistingStack</h3>
+<section class="detail" id="claimRotationSound(net.minecraft.server.level.ServerPlayer)">
+<h3>claimRotationSound</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">handleExistingStack</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
- net.minecraft.world.InteractionHand&nbsp;hand,
- net.minecraft.world.phys.BlockHitResult&nbsp;hit,
- <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;clickedType)</span></div>
-<div class="block">Handles a vanilla use call on an existing stack block.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">claimRotationSound</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">Claims the player's next rotation sound: true at most once per <code>ROTATION_SOUND_INTERVAL_TICKS</code>.</div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="handleSneakingRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,boolean,boolean)">
-<h3>handleSneakingRotation</h3>
+<section class="detail" id="clearRotationSoundPacing(java.util.UUID)">
+<h3>clearRotationSoundPacing</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">handleSneakingRotation</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
- net.minecraft.world.InteractionHand&nbsp;hand,
- net.minecraft.world.phys.BlockHitResult&nbsp;hit,
- boolean&nbsp;blockAllowed,
- boolean&nbsp;itemAllowed)</span></div>
-<div class="block">Handles the sneaking torch gestures before vanilla bypasses the block's use methods. Loader
-callbacks call this only after earlier listeners have allowed both block and item use.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearRotationSoundPacing</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerId)</span></div>
+<div class="block">Forgets a player's rotation sound pacing when that player disconnects.</div>
 </div>
 </section>
 </li>
@@ -172,7 +179,39 @@ callbacks call this only after earlier listeners have allowed both block and ite
  boolean&nbsp;blockAllowed,
  boolean&nbsp;itemAllowed)</span></div>
 <div class="block">Handles a loader-native server right-click against a non-stack block when the selected stack
-belongs in the adjacent position.</div>
+belongs in the adjacent position: deposits into a Singles or Bar stack there, otherwise places
+the selected type where vanilla would place a block for this click. <code>blockAllowed</code> and
+<code>itemAllowed</code> carry earlier listeners' verdicts; either false refuses. Returns true when
+the click is consumed, including a deposit the destination's own interaction checks refused.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="handleExistingStack(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,com.github.crittscott.somestacks.util.BlockType)">
+<h3>handleExistingStack</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">handleExistingStack</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.world.InteractionHand&nbsp;hand,
+ net.minecraft.world.phys.BlockHitResult&nbsp;hit,
+ <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;clickedType)</span></div>
+<div class="block">Handles a vanilla use call on an existing stack block. Returns true when the click is a
+recognized gesture, which consumes it even when the action is refused.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="handleSneakingRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,boolean,boolean)">
+<h3>handleSneakingRotation</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">handleSneakingRotation</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.world.InteractionHand&nbsp;hand,
+ net.minecraft.world.phys.BlockHitResult&nbsp;hit,
+ boolean&nbsp;blockAllowed,
+ boolean&nbsp;itemAllowed)</span></div>
+<div class="block">Handles the sneaking torch gestures before vanilla bypasses the block's use methods. Loader
+callbacks call this only after earlier listeners have allowed both block and item use;
+<code>blockAllowed</code> and <code>itemAllowed</code> carry those verdicts. Returns true when a
+rotation gesture was recognized and the click is consumed.</div>
 </div>
 </section>
 </li>

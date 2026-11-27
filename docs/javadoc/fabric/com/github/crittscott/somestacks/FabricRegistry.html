@@ -68,6 +68,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#init()" tabindex="0">init()</a></li>
+<li><a href="#itemStorage(com.github.crittscott.somestacks.block.StackBlockEntity)" tabindex="0">itemStorage(StackBlockEntity)</a></li>
 </ol>
 </li>
 </ol>
@@ -85,7 +86,8 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">FabricRegistry</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Fabric registration for the shared blocks and block entities.</div>
+<div class="block">Fabric registration for the shared blocks, block entities, sounds, and the block entities'
+whole-run Transfer API item storage.</div>
 </div>
 </section>
 <section class="summary">
@@ -133,7 +135,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#init()" class="member-name-link">init</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Initializes this class, which registers the blocks and block entity types, then registers
+every sound and each block entity type's whole-run item storage for every side.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="block/FabricRunItemStorage.html" title="class in com.github.crittscott.somestacks.block">FabricRunItemStorage</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#itemStorage(com.github.crittscott.somestacks.block.StackBlockEntity)" class="member-name-link">itemStorage</a><wbr>(com.github.crittscott.somestacks.block.StackBlockEntity&nbsp;blockEntity)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The block entity's one Transfer API adapter, created on first use.</div>
+</div>
 </div>
 </div>
 </div>
@@ -212,6 +222,19 @@ loadScripts(document, 'script');</script>
 <h3>init</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">init</span>()</div>
+<div class="block">Initializes this class, which registers the blocks and block entity types, then registers
+every sound and each block entity type's whole-run item storage for every side. Runs once
+from the common entry point.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="itemStorage(com.github.crittscott.somestacks.block.StackBlockEntity)">
+<h3>itemStorage</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="block/FabricRunItemStorage.html" title="class in com.github.crittscott.somestacks.block">FabricRunItemStorage</a></span>&nbsp;<span class="element-name">itemStorage</span><wbr><span class="parameters">(com.github.crittscott.somestacks.block.StackBlockEntity&nbsp;blockEntity)</span></div>
+<div class="block">The block entity's one Transfer API adapter, created on first use. A whole-run view:
+whichever block a caller asks, it reads and stages edits against the complete run.</div>
 </div>
 </section>
 </li>

@@ -56,7 +56,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#verify(java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)" tabindex="0">verify(Path, ServerConfig.Settings)</a></li>
+<li><a href="#tomlPolicyParsesRoundTripsAndMigrates(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">tomlPolicyParsesRoundTripsAndMigrates(GameTestHelper)</a></li>
 </ol>
 </li>
 </ol>
@@ -91,11 +91,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#verify(java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">verify</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;directory,
- com.github.crittscott.somestacks.ServerConfig.Settings&nbsp;defaults)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#tomlPolicyParsesRoundTripsAndMigrates(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">tomlPolicyParsesRoundTripsAndMigrates</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce: edit a Fabric TOML using comments, multiline lists and quoted item ids; run /ss
-reload, then /ss deny item add minecraft:diamond and inspect the saved file.</div>
+<div class="block">The TOML policy file is written with explanations and ranges, parses malformed fields
+independently, clamps numbers, round-trips a custom policy, and a world JSON policy from the
+preceding release migrates to TOML with an archive.</div>
 </div>
 </div>
 </div>
@@ -115,14 +115,18 @@ reload, then /ss deny item add minecraft:diamond and inspect the saved file.</di
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="verify(java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)">
-<h3>verify</h3>
+<section class="detail" id="tomlPolicyParsesRoundTripsAndMigrates(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>tomlPolicyParsesRoundTripsAndMigrates</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">verify</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;directory,
- com.github.crittscott.somestacks.ServerConfig.Settings&nbsp;defaults)</span></div>
-<div class="block">To reproduce: edit a Fabric TOML using comments, multiline lists and quoted item ids; run /ss
-reload, then /ss deny item add minecraft:diamond and inspect the saved file. A world JSON
-from the preceding release becomes a world TOML override with a JSON archive.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">tomlPolicyParsesRoundTripsAndMigrates</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">The TOML policy file is written with explanations and ranges, parses malformed fields
+independently, clamps numbers, round-trips a custom policy, and a world JSON policy from the
+preceding release migrates to TOML with an archive. To reproduce in-game: on Fabric, edit
+<code>config/somestacks-server.toml</code> using comments, multiline lists, and quoted item ids,
+run /ss reload, then /ss deny item add minecraft:diamond and inspect the saved file. On any
+loader, put the preceding release's <code>&lt;world&gt;/serverconfig/somestacks-server.json</code> in a
+world and start it: a world TOML with the same values appears and the JSON is kept as <code>
+somestacks-server.json.migrated</code>.</div>
 </div>
 </section>
 </li>
