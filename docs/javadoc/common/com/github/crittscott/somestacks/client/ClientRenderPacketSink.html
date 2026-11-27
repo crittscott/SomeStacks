@@ -107,7 +107,8 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">apply</a><wbr>(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt,net.minecraft.world.entity.player.Player)" class="member-name-link">apply</a><wbr>(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet,
+ net.minecraft.world.entity.player.Player&nbsp;localPlayer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Stages a decoded chunk on the client thread.</div>
 </div>
@@ -134,12 +135,16 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)">
+<section class="detail" id="apply(com.github.crittscott.somestacks.network.ConfigSyncPkt,net.minecraft.world.entity.player.Player)">
 <h3>apply</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet,
+ @Nullable
+ net.minecraft.world.entity.player.Player&nbsp;localPlayer)</span></div>
 <div class="block">Stages a decoded chunk on the client thread. A first chunk replaces incomplete staging; only
- a complete final chunk publishes flags and lists. Rejection clears staging and throws a
- runtime exception to the loader's receive handler.</div>
+ a complete final chunk publishes flags and lists. Publication moves the selected placement
+ mode off a type the new policy disables, with the mode message when a local player exists to
+ show it. Rejection clears staging and throws a runtime exception to the loader's receive
+ handler.</div>
 </section>
 </li>
 <li>

@@ -108,7 +108,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onRightClickBlock(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock)" class="member-name-link">onRightClickBlock</a><wbr>(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock&nbsp;event)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Handles sneaking torch rotation and clicks that reach a stack through a neighboring block,
+ passing on the block and item denials earlier listeners set.</div>
+</div>
 </div>
 </div>
 </div>
@@ -130,6 +133,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onRightClickBlock(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock)">
 <h3>onRightClickBlock</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onRightClickBlock</span><wbr><span class="parameters">(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock&nbsp;event)</span></div>
+<div class="block">Handles sneaking torch rotation and clicks that reach a stack through a neighboring block,
+ passing on the block and item denials earlier listeners set. Runs at <code>LOWEST</code> so
+ protection mods and other listeners decide first; a click an earlier listener cancels never
+ arrives.</div>
 </section>
 </li>
 </ul>

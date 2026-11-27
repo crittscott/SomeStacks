@@ -90,9 +90,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">FabricGameTestSupport</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Fabric-native scaffolding for the GameTests: the namespaced template name and Transfer API
- storage access and the small transaction helpers used by adapter-specific tests. Everything
- loader-neutral lives in <a href="GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold</code></a>.</div>
+<div class="block">Fabric-native scaffolding for the GameTests: the namespaced template name, Transfer API storage
+ access and the shared scenarios' automation view of it, and the small transaction helpers used
+ by adapter-specific tests. Everything loader-neutral lives in <a href="GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -122,32 +122,35 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#count(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage,net.minecraft.world.item.Item)" class="member-name-link">count</a><wbr>(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#automation(net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">automation</a><wbr>(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold.Automation</code></a> view of <code>blockEntity</code>'s registered Transfer API
+ storage, as a hopper or pipe reaches it; each call runs in its own outer transaction.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#count(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage,net.minecraft.world.item.Item)" class="member-name-link">count</a><wbr>(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage,
  net.minecraft.world.item.Item&nbsp;item)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractAt(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage,int,int,boolean)" class="member-name-link">extractAt</a><wbr>(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractAt(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage,int,int,boolean)" class="member-name-link">extractAt</a><wbr>(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage,
  int&nbsp;slot,
  int&nbsp;amount,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extracts up to <code>amount</code> from <code>slot</code>, mirroring Forge's <code>
  IItemHandler.extractItem(slot, amount, simulate)</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#insertAt(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage,int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#insertAt(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage,int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage,
  int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Inserts <code>stack</code> into <code>slot</code>, mirroring Forge's <code>
  IItemHandler.insertItem(slot, stack, simulate)</code>: returns the remainder left over, and a
  <code>simulate</code> transaction is opened and never committed.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupied(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage)" class="member-name-link">occupied</a><wbr>(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.server.level.ServerPlayer</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#player(net.minecraft.server.level.ServerLevel)" class="member-name-link">player</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -208,6 +211,14 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="automation(net.minecraft.world.level.block.entity.BlockEntity)">
+<h3>automation</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a></span>&nbsp;<span class="element-name">automation</span><wbr><span class="parameters">(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</span></div>
+<div class="block">The <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold.Automation</code></a> view of <code>blockEntity</code>'s registered Transfer API
+ storage, as a hopper or pipe reaches it; each call runs in its own outer transaction.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="storage(net.minecraft.world.level.block.entity.BlockEntity)">
 <h3>storage</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;</span>&nbsp;<span class="element-name">storage</span><wbr><span class="parameters">(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</span></div>
@@ -250,12 +261,6 @@ loadScripts(document, 'script');</script>
 <h3>count</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">count</span><wbr><span class="parameters">(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage,
  net.minecraft.world.item.Item&nbsp;item)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="occupied(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage)">
-<h3>occupied</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">occupied</span><wbr><span class="parameters">(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage)</span></div>
 </section>
 </li>
 <li>

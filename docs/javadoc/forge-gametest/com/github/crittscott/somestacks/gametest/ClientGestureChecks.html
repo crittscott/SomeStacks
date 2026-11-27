@@ -111,24 +111,25 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Air cycling distinguishes hit type and hand, skips disabled types, and always retains
- permanence.</div>
+ permanence; a published server policy moves the selection off a type it disables.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#blockRulesRespectPrecedenceAndHands(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">blockRulesRespectPrecedenceAndHands</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Only the first matching main-hand rule claims a block click.</div>
+<div class="block">Only main-hand clicks that name a gesture are consumed.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullTopFacesFallThroughToPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">fullTopFacesFallThroughToPlacement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#gestureSyncSendsChangesAndResets(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">gestureSyncSendsChangesAndResets</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Full top-face display deposits fall through to placement; Storage keeps its own pile deposit.</div>
+<div class="block">Only changed mode/modifier state is sent; reconnect reset forces the next state packet.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#gestureSyncSendsChangesAndResets(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">gestureSyncSendsChangesAndResets</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topFaceModifiedClicksAreConsumed(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">topFaceModifiedClicksAreConsumed</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Only changed mode/modifier state is sent; reconnect reset forces the next state packet.</div>
+<div class="block">A modified top-face click on any stack is consumed whether its cells are empty, partly
+ occupied, or full; the server deposits or places the selected type above.</div>
 </div>
 </div>
 </div>
@@ -152,21 +153,21 @@ loadScripts(document, 'script');</script>
 <h3>blockRulesRespectPrecedenceAndHands</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">blockRulesRespectPrecedenceAndHands</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Only the first matching main-hand rule claims a block click. To reproduce in-game: try plain
+<div class="block">Only main-hand clicks that name a gesture are consumed. To reproduce in-game: try plain
  extraction, modified deposit, Shift torch rotation, and empty-hand permanence on each stack
  type, then repeat with an off-hand item and on an ordinary block. Unclaimed clicks retain
  ordinary use. Toggle Permanent reserves modified clicks against deposit and placement.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="fullTopFacesFallThroughToPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
-<h3>fullTopFacesFallThroughToPlacement</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullTopFacesFallThroughToPlacement</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+<section class="detail" id="topFaceModifiedClicksAreConsumed(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>topFaceModifiedClicksAreConsumed</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">topFaceModifiedClicksAreConsumed</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Full top-face display deposits fall through to placement; Storage keeps its own pile deposit.
- To reproduce in-game: fill a Singles or Bar top cell and modifier-click its top face while
- holding an eligible item. Placement handles the new block above. A Storage click deposits
- through its existing pile instead. Empty and supported display positions stay deposits.</div>
+<div class="block">A modified top-face click on any stack is consumed whether its cells are empty, partly
+ occupied, or full; the server deposits or places the selected type above. To reproduce
+ in-game: modifier-click the top face of each stack type while holding an eligible item, with
+ its cells empty and then full. The held item is never used against the block.</div>
 </section>
 </li>
 <li>
@@ -175,9 +176,11 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">airRulesAndDisabledModeCycling</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Air cycling distinguishes hit type and hand, skips disabled types, and always retains
- permanence. To reproduce in-game: hold the modifier and click air with empty and occupied
- main hands, also holding an off-hand item. Modes cycle only from the main hand, and disabled
- types are skipped. Clicking a block must not cycle the mode.</div>
+ permanence; a published server policy moves the selection off a type it disables. To
+ reproduce in-game: hold the modifier and click air with empty and occupied main hands, also
+ holding an off-hand item. Modes cycle only from the main hand, and disabled types are
+ skipped. Clicking a block must not cycle the mode. Then select Storage, have an operator
+ disable Storage and run /ss reload: the hotbar shows Singles mode.</div>
 </section>
 </li>
 <li>

@@ -106,7 +106,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second even-row-color"><code><a href="#STACK_GESTURES_PHASE" class="member-name-link">STACK_GESTURES_PHASE</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">The block-use phase, ordered after the default one, in which the mod's server and client
+ gesture listeners run.</div>
+</div>
 </div>
 </section>
 </li>
@@ -123,7 +126,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#init()" class="member-name-link">init</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers the server gesture listener for sneaking rotation and adjacent clicks in <a href="#STACK_GESTURES_PHASE"><code>STACK_GESTURES_PHASE</code></a>, so default-phase listeners, such as protection mods, decide first
+ and a click one of them handles never reaches it.</div>
+</div>
 </div>
 </div>
 </div>
@@ -145,6 +151,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="STACK_GESTURES_PHASE">
 <h3>STACK_GESTURES_PHASE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">STACK_GESTURES_PHASE</span></div>
+<div class="block">The block-use phase, ordered after the default one, in which the mod's server and client
+ gesture listeners run.</div>
 </section>
 </li>
 </ul>
@@ -159,6 +167,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="init()">
 <h3>init</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">init</span>()</div>
+<div class="block">Registers the server gesture listener for sneaking rotation and adjacent clicks in <a href="#STACK_GESTURES_PHASE"><code>STACK_GESTURES_PHASE</code></a>, so default-phase listeners, such as protection mods, decide first
+ and a click one of them handles never reaches it.</div>
 </section>
 </li>
 </ul>

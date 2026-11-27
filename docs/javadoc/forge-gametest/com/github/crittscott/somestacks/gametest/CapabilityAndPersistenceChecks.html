@@ -131,6 +131,17 @@ loadScripts(document, 'script');</script>
 <div class="block">Saved rotation waits until chunk attachment before changing the world.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#releasedBarFormatLoads(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">releasedBarFormatLoads</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A Bar block entity saved by the preceding release (1.20.1) loads the ingot in each position.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#releasedSinglesFormatLoads(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">releasedSinglesFormatLoads</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A Singles block entity saved by the preceding release (1.20.1) loads its items, item data,
+ per-item rotations, and layout rotation.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">setAsideItemsRecoverIntoFreeSlots</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Set-aside entries recover only into free valid slots and disappear from retained disk data.</div>
@@ -164,8 +175,15 @@ loadScripts(document, 'script');</script>
  state.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateTagOmitsContainerContentsAndBookPages(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagOmitsContainerContentsAndBookPages</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A stack's update to nearby clients leaves out the contents of container items and book
+ pages, which no renderer draws, while the stored stacks and the saved block keep them, and a
+ client still accepts the update.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Client update tags carry every field the renderers need while omitting server-only state.</div>
 </div>
 </div>
@@ -222,6 +240,19 @@ loadScripts(document, 'script');</script>
  Singles, and join with another client. Contents and rotations appear. Verifying omission of
  Permanent and Items.SetAside requires inspecting the update tags; no purely in-game
  reproduction proves those fields are absent.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="updateTagOmitsContainerContentsAndBookPages(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>updateTagOmitsContainerContentsAndBookPages</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateTagOmitsContainerContentsAndBookPages</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A stack's update to nearby clients leaves out the contents of container items and book
+ pages, which no renderer draws, while the stored stacks and the saved block keep them, and a
+ client still accepts the update. To reproduce in-game: put a shulker box holding diamonds, a
+ book and quill with writing, and a bundle holding sticks in a Storage Stack, walk out of
+ range and back: all three still render. Save, reopen the world, and take them out: the box
+ still holds its diamonds and the book its page. What the update omits is visible only in
+ network traffic.</div>
 </section>
 </li>
 <li>
@@ -292,6 +323,32 @@ loadScripts(document, 'script');</script>
  data, rotation, or permanence. To reproduce in-game: open a copy of a preceding-release
  1.20.1 world in 1.21.1, extract a tagged item from a rotated permanent Storage Stack, and
  save/reopen it; the tagged item and the pile's orientation and permanence must survive.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="releasedSinglesFormatLoads(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>releasedSinglesFormatLoads</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">releasedSinglesFormatLoads</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A Singles block entity saved by the preceding release (1.20.1) loads its items, item data,
+ per-item rotations, and layout rotation. The fixture is written from string-literal keys in
+ that release's layout (<code>Items</code> holding an <code>Items</code> list of <code>
+ Slot</code>/<code>id</code>/byte <code>Count</code>/<code>tag</code> entries, a 64-entry <code>CubeRotations</code> int
+ array, and a block-entity <code>Rotation</code>), not from the current save code. To reproduce
+ in-game: in 1.20.1, deposit an apple and a renamed stick into a Singles Stack, turn the block
+ and each item, and save; open a copy of that world in this version. Both items are still in
+ their cells, the stick keeps its name, and the block and each item face as before.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="releasedBarFormatLoads(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>releasedBarFormatLoads</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">releasedBarFormatLoads</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A Bar block entity saved by the preceding release (1.20.1) loads the ingot in each position.
+ The fixture is written from string-literal keys in that release's layout (<code>Items</code>
+ holding an <code>Items</code> list of <code>Slot</code>/<code>id</code>/byte <code>Count</code> entries), not from
+ the current save code. To reproduce in-game: in 1.20.1, deposit an iron ingot and a gold ingot
+ into a Bar Stack and save; open a copy of that world in this version. The same two positions
+ hold the same ingots.</div>
 </section>
 </li>
 </ul>

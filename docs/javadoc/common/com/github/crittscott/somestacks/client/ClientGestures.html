@@ -130,7 +130,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#cycleMode()" class="member-name-link">cycleMode</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Advances to the next mode, skipping disabled block types but always retaining permanence.</div>
+<div class="block">Advances the selected mode along <a href="../util/StackMode.html#next()"><code>StackMode.next()</code></a>, skipping server-disabled block
+ types.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#displayModeMessage(net.minecraft.world.entity.player.Player)" class="member-name-link">displayModeMessage</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
@@ -146,20 +147,26 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Classifies the loader's current crosshair hit without consulting the client singleton.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resetSync()" class="member-name-link">resetSync</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#leaveDisabledMode()" class="member-name-link">leaveDisabledMode</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Moves the selection off a block type the current server policy disables, as <a href="#cycleMode()"><code>cycleMode()</code></a> would, so a placement never names a type the server refuses.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resetSync()" class="member-name-link">resetSync</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Forces the next interaction to establish state on a new connection.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a><wbr>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSender(java.util.function.Consumer)" class="member-name-link">setSender</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a><wbr>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSender(java.util.function.Consumer)" class="member-name-link">setSender</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Replaces the loader sender and returns its predecessor; null detaches the sender.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncState(boolean)" class="member-name-link">syncState</a><wbr>(boolean&nbsp;modifierDown)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Sends only state that changed since the last interaction on this connection.</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncState(boolean)" class="member-name-link">syncState</a><wbr>(boolean&nbsp;modifierDown)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sends only state that changed since the last interaction on this connection, through the
+ sender the loader's client initializer installed.</div>
 </div>
 </div>
 </div>
@@ -233,7 +240,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="cycleMode()">
 <h3>cycleMode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">cycleMode</span>()</div>
-<div class="block">Advances to the next mode, skipping disabled block types but always retaining permanence.</div>
+<div class="block">Advances the selected mode along <a href="../util/StackMode.html#next()"><code>StackMode.next()</code></a>, skipping server-disabled block
+ types. Toggle Permanent is always available, so the walk ends there at the latest. This
+ changes local selection only; it neither sends state nor displays a message.</div>
 </section>
 </li>
 <li>
@@ -243,10 +252,22 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="leaveDisabledMode()">
+<h3>leaveDisabledMode</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">leaveDisabledMode</span>()</div>
+<div class="block">Moves the selection off a block type the current server policy disables, as <a href="#cycleMode()"><code>cycleMode()</code></a> would, so a placement never names a type the server refuses.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>whether the selected mode changed</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="syncState(boolean)">
 <h3>syncState</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">syncState</span><wbr><span class="parameters">(boolean&nbsp;modifierDown)</span></div>
-<div class="block">Sends only state that changed since the last interaction on this connection.</div>
+<div class="block">Sends only state that changed since the last interaction on this connection, through the
+ sender the loader's client initializer installed.</div>
 </section>
 </li>
 <li>

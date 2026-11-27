@@ -93,8 +93,8 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Resolves a stack through vanilla's item model pipeline and records what drawing it would emit,
  without drawing anything. Baked quads arrive whole, with the tint vanilla resolved for their
- layer; geometry written vertex by vertex, as a special model renderer or a loader's own item
- renderer writes it, counts toward the bounds but cannot be reproduced quad by quad.
+ layer; geometry written vertex by vertex, as a <code>BlockEntityWithoutLevelRenderer</code> or a
+ loader's own item renderer writes it, counts toward the bounds but cannot be reproduced quad by quad.
 
  <p>One instance serves the render thread, and each capture replaces the previous one, so a caller
  must finish with a result before capturing again.</div>
@@ -164,7 +164,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Whether the stack resolved to nothing to draw.</div>
+<div class="block">Whether no item model was resolved; geometry that draws nothing shows as null bounds.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="ItemCapture.TintedQuad.html" title="class in com.github.crittscott.somestacks.client">ItemCapture.TintedQuad</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#quads()" class="member-name-link">quads</a>()</code></div>
@@ -217,7 +217,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="isEmpty()">
 <h3>isEmpty</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEmpty</span>()</div>
-<div class="block">Whether the stack resolved to nothing to draw.</div>
+<div class="block">Whether no item model was resolved; geometry that draws nothing shows as null bounds.</div>
 </section>
 </li>
 <li>

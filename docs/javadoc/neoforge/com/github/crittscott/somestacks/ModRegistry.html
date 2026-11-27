@@ -91,8 +91,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ModRegistry</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">The mod's registered blocks and block entity types, and the NeoForge registration glue behind
- them. Common code reads the registered values through <code>CommonRegistry</code>.</div>
+<div class="block">The mod's registered blocks, block entity types, and sounds, the NeoForge registration glue
+ behind them, and the block entities' item-handler capability. Common code reads the registered
+ values through <code>CommonRegistry</code>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -105,12 +106,6 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#BAR_DEPOSIT_SOUND" class="member-name-link">BAR_DEPOSIT_SOUND</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#BAR_EXTRACT_SOUND" class="member-name-link">BAR_EXTRACT_SOUND</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;?&gt;,<wbr>net.minecraft.world.level.block.entity.BlockEntityType&lt;com.github.crittscott.somestacks.block.BarStackBE&gt;&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#BAR_STACK_BE" class="member-name-link">BAR_STACK_BE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -123,18 +118,6 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final net.neoforged.neoforge.registries.DeferredRegister.Blocks</code></div>
 <div class="col-second odd-row-color"><code><a href="#BLOCKS" class="member-name-link">BLOCKS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#SINGLES_DEPOSIT_SOUND" class="member-name-link">SINGLES_DEPOSIT_SOUND</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_EXTRACT_SOUND" class="member-name-link">SINGLES_EXTRACT_SOUND</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#SINGLES_ROTATE_ITEM_SOUND" class="member-name-link">SINGLES_ROTATE_ITEM_SOUND</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_ROTATE_SOUND" class="member-name-link">SINGLES_ROTATE_SOUND</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;?&gt;,<wbr>net.minecraft.world.level.block.entity.BlockEntityType&lt;com.github.crittscott.somestacks.block.SinglesStackBE&gt;&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#SINGLES_STACK_BE" class="member-name-link">SINGLES_STACK_BE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -144,21 +127,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static final net.neoforged.neoforge.registries.DeferredRegister<wbr>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#SOUNDS" class="member-name-link">SOUNDS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#STORAGE_DEPOSIT_SOUND" class="member-name-link">STORAGE_DEPOSIT_SOUND</a></code></div>
+<div class="col-first odd-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;?&gt;,<wbr>net.minecraft.world.level.block.entity.BlockEntityType&lt;com.github.crittscott.somestacks.block.StorageStackBE&gt;&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#STORAGE_STACK_BE" class="member-name-link">STORAGE_STACK_BE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#STORAGE_EXTRACT_SOUND" class="member-name-link">STORAGE_EXTRACT_SOUND</a></code></div>
+<div class="col-first even-row-color"><code>static final net.neoforged.neoforge.registries.DeferredBlock<wbr>&lt;com.github.crittscott.somestacks.block.StorageStackBlock&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#STORAGE_STACK_BLOCK" class="member-name-link">STORAGE_STACK_BLOCK</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#STORAGE_ROTATE_SOUND" class="member-name-link">STORAGE_ROTATE_SOUND</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final net.neoforged.neoforge.registries.DeferredHolder<wbr>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;?&gt;,<wbr>net.minecraft.world.level.block.entity.BlockEntityType&lt;com.github.crittscott.somestacks.block.StorageStackBE&gt;&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#STORAGE_STACK_BE" class="member-name-link">STORAGE_STACK_BE</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final net.neoforged.neoforge.registries.DeferredBlock<wbr>&lt;com.github.crittscott.somestacks.block.StorageStackBlock&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#STORAGE_STACK_BLOCK" class="member-name-link">STORAGE_STACK_BLOCK</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -175,7 +149,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#init(net.neoforged.bus.api.IEventBus)" class="member-name-link">init</a><wbr>(net.neoforged.bus.api.IEventBus&nbsp;modBus)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Subscribes the block, block entity, and sound registers (after adding every sound) and the
+ capability registration to the mod bus.</div>
+</div>
 </div>
 </div>
 </div>
@@ -230,60 +207,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="STORAGE_DEPOSIT_SOUND">
-<h3>STORAGE_DEPOSIT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.neoforged.neoforge.registries.DeferredHolder&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">STORAGE_DEPOSIT_SOUND</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="STORAGE_EXTRACT_SOUND">
-<h3>STORAGE_EXTRACT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.neoforged.neoforge.registries.DeferredHolder&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">STORAGE_EXTRACT_SOUND</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="STORAGE_ROTATE_SOUND">
-<h3>STORAGE_ROTATE_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.neoforged.neoforge.registries.DeferredHolder&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">STORAGE_ROTATE_SOUND</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_DEPOSIT_SOUND">
-<h3>SINGLES_DEPOSIT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.neoforged.neoforge.registries.DeferredHolder&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">SINGLES_DEPOSIT_SOUND</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_EXTRACT_SOUND">
-<h3>SINGLES_EXTRACT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.neoforged.neoforge.registries.DeferredHolder&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">SINGLES_EXTRACT_SOUND</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_ROTATE_SOUND">
-<h3>SINGLES_ROTATE_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.neoforged.neoforge.registries.DeferredHolder&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">SINGLES_ROTATE_SOUND</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_ROTATE_ITEM_SOUND">
-<h3>SINGLES_ROTATE_ITEM_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.neoforged.neoforge.registries.DeferredHolder&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">SINGLES_ROTATE_ITEM_SOUND</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="BAR_DEPOSIT_SOUND">
-<h3>BAR_DEPOSIT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.neoforged.neoforge.registries.DeferredHolder&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">BAR_DEPOSIT_SOUND</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="BAR_EXTRACT_SOUND">
-<h3>BAR_EXTRACT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.neoforged.neoforge.registries.DeferredHolder&lt;net.minecraft.sounds.SoundEvent,<wbr>net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">BAR_EXTRACT_SOUND</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="BAR_STACK_BE">
 <h3>BAR_STACK_BE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.neoforged.neoforge.registries.DeferredHolder&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;?&gt;,<wbr>net.minecraft.world.level.block.entity.BlockEntityType&lt;com.github.crittscott.somestacks.block.BarStackBE&gt;&gt;</span>&nbsp;<span class="element-name">BAR_STACK_BE</span></div>
@@ -313,6 +236,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="init(net.neoforged.bus.api.IEventBus)">
 <h3>init</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">init</span><wbr><span class="parameters">(net.neoforged.bus.api.IEventBus&nbsp;modBus)</span></div>
+<div class="block">Subscribes the block, block entity, and sound registers (after adding every sound) and the
+ capability registration to the mod bus. Runs once from the mod constructor.</div>
 </section>
 </li>
 </ul>

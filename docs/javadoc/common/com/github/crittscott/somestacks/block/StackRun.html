@@ -100,8 +100,9 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">StackRun&lt;BE extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></span></div>
-<div class="block">Mechanics shared by every maximal vertical run of one stack type. Concrete runs retain their
- distinct insertion, extraction, growth, settlement, and collapse rules.</div>
+<div class="block">Mechanics shared by every maximal vertical run of one stack type, including the one gate on
+ growing a run one block taller. Concrete runs retain their distinct insertion, extraction,
+ settlement, and collapse rules, and what a grown block must hold clear.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -133,12 +134,13 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.level.ServerLevel,java.util.List,int,net.minecraft.world.level.block.Block)" class="member-name-link">StackRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.level.ServerLevel,java.util.List,int,com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">StackRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="StackRun.html" title="type parameter in StackRun">BE</a>&gt;&nbsp;blocks,
  int&nbsp;slotsPerBlock,
- net.minecraft.world.level.block.Block&nbsp;block)</code></div>
+ <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Creates a server-only run over a nonempty bottom-to-top list of same-type block entities.</div>
+<div class="block">Creates a server-only run over a bottom-to-top list of same-type block entities, empty when
+ the resolving block's entity is gone.</div>
 </div>
 </div>
 </section>
@@ -169,63 +171,78 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Owning block for a validated stored flat slot; headroom and invalid indices are not accepted.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.Block&nbsp;block)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Tests the height of the same-type run a block at pos would join, including both neighbors.</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canGrowSpace(net.minecraft.server.level.ServerPlayer)" class="member-name-link">canGrowSpace</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether the run may grow one block taller as far as anything without side effects can tell:
+ the height limit, the type's enablement, and <a href="../server/WorldEdits.html#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)"><code>WorldEdits.mayPlace(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.core.Direction)</code></a> for the space above,
+ checked against <code>actor</code> or, when null, the automation identity.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#comparatorSignal()" class="member-name-link">comparatorSignal</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether a block of <code>type</code> may be created at <code>pos</code>: the contiguous column it would
+ form, counting the runs both below and above it, must fit the configured maximum.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#comparatorSignal()" class="member-name-link">comparatorSignal</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Vanilla-style run-wide comparator strength: zero when empty, otherwise floor(fill * 14) + 1.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final double</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fillLevel()" class="member-name-link">fillLevel</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final double</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fillLevel()" class="member-name-link">fillLevel</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Whole-run fill computed from each block's maintained local contribution.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlot(int)" class="member-name-link">getSlot</a><wbr>(int&nbsp;flatSlot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlot(int)" class="member-name-link">getSlot</a><wbr>(int&nbsp;flatSlot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The current stack in a run position, or empty for headroom or an invalid position.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final <a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handlerOf(int)" class="member-name-link">handlerOf</a><wbr>(int&nbsp;flatSlot)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final <a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handlerOf(int)" class="member-name-link">handlerOf</a><wbr>(int&nbsp;flatSlot)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Mutable local storage for a validated stored flat slot.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#height()" class="member-name-link">height</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#height()" class="member-name-link">height</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Number of existing blocks in this resolved run.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;BE extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;<br>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#invalidateAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.lang.Class)" class="member-name-link">invalidateAround</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;BE extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;<br>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#invalidateAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.lang.Class)" class="member-name-link">invalidateAround</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;BE&gt;&nbsp;blockEntityClass)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Invalidates every cached run a structural change at <code>pos</code> could have altered.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlot(int)" class="member-name-link">localSlot</a><wbr>(int&nbsp;flatSlot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlot(int)" class="member-name-link">localSlot</a><wbr>(int&nbsp;flatSlot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Local index for a validated stored flat slot, with blocks ordered from the base upward.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markDirty()" class="member-name-link">markDirty</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markDirty()" class="member-name-link">markDirty</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Coalesces server changes into one next-tick pass on the base; no immediate publication
  occurs.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a>&gt;<br>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">markDirtyAt</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a>&gt;<br>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">markDirtyAt</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level,<wbr>net.minecraft.core.BlockPos,<wbr>R&gt;&nbsp;resolver)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does
  nothing.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#placeOnTop(net.minecraft.server.level.ServerPlayer,net.minecraft.world.phys.shapes.VoxelShape)" class="member-name-link">placeOnTop</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.world.phys.shapes.VoxelShape&nbsp;finalCollision)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Places a new block of this run's type on top through <a href="../server/WorldEdits.html#placeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)"><code>WorldEdits.placeChecked(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.core.Direction)</code></a>, which
+ applies the placement gate and obstruction by <code>finalCollision</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;?&gt;&gt;<br>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">publishAround</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
@@ -303,13 +320,14 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(net.minecraft.server.level.ServerLevel,java.util.List,int,net.minecraft.world.level.block.Block)">
+<section class="detail" id="&lt;init&gt;(net.minecraft.server.level.ServerLevel,java.util.List,int,com.github.crittscott.somestacks.util.BlockType)">
 <h3>StackRun</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">StackRun</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="StackRun.html" title="type parameter in StackRun">BE</a>&gt;&nbsp;blocks,
  int&nbsp;slotsPerBlock,
- net.minecraft.world.level.block.Block&nbsp;block)</span></div>
-<div class="block">Creates a server-only run over a nonempty bottom-to-top list of same-type block entities.</div>
+ <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</span></div>
+<div class="block">Creates a server-only run over a bottom-to-top list of same-type block entities, empty when
+ the resolving block's entity is gone.</div>
 </section>
 </li>
 </ul>
@@ -362,12 +380,15 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 </section>
 </li>
 <li>
-<section class="detail" id="columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block)">
+<section class="detail" id="columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.BlockType)">
 <h3>columnHasRoomFor</h3>
-<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">columnHasRoomFor</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">columnHasRoomFor</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.Block&nbsp;block)</span></div>
-<div class="block">Tests the height of the same-type run a block at pos would join, including both neighbors.</div>
+ <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</span></div>
+<div class="block">Whether a block of <code>type</code> may be created at <code>pos</code>: the contiguous column it would
+ form, counting the runs both below and above it, must fit the configured maximum. Testing the
+ whole resulting column rather than one neighboring run is what stops a block placed into the
+ gap between two runs from joining them into an over-tall one.</div>
 </section>
 </li>
 <li>
@@ -409,6 +430,33 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="StackRunItemAccess.html#advertisedSlots()">advertisedSlots</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="canGrowSpace(net.minecraft.server.level.ServerPlayer)">
+<h3>canGrowSpace</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canGrowSpace</span><wbr><span class="parameters">(@Nullable
+ net.minecraft.server.level.ServerPlayer&nbsp;actor)</span></div>
+<div class="block">Whether the run may grow one block taller as far as anything without side effects can tell:
+ the height limit, the type's enablement, and <a href="../server/WorldEdits.html#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)"><code>WorldEdits.mayPlace(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.core.Direction)</code></a> for the space above,
+ checked against <code>actor</code> or, when null, the automation identity. Simulating and
+ committing share this predicate with <a href="#placeOnTop(net.minecraft.server.level.ServerPlayer,net.minecraft.world.phys.shapes.VoxelShape)"><code>placeOnTop(net.minecraft.server.level.ServerPlayer, net.minecraft.world.phys.shapes.VoxelShape)</code></a>, so a simulated insertion cannot
+ promise a block the insertion itself would refuse.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="placeOnTop(net.minecraft.server.level.ServerPlayer,net.minecraft.world.phys.shapes.VoxelShape)">
+<h3>placeOnTop</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">placeOnTop</span><wbr><span class="parameters">(@Nullable
+ net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.world.phys.shapes.VoxelShape&nbsp;finalCollision)</span></div>
+<div class="block">Places a new block of this run's type on top through <a href="../server/WorldEdits.html#placeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)"><code>WorldEdits.placeChecked(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.core.Direction)</code></a>, which
+ applies the placement gate and obstruction by <code>finalCollision</code>. The caller adds the new
+ block entity to the run.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>actor</code> - the player responsible for the new block, or null for automation</dd>
 </dl>
 </section>
 </li>

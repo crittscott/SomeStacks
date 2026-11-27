@@ -126,12 +126,17 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerGestureState.State.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState.State</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#get(net.minecraft.server.level.ServerPlayer)" class="member-name-link">get</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The player's last reported state, or Storage mode with the modifier released when the
+ client has sent none this session.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#set(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.util.StackMode,boolean)" class="member-name-link">set</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  <a href="../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;mode,
  boolean&nbsp;modifierDown)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Records a client's reported state; called on the server thread by <code>GestureStatePkt</code>.</div>
+</div>
 </div>
 </div>
 </div>
@@ -153,6 +158,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="get(net.minecraft.server.level.ServerPlayer)">
 <h3>get</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ServerGestureState.State.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState.State</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">The player's last reported state, or Storage mode with the modifier released when the
+ client has sent none this session. Never records anything.</div>
 </section>
 </li>
 <li>
@@ -161,6 +168,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">set</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
  <a href="../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;mode,
  boolean&nbsp;modifierDown)</span></div>
+<div class="block">Records a client's reported state; called on the server thread by <code>GestureStatePkt</code>.</div>
 </section>
 </li>
 <li>

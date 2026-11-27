@@ -112,19 +112,31 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#init()" class="member-name-link">init</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Installs the sender that carries gesture state to the server.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onRegisterClientCommands(net.minecraftforge.client.event.RegisterClientCommandsEvent)" class="member-name-link">onRegisterClientCommands</a><wbr>(net.minecraftforge.client.event.RegisterClientCommandsEvent&nbsp;event)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers the client-side <code>/ss</code> subcommands.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onRightClick(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock)" class="member-name-link">onRightClick</a><wbr>(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock&nbsp;evt)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Runs last, as the server listener and Fabric's gesture phase do, so a listener that handles
+ the click earlier keeps it.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onRightClickEmpty(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickEmpty)" class="member-name-link">onRightClickEmpty</a><wbr>(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickEmpty&nbsp;evt)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Runs the air rules for an empty-hand air click and syncs gesture state.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onRightClickItem(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem)" class="member-name-link">onRightClickItem</a><wbr>(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem&nbsp;evt)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Runs the air rules for an air click with a held item, syncs gesture state, and cancels the
+ item use when a rule claims the click.</div>
+</div>
 </div>
 </div>
 </div>
@@ -146,30 +158,40 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="init()">
 <h3>init</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">init</span>()</div>
+<div class="block">Installs the sender that carries gesture state to the server. Runs once at client setup.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="onRegisterClientCommands(net.minecraftforge.client.event.RegisterClientCommandsEvent)">
 <h3>onRegisterClientCommands</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onRegisterClientCommands</span><wbr><span class="parameters">(net.minecraftforge.client.event.RegisterClientCommandsEvent&nbsp;event)</span></div>
+<div class="block">Registers the client-side <code>/ss</code> subcommands.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="onRightClickEmpty(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickEmpty)">
 <h3>onRightClickEmpty</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onRightClickEmpty</span><wbr><span class="parameters">(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickEmpty&nbsp;evt)</span></div>
+<div class="block">Runs the air rules for an empty-hand air click and syncs gesture state. <code>HIGHEST</code>, like
+ the item click, so the rules see the click before any other mod's listener.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="onRightClickItem(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem)">
 <h3>onRightClickItem</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onRightClickItem</span><wbr><span class="parameters">(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem&nbsp;evt)</span></div>
+<div class="block">Runs the air rules for an air click with a held item, syncs gesture state, and cancels the
+ item use when a rule claims the click. <code>HIGHEST</code>, so the item is not used by another
+ mod's listener before a claiming rule cancels it.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="onRightClick(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock)">
 <h3>onRightClick</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onRightClick</span><wbr><span class="parameters">(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock&nbsp;evt)</span></div>
+<div class="block">Runs last, as the server listener and Fabric's gesture phase do, so a listener that handles
+ the click earlier keeps it. It still receives a canceled click to synchronize gesture state,
+ because the vanilla block-use packet that follows carries the action to the server.</div>
 </section>
 </li>
 </ul>
