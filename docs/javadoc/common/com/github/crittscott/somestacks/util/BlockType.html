@@ -97,8 +97,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public enum </span><span class="element-name type-name-label">BlockType</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&gt;</span></div>
-<div class="block">The three stack types, as a value that can be named in a packet and looked up in the registry or
- the server config. Ordinals are the wire form, so their order is a protocol detail.</div>
+<div class="block">The three stack types, as a value that can be looked up in the registry or the server config,
+ and what differs between them before a block of the type exists: admission, enablement, sounds,
+ and the shape of a new block's first deposit.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -139,12 +140,36 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#admits(net.minecraft.world.item.ItemStack)" class="member-name-link">admits</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether this type accepts <code>stack</code> as a new deposit, the rule its block entities apply
+ as <code>admits</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depositSound()" class="member-name-link">depositSound</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractSound()" class="member-name-link">extractSound</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.shapes.VoxelShape</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#firstDepositShape(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,com.github.crittscott.somestacks.util.ViewRay)" class="member-name-link">firstDepositShape</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ <a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The collision shape a new block of this type in <code>state</code> at <code>pos</code> would have once
+ it holds the first deposit along <code>ray</code>, or null when that deposit would find no
+ supported cell.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.level.block.Block</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBlock()" class="member-name-link">getBlock</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether the server policy enables this type.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#of(net.minecraft.world.level.block.Block)" class="member-name-link">of</a><wbr>(net.minecraft.world.level.block.Block&nbsp;block)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -247,6 +272,41 @@ not permitted.)</div>
 </section>
 </li>
 <li>
+<section class="detail" id="admits(net.minecraft.world.item.ItemStack)">
+<h3>admits</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">admits</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="block">Whether this type accepts <code>stack</code> as a new deposit, the rule its block entities apply
+ as <code>admits</code>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="depositSound()">
+<h3>depositSound</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">depositSound</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="extractSound()">
+<h3>extractSound</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">extractSound</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="firstDepositShape(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,com.github.crittscott.somestacks.util.ViewRay)">
+<h3>firstDepositShape</h3>
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.phys.shapes.VoxelShape</span>&nbsp;<span class="element-name">firstDepositShape</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ <a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray)</span></div>
+<div class="block">The collision shape a new block of this type in <code>state</code> at <code>pos</code> would have once
+ it holds the first deposit along <code>ray</code>, or null when that deposit would find no
+ supported cell. Changes nothing. A new block starts empty and takes its real shape only with
+ its first deposit, so placement tests obstruction against this shape. New blocks are
+ unrotated, so Singles cells are traced in their storage frame.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getBlock()">
 <h3>getBlock</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.Block</span>&nbsp;<span class="element-name">getBlock</span>()</div>
@@ -256,6 +316,8 @@ not permitted.)</div>
 <section class="detail" id="isEnabled()">
 <h3>isEnabled</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEnabled</span>()</div>
+<div class="block">Whether the server policy enables this type. Server-side only; the client's copy is <code>
+ ClientServerSettings</code>.</div>
 </section>
 </li>
 </ul>

@@ -91,8 +91,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ForgeRegistry</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">The mod's registered blocks and block entity types, and the Forge registration glue behind them.
- Common code reads the registered values through <code>CommonRegistry</code>.
+<div class="block">The mod's registered blocks, block entity types, and sounds, and the Forge registration glue
+ behind them. Common code reads the registered values through <code>CommonRegistry</code>.
 
  <p>There are deliberately no block items, no recipes, and no menus: stacks reach the world only
  through a player gesture or capability-driven growth, and their contents are reached by clicking
@@ -155,7 +155,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#init(net.minecraftforge.eventbus.api.bus.BusGroup)" class="member-name-link">init</a><wbr>(net.minecraftforge.eventbus.api.bus.BusGroup&nbsp;modBus)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Subscribes the block, block entity, and sound registers (after adding every sound) to the mod
+ bus.</div>
+</div>
 </div>
 </div>
 </div>
@@ -239,6 +242,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="init(net.minecraftforge.eventbus.api.bus.BusGroup)">
 <h3>init</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">init</span><wbr><span class="parameters">(net.minecraftforge.eventbus.api.bus.BusGroup&nbsp;modBus)</span></div>
+<div class="block">Subscribes the block, block entity, and sound registers (after adding every sound) to the mod
+ bus. Runs once from the mod constructor.</div>
 </section>
 </li>
 </ul>

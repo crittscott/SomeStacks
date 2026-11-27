@@ -98,7 +98,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">ConfigSyncPkt</span>(boolean&nbsp;enableStorage, boolean&nbsp;enableSingles, boolean&nbsp;enableBar, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;genMods, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;disabledMods)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a>
 implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</span></div>
-<div class="block">Complete client policy snapshot; Fabric sends it as one bounded play payload.</div>
+<div class="block">Complete client policy snapshot, sent by every loader as one bounded play payload.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -195,7 +195,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromSettings(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">fromSettings</a><wbr>(<a href="../ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;settings)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Normalizes policy for either native NeoForge receipt or Fabric payload delivery.</div>
+<div class="block">Normalizes the published policy into the client snapshot.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#genMods()" class="member-name-link">genMods</a>()</code></div>
@@ -312,7 +312,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <section class="detail" id="fromSettings(com.github.crittscott.somestacks.ServerConfig.Settings)">
 <h3>fromSettings</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></span>&nbsp;<span class="element-name">fromSettings</span><wbr><span class="parameters">(<a href="../ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;settings)</span></div>
-<div class="block">Normalizes policy for either native NeoForge receipt or Fabric payload delivery.</div>
+<div class="block">Normalizes the published policy into the client snapshot.</div>
 </section>
 </li>
 <li>

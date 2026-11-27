@@ -96,7 +96,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ForgeServerConfig</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements com.github.crittscott.somestacks.ServerConfig.Backend</span></div>
-<div class="block">Loader-managed server configuration exposed as one immutable common policy snapshot.</div>
+<div class="block">Loader-managed server configuration exposed as one immutable common policy snapshot. The spec is
+ built from <code>ServerConfig</code>'s declaration of sections and settings.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -134,10 +135,14 @@ implements com.github.crittscott.somestacks.ServerConfig.Backend</span></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLoading(net.minecraftforge.fml.event.config.ModConfigEvent.Loading)" class="member-name-link">onLoading</a><wbr>(net.minecraftforge.fml.event.config.ModConfigEvent.Loading&nbsp;event)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Mod-bus listener for the loader loading this spec's file.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onReloading(net.minecraftforge.fml.event.config.ModConfigEvent.Reloading)" class="member-name-link">onReloading</a><wbr>(net.minecraftforge.fml.event.config.ModConfigEvent.Reloading&nbsp;event)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Mod-bus listener for an edit to this spec's file.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#path()" class="member-name-link">path</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -149,6 +154,12 @@ implements com.github.crittscott.somestacks.ServerConfig.Backend</span></div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#save(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">save</a><wbr>(com.github.crittscott.somestacks.ServerConfig.Settings&nbsp;settings)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stop()" class="member-name-link">stop</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Forgets the running server on server stop, so a later file event does not reload or resync a
+ stopped server.</div>
+</div>
 </div>
 </div>
 </div>
@@ -187,24 +198,6 @@ implements com.github.crittscott.somestacks.ServerConfig.Backend</span></div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="path()">
-<h3>path</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">path</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="onLoading(net.minecraftforge.fml.event.config.ModConfigEvent.Loading)">
-<h3>onLoading</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onLoading</span><wbr><span class="parameters">(net.minecraftforge.fml.event.config.ModConfigEvent.Loading&nbsp;event)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="onReloading(net.minecraftforge.fml.event.config.ModConfigEvent.Reloading)">
-<h3>onReloading</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onReloading</span><wbr><span class="parameters">(net.minecraftforge.fml.event.config.ModConfigEvent.Reloading&nbsp;event)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="loadFor(net.minecraft.server.MinecraftServer)">
 <h3>loadFor</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.crittscott.somestacks.ServerConfig.Settings</span>&nbsp;<span class="element-name">loadFor</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server)</span></div>
@@ -212,6 +205,30 @@ implements com.github.crittscott.somestacks.ServerConfig.Backend</span></div>
 <dt>Specified by:</dt>
 <dd><code>loadFor</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.ServerConfig.Backend</code></dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="onLoading(net.minecraftforge.fml.event.config.ModConfigEvent.Loading)">
+<h3>onLoading</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onLoading</span><wbr><span class="parameters">(net.minecraftforge.fml.event.config.ModConfigEvent.Loading&nbsp;event)</span></div>
+<div class="block">Mod-bus listener for the loader loading this spec's file. Records the loaded config and,
+ while a server is running with this backend installed, reapplies the policy and resyncs
+ clients on the server thread.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onReloading(net.minecraftforge.fml.event.config.ModConfigEvent.Reloading)">
+<h3>onReloading</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onReloading</span><wbr><span class="parameters">(net.minecraftforge.fml.event.config.ModConfigEvent.Reloading&nbsp;event)</span></div>
+<div class="block">Mod-bus listener for an edit to this spec's file. Records the reloaded config and, while a
+ server is running with this backend installed, reapplies the policy and resyncs clients on
+ the server thread.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="path()">
+<h3>path</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">path</span>()</div>
 </section>
 </li>
 <li>
@@ -233,6 +250,14 @@ implements com.github.crittscott.somestacks.ServerConfig.Backend</span></div>
 <dt>Specified by:</dt>
 <dd><code>save</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.ServerConfig.Backend</code></dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="stop()">
+<h3>stop</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stop</span>()</div>
+<div class="block">Forgets the running server on server stop, so a later file event does not reload or resync a
+ stopped server.</div>
 </section>
 </li>
 </ul>

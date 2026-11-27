@@ -37,7 +37,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Summary:</p>
 <ul>
-<li>Nested</li>
+<li><a href="#nested-class-summary">Nested</a></li>
 <li><a href="#field-summary">Field</a></li>
 <li>Constr</li>
 <li><a href="#method-summary">Method</a></li>
@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -95,10 +95,28 @@ loadScripts(document, 'script');</script>
  client override file, generated profile files, and the measured cache.
 
  <p>A document is a JSON object keyed by item id; each value contains optional <code>mode</code>,
- <code>scale</code>, and <code>offset</code> fields. Malformed entries and fields are logged and skipped.</div>
+ <code>scale</code>, and <code>offset</code> fields. Each field is decoded by its own codec, so a malformed
+ field is logged and skipped while the entry's valid fields are kept.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="OverrideJsonCodec.Document.html" class="type-name-link" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec.Document</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">One parsed document.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -109,21 +127,26 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static final float</code></div>
-<div class="col-second even-row-color"><code><a href="#MAX_OFFSET" class="member-name-link">MAX_OFFSET</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final float</code></div>
-<div class="col-second odd-row-color"><code><a href="#MAX_SCALE" class="member-name-link">MAX_SCALE</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final float</code></div>
-<div class="col-second even-row-color"><code><a href="#MIN_OFFSET" class="member-name-link">MIN_OFFSET</a></code></div>
+<div class="col-second even-row-color"><code><a href="#DEFAULT_SCALE" class="member-name-link">DEFAULT_SCALE</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Scale of an entry that names none, and of <code>ss item</code> given none.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final float</code></div>
+<div class="col-second odd-row-color"><code><a href="#MAX_OFFSET" class="member-name-link">MAX_OFFSET</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Inclusive offset bounds in cell widths.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final float</code></div>
-<div class="col-second odd-row-color"><code><a href="#MIN_SCALE" class="member-name-link">MIN_SCALE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final float</code></div>
+<div class="col-second even-row-color"><code><a href="#MAX_SCALE" class="member-name-link">MAX_SCALE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Inclusive scale bounds shared by authored overrides and automatic measurement.</div>
 </div>
+<div class="col-first odd-row-color"><code>static final float</code></div>
+<div class="col-second odd-row-color"><code><a href="#MIN_OFFSET" class="member-name-link">MIN_OFFSET</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final float</code></div>
+<div class="col-second even-row-color"><code><a href="#MIN_SCALE" class="member-name-link">MIN_SCALE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -138,35 +161,23 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.gson.JsonObject</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#entryToJson(com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)" class="member-name-link">entryToJson</a><wbr>(<a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&nbsp;config)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Serializes one sanitized override entry, returning an empty object if encoding fails.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#inRange(float,float,float)" class="member-name-link">inRange</a><wbr>(float&nbsp;value,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#inRange(float,float,float)" class="member-name-link">inRange</a><wbr>(float&nbsp;value,
  float&nbsp;min,
  float&nbsp;max)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether a value is finite and within the inclusive bounds.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.Identifier,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#parse(com.google.gson.JsonObject,java.lang.String)" class="member-name-link">parse</a><wbr>(com.google.gson.JsonObject&nbsp;root,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="OverrideJsonCodec.Document.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec.Document</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#parse(com.google.gson.JsonObject,java.lang.String)" class="member-name-link">parse</a><wbr>(com.google.gson.JsonObject&nbsp;root,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sourceName)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Parses every valid item entry, logging and skipping malformed entries or fields.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#parseEntry(java.lang.String,com.google.gson.JsonObject)" class="member-name-link">parseEntry</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;itemKey,
- com.google.gson.JsonObject&nbsp;json)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the parsed entry, or null if none of its fields are valid.</div>
+<div class="block">Parses every entry, logging malformed entries and fields with the source and item key.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sanitize(com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)" class="member-name-link">sanitize</a><wbr>(<a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&nbsp;config)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Applies the file-format bounds to an override before it is serialized, dropping invalid
- fields.</div>
+<div class="block">Applies the file-format bounds to an override, dropping invalid fields.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.gson.JsonObject</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toJson(java.util.Map)" class="member-name-link">toJson</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.Identifier,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&nbsp;map)</code></div>
@@ -191,15 +202,30 @@ loadScripts(document, 'script');</script>
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="MIN_SCALE">
-<h3>MIN_SCALE</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">MIN_SCALE</span></div>
-<div class="block">Inclusive scale bounds shared by authored overrides and automatic measurement.</div>
+<section class="detail" id="DEFAULT_SCALE">
+<h3>DEFAULT_SCALE</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">DEFAULT_SCALE</span></div>
+<div class="block">Scale of an entry that names none, and of <code>ss item</code> given none.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
 <ul class="tag-list">
-<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec.MIN_SCALE">Constant Field Values</a></li>
+<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec.DEFAULT_SCALE">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MAX_OFFSET">
+<h3>MAX_OFFSET</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">MAX_OFFSET</span></div>
+<div class="block">Inclusive offset bounds in cell widths.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec.MAX_OFFSET">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -209,6 +235,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="MAX_SCALE">
 <h3>MAX_SCALE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">MAX_SCALE</span></div>
+<div class="block">Inclusive scale bounds shared by authored overrides and automatic measurement.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -223,7 +250,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="MIN_OFFSET">
 <h3>MIN_OFFSET</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">MIN_OFFSET</span></div>
-<div class="block">Inclusive offset bounds in cell widths.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -235,14 +261,14 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="MAX_OFFSET">
-<h3>MAX_OFFSET</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">MAX_OFFSET</span></div>
+<section class="detail" id="MIN_SCALE">
+<h3>MIN_SCALE</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">MIN_SCALE</span></div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
 <ul class="tag-list">
-<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec.MAX_OFFSET">Constant Field Values</a></li>
+<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec.MIN_SCALE">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -269,26 +295,16 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="sanitize(com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)">
 <h3>sanitize</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></span>&nbsp;<span class="element-name">sanitize</span><wbr><span class="parameters">(<a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&nbsp;config)</span></div>
-<div class="block">Applies the file-format bounds to an override before it is serialized, dropping invalid
- fields. Authored and measured configurations do not pass through <a href="#parse(com.google.gson.JsonObject,java.lang.String)"><code>parse(com.google.gson.JsonObject, java.lang.String)</code></a>, so writing
- applies the same validation reading does.</div>
+<div class="block">Applies the file-format bounds to an override, dropping invalid fields. Serialization may
+ receive measured data rather than parsed data, so it validates through here.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="parse(com.google.gson.JsonObject,java.lang.String)">
 <h3>parse</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.Identifier,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">parse</span><wbr><span class="parameters">(com.google.gson.JsonObject&nbsp;root,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="OverrideJsonCodec.Document.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec.Document</a></span>&nbsp;<span class="element-name">parse</span><wbr><span class="parameters">(com.google.gson.JsonObject&nbsp;root,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sourceName)</span></div>
-<div class="block">Parses every valid item entry, logging and skipping malformed entries or fields.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="parseEntry(java.lang.String,com.google.gson.JsonObject)">
-<h3>parseEntry</h3>
-<div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></span>&nbsp;<span class="element-name">parseEntry</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;itemKey,
- com.google.gson.JsonObject&nbsp;json)</span></div>
-<div class="block">Returns the parsed entry, or null if none of its fields are valid.</div>
+<div class="block">Parses every entry, logging malformed entries and fields with the source and item key.</div>
 </section>
 </li>
 <li>
@@ -296,13 +312,6 @@ loadScripts(document, 'script');</script>
 <h3>toJson</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.gson.JsonObject</span>&nbsp;<span class="element-name">toJson</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.Identifier,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&nbsp;map)</span></div>
 <div class="block">Serializes entries sorted by item id for stable files.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="entryToJson(com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)">
-<h3>entryToJson</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.gson.JsonObject</span>&nbsp;<span class="element-name">entryToJson</span><wbr><span class="parameters">(<a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&nbsp;config)</span></div>
-<div class="block">Serializes one sanitized override entry, returning an empty object if encoding fails.</div>
 </section>
 </li>
 </ul>

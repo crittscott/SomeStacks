@@ -94,6 +94,8 @@ loadScripts(document, 'script');</script>
 <dt>Record Components:</dt>
 <dd><code><span id="param-flatProjectionAvailable">flatProjectionAvailable</span></code> - whether the shared 2-D renderer can draw the geometry that
      produced these bounds</dd>
+<dd><code><span id="param-bounds">bounds</span></code> - the drawn geometry's bounds, or null when nothing was drawn</dd>
+<dd><code><span id="param-failure">failure</span></code> - why no usable bounds were measured, or null on success</dd>
 </dl>
 <dl class="notes">
 <dt>Enclosing class:</dt>
@@ -136,7 +138,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.AABB</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#bounds()" class="member-name-link">bounds</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>bounds</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-bounds"><code>bounds</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
@@ -146,7 +148,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#failure()" class="member-name-link">failure</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>failure</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-failure"><code>failure</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#flatProjectionAvailable()" class="member-name-link">flatProjectionAvailable</a>()</code></div>
@@ -192,8 +194,8 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>flatProjectionAvailable</code> - the value for the <a href="#param-flatProjectionAvailable"><code>flatProjectionAvailable</code></a> record component</dd>
-<dd><code>bounds</code> - the value for the <code>bounds</code> record component</dd>
-<dd><code>failure</code> - the value for the <code>failure</code> record component</dd>
+<dd><code>bounds</code> - the value for the <a href="#param-bounds"><code>bounds</code></a> record component</dd>
+<dd><code>failure</code> - the value for the <a href="#param-failure"><code>failure</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -262,10 +264,10 @@ loadScripts(document, 'script');</script>
 <h3>bounds</h3>
 <div class="member-signature"><span class="annotations">@Nullable
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.phys.AABB</span>&nbsp;<span class="element-name">bounds</span>()</div>
-<div class="block">Returns the value of the <code>bounds</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-bounds"><code>bounds</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>bounds</code> record component</dd>
+<dd>the value of the <a href="#param-bounds"><code>bounds</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -274,10 +276,10 @@ loadScripts(document, 'script');</script>
 <h3>failure</h3>
 <div class="member-signature"><span class="annotations">@Nullable
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">failure</span>()</div>
-<div class="block">Returns the value of the <code>failure</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-failure"><code>failure</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>failure</code> record component</dd>
+<dd>the value of the <a href="#param-failure"><code>failure</code></a> record component</dd>
 </dl>
 </section>
 </li>

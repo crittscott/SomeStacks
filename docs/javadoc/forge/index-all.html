@@ -67,13 +67,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ForgeRegistry.html#BLOCKS" class="member-name-link">BLOCKS</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeRegistry.html" title="class in com.github.crittscott.somestacks">ForgeRegistry</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/ForgePlatformServices.html#broadcastConfig(net.minecraft.server.MinecraftServer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">broadcastConfig(MinecraftServer, ConfigSyncPkt)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgePlatformServices.html" title="class in com.github.crittscott.somestacks">ForgePlatformServices</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/client/ForgeKeyMappings.html#CATEGORY" class="member-name-link">CATEGORY</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ForgeKeyMappings.html" title="class in com.github.crittscott.somestacks.client">ForgeKeyMappings</a></dt>
-<dd>
-<div class="block">The mod's key-binding category, registered with vanilla when this class loads.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/network/ForgeNetworking.html#CHANNEL" class="member-name-link">CHANNEL</a> - Static variable in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ForgeNetworking.html" title="class in com.github.crittscott.somestacks.network">ForgeNetworking</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html#clear()" class="member-name-link">clear()</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a></dt>
@@ -127,10 +125,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html#%3Cinit%3E()" class="member-name-link">ForgeEditAuthority()</a> - Constructor for class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/ForgeKeyMappings.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">ForgeKeyMappings</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
-<dd>
-<div class="block">The mod's key bindings.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/network/ForgeNetworking.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">ForgeNetworking</a> - Class in <a href="com/github/crittscott/somestacks/network/package-summary.html">com.github.crittscott.somestacks.network</a></dt>
 <dd>
 <div class="block">The mod's single channel and the payload registrations on it.</div>
@@ -143,7 +137,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ForgeRegistry.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ForgeRegistry</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
 <dd>
-<div class="block">The mod's registered blocks and block entity types, and the Forge registration glue behind them.</div>
+<div class="block">The mod's registered blocks, block entity types, and sounds, and the Forge registration glue
+ behind them.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
 <dd>
@@ -193,13 +188,25 @@ loadScripts(document, 'script');</script>
 <h2 class="title" id="I:I">I</h2>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html#init()" class="member-name-link">init()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html" title="class in com.github.crittscott.somestacks.client">ForgeClientEvents</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Installs the sender that carries gesture state to the server.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/network/ForgeNetworking.html#init()" class="member-name-link">init()</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ForgeNetworking.html" title="class in com.github.crittscott.somestacks.network">ForgeNetworking</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Builds <a href="com/github/crittscott/somestacks/network/ForgeNetworking.html#CHANNEL"><code>ForgeNetworking.CHANNEL</code></a> and registers the gesture-state payload to the server and the config
+ snapshot to the client.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ForgeClientSetup.html#init(net.minecraftforge.eventbus.api.bus.BusGroup)" class="member-name-link">init(BusGroup)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ForgeClientSetup.html" title="class in com.github.crittscott.somestacks.client">ForgeClientSetup</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Runs once from the mod constructor on the physical client: installs the gesture-state
+ sender, subscribes the renderer, key, and reload-listener registrations to the mod bus, and
+ hands join, disconnect, and shutdown to <code>SomeStacksClient</code>.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/ForgeRegistry.html#init(net.minecraftforge.eventbus.api.bus.BusGroup)" class="member-name-link">init(BusGroup)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeRegistry.html" title="class in com.github.crittscott.somestacks">ForgeRegistry</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Subscribes the block, block entity, and sound registers (after adding every sound) to the mod
+ bus.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertItem(int, ItemStack, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
 <dd>
 <div class="block">Inserts at one bottom-up run position, leaving the offered stack unchanged and returning its
@@ -236,26 +243,52 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/block/ForgeStackBlockEntities.Storage.html#onDataPacket(net.minecraft.network.Connection,net.minecraft.world.level.storage.ValueInput,net.minecraft.core.HolderLookup.Provider)" class="member-name-link">onDataPacket(Connection, ValueInput, HolderLookup.Provider)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/ForgeStackBlockEntities.Storage.html" title="class in com.github.crittscott.somestacks.block">ForgeStackBlockEntities.Storage</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#onLoading(net.minecraftforge.fml.event.config.ModConfigEvent.Loading)" class="member-name-link">onLoading(ModConfigEvent.Loading)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Mod-bus listener for the loader loading this spec's file.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html#onRegisterClientCommands(net.minecraftforge.client.event.RegisterClientCommandsEvent)" class="member-name-link">onRegisterClientCommands(RegisterClientCommandsEvent)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html" title="class in com.github.crittscott.somestacks.client">ForgeClientEvents</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Registers the client-side <code>/ss</code> subcommands.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#onReloading(net.minecraftforge.fml.event.config.ModConfigEvent.Reloading)" class="member-name-link">onReloading(ModConfigEvent.Reloading)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Mod-bus listener for an edit to this spec's file.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html#onRightClick(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock)" class="member-name-link">onRightClick(PlayerInteractEvent.RightClickBlock)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html" title="class in com.github.crittscott.somestacks.client">ForgeClientEvents</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Runs last, as the server listener and Fabric's gesture phase do, so a listener that handles
+ the click earlier keeps it.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/server/ForgeStackInteractionEvents.html#onRightClickBlock(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock)" class="member-name-link">onRightClickBlock(PlayerInteractEvent.RightClickBlock)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ForgeStackInteractionEvents.html" title="class in com.github.crittscott.somestacks.server">ForgeStackInteractionEvents</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Handles sneaking torch rotation and clicks that reach a stack through a neighboring block,
+ passing on the block and item denials earlier listeners set.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html#onRightClickEmpty(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickEmpty)" class="member-name-link">onRightClickEmpty(PlayerInteractEvent.RightClickEmpty)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html" title="class in com.github.crittscott.somestacks.client">ForgeClientEvents</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Classifies an empty-hand air click and syncs gesture state.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html#onRightClickItem(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem)" class="member-name-link">onRightClickItem(PlayerInteractEvent.RightClickItem)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html" title="class in com.github.crittscott.somestacks.client">ForgeClientEvents</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Classifies an air click with a held item, syncs gesture state, and cancels the item use when
+ the gesture claims the click.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html#onRightClickSync(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock)" class="member-name-link">onRightClickSync(PlayerInteractEvent.RightClickBlock)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html" title="class in com.github.crittscott.somestacks.client">ForgeClientEvents</a></dt>
+<dd>
+<div class="block">Synchronizes gesture state for every client block click, including one a later listener
+ cancels, because the vanilla block-use packet that follows still carries the action to the
+ server.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#path()" class="member-name-link">path()</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html#place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">place(Player, ServerLevel, BlockPos, BlockState, Direction)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html#place(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">place(ServerPlayer, ServerLevel, BlockPos, BlockState, Direction)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a></dt>
+<dd>
+<div class="block">Places under Forge's snapshot capture, the way Forge's own item placement does, rather than
+ with the shorter snapshot, <code>setBlock</code>, place event, restore-on-veto pattern.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
@@ -293,9 +326,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#spec" class="member-name-link">spec</a> - Variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/ForgeKeyMappings.html#STACK_MODE_KEY" class="member-name-link">STACK_MODE_KEY</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ForgeKeyMappings.html" title="class in com.github.crittscott.somestacks.client">ForgeKeyMappings</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/ForgeClientSetup.html#STACK_MODE_KEY" class="member-name-link">STACK_MODE_KEY</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ForgeClientSetup.html" title="class in com.github.crittscott.somestacks.client">ForgeClientSetup</a></dt>
 <dd>
 <div class="block">The stack modifier, <code>V</code> by default and rebindable.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#stop()" class="member-name-link">stop()</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
+<dd>
+<div class="block">Forgets the running server on server stop, so a later file event does not reload or resync a
+ stopped server.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/ForgeStackBlockEntities.Storage.html#%3Cinit%3E(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">Storage(BlockPos, BlockState)</a> - Constructor for class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/ForgeStackBlockEntities.Storage.html" title="class in com.github.crittscott.somestacks.block">ForgeStackBlockEntities.Storage</a></dt>
 <dd>&nbsp;</dd>

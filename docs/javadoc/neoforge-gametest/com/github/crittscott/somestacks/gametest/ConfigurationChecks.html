@@ -128,7 +128,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Valid render-override fields round-trip in stable item-id order while malformed entries and
- fields are skipped independently.</div>
+ fields are skipped independently, and every entry with an unusable part is reported verbatim
+ for a writer to keep.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#overrideJsonUsesInclusiveBounds(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">overrideJsonUsesInclusiveBounds</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -164,7 +165,8 @@ loadScripts(document, 'script');</script>
 <h3>overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Valid render-override fields round-trip in stable item-id order while malformed entries and
- fields are skipped independently. No in-game reproduction applies: this directly verifies the
+ fields are skipped independently, and every entry with an unusable part is reported verbatim
+ for a writer to keep. No in-game reproduction applies: this directly verifies the
  JSON codec rather than a player-visible action.</div>
 </section>
 </li>

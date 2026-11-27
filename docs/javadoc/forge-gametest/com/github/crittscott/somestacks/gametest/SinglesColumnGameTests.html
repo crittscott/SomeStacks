@@ -128,20 +128,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilityExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">capabilityExtractionUsesThePlayerGravityPath</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: extract a lower Singles cell through item automation and verify the
- item above shifts down with its rotation, just as it does after player extraction.</div>
+<div class="block">See <a href="AutomationChecks.html#singlesExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.singlesExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilityInsertionAnswersForTheCellItIsGiven(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">capabilityInsertionAnswersForTheCellItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: target individual Singles cells with item automation; only the named
- supported empty cell accepts the item, without redirecting it elsewhere.</div>
+<div class="block">See <a href="AutomationChecks.html#singlesInsertionAnswersForTheCellItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.singlesInsertionAnswersForTheCellItIsGiven(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilityWalkFillsTheColumnFromTheBottom(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">capabilityWalkFillsTheColumnFromTheBottom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: let item automation walk the advertised Singles cells in order and
- verify the column fills from the lowest supported cell upward.</div>
+<div class="block">See <a href="AutomationChecks.html#singlesWalkFillsFromTheBottom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.singlesWalkFillsFromTheBottom(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorFollowsAColumnLosingABlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorFollowsAColumnLosingABlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -176,27 +173,27 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">drawDownKeepsAnItemItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="SinglesColumnChecks.html#drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)"><code>SinglesColumnChecks.drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="SinglesColumnChecks.html#drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>SinglesColumnChecks.drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionDrawsAcrossDifferentlyRotatedBlockBoundary</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="SinglesColumnChecks.html#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)"><code>SinglesColumnChecks.extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="SinglesColumnChecks.html#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>SinglesColumnChecks.extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionPreservesAnExistingGap</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="SinglesColumnChecks.html#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)"><code>SinglesColumnChecks.extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="SinglesColumnChecks.html#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>SinglesColumnChecks.extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionShiftsOneColumnAndCarriesItemRotation</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="SinglesColumnChecks.html#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)"><code>SinglesColumnChecks.extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="SinglesColumnChecks.html#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>SinglesColumnChecks.extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">shiftKeepsAnItemItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="SinglesColumnChecks.html#shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)"><code>SinglesColumnChecks.shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="SinglesColumnChecks.html#shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>SinglesColumnChecks.shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#standaloneBottomIsGroundedAndFloatingCellIsRejected(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">standaloneBottomIsGroundedAndFloatingCellIsRejected</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -264,59 +261,56 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>extractionShiftsOneColumnAndCarriesItemRotation</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionShiftsOneColumnAndCarriesItemRotation</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="SinglesColumnChecks.html#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)"><code>SinglesColumnChecks.extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="SinglesColumnChecks.html#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>SinglesColumnChecks.extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>shiftKeepsAnItemItWouldNoLongerAccept</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">shiftKeepsAnItemItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="SinglesColumnChecks.html#shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)"><code>SinglesColumnChecks.shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="SinglesColumnChecks.html#shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>SinglesColumnChecks.shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>drawDownKeepsAnItemItWouldNoLongerAccept</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawDownKeepsAnItemItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="SinglesColumnChecks.html#drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)"><code>SinglesColumnChecks.drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="SinglesColumnChecks.html#drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>SinglesColumnChecks.drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>extractionPreservesAnExistingGap</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionPreservesAnExistingGap</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="SinglesColumnChecks.html#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)"><code>SinglesColumnChecks.extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="SinglesColumnChecks.html#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>SinglesColumnChecks.extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>extractionDrawsAcrossDifferentlyRotatedBlockBoundary</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionDrawsAcrossDifferentlyRotatedBlockBoundary</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="SinglesColumnChecks.html#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)"><code>SinglesColumnChecks.extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="SinglesColumnChecks.html#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>SinglesColumnChecks.extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="capabilityInsertionAnswersForTheCellItIsGiven(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>capabilityInsertionAnswersForTheCellItIsGiven</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">capabilityInsertionAnswersForTheCellItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: target individual Singles cells with item automation; only the named
- supported empty cell accepts the item, without redirecting it elsewhere.</div>
+<div class="block">See <a href="AutomationChecks.html#singlesInsertionAnswersForTheCellItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.singlesInsertionAnswersForTheCellItIsGiven(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="capabilityWalkFillsTheColumnFromTheBottom(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>capabilityWalkFillsTheColumnFromTheBottom</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">capabilityWalkFillsTheColumnFromTheBottom</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: let item automation walk the advertised Singles cells in order and
- verify the column fills from the lowest supported cell upward.</div>
+<div class="block">See <a href="AutomationChecks.html#singlesWalkFillsFromTheBottom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.singlesWalkFillsFromTheBottom(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="capabilityExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>capabilityExtractionUsesThePlayerGravityPath</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">capabilityExtractionUsesThePlayerGravityPath</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: extract a lower Singles cell through item automation and verify the
- item above shifts down with its rotation, just as it does after player extraction.</div>
+<div class="block">See <a href="AutomationChecks.html#singlesExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.singlesExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </section>
 </li>
 <li>

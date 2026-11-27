@@ -100,8 +100,9 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">StackRun&lt;BE extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></span></div>
-<div class="block">Mechanics shared by every maximal vertical run of one stack type. Concrete runs retain their
- distinct insertion, extraction, growth, settlement, and collapse rules.</div>
+<div class="block">Mechanics shared by every maximal vertical run of one stack type, including the one gate on
+ growing a run one block taller. Concrete runs retain their distinct insertion, extraction,
+ settlement, and collapse rules, and what a grown block must hold clear.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -150,10 +151,10 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.level.ServerLevel,java.util.List,int,net.minecraft.world.level.block.Block)" class="member-name-link">StackRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.level.ServerLevel,java.util.List,int,com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">StackRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="StackRun.html" title="type parameter in StackRun">BE</a>&gt;&nbsp;blocks,
  int&nbsp;slotsPerBlock,
- net.minecraft.world.level.block.Block&nbsp;block)</code></div>
+ <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a server-only run over a nonempty bottom-to-top list of same-type block entities.</div>
 </div>
@@ -192,17 +193,20 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <div class="block">Owning block for a validated stored flat slot; headroom and invalid indices are not accepted.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canGrowBlock(boolean,net.minecraft.server.level.ServerPlayer)" class="member-name-link">canGrowBlock</a><wbr>(boolean&nbsp;enabled,
- net.minecraft.server.level.ServerPlayer&nbsp;actor)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canGrowBlock(net.minecraft.server.level.ServerPlayer)" class="member-name-link">canGrowBlock</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Shared shape-independent growth checks; player authority is always queried afresh.</div>
+<div class="block">Whether the run may grow one block taller as far as anything without side effects and
+ independent of the new block's shape can tell: the height limit, the type's enablement,
+ build height, replaceability, and <a href="../server/WorldEdits.html#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)"><code>WorldEdits.mayPlace(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.core.Direction)</code></a> for the space above, checked
+ against <code>actor</code> or, when null, the automation identity.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.Block&nbsp;block)</code></div>
+ <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Tests the height of the same-type run a block at pos would join, including both neighbors.</div>
+<div class="block">Whether a block of <code>type</code> may be created at <code>pos</code>: the contiguous column it would
+ form, counting the runs both below and above it, must fit the configured maximum.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#comparatorSignal()" class="member-name-link">comparatorSignal</a>()</code></div>
@@ -349,12 +353,12 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(net.minecraft.server.level.ServerLevel,java.util.List,int,net.minecraft.world.level.block.Block)">
+<section class="detail" id="&lt;init&gt;(net.minecraft.server.level.ServerLevel,java.util.List,int,com.github.crittscott.somestacks.util.BlockType)">
 <h3>StackRun</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">StackRun</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="StackRun.html" title="type parameter in StackRun">BE</a>&gt;&nbsp;blocks,
  int&nbsp;slotsPerBlock,
- net.minecraft.world.level.block.Block&nbsp;block)</span></div>
+ <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</span></div>
 <div class="block">Creates a server-only run over a nonempty bottom-to-top list of same-type block entities.</div>
 </section>
 </li>
@@ -374,12 +378,15 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 </section>
 </li>
 <li>
-<section class="detail" id="canGrowBlock(boolean,net.minecraft.server.level.ServerPlayer)">
+<section class="detail" id="canGrowBlock(net.minecraft.server.level.ServerPlayer)">
 <h3>canGrowBlock</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canGrowBlock</span><wbr><span class="parameters">(boolean&nbsp;enabled,
- @Nullable
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canGrowBlock</span><wbr><span class="parameters">(@Nullable
  net.minecraft.server.level.ServerPlayer&nbsp;actor)</span></div>
-<div class="block">Shared shape-independent growth checks; player authority is always queried afresh.</div>
+<div class="block">Whether the run may grow one block taller as far as anything without side effects and
+ independent of the new block's shape can tell: the height limit, the type's enablement,
+ build height, replaceability, and <a href="../server/WorldEdits.html#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)"><code>WorldEdits.mayPlace(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.core.Direction)</code></a> for the space above, checked
+ against <code>actor</code> or, when null, the automation identity. Player authority is always
+ queried afresh; automation's is shared within one <code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="StackRun.html" title="type parameter in StackRun">BE</a> extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;.<a href="StackRun.GrowthQuery.html" title="class in com.github.crittscott.somestacks.block">GrowthQuery</a></code>.</div>
 </section>
 </li>
 <li>
@@ -443,12 +450,15 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 </section>
 </li>
 <li>
-<section class="detail" id="columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block)">
+<section class="detail" id="columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.BlockType)">
 <h3>columnHasRoomFor</h3>
-<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">columnHasRoomFor</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">columnHasRoomFor</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.Block&nbsp;block)</span></div>
-<div class="block">Tests the height of the same-type run a block at pos would join, including both neighbors.</div>
+ <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</span></div>
+<div class="block">Whether a block of <code>type</code> may be created at <code>pos</code>: the contiguous column it would
+ form, counting the runs both below and above it, must fit the configured maximum. Testing the
+ whole resulting column rather than one neighboring run is what stops a block placed into the
+ gap between two runs from joining them into an over-tall one.</div>
 </section>
 </li>
 <li>
