@@ -79,9 +79,8 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Vanilla world-edit mechanics for player placement, growth, and removal: the one placement gate,
  world border and spawn protection, entity obstruction, and the actual block placement/removal.
- The one loader-specific authority â€”
- the automation actor, protection callbacks, and loader completion notifications â€” is delegated to
- <a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server"><code>EditAuthority</code></a>.</div>
+ The one loader-specific authority â€” the automation actor, protection callbacks, and loader
+ completion notifications â€” is delegated to <a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server"><code>EditAuthority</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -259,11 +258,11 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.Direction&nbsp;placedAgainst,
  net.minecraft.world.phys.shapes.VoxelShape&nbsp;finalCollision)</span></div>
 <div class="block">Places <code>state</code> after <a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)"><code>mayPlace(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.core.Direction)</code></a> and an obstruction test, through the loader
- transaction, restoring captured state and block-entity data when protection denies it.
- <code>finalCollision</code> is the completed placement's collision shape, since a block-entity
- stack can start empty and acquire its real shape only with its first deposit. <code>
- placedAgainst</code> points from <code>pos</code> to the block the new one is placed against. A null
- placer uses the level's automation identity for both placement and its game event.</div>
+ transaction, restoring captured state and block-entity data when protection denies it. <code>
+ finalCollision</code> is the completed placement's collision shape, since a block-entity stack can
+ start empty and acquire its real shape only with its first deposit. <code>placedAgainst</code>
+ points from <code>pos</code> to the block the new one is placed against. A null placer uses the
+ level's automation identity for both placement and its game event.</div>
 </section>
 </li>
 <li>

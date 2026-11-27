@@ -309,9 +309,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Internal settlement fixture: directly seed stone stacks of 40 and 30 with {variant:1} and two
  stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, stone with an
  explicit empty tag, and two wooden pickaxes with different damage. Settlement orders dirt,
- untagged stone, tagged stone stacks of 64, 6, and 10, the empty-tag stone (its tag text
- "{}" sorts after "{variant:...}", and it stays apart from untagged stone), then the pickaxes
- in ascending damage order.
+ untagged stone, tagged stone stacks of 64, 6, and 10, the empty-tag stone (its tag text "{}"
+ sorts after "{variant:...}", and it stays apart from untagged stone), then the pickaxes in
+ ascending damage order.
 
  <p>For a visible check, /give stone with those tags and deposit the same totals into Storage.
  Also deposit dirt, untagged stone, and wooden pickaxes with different damage. After
@@ -327,8 +327,8 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce: rename stone "Alpha" and "Beta" in an anvil. Store a full stack of dirt in a
  Storage Stack, then three Alpha, two Beta, and four Alpha in separate later cells. After
  settlement the dirt stays in the base cell, the two Alpha stacks merge into one cell of
- seven, and Beta keeps its own cell of two. The test seeds the separated cells directly;
- that each written cell holds its own stack, and that the already-settled dirt cell is not
+ seven, and Beta keeps its own cell of two. The test seeds the separated cells directly; that
+ each written cell holds its own stack, and that the already-settled dirt cell is not
  rewritten, are internal ownership checks.</div>
 </section>
 </li>

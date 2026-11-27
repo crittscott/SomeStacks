@@ -192,8 +192,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">gestureStatePacketValidatesOnDecode</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">No in-game form: an unmodified client only sends modes it can select. This guards the one
  input the server takes from a player's client: every mode survives the trip under its fixed
- wire id, and an unknown id or a truncated packet is rejected on the network thread before
- any gesture state changes. The id table is written out here rather than read from <code>StackMode</code>, so reordering the enum cannot change it unnoticed.</div>
+ wire id, and an unknown id or a truncated packet is rejected on the network thread before any
+ gesture state changes. The id table is written out here rather than read from <code>StackMode</code>, so reordering the enum cannot change it unnoticed.</div>
 </section>
 </li>
 </ul>

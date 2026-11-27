@@ -82,10 +82,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">StackBlockEntityMixin</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../block/FabricStorageOwner.html" title="interface in com.github.crittscott.somestacks.block">FabricStorageOwner</a></span></div>
-<div class="block">Keeps the Fabric adapter on its owning block entity, outside common code. Transfer API callers
- on every side of a block must share one <a href="../block/FabricRunItemStorage.html" title="class in com.github.crittscott.somestacks.block"><code>FabricRunItemStorage</code></a>, a <code>
- SnapshotParticipant</code>, so a transaction has one ledger per entity; that needs a field whose
- lifetime is the entity's. Common code cannot declare it, because the type is Fabric-only.
+<div class="block">Keeps the Fabric adapter on its owning block entity, outside common code. Transfer API callers on
+ every side of a block must share one <a href="../block/FabricRunItemStorage.html" title="class in com.github.crittscott.somestacks.block"><code>FabricRunItemStorage</code></a>, a <code>SnapshotParticipant</code>,
+ so a transaction has one ledger per entity; that needs a field whose lifetime is the entity's.
+ Common code cannot declare it, because the type is Fabric-only.
 
  <p>The expected alternative, a Fabric subclass of each block entity holding the field, is not
  used because it costs three Fabric-only subclasses plus a change to how the common blocks build

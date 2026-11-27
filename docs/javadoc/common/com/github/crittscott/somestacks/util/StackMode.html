@@ -85,8 +85,8 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&gt;</span></div>
 <div class="block">What the placement modifier does next, as cycled by the mode gesture: place one of the three
  stack types, or toggle a Storage pile's permanence. It is the client's selected mode and the
- server's record of it (<code>ServerGestureState</code>); <code>ClientGestures.syncState</code> sends it in a
- <code>GestureStatePkt</code> when it changes.
+ server's record of it (<code>ServerGestureState</code>); <code>ClientGestures.syncState</code> sends it in
+ a <code>GestureStatePkt</code> when it changes.
 
  <p>Toggle Permanent is a mode but not a stack type, so <a href="#toBlockType()"><code>toBlockType()</code></a> rejects it and
  <a href="#isBlockType()"><code>isBlockType()</code></a> is how callers ask first. The wire id and the cycle order are explicit, so

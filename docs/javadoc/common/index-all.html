@@ -121,8 +121,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientRenderPlatform.html#applyGuiCounterRotation(com.mojang.blaze3d.vertex.PoseStack)" class="member-name-link">applyGuiCounterRotation(PoseStack)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientRenderPlatform.html" title="class in com.github.crittscott.somestacks.client">ClientRenderPlatform</a></dt>
 <dd>
-<div class="block">Turns the pose so that an item drawn with the GUI display context faces as it does in a
- FIXED display instead of tilted like an inventory icon: it cancels the 30-degree tilt and 45
+<div class="block">Turns the pose so that an item drawn with the GUI display context faces as it does in a FIXED
+ display instead of tilted like an inventory icon: it cancels the 30-degree tilt and 45
  degrees of the 225-degree turn of the GUI transform vanilla's block model parent gives.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/command/SsCommand.html#ARG_ITEM" class="member-name-link">ARG_ITEM</a> - Static variable in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/SsCommand.html" title="class in com.github.crittscott.somestacks.command">SsCommand</a></dt>
@@ -554,9 +554,9 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/CubeGrid.html#%3Cinit%3E(int,double,int...)" class="member-name-link">CubeGrid(int, double, int...)</a> - Constructor for class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a></dt>
 <dd>
-<div class="block">Builds an <code>edge</code>-cubed grid of cells <code>cellPixels</code> wide, where <code>starts</code> gives
- one pixel offset per axis cell (shared by x, y, and z), and precomputes every cell's box, shape,
- and rotated index.</div>
+<div class="block">Builds an <code>edge</code>-cubed grid of cells <code>cellPixels</code> wide, where <code>starts</code>
+ gives one pixel offset per axis cell (shared by x, y, and z), and precomputes every cell's
+ box, shape, and rotated index.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
 <dd>
@@ -1084,8 +1084,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/ServerGestureState.html#get(net.minecraft.server.level.ServerPlayer)" class="member-name-link">get(ServerPlayer)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ServerGestureState.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState</a></dt>
 <dd>
-<div class="block">The player's last reported state, or Storage mode with the modifier up when this session has no
- report from them; reading never records a state.</div>
+<div class="block">The player's last reported state, or Storage mode with the modifier up when this session has
+ no report from them; reading never records a state.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/AutoRenderProfiles.html#get(net.minecraft.world.item.ItemStack)" class="member-name-link">get(ItemStack)</a> - Static method in class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/AutoRenderProfiles.html" title="class in com.github.crittscott.somestacks.client.measure">AutoRenderProfiles</a></dt>
 <dd>
@@ -1249,8 +1249,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/network/GestureStatePkt.html#handleServer(com.github.crittscott.somestacks.network.GestureStatePkt,net.minecraft.server.level.ServerPlayer)" class="member-name-link">handleServer(GestureStatePkt, ServerPlayer)</a> - Static method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/GestureStatePkt.html" title="class in com.github.crittscott.somestacks.network">GestureStatePkt</a></dt>
 <dd>
-<div class="block">Records the sender's mode and modifier on the server thread, ignoring a player who disconnected
- while the packet was queued.</div>
+<div class="block">Records the sender's mode and modifier on the server thread, ignoring a player who
+ disconnected while the packet was queued.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/StackInteractions.html#handleSneakingRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,boolean,boolean)" class="member-name-link">handleSneakingRotation(ServerPlayer, InteractionHand, BlockHitResult, boolean, boolean)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/StackInteractions.html" title="class in com.github.crittscott.somestacks.server">StackInteractions</a></dt>
 <dd>
@@ -1403,8 +1403,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/PlatformServices.html#install(com.github.crittscott.somestacks.PlatformServices.Backend)" class="member-name-link">install(PlatformServices.Backend)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/PlatformServices.html" title="class in com.github.crittscott.somestacks">PlatformServices</a></dt>
 <dd>
-<div class="block">Installs the loader's backend; each loader's entry point calls this once, before common client
- or world logic can run.</div>
+<div class="block">Installs the loader's backend; each loader's entry point calls this once, before common
+ client or world logic can run.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#installedNamespaces()" class="member-name-link">installedNamespaces()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
 <dd>
@@ -1423,8 +1423,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/InteractionRuleRegistry.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client.interaction">InteractionRuleRegistry</a> - Class in <a href="com/github/crittscott/somestacks/client/interaction/package-summary.html">com.github.crittscott.somestacks.client.interaction</a></dt>
 <dd>
-<div class="block">The ordered rule lists behind each loader's right-click callbacks: one for clicks on a block,
- one for clicks that reach no block (an empty-hand click at air, or a held-item use).</div>
+<div class="block">The ordered rule lists behind each loader's right-click callbacks: one for clicks on a block, one
+ for clicks that reach no block (an empty-hand click at air, or a held-item use).</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackRun.html#invalidateAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.lang.Class)" class="member-name-link">invalidateAround(Level, BlockPos, Class&lt;BE&gt;)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
 <dd>
@@ -1873,8 +1873,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement</a> - Class in <a href="com/github/crittscott/somestacks/client/measure/package-summary.html">com.github.crittscott.somestacks.client.measure</a></dt>
 <dd>
-<div class="block">Loader-neutral access to model geometry measurement, and the quad walk and bounds collection
- both loaders' measurers share.</div>
+<div class="block">Loader-neutral access to model geometry measurement, and the quad walk and bounds collection both
+ loaders' measurers share.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Backend.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Backend</a> - Interface in <a href="com/github/crittscott/somestacks/client/measure/package-summary.html">com.github.crittscott.somestacks.client.measure</a></dt>
 <dd>
@@ -2425,8 +2425,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
 <dd>
-<div class="block">Per-world immutable policy, its file declaration (<a href="com/github/crittscott/somestacks/ServerConfig.Section.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Section</code></a>, <a href="com/github/crittscott/somestacks/ServerConfig.Setting.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Setting</code></a>), and
- resolved admission sets; loaders own persistence.</div>
+<div class="block">Per-world immutable policy, its file declaration (<a href="com/github/crittscott/somestacks/ServerConfig.Section.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Section</code></a>, <a href="com/github/crittscott/somestacks/ServerConfig.Setting.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Setting</code></a>), and resolved
+ admission sets; loaders own persistence.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Keys.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.Keys</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
 <dd>
@@ -2739,8 +2739,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerLifecycle.html#stopped()" class="member-name-link">stopped()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerLifecycle.html" title="class in com.github.crittscott.somestacks">ServerLifecycle</a></dt>
 <dd>
-<div class="block">Performs the same session reset as <a href="com/github/crittscott/somestacks/ServerLifecycle.html#starting()"><code>ServerLifecycle.starting()</code></a>, then releases world policy, its saver,
- and derived admission sets after server shutdown.</div>
+<div class="block">Performs the same session reset as <a href="com/github/crittscott/somestacks/ServerLifecycle.html#starting()"><code>ServerLifecycle.starting()</code></a>, then releases world policy, its
+ saver, and derived admission sets after server shutdown.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html#STORAGE" class="member-name-link">STORAGE</a> - Enum constant in enum class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html" title="enum class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Kind</a></dt>
 <dd>

@@ -132,15 +132,15 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce in-game: quit, put a syntax error in <code>
  config/somestacks/item_overrides.json</code> (delete its last closing brace), start the game, and
- run <code>/ss item minecraft:apple gui</code> and then <code>/ss write changed</code>. The command fails,
- saying the file could not be read, and the file is unchanged. Restore the brace, add <code>
- "minecraft:dirt": {"mode": "flat"}</code>, and run <code>/ss write changed</code> again: it succeeds, the
- file gains the apple entry, and it keeps the dirt entry exactly as written along with every
- other entry. Then run <code>/ss item minecraft:dirt reset</code> and <code>/ss write changed</code>: the
- dirt entry is gone.
+ run <code>/ss item minecraft:apple gui</code> and then <code>/ss write changed</code>. The command
+ fails, saying the file could not be read, and the file is unchanged. Restore the brace, add
+ <code>"minecraft:dirt": {"mode": "flat"}</code>, and run <code>/ss write changed</code> again: it
+ succeeds, the file gains the apple entry, and it keeps the dirt entry exactly as written
+ along with every other entry. Then run <code>/ss item minecraft:dirt reset</code> and <code>/ss
+ write changed</code>: the dirt entry is gone.
 
- <p>The handlers' one-time read is reset by reflection before each scenario, standing in for
- a restart.</div>
+ <p>The handlers' one-time read is reset by reflection before each scenario, standing in for a
+ restart.</div>
 </section>
 </li>
 <li>

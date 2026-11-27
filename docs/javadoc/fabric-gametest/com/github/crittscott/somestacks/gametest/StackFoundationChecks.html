@@ -160,13 +160,12 @@ loadScripts(document, 'script');</script>
 <h3>storedLightIsPerOccupiedSlotAndCapped</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storedLightIsPerOccupiedSlotAndCapped</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce in-game: deposit a full stack of glowstone into one Storage Stack slot; the
- block gives off light level 3, the same as a single glowstone would. Deposit one each of
- sea lantern, jack o'lantern, lantern, shroomlight, and beacon, so six slots hold different
+ block gives off light level 3, the same as a single glowstone would. Deposit one each of sea
+ lantern, jack o'lantern, lantern, shroomlight, and beacon, so six slots hold different
  full-brightness blocks; the light reaches 15, not 18.
 
- <p>The contents are written straight to the slots; the light comes from the publication
- those writes schedule. The six items differ so settlement cannot merge them into fewer
- slots.</div>
+ <p>The contents are written straight to the slots; the light comes from the publication those
+ writes schedule. The six items differ so settlement cannot merge them into fewer slots.</div>
 </section>
 </li>
 <li>

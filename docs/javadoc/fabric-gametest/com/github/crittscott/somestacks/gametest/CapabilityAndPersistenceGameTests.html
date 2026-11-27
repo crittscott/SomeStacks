@@ -591,12 +591,12 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
  valid ones, literal strings and trailing commas, out-of-range values corrected to their
  bounds, a written file read back, and the preceding release's world JSON migrated once.
 
- <p>To reproduce: on a Fabric server, delete config/somestacks-server.toml and start; the
- file is recreated with explanations and "Range:" lines. Edit it using comments, multiline
- lists, and quoted item ids, set max_pile_height = 99, and run /ss reload; the log names the
- file and reports the height corrected to 64. Run /ss deny item add minecraft:diamond and
- inspect the saved file. A world serverconfig/somestacks-server.json from the preceding
- release becomes a world TOML override with a .migrated archive at the next start.</div>
+ <p>To reproduce: on a Fabric server, delete config/somestacks-server.toml and start; the file
+ is recreated with explanations and "Range:" lines. Edit it using comments, multiline lists,
+ and quoted item ids, set max_pile_height = 99, and run /ss reload; the log names the file and
+ reports the height corrected to 64. Run /ss deny item add minecraft:diamond and inspect the
+ saved file. A world serverconfig/somestacks-server.json from the preceding release becomes a
+ world TOML override with a .migrated archive at the next start.</div>
 </section>
 </li>
 </ul>
