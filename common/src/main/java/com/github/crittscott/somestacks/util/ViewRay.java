@@ -23,9 +23,9 @@ import javax.annotation.Nullable;
  */
 public record ViewRay(Vec3 eye, Vec3 end) {
     // Vanilla reach allowance plus the distance through the far corner of the clicked block.
-    // Vanilla reach allowance plus the distance through the far corner of the clicked block.
     private static final double BLOCK_CROSSING = 2.0;
 
+    /** Builds a reach-length ray along the player's look direction. */
     public static ViewRay of(Player player) {
         Vec3 eye = player.getEyePosition(1.0f);
         double length = player.blockInteractionRange() + BLOCK_CROSSING;

@@ -27,51 +27,49 @@ public final class SinglesColumnGameTests {
 
     /** See {@link SinglesColumnChecks#extractionShiftsOneColumnAndCarriesItemRotation}. */
     public static void extractionShiftsOneColumnAndCarriesItemRotation(GameTestHelper helper) {
-        SinglesColumnChecks.extractionShiftsOneColumnAndCarriesItemRotation(helper);
+        SinglesColumnChecks.extractionShiftsOneColumnAndCarriesItemRotation(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link SinglesColumnChecks#shiftKeepsAnItemItWouldNoLongerAccept}. */
     public static void shiftKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
-        SinglesColumnChecks.shiftKeepsAnItemItWouldNoLongerAccept(helper);
+        SinglesColumnChecks.shiftKeepsAnItemItWouldNoLongerAccept(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link SinglesColumnChecks#drawDownKeepsAnItemItWouldNoLongerAccept}. */
     public static void drawDownKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
-        SinglesColumnChecks.drawDownKeepsAnItemItWouldNoLongerAccept(helper);
+        SinglesColumnChecks.drawDownKeepsAnItemItWouldNoLongerAccept(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link SinglesColumnChecks#extractionPreservesAnExistingGap}. */
     public static void extractionPreservesAnExistingGap(GameTestHelper helper) {
-        SinglesColumnChecks.extractionPreservesAnExistingGap(helper);
+        SinglesColumnChecks.extractionPreservesAnExistingGap(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link SinglesColumnChecks#extractionDrawsAcrossDifferentlyRotatedBlockBoundary}. */
     public static void extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper helper) {
-        SinglesColumnChecks.extractionDrawsAcrossDifferentlyRotatedBlockBoundary(helper);
+        SinglesColumnChecks.extractionDrawsAcrossDifferentlyRotatedBlockBoundary(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
-    /**
-     * To reproduce in-game: target individual Singles cells with item automation; only the named
-     * supported empty cell accepts the item, without redirecting it elsewhere.
-     */
+    /** See {@link AutomationChecks#singlesInsertionAnswersForTheCellItIsGiven}. */
     public static void capabilityInsertionAnswersForTheCellItIsGiven(GameTestHelper helper) {
-        AutomationChecks.singlesInsertionAnswersForTheCellItIsGiven(helper);
+        AutomationChecks.singlesInsertionAnswersForTheCellItIsGiven(
+                helper, GameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: let item automation walk the advertised Singles cells in order and
-     * verify the column fills from the lowest supported cell upward.
-     */
+    /** See {@link AutomationChecks#singlesWalkFillsFromTheBottom}. */
     public static void capabilityWalkFillsTheColumnFromTheBottom(GameTestHelper helper) {
-        AutomationChecks.singlesWalkFillsFromTheBottom(helper);
+        AutomationChecks.singlesWalkFillsFromTheBottom(helper, GameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: extract a lower Singles cell through item automation and verify the
-     * item above shifts down with its rotation, just as it does after player extraction.
-     */
+    /** See {@link AutomationChecks#singlesExtractionUsesThePlayerGravityPath}. */
     public static void capabilityExtractionUsesThePlayerGravityPath(GameTestHelper helper) {
-        AutomationChecks.singlesExtractionUsesThePlayerGravityPath(helper);
+        AutomationChecks.singlesExtractionUsesThePlayerGravityPath(
+                helper, GameTestSupport::automation);
     }
 
     /** See {@link SinglesColumnChecks#depositTraceStopsAtLastEmptyBeforeOccupiedCell}. */

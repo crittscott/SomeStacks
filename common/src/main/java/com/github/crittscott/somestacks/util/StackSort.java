@@ -5,32 +5,38 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
-/** Comparator used to lay out the contents of a settled Storage pile. */
+import javax.annotation.Nullable;
+
+/** Sort key that orders the contents of a settled Storage pile. */
 public final class StackSort {
     private StackSort() {}
 
-    /** Computes the identity's sortable fields once for a settlement group. */
+    /**
+     * The identity's sortable fields: item id, then damage, then untagged before component-bearing,
+     * then the component patch's text. The patch is immutable, so the key stays valid whatever
+     * later happens to the stack.
+     */
     public static SortKey key(ItemStack stack) {
-        DataComponentPatch patch = stack.getComponentsPatch();
         return new SortKey(
-                BuiltInRegistries.ITEM.getKey(stack.getItem()), stack.getDamageValue(), patch);
+                BuiltInRegistries.ITEM.getKey(stack.getItem()),
+                stack.getDamageValue(),
+                stack.getComponentsPatch());
     }
 
+    /**
+     * Sort fields for one identity. The patch's text is computed only when two keys tie on item
+     * and damage, and at most once per key, since most piles never compare by components.
+     */
     public static final class SortKey implements Comparable<SortKey> {
-        private final Identifier itemId;
         private final int damage;
+        private final Identifier itemId;
         private final DataComponentPatch patch;
-        private String componentText;
+        @Nullable private String componentText;
 
         private SortKey(Identifier itemId, int damage, DataComponentPatch patch) {
             this.itemId = itemId;
             this.damage = damage;
             this.patch = patch;
-        }
-
-        private String componentText() {
-            if (componentText == null) componentText = patch.toString();
-            return componentText;
         }
 
         @Override
@@ -42,6 +48,11 @@ public final class StackSort {
             if (patch.isEmpty()) return other.patch.isEmpty() ? 0 : -1;
             if (other.patch.isEmpty()) return 1;
             return componentText().compareTo(other.componentText());
+        }
+
+        private String componentText() {
+            if (componentText == null) componentText = patch.toString();
+            return componentText;
         }
     }
 }

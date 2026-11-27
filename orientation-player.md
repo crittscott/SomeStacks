@@ -38,7 +38,7 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 
 NeoForge allows deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination permission through Common Protection API providers.
 
-Only the main hand acts; off-hand items allow cycling. Torches are retained. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures. Unhandled modified clicks retain item use; plain extraction attempts stay consumed.
+Only the main hand acts; torches are not spent. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures. Unhandled modified clicks retain item use; plain extraction attempts stay consumed.
 
 ## Depositing and placing
 
@@ -103,7 +103,7 @@ Every block exposes the whole run on all sides: transactional `ResourceHandler<I
 | Singles | one display cell | 1 |
 | Bar | one bar position | 1 |
 
-Storage advertises current positions plus one block of headroom below the height limit; headroom insertion can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the loader's edit authority refuses the automation actor. Automation uses `[SomeStacks]` for machine and claim policies.
+Storage advertises current positions plus one block of headroom below the height limit; headroom insertion can grow the run. Growth is refused when the type is disabled, the space is unreplaceable or blocked, a height limit is reached, or edit authority refuses the automation actor. Automation acts as `[SomeStacks]`.
 
 Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named. For extraction, Storage removes from the named slot then settles, Singles uses the same one-column gravity as player extraction, and Bar moves the column's topmost bar into the hole to avoid the player-extraction collapse.
 
@@ -134,7 +134,7 @@ NeoForge uses loader-managed `somestacks-server.toml`, with per-world overrides 
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
 | `render_gallery.gen_mods` / `gen_items` | empty | Namespace and item lists used by the `list` and `items` gallery forms |
 
-Disabling types, items, mods, or ingot categories preserves existing contents. Clients receive enable flags on login and skip disabled types when cycling. Data-pack tags refresh on reload.
+Disabling types, items, mods, or ingot categories preserves existing contents. Clients receive enable flags on login and reload, skip disabled types when cycling, and leave a selected type that becomes disabled. Data-pack tags refresh on reload.
 
 ## Commands
 
@@ -157,7 +157,7 @@ Storage and Singles show items in four modes: `2d` (flat art), `3d` (the FIXED r
 
 Resolution order is local override, resource-pack data, then automatic measurement. A server can distribute profiles through its server resource pack; local overrides keep priority. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by pack, mod-version, or reload changes.
 
-`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`. Namespace forms write complete files to `config/somestacks/generated_overrides/`, output only. Servers cannot request writes.
+`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json` and refuses while the file is unreadable. Namespace forms write complete files to `config/somestacks/generated_overrides/`, output only. Servers cannot request writes.
 
 Bar mappings live at `assets/<namespace>/textures/bars/*.json`; missing tints derive from the item. Mappings are client-local.
 

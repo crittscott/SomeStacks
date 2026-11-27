@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.server.NeoForgeEditAuthority;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLPaths;
@@ -12,6 +13,11 @@ import java.nio.file.Path;
 /** NeoForge implementations of the common platform services. */
 public final class NeoForgePlatformServices implements PlatformServices.Backend {
     private final NeoForgeEditAuthority editAuthority = new NeoForgeEditAuthority();
+
+    @Override
+    public void broadcastConfig(MinecraftServer server, ConfigSyncPkt packet) {
+        // SERVER config loading and reload events already deliver policy through NeoForge.
+    }
 
     @Override
     public Path configFolder() {
@@ -27,9 +33,8 @@ public final class NeoForgePlatformServices implements PlatformServices.Backend 
     }
 
     @Override
-    public boolean sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
+    public void sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
         // SERVER config loading and reload events already deliver policy through NeoForge.
-        return false;
     }
 
     @Override
