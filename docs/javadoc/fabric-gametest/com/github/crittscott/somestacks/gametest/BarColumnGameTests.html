@@ -133,14 +133,12 @@ backfills from the top instead.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#automationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationBackfillsWithoutDropping</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">To reproduce in-game: fill a supported Bar column, let item automation extract a lower
-position, and verify the top bar fills the hole without dropping an item.</div>
+<div class="block">See <a href="AutomationChecks.html#barAutomationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barAutomationBackfillsWithoutDropping(GameTestHelper, Function)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#backfillKeepsABarItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">backfillKeepsABarItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Validity gates insertion only, so a bar stored before a data pack reload narrowed the rule
-has to survive the backfill an automated extraction moves it through.</div>
+<div class="block">See <a href="AutomationChecks.html#barBackfillKeepsAStoredItemNoLongerAccepted(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barBackfillKeepsAStoredItemNoLongerAccepted(GameTestHelper, Function)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#breakingFullColumnConsolidatesDrops(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">breakingFullColumnConsolidatesDrops</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -160,7 +158,7 @@ has to survive the backfill an automated extraction moves it through.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">collapseDoesNotMergeDifferentComponents</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">See <a href="BarColumnChecks.html#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.collapseDoesNotMergeDifferentComponents(GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.collapseDoesNotMergeDifferentComponents(GameTestHelper, Function)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#comparatorFollowsAColumnLosingABlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorFollowsAColumnLosingABlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -195,30 +193,27 @@ has to survive the backfill an automated extraction moves it through.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCascadeConsolidatesAcrossBlocks</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">See <a href="BarColumnChecks.html#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(GameTestHelper, Function)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerExtractionDropsUnsupportedBars</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">See <a href="BarColumnChecks.html#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.playerExtractionDropsUnsupportedBars(GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.playerExtractionDropsUnsupportedBars(GameTestHelper, Function)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#storageInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageInsertionAnswersForThePositionItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
-positions; unsupported positions refuse insertion while a supported empty position accepts
-it.</div>
+<div class="block">See <a href="AutomationChecks.html#barInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barInsertionAnswersForThePositionItIsGiven(GameTestHelper, Function)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#storageSimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageSimulationDoesNotMutateExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">No in-game reproduction applies: this verifies the Fabric transaction simulation contract; a
-simulated Bar extraction reports the result without changing the stored bar.</div>
+<div class="block">See <a href="AutomationChecks.html#barSimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barSimulationDoesNotMutateExtraction(GameTestHelper, Function)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">supportedNeighborSurvivesPlayerExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">See <a href="BarColumnChecks.html#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(GameTestHelper, Function)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#upperBarRequiresOverlappingSupport(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">upperBarRequiresOverlappingSupport</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -303,7 +298,7 @@ simulated Bar extraction reports the result without changing the stored bar.</di
 <div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerExtractionDropsUnsupportedBars</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="BarColumnChecks.html#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.playerExtractionDropsUnsupportedBars(GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.playerExtractionDropsUnsupportedBars(GameTestHelper, Function)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -314,7 +309,7 @@ simulated Bar extraction reports the result without changing the stored bar.</di
 <div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">supportedNeighborSurvivesPlayerExtraction</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="BarColumnChecks.html#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(GameTestHelper, Function)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -347,8 +342,7 @@ simulated Bar extraction reports the result without changing the stored bar.</di
 <div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">automationBackfillsWithoutDropping</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: fill a supported Bar column, let item automation extract a lower
-position, and verify the top bar fills the hole without dropping an item.</div>
+<div class="block">See <a href="AutomationChecks.html#barAutomationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barAutomationBackfillsWithoutDropping(GameTestHelper, Function)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -359,9 +353,7 @@ position, and verify the top bar fills the hole without dropping an item.</div>
 <div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageInsertionAnswersForThePositionItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
-positions; unsupported positions refuse insertion while a supported empty position accepts
-it.</div>
+<div class="block">See <a href="AutomationChecks.html#barInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barInsertionAnswersForThePositionItIsGiven(GameTestHelper, Function)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -372,14 +364,7 @@ it.</div>
 <div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">backfillKeepsABarItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Validity gates insertion only, so a bar stored before a data pack reload narrowed the rule
-has to survive the backfill an automated extraction moves it through. A stick stands in for
-such a bar: a Bar Stack refuses one from a deposit, but may be holding contents the current
-ingot set no longer covers.
-
-<p>To reproduce in-game: fill a Bar Stack, narrow the ingot rule so one stored bar is no
-longer accepted, then automate extraction below it. Backfill retains or drops that legacy bar
-without deleting or changing it.</div>
+<div class="block">See <a href="AutomationChecks.html#barBackfillKeepsAStoredItemNoLongerAccepted(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barBackfillKeepsAStoredItemNoLongerAccepted(GameTestHelper, Function)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -390,8 +375,7 @@ without deleting or changing it.</div>
 <div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageSimulationDoesNotMutateExtraction</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">No in-game reproduction applies: this verifies the Fabric transaction simulation contract; a
-simulated Bar extraction reports the result without changing the stored bar.</div>
+<div class="block">See <a href="AutomationChecks.html#barSimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barSimulationDoesNotMutateExtraction(GameTestHelper, Function)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -424,7 +408,7 @@ simulated Bar extraction reports the result without changing the stored bar.</di
 <div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCascadeConsolidatesAcrossBlocks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="BarColumnChecks.html#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(GameTestHelper, Function)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -435,7 +419,7 @@ simulated Bar extraction reports the result without changing the stored bar.</di
 <div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">collapseDoesNotMergeDifferentComponents</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="BarColumnChecks.html#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.collapseDoesNotMergeDifferentComponents(GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.collapseDoesNotMergeDifferentComponents(GameTestHelper, Function)</code></a>.</div>
 </div>
 </section>
 </li>
