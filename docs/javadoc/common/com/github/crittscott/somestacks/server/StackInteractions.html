@@ -81,7 +81,8 @@ loadScripts(document, 'script');</script>
  main hand acts. Existing-stack use handles permanence, deposit/top placement, then extraction;
  loader callbacks supply sneaking torch rotations and adjacent placement/deposit. Gestures use
  synchronized mode/modifier state and target along the ray through the clicked point. Creative
- deposits retain held items, and edits retain the player for protection and game events.</div>
+ deposits retain held items, and edits retain the player for protection and game events. Each
+ successful action plays its type's sound; rotation sounds are paced per player.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -97,37 +98,53 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#handleAdjacentClick(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,boolean,boolean)" class="member-name-link">handleAdjacentClick</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#claimRotationSound(net.minecraft.server.level.ServerPlayer)" class="member-name-link">claimRotationSound</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Claims this player's rotation-sound allowance, returning false while the previous rotation
+ sound is still within the pacing interval; the rotation itself has already happened.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clearRotationSoundPacing()" class="member-name-link">clearRotationSoundPacing</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Forgets every player's rotation-sound pacing.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clearRotationSoundPacing(java.util.UUID)" class="member-name-link">clearRotationSoundPacing</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerId)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Forgets one player's rotation-sound pacing.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#handleAdjacentClick(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,boolean,boolean)" class="member-name-link">handleAdjacentClick</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.world.InteractionHand&nbsp;hand,
  net.minecraft.world.phys.BlockHitResult&nbsp;hit,
  boolean&nbsp;blockAllowed,
  boolean&nbsp;itemAllowed)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Handles a loader-native server right-click against a non-stack block when the selected stack
  belongs in the adjacent position.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#handleExistingStack(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">handleExistingStack</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#handleExistingStack(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">handleExistingStack</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.world.InteractionHand&nbsp;hand,
  net.minecraft.world.phys.BlockHitResult&nbsp;hit,
  <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;clickedType)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Handles a vanilla use call on an existing stack block.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#handleSneakingRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,boolean,boolean)" class="member-name-link">handleSneakingRotation</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#handleSneakingRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,boolean,boolean)" class="member-name-link">handleSneakingRotation</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.world.InteractionHand&nbsp;hand,
  net.minecraft.world.phys.BlockHitResult&nbsp;hit,
  boolean&nbsp;blockAllowed,
  boolean&nbsp;itemAllowed)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Handles the sneaking torch gestures, which vanilla never routes to the block's use method.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#modifierClaimsItemUse(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand)" class="member-name-link">modifierClaimsItemUse</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#modifierClaimsItemUse(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand)" class="member-name-link">modifierClaimsItemUse</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.world.InteractionHand&nbsp;hand)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Whether the Stack Modifier claims a main-hand item use that reached the server.</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether the Stack Modifier claims a main-hand item use that reached the server; see <a href="../util/StackGestures.html#modifierClaimsItemUse(net.minecraft.world.InteractionHand,boolean)"><code>StackGestures.modifierClaimsItemUse(net.minecraft.world.InteractionHand, boolean)</code></a>.</div>
 </div>
 </div>
 </div>
@@ -147,6 +164,28 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="claimRotationSound(net.minecraft.server.level.ServerPlayer)">
+<h3>claimRotationSound</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">claimRotationSound</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">Claims this player's rotation-sound allowance, returning false while the previous rotation
+ sound is still within the pacing interval; the rotation itself has already happened.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clearRotationSoundPacing()">
+<h3>clearRotationSoundPacing</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearRotationSoundPacing</span>()</div>
+<div class="block">Forgets every player's rotation-sound pacing.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clearRotationSoundPacing(java.util.UUID)">
+<h3>clearRotationSoundPacing</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearRotationSoundPacing</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerId)</span></div>
+<div class="block">Forgets one player's rotation-sound pacing.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="handleExistingStack(net.minecraft.server.level.ServerPlayer,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult,com.github.crittscott.somestacks.util.BlockType)">
 <h3>handleExistingStack</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">handleExistingStack</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
@@ -161,9 +200,8 @@ loadScripts(document, 'script');</script>
 <h3>modifierClaimsItemUse</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">modifierClaimsItemUse</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.world.InteractionHand&nbsp;hand)</span></div>
-<div class="block">Whether the Stack Modifier claims a main-hand item use that reached the server. A modifier
- right-click at air cycles the placement mode on the client, which may still deliver the
- ordinary use-item packet; the held item must not then be used (thrown, eaten, drawn).</div>
+<div class="block">Whether the Stack Modifier claims a main-hand item use that reached the server; see <a href="../util/StackGestures.html#modifierClaimsItemUse(net.minecraft.world.InteractionHand,boolean)"><code>StackGestures.modifierClaimsItemUse(net.minecraft.world.InteractionHand, boolean)</code></a>. The client claims the same uses locally but may still
+ deliver the ordinary use-item packet.</div>
 </section>
 </li>
 <li>
@@ -175,7 +213,8 @@ loadScripts(document, 'script');</script>
  boolean&nbsp;blockAllowed,
  boolean&nbsp;itemAllowed)</span></div>
 <div class="block">Handles the sneaking torch gestures, which vanilla never routes to the block's use method.
- Loader callbacks call this only after earlier listeners have allowed both block and item use.</div>
+ <code>blockAllowed</code> and <code>itemAllowed</code> carry earlier listeners' verdicts on block and item
+ use; either false refuses.</div>
 </section>
 </li>
 <li>
@@ -187,7 +226,8 @@ loadScripts(document, 'script');</script>
  boolean&nbsp;blockAllowed,
  boolean&nbsp;itemAllowed)</span></div>
 <div class="block">Handles a loader-native server right-click against a non-stack block when the selected stack
- belongs in the adjacent position.</div>
+ belongs in the adjacent position. <code>blockAllowed</code> and <code>itemAllowed</code> carry earlier
+ listeners' verdicts on block and item use; either false refuses.</div>
 </section>
 </li>
 </ul>

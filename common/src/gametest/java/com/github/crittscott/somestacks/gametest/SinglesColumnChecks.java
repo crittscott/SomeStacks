@@ -6,6 +6,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedNear;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.heldAt;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalAt;
@@ -13,25 +14,30 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalA
 import com.github.crittscott.somestacks.block.SinglesColumn;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
+import com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.function.Function;
+
 /**
- * Singles support and gravity in a live level that does not touch loader-native automation
- * directly: grounding at the bottom of a column, a cell resting on the one below it, visual columns
- * lining up across differently rotated blocks, and extraction shifting a column down while carrying
- * each item's rotation with it. Capability/Transfer-API-facing tests stay in each loader's own
- * {@code SinglesColumnGameTests}.
+ * Singles support and gravity in a live level: grounding at the bottom of a column, a cell resting
+ * on the one below it, visual columns lining up across differently rotated blocks, extraction
+ * shifting a column down while carrying each item's rotation with it, and automation addressing the
+ * cell it names. Player scenarios take the loader's click; automation scenarios take the loader's
+ * {@link Automation} view.
  */
 public final class SinglesColumnChecks {
     private SinglesColumnChecks() {}
@@ -245,7 +251,10 @@ public final class SinglesColumnChecks {
      * and plain-right-click the bottom stick with an empty hand. Paper and apple each fall one
      * layer with their item rotations unchanged; the vacated top cell is empty.
      */
-    public static void extractionShiftsOneColumnAndCarriesItemRotation(GameTestHelper helper) {
+    public static void extractionShiftsOneColumnAndCarriesItemRotation(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int column = 3;
         int bottom = SinglesCubeIdx.indexFromColumn(column, 0);
@@ -257,7 +266,7 @@ public final class SinglesColumnChecks {
         singles.setCubeRotation(middle, 1);
         singles.setCubeRotation(top, 3);
 
-        ItemStack extracted = singles.extractAt(bottom);
+        ItemStack extracted = extractByHand(factory, click, singles.getBlockPos(), column, 0);
 
         checkEquals(Items.STICK, extracted.getItem(), "Extracted item");
         checkEquals(
@@ -279,15 +288,18 @@ public final class SinglesColumnChecks {
 
     /**
      * Synthetic admission fixture: an apple supports a directly seeded item currently accepted by
-     * Bar and refused by Singles. Extracting the lower item must conserve the refused item, counted
+     * Bar and refused by Singles. Plain-clicking the apple must conserve the refused item, counted
      * in storage plus nearby drops; the test does not change policy.
      *
      * <p>To check a tag change manually, deposit a stick above an apple in Singles, then enable a
-     * data pack adding minecraft:stick to the somestacks:ingots item tag and run /reload. Extract
-     * the apple; the stored stick is conserved despite being refused for new Singles deposits.
-     * Disable the data pack and /reload afterward.
+     * data pack adding minecraft:stick to the somestacks:ingots item tag and run /reload.
+     * Plain-click the apple with an empty hand; the stored stick is conserved despite being refused
+     * for new Singles deposits. Disable the data pack and /reload afterward.
      */
-    public static void shiftKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
+    public static void shiftKeepsAnItemItWouldNoLongerAccept(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BlockPos pos = singles.getBlockPos();
         Item legacy = firstBarItem();
@@ -299,7 +311,7 @@ public final class SinglesColumnChecks {
         singles.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);
         seedSlot(singles.getItems(), second, new ItemStack(legacy));
 
-        ItemStack extracted = singles.extractAt(bottom);
+        ItemStack extracted = extractByHand(factory, click, pos, 0, 0);
 
         checkEquals(Items.APPLE, extracted.getItem(), "Extracted item");
         int accounted = heldAt(helper, pos, legacy) + droppedNear(helper, pos, legacy);
@@ -309,16 +321,19 @@ public final class SinglesColumnChecks {
 
     /**
      * Synthetic admission fixture: the lower block holds an apple and the upper block has a
-     * directly seeded bottom item currently refused by Singles. Extraction exercises cross-block
-     * draw-down; it asserts conservation across both inventories and nearby drops, without changing
-     * policy.
+     * directly seeded bottom item currently refused by Singles. Plain-clicking the apple exercises
+     * cross-block draw-down; it asserts conservation across both inventories and nearby drops,
+     * without changing policy.
      *
      * <p>For a visible tag-change check, build a supported column spanning two Singles blocks with
      * a stick above the seam, then enable a data pack adding minecraft:stick to the
-     * somestacks:ingots item tag and run /reload. Extract below the seam and confirm the stick is
-     * conserved. Disable the data pack and /reload afterward.
+     * somestacks:ingots item tag and run /reload. Plain-click below the seam with an empty hand and
+     * confirm the stick is conserved. Disable the data pack and /reload afterward.
      */
-    public static void drawDownKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
+    public static void drawDownKeepsAnItemItWouldNoLongerAccept(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
         SinglesStackBE upper = placeSingles(helper, ORIGIN.above());
         BlockPos lowerPos = lower.getBlockPos();
@@ -331,7 +346,7 @@ public final class SinglesColumnChecks {
         lower.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);
         seedSlot(upper.getItems(), bottom, new ItemStack(legacy));
 
-        ItemStack extracted = lower.extractAt(bottom);
+        ItemStack extracted = extractByHand(factory, click, lowerPos, 0, 0);
 
         checkEquals(Items.APPLE, extracted.getItem(), "Extracted item");
         int accounted =
@@ -344,16 +359,19 @@ public final class SinglesColumnChecks {
 
     /**
      * The fixture directly stores a stick at the bottom and paper two layers above in visual column
-     * 2, leaving the middle cell empty. Extracting the stick shifts paper down one layer and leaves
-     * the bottom empty.
+     * 2, leaving the middle cell empty. Plain-clicking the stick shifts paper down one layer and
+     * leaves the bottom empty.
      *
      * <p>This unsupported starting layout requires a fixture or /data merge block rather than
      * ordinary deposits. Create a Singles block with /setblock, then merge
-     * {Items:{Size:64,Items:[{Slot:2,id:"minecraft:stick",Count:1b},{Slot:34,id:"minecraft:paper",Count:1b}]}}
+     * {Items:{Items:[{Slot:2,id:"minecraft:stick",Count:1b},{Slot:34,id:"minecraft:paper",Count:1b}]}}
      * into its block entity. Plain-right-click the stick; paper moves to the middle cell,
      * preserving the gap.
      */
-    public static void extractionPreservesAnExistingGap(GameTestHelper helper) {
+    public static void extractionPreservesAnExistingGap(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int column = 2;
         int bottom = SinglesCubeIdx.indexFromColumn(column, 0);
@@ -362,8 +380,9 @@ public final class SinglesColumnChecks {
         singles.getItems().insertItem(bottom, new ItemStack(Items.STICK), false);
         singles.getItems().insertItem(third, new ItemStack(Items.PAPER), false);
 
-        singles.extractAt(bottom);
+        ItemStack extracted = extractByHand(factory, click, singles.getBlockPos(), column, 0);
 
+        checkEquals(Items.STICK, extracted.getItem(), "Extracted item");
         check(
                 singles.getItems().getStackInSlot(bottom).isEmpty(),
                 "Existing gap was compacted away");
@@ -383,7 +402,10 @@ public final class SinglesColumnChecks {
      * hand. The upper item crosses the visible seam with its facing unchanged; an emptied upper
      * block disappears.
      */
-    public static void extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper helper) {
+    public static void extractionDrawsAcrossDifferentlyRotatedBlockBoundary(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
         SinglesStackBE upper = placeSingles(helper, ORIGIN.above());
         lower.setRotation(1);
@@ -397,8 +419,9 @@ public final class SinglesColumnChecks {
         upper.getItems().insertItem(upperBottom, new ItemStack(Items.PAPER), false);
         upper.setCubeRotation(upperBottom, 3);
 
-        lower.extractAt(lowerTop);
+        ItemStack extracted = extractByHand(factory, click, lower.getBlockPos(), visualColumn, 3);
 
+        checkEquals(Items.STICK, extracted.getItem(), "Extracted item");
         checkEquals(
                 Items.PAPER,
                 lower.getItems().getStackInSlot(lowerTop).getItem(),
@@ -408,6 +431,30 @@ public final class SinglesColumnChecks {
                 helper.getLevel().getBlockEntity(upper.getBlockPos()) == null,
                 "Emptied top block remained");
         helper.succeed();
+    }
+
+    /**
+     * Plain-clicks the Singles block at {@code pos} with an empty hand, aimed from the west along
+     * the row holding visual column {@code visualColumn} at {@code layer}, and returns what the
+     * hand received. Visual columns count four to a row from the north-west corner, so the click
+     * meets the target cell after the cells west of it in that row, which must be empty.
+     */
+    private static ItemStack extractByHand(
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click,
+            BlockPos pos,
+            int visualColumn,
+            int layer) {
+        try (InteractionChecks.PlayerScope scope =
+                new InteractionChecks.PlayerScope(factory.apply(ItemStack.EMPTY))) {
+            var player = scope.player;
+            click.click(
+                    player,
+                    InteractionChecks.HAND,
+                    InteractionChecks.aim(
+                            player, pos, (layer + 0.5) / 4, (visualColumn / 4 + 0.5) / 4));
+            return player.getMainHandItem().copy();
+        }
     }
 
     /**
@@ -423,9 +470,7 @@ public final class SinglesColumnChecks {
         singles.getItems().insertItem(8, new ItemStack(Items.STICK), false);
         BlockPos blockPos = singles.getBlockPos();
 
-        int result =
-                SinglesCubeIdx.traceAllPositions(
-                        traceThroughBlock(blockPos), blockPos, singles.getItems(), 0);
+        int result = singles.depositTarget(traceThroughBlock(blockPos));
 
         checkEquals(4, result, "Trace deposit index");
         helper.succeed();
@@ -442,9 +487,7 @@ public final class SinglesColumnChecks {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BlockPos blockPos = singles.getBlockPos();
 
-        int result =
-                SinglesCubeIdx.traceAllPositions(
-                        traceThroughBlock(blockPos), blockPos, singles.getItems(), 0);
+        int result = singles.depositTarget(traceThroughBlock(blockPos));
 
         checkEquals(12, result, "Trace deposit index");
         helper.succeed();
@@ -459,29 +502,6 @@ public final class SinglesColumnChecks {
         double y = blockPos.getY() + 0.125;
         return new ViewRay(
                 new Vec3(x, y, blockPos.getZ() - 1.0), new Vec3(x, y, blockPos.getZ() + 2.0));
-    }
-
-    /**
-     * The fixture checks an empty Singles block, one occupied cell, then all 64 cells: signals are
-     * 0, 1, and 15.
-     *
-     * <p>To reproduce visible readings, place an outward-facing comparator beside Singles, deposit
-     * one item, then fill all cells. Read 1 and 15; after extracting all items, the block
-     * disappears and the comparator reads 0.
-     */
-    public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
-        SinglesStackBE singles = placeSingles(helper, ORIGIN);
-
-        checkEquals(0, signalAt(helper, ORIGIN), "Empty column signal");
-
-        singles.getItems().insertItem(0, new ItemStack(Items.STONE, 1), false);
-        checkEquals(1, signalAt(helper, ORIGIN), "Signal for a single item in a whole column");
-
-        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
-        }
-        checkEquals(15, signalAt(helper, ORIGIN), "Full column signal");
-        helper.succeed();
     }
 
     /**
@@ -525,6 +545,113 @@ public final class SinglesColumnChecks {
         helper.setBlock(ORIGIN.above(), Blocks.AIR);
 
         checkEquals(15, signalAt(helper, ORIGIN), "Signal after the block was lost");
+        helper.succeed();
+    }
+
+    /**
+     * Internal positional insertion check: offer three sticks to unsupported Singles slot 63, then
+     * grounded slot 0, through the loader's automation view. Slot 63 refuses all three; slot 0
+     * accepts exactly one without mutating the caller's offer. Simulation stores nothing.
+     *
+     * <p>To check manually, use a slot-addressing machine on an empty Singles fixture: an
+     * unsupported target must not redirect, and a grounded target stores one stick. A dry-run
+     * assertion requires automation that exposes simulation or abort.
+     */
+    public static void capabilityInsertionAnswersForTheCellItIsGiven(
+            GameTestHelper helper, Function<BlockEntity, Automation> automation) {
+        SinglesStackBE singles = placeSingles(helper, ORIGIN);
+        Automation capability = automation.apply(singles);
+        ItemStack offered = new ItemStack(Items.STICK, 3);
+
+        // Cell 63 is a top-layer cell with nothing beneath it, so it is refused rather than
+        // redirected to a cell that would take the item.
+        checkEquals(
+                3,
+                capability.insert(63, offered, true).getCount(),
+                "Simulated insertion into an unsupported cell");
+        checkEquals(
+                3,
+                capability.insert(63, offered, false).getCount(),
+                "Committed insertion into an unsupported cell");
+        checkEquals(0, occupied(singles.getItems()), "An unsupported cell stored something");
+
+        // Cell 0 is grounded outright, and takes exactly the one item a cell holds.
+        checkEquals(
+                2,
+                capability.insert(0, offered, true).getCount(),
+                "Simulated insertion into a grounded cell");
+        checkEquals(3, offered.getCount(), "Simulation changed input");
+        checkEquals(0, occupied(singles.getItems()), "Simulation changed occupancy");
+
+        checkEquals(
+                2,
+                capability.insert(0, offered, false).getCount(),
+                "Committed insertion into a grounded cell");
+        checkEquals(3, offered.getCount(), "Capability mutated caller input");
+        checkEquals(1, occupied(singles.getItems()), "One call should store one item");
+        checkEquals(
+                Items.STICK,
+                singles.getItems().getStackInSlot(0).getItem(),
+                "The cell named should hold the item");
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce: offer three sticks to an empty Singles fixture through a machine that visits
+     * slots in ascending order. The first three bottom-layer cells receive one stick each and
+     * nothing remains uninserted. The test also asserts that the automation view does not mutate
+     * its caller-owned offer.
+     */
+    public static void capabilityWalkFillsTheColumnFromTheBottom(
+            GameTestHelper helper, Function<BlockEntity, Automation> automation) {
+        SinglesStackBE singles = placeSingles(helper, ORIGIN);
+        ItemStack offered = new ItemStack(Items.STICK, 3);
+
+        // A caller walking the advertised cells in order still fills the column, because each
+        // placement stands before the next cell is offered.
+        ItemStack remainder = automation.apply(singles).insertStacked(offered, false);
+
+        check(remainder.isEmpty(), "A walk of the cells left a remainder");
+        checkEquals(3, offered.getCount(), "Capability mutated caller input");
+        for (int cell = 0; cell < 3; cell++) {
+            checkEquals(
+                    Items.STICK,
+                    singles.getItems().getStackInSlot(cell).getItem(),
+                    "Lowest cell " + cell);
+        }
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce: put a stick at the bottom of one Singles column and paper directly above.
+     * Automate extraction from the stick's slot. Exactly one stick is extracted and paper shifts
+     * into its cell. The test also performs a dry run first, which returns a stick without changing
+     * contents; this requires a machine or probe with simulation/abort support.
+     */
+    public static void capabilityExtractionUsesThePlayerGravityPath(
+            GameTestHelper helper, Function<BlockEntity, Automation> automation) {
+        SinglesStackBE singles = placeSingles(helper, ORIGIN);
+        int column = 0;
+        int bottom = SinglesCubeIdx.indexFromColumn(column, 0);
+        int above = SinglesCubeIdx.indexFromColumn(column, 1);
+        singles.getItems().insertItem(bottom, new ItemStack(Items.STICK), false);
+        singles.getItems().insertItem(above, new ItemStack(Items.PAPER), false);
+        Automation capability = automation.apply(singles);
+
+        ItemStack simulated = capability.extract(bottom, 64, true);
+        checkEquals(Items.STICK, simulated.getItem(), "Simulated extracted item");
+        checkEquals(
+                Items.STICK,
+                singles.getItems().getStackInSlot(bottom).getItem(),
+                "Simulation mutated contents");
+
+        ItemStack extracted = capability.extract(bottom, 64, false);
+
+        checkEquals(1, extracted.getCount(), "Capability extracted more than one item");
+        checkEquals(
+                Items.PAPER,
+                singles.getItems().getStackInSlot(bottom).getItem(),
+                "Capability extraction did not shift column");
         helper.succeed();
     }
 }

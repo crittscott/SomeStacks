@@ -80,9 +80,12 @@ loadScripts(document, 'script');</script>
 <dd><a href="ClientCallbackChecks.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks</a></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public static record </span><span class="element-name type-name-label">ClientCallbackChecks.Result</span>(boolean&nbsp;consumed, boolean&nbsp;blockDenied, boolean&nbsp;itemDenied)
+<div class="type-signature"><span class="modifiers">public static record </span><span class="element-name type-name-label">ClientCallbackChecks.Result</span>(boolean&nbsp;consumed, boolean&nbsp;reportsDenials, boolean&nbsp;blockDenied, boolean&nbsp;itemDenied)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
-<div class="block">Observable local callback outputs; none of these performs the server's world action.</div>
+<div class="block">Observable local callback outputs; none of these performs the server's world action. A
+ loader whose callback returns a single result, with no separate block-use and item-use
+ denial, reports only <code>consumed</code>; <code>reportsDenials</code> is then false and the denial
+ fields are not asserted.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -94,7 +97,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(boolean,boolean,boolean)" class="member-name-link">Result</a><wbr>(boolean&nbsp;consumed,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(boolean,boolean,boolean,boolean)" class="member-name-link">Result</a><wbr>(boolean&nbsp;consumed,
+ boolean&nbsp;reportsDenials,
  boolean&nbsp;blockDenied,
  boolean&nbsp;itemDenied)</code></div>
 <div class="col-last even-row-color">
@@ -108,7 +112,7 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -124,25 +128,42 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>consumed</code> record component.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#consumedOnly(boolean)" class="member-name-link">consumedOnly</a><wbr>(boolean&nbsp;consumed)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A callback that reports only whether it consumed the click.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#itemDenied()" class="member-name-link">itemDenied</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#itemDenied()" class="member-name-link">itemDenied</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>itemDenied</code> record component.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reportsDenials()" class="member-name-link">reportsDenials</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <code>reportsDenials</code> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a string representation of this record class.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withDenials(boolean,boolean,boolean)" class="member-name-link">withDenials</a><wbr>(boolean&nbsp;consumed,
+ boolean&nbsp;blockDenied,
+ boolean&nbsp;itemDenied)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A callback that also reports separate block-use and item-use denial.</div>
 </div>
 </div>
 </div>
@@ -162,15 +183,17 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(boolean,boolean,boolean)">
+<section class="detail" id="&lt;init&gt;(boolean,boolean,boolean,boolean)">
 <h3>Result</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Result</span><wbr><span class="parameters">(boolean&nbsp;consumed,
+ boolean&nbsp;reportsDenials,
  boolean&nbsp;blockDenied,
  boolean&nbsp;itemDenied)</span></div>
 <div class="block">Creates an instance of a <code>Result</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>consumed</code> - the value for the <code>consumed</code> record component</dd>
+<dd><code>reportsDenials</code> - the value for the <code>reportsDenials</code> record component</dd>
 <dd><code>blockDenied</code> - the value for the <code>blockDenied</code> record component</dd>
 <dd><code>itemDenied</code> - the value for the <code>itemDenied</code> record component</dd>
 </dl>
@@ -184,6 +207,22 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="consumedOnly(boolean)">
+<h3>consumedOnly</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></span>&nbsp;<span class="element-name">consumedOnly</span><wbr><span class="parameters">(boolean&nbsp;consumed)</span></div>
+<div class="block">A callback that reports only whether it consumed the click.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withDenials(boolean,boolean,boolean)">
+<h3>withDenials</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></span>&nbsp;<span class="element-name">withDenials</span><wbr><span class="parameters">(boolean&nbsp;consumed,
+ boolean&nbsp;blockDenied,
+ boolean&nbsp;itemDenied)</span></div>
+<div class="block">A callback that also reports separate block-use and item-use denial.</div>
+</section>
+</li>
 <li>
 <section class="detail" id="toString()">
 <h3>toString</h3>
@@ -233,6 +272,17 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of the <code>consumed</code> record component</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="reportsDenials()">
+<h3>reportsDenials</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">reportsDenials</span>()</div>
+<div class="block">Returns the value of the <code>reportsDenials</code> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <code>reportsDenials</code> record component</dd>
 </dl>
 </section>
 </li>

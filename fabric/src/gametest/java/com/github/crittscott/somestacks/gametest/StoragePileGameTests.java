@@ -1,25 +1,9 @@
 package com.github.crittscott.somestacks.gametest;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
-
-import com.github.crittscott.somestacks.block.StoragePile;
-import com.github.crittscott.somestacks.block.StorageStackBE;
-
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
-import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 
 /**
  * Storage pile behavior in a live level: deposits filling partial stacks before empty ones, growth
@@ -43,7 +27,8 @@ public final class StoragePileGameTests implements FabricGameTest {
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void fullPileGrowsByOneBlock(GameTestHelper helper) {
-        StoragePileChecks.fullPileGrowsByOneBlock(helper);
+        StoragePileChecks.fullPileGrowsByOneBlock(
+                helper, FabricGameTestSupport.players(helper), FabricGameTestSupport::click);
     }
 
     /** See {@link StoragePileChecks#growthRequiresBuildPermission}. */
@@ -58,92 +43,36 @@ public final class StoragePileGameTests implements FabricGameTest {
         StoragePileChecks.placementChoosesFacingBeforeJoining(helper);
     }
 
-    /** See {@link StoragePileChecks#grownBlockTakesTheBaseFacing}. */
+    /**
+     * Loader entry point for {@link StoragePileChecks#grownBlockTakesTheBaseFacing}; see that
+     * method for the scenario and manual check.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void grownBlockTakesTheBaseFacing(GameTestHelper helper) {
-        StoragePileChecks.grownBlockTakesTheBaseFacing(helper);
+        StoragePileChecks.grownBlockTakesTheBaseFacing(
+                helper, FabricGameTestSupport.players(helper), FabricGameTestSupport::click);
     }
 
     /**
-     * Internal Storage slot check: insert eight stone into local slot 20, reject dirt offered to
-     * that incompatible slot, then settle. Before settlement stone occupies slot 20; afterward it
-     * occupies slot 0. Simulation and caller-owned input are unchanged.
-     *
-     * <p>To check manually, use slot-addressing automation to insert into an empty Storage slot,
-     * then observe the next settlement pack its contents toward the base. Precise pre-tick
-     * placement and dry-run results require an automation probe.
+     * Loader entry point for {@link
+     * StoragePileChecks#capabilityInsertionAnswersForTheSlotItIsGiven}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void capabilityInsertionAnswersForTheSlotItIsGiven(GameTestHelper helper) {
-        StorageStackBE storage = placeStorage(helper, ORIGIN);
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(storage);
-        ItemStack offered = new ItemStack(Items.STONE, 8);
-
-        // A pile is a bag, so the slot named takes what a slot takes — here all eight, in slot 20
-        // rather than at the base a deposit would have filled.
-        checkEquals(
-                0,
-                FabricGameTestSupport.insertAt(capability, 20, offered, true).getCount(),
-                "Simulated insertion into an empty slot");
-        checkEquals(
-                0,
-                FabricGameTestSupport.insertAt(capability, 20, offered, false).getCount(),
-                "Committed insertion into an empty slot");
-        checkEquals(8, offered.getCount(), "Capability mutated caller input");
-        checkEquals(
-                8,
-                storage.getItems().getStackInSlot(20).getCount(),
-                "The slot named should hold the items");
-
-        // An incompatible slot takes nothing rather than redirecting to available space elsewhere.
-        ItemStack other = new ItemStack(Items.DIRT, 8);
-        checkEquals(
-                8,
-                FabricGameTestSupport.insertAt(capability, 20, other, true).getCount(),
-                "Simulated insertion into an occupied incompatible slot");
-
-        // The settle the insertion scheduled is what puts the items at the base.
-        StoragePile pile = storage.pile();
-        check(pile != null, "Pile did not resolve");
-        pile.settle();
-        checkEquals(
-                8,
-                storage.getItems().getStackInSlot(0).getCount(),
-                "Settle should pack the insertion down to the base");
-        checkEquals(0, count(storage.getItems(), Items.DIRT), "Refused insertion stored something");
-        helper.succeed();
+        StoragePileChecks.capabilityInsertionAnswersForTheSlotItIsGiven(
+                helper, FabricGameTestSupport::automation);
     }
 
     /**
-     * To reproduce: fill all 27 slots of a Storage block with full dirt stacks, allow height above
-     * one, and put solid stone directly above. Offer four stone through automation to first
-     * headroom slot 27. All four are refused and the obstruction remains. A simulated offer must
-     * report the same refusal without modifying input.
+     * Loader entry point for {@link
+     * StoragePileChecks#obstructionPreventsGrowthAndSimulationReportsNoRoom}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void obstructionPreventsGrowthAndSimulationReportsNoRoom(GameTestHelper helper) {
-        StorageStackBE storage = placeStorage(helper, ORIGIN);
-        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
-        }
-        BlockPos above = helper.absolutePos(ORIGIN.above());
-        helper.getLevel().setBlock(above, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(storage);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-
-        // The first advertised slot past what the pile holds: the one insertion grows into, and so
-        // the only one an obstruction can refuse.
-        int headroom = StorageStackBE.SLOTS;
-        ItemStack simulatedRemainder =
-                FabricGameTestSupport.insertAt(capability, headroom, offered, true);
-        ItemStack committedRemainder =
-                FabricGameTestSupport.insertAt(capability, headroom, offered, false);
-
-        checkEquals(4, simulatedRemainder.getCount(), "Simulated remainder");
-        checkEquals(4, committedRemainder.getCount(), "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        check(helper.getLevel().getBlockState(above).is(Blocks.STONE), "Obstruction changed");
-        helper.succeed();
+        StoragePileChecks.obstructionPreventsGrowthAndSimulationReportsNoRoom(
+                helper, FabricGameTestSupport::automation);
     }
 
     /**
@@ -155,13 +84,20 @@ public final class StoragePileGameTests implements FabricGameTest {
         StoragePileChecks.settleConsolidatesExactIdentityAndPacksDown(helper);
     }
 
+    /** Loader entry point for {@link StoragePileChecks#settleMergesOnlyIdenticalNames}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void settleMergesOnlyIdenticalNames(GameTestHelper helper) {
+        StoragePileChecks.settleMergesOnlyIdenticalNames(helper);
+    }
+
     /**
      * Loader entry point for {@link StoragePileChecks#extractionSettlesOnScheduledBlockTick}; see
      * that method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE, timeoutTicks = 20)
     public void extractionSettlesOnScheduledBlockTick(GameTestHelper helper) {
-        StoragePileChecks.extractionSettlesOnScheduledBlockTick(helper);
+        StoragePileChecks.extractionSettlesOnScheduledBlockTick(
+                helper, FabricGameTestSupport.players(helper), FabricGameTestSupport::click);
     }
 
     /**
@@ -175,32 +111,14 @@ public final class StoragePileGameTests implements FabricGameTest {
     }
 
     /**
-     * Internal shared-view check: seed twelve stone in the base of two contiguous Storage blocks.
-     * Slot 0 and advertised slot count agree through adapters attached to either block.
-     *
-     * <p>To reproduce visibly, make a permanent two-block Storage pile, leave twelve stone stored,
-     * and attach machines at different heights. Both access the same inventory and capacity.
+     * Loader entry point for {@link
+     * StoragePileChecks#capabilityFromEveryBlockAddressesTheSamePile}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void capabilityFromEveryBlockAddressesTheSamePile(GameTestHelper helper) {
-        StorageStackBE lower = placeStorage(helper, ORIGIN);
-        StorageStackBE upper = placeStorage(helper, ORIGIN.above());
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12), false);
-
-        SlottedStorage<ItemVariant> lowerCapability = FabricGameTestSupport.capability(lower);
-        SlottedStorage<ItemVariant> upperCapability = FabricGameTestSupport.capability(upper);
-
-        checkEquals(
-                12,
-                FabricGameTestSupport.stackAt(lowerCapability, 0).getCount(),
-                "Lower capability count");
-        checkEquals(
-                12,
-                FabricGameTestSupport.stackAt(upperCapability, 0).getCount(),
-                "Upper capability count");
-        checkEquals(
-                lowerCapability.getSlotCount(), upperCapability.getSlotCount(), "Capability shape");
-        helper.succeed();
+        StoragePileChecks.capabilityFromEveryBlockAddressesTheSamePile(
+                helper, FabricGameTestSupport::automation);
     }
 
     /**
@@ -220,15 +138,6 @@ public final class StoragePileGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE, timeoutTicks = 20)
     public void ordinaryPlacementBelowPermanentPileRepairsDerivedState(GameTestHelper helper) {
         StoragePileChecks.ordinaryPlacementBelowPermanentPileRepairsDerivedState(helper);
-    }
-
-    /**
-     * Loader entry point for {@link StoragePileChecks#comparatorReservesZeroForAnEmptyPile}; see
-     * that method for the scenario, manual check, and any internal-only assertions.
-     */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
-        StoragePileChecks.comparatorReservesZeroForAnEmptyPile(helper);
     }
 
     /**

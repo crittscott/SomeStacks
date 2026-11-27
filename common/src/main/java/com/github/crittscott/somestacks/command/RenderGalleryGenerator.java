@@ -45,42 +45,55 @@ public final class RenderGalleryGenerator {
     /**
      * What a gallery is built from. A kind decides which items belong in it, how many of them one
      * stack shows, and how that stack is filled.
+     *
+     * <p>Each message about a kind is a whole sentence of its own, so a translation never has to
+     * fit a kind's noun into another sentence. The keys follow one scheme: {@code
+     * somestacks.command.gallery.<kind>.<phase>.<subject>} for gallery progress, and a suffix
+     * naming what the kind shows ({@code items} or {@code ingots}) for the messages about
+     * namespaces that cannot be shown.
      */
     public enum Kind {
         /** Storage Stacks showing nine items each. */
-        STORAGE(
-                "somestacks.command.gallery.storage_stacks",
-                "somestacks.command.gallery.items",
-                StorageCubeIdx.LAYER_SIZE),
+        STORAGE("storage", "items", StorageCubeIdx.LAYER_SIZE),
 
         /**
          * Bar Stacks showing eight ingots each, one bar per ingot. Only items a Bar Stack accepts
-         * qualify, tested by the block entity itself so that a gallery shows what a player could
-         * actually deposit rather than a second opinion about it.
+         * qualify, tested by {@link BlockType#admits BlockType.BAR_STACK.admits} so that a gallery
+         * shows what a player could actually deposit rather than a second opinion about it.
          */
-        BAR(
-                "somestacks.command.gallery.bar_stacks",
-                "somestacks.command.gallery.ingots",
-                BarCubeIdx.LAYER_SIZE);
+        BAR("bar", "ingots", BarCubeIdx.LAYER_SIZE);
 
-        private final String stackLabelKey;
-        private final String itemLabelKey;
+        private final String id;
+        private final String contents;
         private final int itemsPerStack;
 
-        Kind(String stackLabelKey, String itemLabelKey, int itemsPerStack) {
-            this.stackLabelKey = stackLabelKey;
-            this.itemLabelKey = itemLabelKey;
+        Kind(String id, String contents, int itemsPerStack) {
+            this.id = id;
+            this.contents = contents;
             this.itemsPerStack = itemsPerStack;
         }
 
-        /** Translation key naming this kind's blocks in a message to the player. */
-        public String stackLabelKey() {
-            return stackLabelKey;
+        /**
+         * Gallery progress sentence for one phase ({@code building}, {@code created}, or {@code
+         * created_partial}) and subject ({@code mod}, {@code mods}, or {@code list}).
+         */
+        public String messageKey(String phase, String subject) {
+            return "somestacks.command.gallery." + id + "." + phase + "." + subject;
         }
 
-        /** Translation key naming this kind's contents in a message to the player. */
-        public String itemLabelKey() {
-            return itemLabelKey;
+        /** "No namespace of the gen mod list can be shown", taking the two skip counts. */
+        public String genModsUnusableKey() {
+            return "somestacks.command.gen_mods_unusable." + contents;
+        }
+
+        /** "Skipped namespaces not loaded or with nothing to show", taking count and list. */
+        public String skippedUnusableModsKey() {
+            return "somestacks.command.skipped.mods_without_" + contents;
+        }
+
+        /** "A namespace is not loaded or has nothing to show", taking the namespace. */
+        public String unusableModKey() {
+            return "somestacks.command.mod_unusable." + contents;
         }
 
         /** Namespaces holding at least one item this kind can show. */
@@ -232,7 +245,7 @@ public final class RenderGalleryGenerator {
             return;
         }
 
-        int budget = ServerConfig.renderGalleryPlacementsPerTick();
+        int budget = ServerConfig.settings().renderGalleryPlacementsPerTick();
         while (budget > 0 && !jobs.isEmpty()) {
             Job job = jobs.peek();
 
@@ -347,7 +360,7 @@ public final class RenderGalleryGenerator {
         StorageStackBE sbe = (StorageStackBE) level.getBlockEntity(pos);
 
         for (Item item : batch) {
-            sbe.deposit(new ItemStack(item, 1));
+            sbe.deposit(new ItemStack(item, 1), null);
         }
         return true;
     }

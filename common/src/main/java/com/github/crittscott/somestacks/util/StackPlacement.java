@@ -20,9 +20,8 @@ public final class StackPlacement {
      *
      * <p>Vanilla reads the fluid at the target through {@code getStateForPlacement}, which runs off
      * a {@code BlockPlaceContext} the mod never builds: every stack block reaches the world through
-     * a block-use gesture or capability-driven growth instead. This is where those four routes ask
-     * the same question, so that a stack placed in water displaces it no more than a vanilla slab
-     * does.
+     * a block-use gesture or capability-driven growth instead. This is where those routes ask the
+     * same question, so that a stack placed in water displaces it no more than a vanilla slab does.
      */
     public static BlockState stateFor(Block block, LevelReader level, BlockPos pos) {
         Direction facing = Direction.NORTH;

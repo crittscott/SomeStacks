@@ -8,12 +8,16 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
 
-/** The three stack types and their registered blocks and server enablement settings. */
+/**
+ * The three stack types: their registered blocks, server enablement settings, item admission, and
+ * the sounds player deposits and extractions play.
+ */
 public enum BlockType {
     STORAGE_STACK,
     SINGLES_STACK,
@@ -38,11 +42,30 @@ public enum BlockType {
         };
     }
 
-    public boolean isEnabled() {
+    /** The sound a player's deposit into this type plays. */
+    public SoundEvent depositSound() {
         return switch (this) {
-            case STORAGE_STACK -> ServerConfig.enableStorageStackBlock();
-            case SINGLES_STACK -> ServerConfig.enableSinglesStackBlock();
-            case BAR_STACK -> ServerConfig.enableBarStackBlock();
+            case STORAGE_STACK -> CommonRegistry.Sound.STORAGE_DEPOSIT.get();
+            case SINGLES_STACK -> CommonRegistry.Sound.SINGLES_DEPOSIT.get();
+            case BAR_STACK -> CommonRegistry.Sound.BAR_DEPOSIT.get();
+        };
+    }
+
+    /** The sound a player's extraction from this type plays. */
+    public SoundEvent extractSound() {
+        return switch (this) {
+            case STORAGE_STACK -> CommonRegistry.Sound.STORAGE_EXTRACT.get();
+            case SINGLES_STACK -> CommonRegistry.Sound.SINGLES_EXTRACT.get();
+            case BAR_STACK -> CommonRegistry.Sound.BAR_EXTRACT.get();
+        };
+    }
+
+    public boolean isEnabled() {
+        ServerConfig.Settings settings = ServerConfig.settings();
+        return switch (this) {
+            case STORAGE_STACK -> settings.enableStorageStackBlock();
+            case SINGLES_STACK -> settings.enableSinglesStackBlock();
+            case BAR_STACK -> settings.enableBarStackBlock();
         };
     }
 

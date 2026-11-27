@@ -97,34 +97,39 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#CELLS" class="member-name-link">CELLS</a></code></div>
+<div class="col-first even-row-color"><code>static final double</code></div>
+<div class="col-second even-row-color"><code><a href="#CELL_PIXELS" class="member-name-link">CELL_PIXELS</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Edge of one cell, in pixels.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#CELLS" class="member-name-link">CELLS</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Cells in one block, and therefore slots in one <a href="../block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block"><code>SinglesStackBE</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#GRID" class="member-name-link">GRID</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final <a href="CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a></code></div>
+<div class="col-second even-row-color"><code><a href="#GRID" class="member-name-link">GRID</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Cached coordinate transforms, bounds, and shapes for the Singles layout.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#GRID_EDGE" class="member-name-link">GRID_EDGE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#GRID_EDGE" class="member-name-link">GRID_EDGE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Cells along one axis of the grid.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#LAYER_SIZE" class="member-name-link">LAYER_SIZE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#LAYER_SIZE" class="member-name-link">LAYER_SIZE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Cells in one layer.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#LAYERS" class="member-name-link">LAYERS</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#LAYERS" class="member-name-link">LAYERS</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Layers in one block.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#TOP_LAYER_Y" class="member-name-link">TOP_LAYER_Y</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TOP_LAYER_Y" class="member-name-link">TOP_LAYER_Y</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">The layer a block hands items down from, and the only one that holds up the block above.</div>
 </div>
 </div>
@@ -203,32 +208,9 @@ loadScripts(document, 'script');</script>
  boundary even when adjacent blocks have different rotations.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
- net.minecraft.core.BlockPos&nbsp;blockPos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Finds the deposit target for a Singles Stack that does not yet exist and therefore has no
- occupied slots.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage,int)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
- net.minecraft.core.BlockPos&nbsp;blockPos,
- <a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#visualColumnFromStorage(int,int)" class="member-name-link">visualColumnFromStorage</a><wbr>(int&nbsp;storageColumn,
  int&nbsp;blockRotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Finds the slot a deposit targets: the last empty slot along the view ray before the first
- occupied one, or the farthest intersected slot if the ray meets no occupied item.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceCubes(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.SinglesStackBE)" class="member-name-link">traceCubes</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
- net.minecraft.core.BlockPos&nbsp;blockPos,
- <a href="../block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&nbsp;be)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the nearest occupied cell intersected by the view ray, or <code>-1</code> on a miss.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#visualColumnFromStorage(int,int)" class="member-name-link">visualColumnFromStorage</a><wbr>(int&nbsp;storageColumn,
- int&nbsp;blockRotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The visual column a storage column occupies under a block rotation.</div>
 </div>
 </div>
@@ -324,6 +306,21 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="CELL_PIXELS">
+<h3>CELL_PIXELS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">CELL_PIXELS</span></div>
+<div class="block">Edge of one cell, in pixels.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.util.SinglesCubeIdx.CELL_PIXELS">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="GRID">
 <h3>GRID</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a></span>&nbsp;<span class="element-name">GRID</span></div>
@@ -408,38 +405,6 @@ loadScripts(document, 'script');</script>
  int&nbsp;blockRotation)</span></div>
 <div class="block">Returns top-layer occupancy in visual columns, the coordinate system shared across a block
  boundary even when adjacent blocks have different rotations.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos)">
-<h3>traceAllPositions</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">traceAllPositions</span><wbr><span class="parameters">(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
- net.minecraft.core.BlockPos&nbsp;blockPos)</span></div>
-<div class="block">Finds the deposit target for a Singles Stack that does not yet exist and therefore has no
- occupied slots. Placement uses this to validate the initial deposit and its resulting
- collision shape before adding the block to the world. New blocks are unrotated.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage,int)">
-<h3>traceAllPositions</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">traceAllPositions</span><wbr><span class="parameters">(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
- net.minecraft.core.BlockPos&nbsp;blockPos,
- @Nullable
- <a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler,
- int&nbsp;blockRotation)</span></div>
-<div class="block">Finds the slot a deposit targets: the last empty slot along the view ray before the first
- occupied one, or the farthest intersected slot if the ray meets no occupied item. A null
- handler describes a prospective, entirely empty block.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="traceCubes(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.SinglesStackBE)">
-<h3>traceCubes</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">traceCubes</span><wbr><span class="parameters">(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
- net.minecraft.core.BlockPos&nbsp;blockPos,
- <a href="../block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&nbsp;be)</span></div>
-<div class="block">Returns the nearest occupied cell intersected by the view ray, or <code>-1</code> on a miss.</div>
 </section>
 </li>
 <li>

@@ -83,7 +83,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public enum </span><span class="element-name type-name-label">BlockType</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&gt;</span></div>
-<div class="block">The three stack types and their registered blocks and server enablement settings.</div>
+<div class="block">The three stack types: their registered blocks, server enablement settings, item admission, and
+ the sounds player deposits and extractions play.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -130,6 +131,16 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Silent admission for simulation/commit; null denotes automation, which ignores exact-item
  denial.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depositSound()" class="member-name-link">depositSound</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The sound a player's deposit into this type plays.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractSound()" class="member-name-link">extractSound</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The sound a player's extraction from this type plays.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.level.block.Block</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBlock()" class="member-name-link">getBlock</a>()</code></div>
@@ -248,6 +259,20 @@ not permitted.)</div>
 <section class="detail" id="getBlock()">
 <h3>getBlock</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.Block</span>&nbsp;<span class="element-name">getBlock</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="depositSound()">
+<h3>depositSound</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">depositSound</span>()</div>
+<div class="block">The sound a player's deposit into this type plays.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="extractSound()">
+<h3>extractSound</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">extractSound</span>()</div>
+<div class="block">The sound a player's extraction from this type plays.</div>
 </section>
 </li>
 <li>

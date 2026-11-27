@@ -92,19 +92,38 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>double</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#blockReach(net.minecraft.world.entity.player.Player)" class="member-name-link">blockReach</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">How far, in blocks, this player can reach a block on this loader.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#broadcastConfig(net.minecraft.server.MinecraftServer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">broadcastConfig</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server,
+ <a href="network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Sends one encoding of the policy snapshot to every connected player.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#configFolder()" class="member-name-link">configFolder</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">The game's config directory.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="server/EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#editAuthority()" class="member-name-link">editAuthority</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">The loader's half of world edits, which <a href="server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server"><code>WorldEdits</code></a> consults.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#modVersion(java.lang.String)" class="member-name-link">modVersion</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">The installed version of the namespace, or "unknown" when it is not loaded.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#sendConfig(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">sendConfig</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  <a href="network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Sends the policy snapshot to one player.</div>
+</div>
 </div>
 </div>
 </div>
@@ -120,15 +139,39 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="blockReach(net.minecraft.world.entity.player.Player)">
+<h3>blockReach</h3>
+<div class="member-signature"><span class="return-type">double</span>&nbsp;<span class="element-name">blockReach</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;player)</span></div>
+<div class="block">How far, in blocks, this player can reach a block on this loader.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="broadcastConfig(net.minecraft.server.MinecraftServer,com.github.crittscott.somestacks.network.ConfigSyncPkt)">
+<h3>broadcastConfig</h3>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">broadcastConfig</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server,
+ <a href="network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</span></div>
+<div class="block">Sends one encoding of the policy snapshot to every connected player.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="configFolder()">
 <h3>configFolder</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">configFolder</span>()</div>
+<div class="block">The game's config directory.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="editAuthority()">
+<h3>editAuthority</h3>
+<div class="member-signature"><span class="return-type"><a href="server/EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a></span>&nbsp;<span class="element-name">editAuthority</span>()</div>
+<div class="block">The loader's half of world edits, which <a href="server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server"><code>WorldEdits</code></a> consults.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="modVersion(java.lang.String)">
 <h3>modVersion</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">modVersion</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</span></div>
+<div class="block">The installed version of the namespace, or "unknown" when it is not loaded.</div>
 </section>
 </li>
 <li>
@@ -136,12 +179,7 @@ loadScripts(document, 'script');</script>
 <h3>sendConfig</h3>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">sendConfig</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
  <a href="network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="editAuthority()">
-<h3>editAuthority</h3>
-<div class="member-signature"><span class="return-type"><a href="server/EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a></span>&nbsp;<span class="element-name">editAuthority</span>()</div>
+<div class="block">Sends the policy snapshot to one player.</div>
 </section>
 </li>
 </ul>

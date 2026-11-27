@@ -80,12 +80,14 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">ViewRay</span>(net.minecraft.world.phys.Vec3&nbsp;eye, net.minecraft.world.phys.Vec3&nbsp;end)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 <div class="block">The segment a player's view ray sweeps against a block they are interacting with: their eye
- position out to the far end of their block reach.
+ position out to the far end of their block reach, and the two walks that pick a cell inside a
+ stack along it.
 
  <p>Cell targeting takes the ray as a segment rather than as a direction, so how far it reaches is
  stated where the player is known instead of assumed inside the geometry helpers. Reach is the
- attribute rather than a fixed distance, so a player whose reach has been raised finds the cells
- of the block they are looking at.
+ loader's answer for this player (<a href="../PlatformServices.html#blockReach(net.minecraft.world.entity.player.Player)"><code>PlatformServices.blockReach(net.minecraft.world.entity.player.Player)</code></a>) rather than a fixed
+ distance, so where the loader lets reach be raised, the player still finds the cells of the block
+ they are looking at.
 
  <p>The segment runs two blocks past the reach limit: the slack vanilla allows a server-side
  interaction (one block) plus the distance from a block's center to its farthest corner (about
@@ -121,25 +123,43 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.Vec3</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#end()" class="member-name-link">end</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depositTarget(net.minecraft.core.BlockPos,int,java.util.function.IntFunction,java.util.function.IntPredicate)" class="member-name-link">depositTarget</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
+ int&nbsp;cells,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.phys.AABB&gt;&nbsp;localBox,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;occupied)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The cell a deposit targets in the block at <code>pos</code>: the last empty cell along the ray
+ before the first occupied one, or the farthest crossed cell when the ray meets none occupied;
+ -1 when it crosses no cell or the first cell it crosses is occupied.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.Vec3</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#end()" class="member-name-link">end</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>end</code> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.Vec3</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#eye()" class="member-name-link">eye</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.Vec3</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#eye()" class="member-name-link">eye</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>eye</code> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nearestOccupied(net.minecraft.core.BlockPos,int,java.util.function.IntFunction,java.util.function.IntPredicate)" class="member-name-link">nearestOccupied</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
+ int&nbsp;cells,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.phys.AABB&gt;&nbsp;localBox,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;occupied)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The nearest occupied cell the ray crosses in the block at <code>pos</code>, or -1 on a miss.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#of(net.minecraft.world.entity.player.Player)" class="member-name-link">of</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
@@ -205,6 +225,43 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></span>&nbsp;<span class="element-name">through</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;player,
  net.minecraft.world.phys.Vec3&nbsp;hitLocation)</span></div>
 <div class="block">Builds a reach-length ray through the exact point carried by a vanilla block interaction.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="depositTarget(net.minecraft.core.BlockPos,int,java.util.function.IntFunction,java.util.function.IntPredicate)">
+<h3>depositTarget</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">depositTarget</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
+ int&nbsp;cells,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.phys.AABB&gt;&nbsp;localBox,
+ @Nullable
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;occupied)</span></div>
+<div class="block">The cell a deposit targets in the block at <code>pos</code>: the last empty cell along the ray
+ before the first occupied one, or the farthest crossed cell when the ray meets none occupied;
+ -1 when it crosses no cell or the first cell it crosses is occupied. Equally distant cells
+ keep index order.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>cells</code> - the block's cell count</dd>
+<dd><code>localBox</code> - each cell's block-local box at the block's layout</dd>
+<dd><code>occupied</code> - which cells hold something, or null for a prospective, empty block</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nearestOccupied(net.minecraft.core.BlockPos,int,java.util.function.IntFunction,java.util.function.IntPredicate)">
+<h3>nearestOccupied</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">nearestOccupied</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
+ int&nbsp;cells,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.phys.AABB&gt;&nbsp;localBox,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;occupied)</span></div>
+<div class="block">The nearest occupied cell the ray crosses in the block at <code>pos</code>, or -1 on a miss. Of
+ equally distant cells, the lowest index wins.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>cells</code> - the block's cell count</dd>
+<dd><code>localBox</code> - each cell's block-local box at the block's layout</dd>
+<dd><code>occupied</code> - which cells hold something</dd>
+</dl>
 </section>
 </li>
 <li>

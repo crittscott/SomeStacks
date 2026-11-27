@@ -140,7 +140,8 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.InteractionHand,<wbr>net.minecraft.world.phys.BlockHitResult,<wbr><a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a>&gt;&nbsp;callback)</span></div>
 <div class="block">To reproduce in-game: launch the loader's runClientGameTests client, join a world, aim at any
  stack, release Shift and the Stack Modifier, and run /ssclienttest. It invokes the actual
- loader callback for main/off hand and checks consumption plus block/item suppression. It does
+ loader callback for main/off hand and checks that it consumes the click and, where the loader
+ reports them separately, that it denies both block use and item use. It does
  not send a vanilla use packet or extract contents. A translated success/failure message
  reports the assertions; server GameTests cannot exercise this client-only boundary.</div>
 </section>

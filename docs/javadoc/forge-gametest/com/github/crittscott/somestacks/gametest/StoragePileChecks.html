@@ -76,10 +76,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">StoragePileChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Storage pile behavior in a live level that does not touch loader-native automation directly:
- deposits filling partial stacks before empty ones, growth when a pile fills, and settling
- consolidating, packing, and sorting. Capability/Transfer-API-facing tests stay in each loader's
- own <code>StoragePileGameTests</code>.</div>
+<div class="block">Storage pile behavior in a live level: deposits filling partial stacks before empty ones, growth
+ when a pile fills, automation insertion addressing the slot it names, obstruction refusing
+ growth, and settling consolidating, packing, and sorting. Player scenarios take the loader's
+ click; automation scenarios take the loader's <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold.Automation</code></a> view.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -95,44 +95,68 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilityFromEveryBlockAddressesTheSamePile(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">capabilityFromEveryBlockAddressesTheSamePile</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Internal shared-view check: seed twelve stone in the base of two contiguous Storage blocks.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilityInsertionAnswersForTheSlotItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">capabilityInsertionAnswersForTheSlotItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Internal Storage slot check: insert eight stone into local slot 20 through the loader's
+ automation view, reject dirt offered to that now-incompatible slot, then wait for the
+ settlement the insertion scheduled.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReadsTheWholePileFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReadsTheWholePileFromEveryBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The fixture puts a full stone stack in the lower block of a two-block pile and checks that
- both blocks return the pile signal.</div>
+<div class="block">The fixture fills every slot of the lower block of a two-block pile with full stone stacks
+ and leaves the upper block empty, so the pile is half full.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReservesZeroForAnEmptyPile(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReservesZeroForAnEmptyPile</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#depositFillsCompatiblePartialBeforeEmptySlot(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">depositFillsCompatiblePartialBeforeEmptySlot</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The fixture reads an empty pile, adds one stone, then fills all 27 slots with full stone
- stacks: signals are 0, 1, and 15.</div>
+<div class="block">Internal deposit-placement check: the fixture seeds 60 stone in local slot 5 and deposits
+ eight more through the block entity, with no player; slot 5 reaches 64 and slot 0 receives
+ four.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#depositFillsCompatiblePartialBeforeEmptySlot(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">depositFillsCompatiblePartialBeforeEmptySlot</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#emptyTemporaryPileDisappearsButPermanentPileRemains(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">emptyTemporaryPileDisappearsButPermanentPileRemains</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The fixture seeds 60 stone in local slot 5 and offers eight more; slot 5 reaches 64 and slot
- 0 receives four.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#emptyTemporaryPileDisappearsButPermanentPileRemains(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">emptyTemporaryPileDisappearsButPermanentPileRemains</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: place two Storage piles with one item each.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionSettlesOnScheduledBlockTick</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">extractionSettlesOnScheduledBlockTick</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: store one full stone stack and one dirt item in Storage.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">fullPileGrowsByOneBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">fullPileGrowsByOneBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: allow pile height of at least two, fill all 27 slots of a Storage block with
  full dirt stacks, and leave replaceable, unobstructed space above.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#grownBlockTakesTheBaseFacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">grownBlockTakesTheBaseFacing</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#grownBlockTakesTheBaseFacing(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">grownBlockTakesTheBaseFacing</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: build a two-block Storage pile, give its base one redstone-torch turn and its
- top block three, fill both blocks with full dirt stacks, then V-deposit one stone.</div>
+ top block three, fill both blocks with full dirt stacks, then select Storage and V-deposit
+ one stone into the base.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#growThreeBlockPileFromRotatedBase(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">growThreeBlockPileFromRotatedBase</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The scenario of <a href="#grownBlockTakesTheBaseFacing(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)"><code>grownBlockTakesTheBaseFacing(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)</code></a> without its success call, for a loader
+ wrapper that asserts more about the same growth afterward.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#growthRequiresBuildPermission(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">growthRequiresBuildPermission</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
@@ -147,23 +171,35 @@ loadScripts(document, 'script');</script>
  sparse glowstone contents in its end blocks and diamonds in its middle block.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ordinaryPlacementBelowPermanentPileRepairsDerivedState(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">ordinaryPlacementBelowPermanentPileRepairsDerivedState</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#obstructionPreventsGrowthAndSimulationReportsNoRoom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">obstructionPreventsGrowthAndSimulationReportsNoRoom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: fill all 27 slots of a Storage block with full dirt stacks, allow height above
+ one, and put solid stone directly above.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ordinaryPlacementBelowPermanentPileRepairsDerivedState(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">ordinaryPlacementBelowPermanentPileRepairsDerivedState</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Internal native-placement check: create a full, permanent Storage block above an empty
  position with an outward-facing comparator.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementChoosesFacingBeforeJoining(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementChoosesFacingBeforeJoining</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementChoosesFacingBeforeJoining(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementChoosesFacingBeforeJoining</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: rotate the top of a Storage pile, then V-place Storage above it or beneath an
  overhanging pile.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Internal settlement fixture: directly seed stone stacks of 40 and 30 with {variant:1} and two
- stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, and two wooden
- pickaxes with different damage.</div>
+ stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, stone with an
+ explicit empty tag, and two wooden pickaxes with different damage.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleMergesOnlyIdenticalNames(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleMergesOnlyIdenticalNames</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: rename stone "Alpha" and "Beta" in an anvil.</div>
 </div>
 </div>
 </div>
@@ -203,30 +239,46 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="depositFillsCompatiblePartialBeforeEmptySlot(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>depositFillsCompatiblePartialBeforeEmptySlot</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">depositFillsCompatiblePartialBeforeEmptySlot</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">The fixture seeds 60 stone in local slot 5 and offers eight more; slot 5 reaches 64 and slot
- 0 receives four.
+<div class="block">Internal deposit-placement check: the fixture seeds 60 stone in local slot 5 and deposits
+ eight more through the block entity, with no player; slot 5 reaches 64 and slot 0 receives
+ four. It pins which slots a deposit fills before settlement, which no click shows.
 
- <p>To check manually, V-deposit 60 stone into Storage, then eight more in Survival. All eight
- leave the hand; one full stack and a four-item remainder occupy the pile. The exact
- pre-settlement slot placement is an internal assertion.</div>
+ <p>The nearest real-trigger check is <a href="#fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)"><code>fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)</code></a>. To see the visible
+ part, V-deposit 60 stone into Storage, then eight more in Survival: all eight leave the hand,
+ and one full stack and a four-item remainder occupy the pile.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
 <h3>fullPileGrowsByOneBlock</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullPileGrowsByOneBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullPileGrowsByOneBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
 <div class="block">To reproduce: allow pile height of at least two, fill all 27 slots of a Storage block with
- full dirt stacks, and leave replaceable, unobstructed space above. V-deposit one stone. A
- second Storage block appears and stores it; the hand is emptied in Survival.</div>
+ full dirt stacks, and leave replaceable, unobstructed space above. Select Storage and
+ V-deposit one stone into its side. A second Storage block appears and stores it; the hand is
+ emptied in Survival.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="grownBlockTakesTheBaseFacing(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="grownBlockTakesTheBaseFacing(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
 <h3>grownBlockTakesTheBaseFacing</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">grownBlockTakesTheBaseFacing</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">grownBlockTakesTheBaseFacing</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
 <div class="block">To reproduce: build a two-block Storage pile, give its base one redstone-torch turn and its
- top block three, fill both blocks with full dirt stacks, then V-deposit one stone. The new
- third block shows the base's layout, not the top block's.</div>
+ top block three, fill both blocks with full dirt stacks, then select Storage and V-deposit
+ one stone into the base. The new third block shows the base's layout, not the top block's.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="growThreeBlockPileFromRotatedBase(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
+<h3>growThreeBlockPileFromRotatedBase</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">growThreeBlockPileFromRotatedBase</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
+<div class="block">The scenario of <a href="#grownBlockTakesTheBaseFacing(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)"><code>grownBlockTakesTheBaseFacing(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)</code></a> without its success call, for a loader
+ wrapper that asserts more about the same growth afterward.</div>
 </section>
 </li>
 <li>
@@ -254,9 +306,11 @@ loadScripts(document, 'script');</script>
 <h3>settleConsolidatesExactIdentityAndPacksDown</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">settleConsolidatesExactIdentityAndPacksDown</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Internal settlement fixture: directly seed stone stacks of 40 and 30 with {variant:1} and two
- stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, and two wooden
- pickaxes with different damage. Settlement orders dirt, untagged stone, tagged stone stacks
- of 64, 6, and 10, then the pickaxes in ascending damage order.
+ stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, stone with an
+ explicit empty tag, and two wooden pickaxes with different damage. Settlement orders dirt,
+ untagged stone, tagged stone stacks of 64, 6, and 10, the empty-tag stone (its tag text
+ "{}" sorts after "{variant:...}", and it stays apart from untagged stone), then the pickaxes
+ in ascending damage order.
 
  <p>For a visible check, /give stone with those tags and deposit the same totals into Storage.
  Also deposit dirt, untagged stone, and wooden pickaxes with different damage. After
@@ -266,9 +320,23 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="settleMergesOnlyIdenticalNames(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>settleMergesOnlyIdenticalNames</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">settleMergesOnlyIdenticalNames</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce: rename stone "Alpha" and "Beta" in an anvil. Store a full stack of dirt in a
+ Storage Stack, then three Alpha, two Beta, and four Alpha in separate later cells. After
+ settlement the dirt stays in the base cell, the two Alpha stacks merge into one cell of
+ seven, and Beta keeps its own cell of two. The test seeds the separated cells directly;
+ that each written cell holds its own stack, and that the already-settled dirt cell is not
+ rewritten, are internal ownership checks.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
 <h3>extractionSettlesOnScheduledBlockTick</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionSettlesOnScheduledBlockTick</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionSettlesOnScheduledBlockTick</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
 <div class="block">To reproduce: store one full stone stack and one dirt item in Storage. Plain-right-click the
  stone cell with an empty hand. The stone enters the hand, and after the scheduled block
  update the remaining dirt packs into the base slot. The test directly seeds the initial order
@@ -290,12 +358,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="comparatorReadsTheWholePileFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>comparatorReadsTheWholePileFromEveryBlock</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReadsTheWholePileFromEveryBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">The fixture puts a full stone stack in the lower block of a two-block pile and checks that
- both blocks return the pile signal.
+<div class="block">The fixture fills every slot of the lower block of a two-block pile with full stone stacks
+ and leaves the upper block empty, so the pile is half full. Both blocks read 8: a lower-only
+ read would give 15 and an upper-only read 0.
 
  <p>To reproduce: create a permanent two-block Storage pile by filling until it grows, then
- toggling permanence. Extract until only one full stack remains. Put outward-facing
- comparators beside both blocks on solid supports; both read the same whole-pile fill.</div>
+ toggling permanence. Extract until exactly 27 full stacks remain, which settle into the lower
+ block. Put outward-facing comparators beside both blocks on solid supports; both output 8.</div>
 </section>
 </li>
 <li>
@@ -314,15 +383,41 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="comparatorReservesZeroForAnEmptyPile(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>comparatorReservesZeroForAnEmptyPile</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReservesZeroForAnEmptyPile</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">The fixture reads an empty pile, adds one stone, then fills all 27 slots with full stone
- stacks: signals are 0, 1, and 15.
+<section class="detail" id="capabilityInsertionAnswersForTheSlotItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>capabilityInsertionAnswersForTheSlotItIsGiven</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">capabilityInsertionAnswersForTheSlotItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">Internal Storage slot check: insert eight stone into local slot 20 through the loader's
+ automation view, reject dirt offered to that now-incompatible slot, then wait for the
+ settlement the insertion scheduled. Before settlement stone occupies slot 20; afterward it
+ occupies slot 0. Simulation and caller-owned input are unchanged.
 
- <p>To reproduce: make a permanent one-block Storage pile with an outward-facing comparator.
- Empty it, deposit one stone, then fill it without allowing growth. Read 0, 1, and 15 after
- updates.</div>
+ <p>To check manually, use slot-addressing automation to insert into an empty Storage slot,
+ then observe the next settlement pack its contents toward the base. Precise pre-tick
+ placement and dry-run results require an automation probe.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="obstructionPreventsGrowthAndSimulationReportsNoRoom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>obstructionPreventsGrowthAndSimulationReportsNoRoom</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">obstructionPreventsGrowthAndSimulationReportsNoRoom</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce: fill all 27 slots of a Storage block with full dirt stacks, allow height above
+ one, and put solid stone directly above. Offer four stone through automation to first
+ headroom slot 27. All four are refused and the obstruction remains. A simulated offer must
+ report the same refusal without modifying input.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="capabilityFromEveryBlockAddressesTheSamePile(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>capabilityFromEveryBlockAddressesTheSamePile</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">capabilityFromEveryBlockAddressesTheSamePile</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">Internal shared-view check: seed twelve stone in the base of two contiguous Storage blocks.
+ Slot 0 and advertised slot count agree through automation views attached to either block.
+
+ <p>To reproduce visibly, make a permanent two-block Storage pile, leave twelve stone stored,
+ and attach machines at different heights. Both access the same inventory and capacity.</div>
 </section>
 </li>
 </ul>

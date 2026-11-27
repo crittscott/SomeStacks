@@ -1,14 +1,13 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import com.github.crittscott.somestacks.util.StackSort;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -17,9 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 import javax.annotation.Nullable;
@@ -38,7 +35,7 @@ import javax.annotation.Nullable;
  */
 public final class StoragePile extends StackRun<StorageStackBE> {
     private StoragePile(ServerLevel level, List<StorageStackBE> blocks) {
-        super(level, blocks, StorageStackBE.SLOTS, CommonRegistry.STORAGE_STACK_BLOCK.get());
+        super(level, blocks, StorageStackBE.SLOTS, BlockType.STORAGE_STACK);
     }
 
     /**
@@ -87,19 +84,15 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         markDirtyAt(level, pos, StoragePile::at);
     }
 
-    /** The configured ceiling on pile height. Server-side only. */
-    public static int maxHeight() {
-        return ServerConfig.maxPileHeight();
-    }
-
     /**
-     * Whether a Storage Stack may be created at {@code pos}: the contiguous column it would form,
-     * counting the runs both below and above it, must fit the configured maximum. Testing the whole
-     * resulting column rather than one neighboring pile is what stops a block placed into the gap
-     * between two piles from joining them into an over-tall one.
+     * Marks the pile at {@code pos} for settling, if one is there, attributing any block the
+     * settlement removes to {@code actor}, or to automation when null.
      */
-    public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return columnHasRoomFor(level, pos, CommonRegistry.STORAGE_STACK_BLOCK.get());
+    static void markDirtyAt(Level level, BlockPos pos, @Nullable ServerPlayer actor) {
+        StoragePile pile = at(level, pos);
+        if (pile != null) {
+            pile.markDirtyBy(actor);
+        }
     }
 
     /**
@@ -307,8 +300,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * took.
      */
     private int fillSlot(int flatSlot, ItemStack from, int amount) {
-        ItemStack offer = from.copy();
-        offer.setCount(amount);
+        ItemStack offer = from.copyWithCount(amount);
         ItemStack rejected = handlerOf(flatSlot).insertItem(localSlot(flatSlot), offer, false);
         int used = amount - rejected.getCount();
         from.shrink(used);
@@ -316,35 +308,19 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /**
-     * Whether growth is permitted and the space above the pile could take a block: height,
-     * enablement, build height, replaceability, and every protection check available without side
-     * effects. Planning and committing share this predicate so that a simulated deposit cannot
-     * promise a block the deposit itself would refuse.
-     *
-     * <p>Spawn protection exempts operators, so the result depends on who is growing the pile: a
-     * player's own deposit is checked against that player, and automation against the automation
-     * actor, which is never exempt.
+     * Whether the pile could grow a full block on top: {@link #canGrowSpace} for {@code placer}
+     * plus obstruction of the whole block, so a simulated deposit cannot promise a block the
+     * deposit itself would refuse.
      */
     private boolean canGrow(@Nullable ServerPlayer placer) {
-        if (blocks.size() >= maxHeight() || !ServerConfig.enableStorageStackBlock()) {
-            return false;
-        }
-        BlockPos above = topPos().above();
-        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
-            return false;
-        }
-        return WorldEdits.mayPlace(placer, level, above)
-                && WorldEdits.isUnobstructed(level, above, Shapes.block());
+        return canGrowSpace(placer)
+                && WorldEdits.isUnobstructed(level, topPos().above(), Shapes.block());
     }
 
     /**
      * Adds one block on top. The placement hook inherits its mode; growth uses the base rotation.
      */
     private boolean grow(@Nullable ServerPlayer placer) {
-        if (!canGrow(placer)) {
-            return false;
-        }
-
         BlockPos above = topPos().above();
         BlockState newStack =
                 StackPlacement.stateFor(
@@ -354,8 +330,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
                         blocks.get(0)
                                 .getBlockState()
                                 .getValue(StorageStackBlock.HORIZONTAL_FACING));
-        if (!WorldEdits.placeChecked(
-                placer, level, above, newStack, Direction.DOWN, Shapes.block())) {
+        if (!placeOnTop(placer, newStack, Shapes.block())) {
             return false;
         }
         StorageStackBE grown = (StorageStackBE) level.getBlockEntity(above);
@@ -386,7 +361,9 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             }
         }
 
-        List<ItemStack> packed = consolidate(contents);
+        // The pieces refer to the slot stacks read above. Writing a slot replaces its stack rather
+        // than changing it, so every model stays intact until the last slot is written.
+        List<ItemOps.Piece> packed = packedOrder(contents);
         boolean permanent = isPermanent();
 
         for (StorageStackBE sbe : blocks) {
@@ -396,9 +373,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             int index = 0;
             for (StorageStackBE sbe : blocks) {
                 for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-                    ItemStack desired = index < packed.size() ? packed.get(index) : ItemStack.EMPTY;
+                    sbe.setSlotIfChanged(slot, index < packed.size() ? packed.get(index) : null);
                     index++;
-                    sbe.setSlotIfChanged(slot, desired);
                 }
                 sbe.inheritPermanent(permanent);
             }
@@ -445,55 +421,30 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /**
-     * Totals the input by exact item identity, then re-cuts each total into whole stacks plus at
-     * most one remainder. Grouping by identity rather than by adjacency means two compatible stacks
-     * always merge, wherever they sat in the pile.
+     * Consolidates the pile's contents by exact identity and sorts the pieces into the order they
+     * are laid out from the base upward.
      */
-    private static List<ItemStack> consolidate(List<ItemStack> stacks) {
-        Map<StackKey, SettlementGroup> groups = new LinkedHashMap<>();
-
-        for (ItemStack stack : stacks) {
-            if (stack.isEmpty()) continue;
-
-            StackKey key = StackKey.of(stack);
-            SettlementGroup group =
-                    groups.computeIfAbsent(key, ignored -> new SettlementGroup(stack));
-            group.count += stack.getCount();
-        }
-
-        List<SortedPiece> pieces = new ArrayList<>();
-
-        for (SettlementGroup group : groups.values()) {
-            ItemStack model = group.model;
-            StackSort.SortKey sortKey = StackSort.key(model);
-            int max = Math.max(1, model.getMaxStackSize());
-            int remaining = group.count;
-
-            while (remaining > 0) {
-                ItemStack piece = model.copy();
-                piece.setCount(Math.min(remaining, max));
-                pieces.add(new SortedPiece(piece, sortKey));
-                remaining -= piece.getCount();
+    private static List<ItemOps.Piece> packedOrder(List<ItemStack> stacks) {
+        List<SortedPiece> sorted = new ArrayList<>();
+        ItemStack lastModel = null;
+        StackSort.SortKey key = null;
+        // A group's pieces are adjacent and share one model, so each group computes its key once.
+        for (ItemOps.Piece piece : ItemOps.consolidate(stacks)) {
+            if (piece.model() != lastModel) {
+                lastModel = piece.model();
+                key = StackSort.key(lastModel);
             }
+            sorted.add(new SortedPiece(piece, key));
         }
 
-        pieces.sort((a, b) ->
-                StackSort.comparePieces(a.key, a.stack.getCount(), b.key, b.stack.getCount()));
-        List<ItemStack> out = new ArrayList<>(pieces.size());
-        for (SortedPiece piece : pieces) {
-            out.add(piece.stack);
+        sorted.sort(
+                (a, b) -> StackSort.comparePieces(a.key, a.piece.count(), b.key, b.piece.count()));
+        List<ItemOps.Piece> out = new ArrayList<>(sorted.size());
+        for (SortedPiece entry : sorted) {
+            out.add(entry.piece);
         }
         return out;
     }
 
-    private static final class SettlementGroup {
-        private final ItemStack model;
-        private int count;
-
-        private SettlementGroup(ItemStack model) {
-            this.model = model;
-        }
-    }
-
-    private record SortedPiece(ItemStack stack, StackSort.SortKey key) {}
+    private record SortedPiece(ItemOps.Piece piece, StackSort.SortKey key) {}
 }

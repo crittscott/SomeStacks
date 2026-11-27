@@ -117,7 +117,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="register(net.minecraftforge.client.event.RegisterClientCommandsEvent)">
 <h3>register</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">register</span><wbr><span class="parameters">(net.minecraftforge.client.event.RegisterClientCommandsEvent&nbsp;event)</span></div>
-<div class="block">Registers the local /ssclienttest smoke command in a client running the test mod.</div>
+<div class="block">Registers the local /ssclienttest smoke command in a client running the test mod. Besides
+ <a href="ClientCallbackChecks.html#run(boolean,java.util.function.BiFunction)"><code>ClientCallbackChecks.run(boolean, java.util.function.BiFunction&lt;net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult, com.github.crittscott.somestacks.gametest.ClientCallbackChecks.Result&gt;)</code></a>, each hand's click is also posted through Forge's bus behind
+ a higher-priority listener that takes it. To reproduce in-game: with another mod that
+ consumes right-clicks on a block at normal priority, plain-click a stack holding a bucket.
+ That mod's action happens on both sides, the stack is untouched, and the next modifier click
+ still reaches the server with the current mode.</div>
 </section>
 </li>
 </ul>

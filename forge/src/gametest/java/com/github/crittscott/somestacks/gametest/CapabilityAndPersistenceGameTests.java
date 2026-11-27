@@ -1,21 +1,19 @@
 package com.github.crittscott.somestacks.gametest;
 
+import static com.github.crittscott.somestacks.gametest.ForgeGameTestSupport.count;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
-import static com.github.crittscott.somestacks.gametest.GameTestSupport.count;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.withPolicy;
 
 import com.github.crittscott.somestacks.ForgeServerConfig;
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.SomeStacks;
-import com.github.crittscott.somestacks.block.BarColumn;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.SinglesColumn;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 
 import net.minecraft.core.Direction;
@@ -36,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -45,7 +44,7 @@ import java.util.regex.Pattern;
  * run advertising its reachable headroom, and each type's update tag round-tripping the contents
  * and presentation state it is responsible for.
  */
-@GameTestHolder(SomeStacks.MODID)
+@GameTestHolder(SomeStacksCommon.MODID)
 @PrefixGameTestTemplate(false)
 public final class CapabilityAndPersistenceGameTests {
     private static final long CONFIG_RELOAD_TIMEOUT_NANOS = TimeUnit.SECONDS.toNanos(5);
@@ -61,7 +60,7 @@ public final class CapabilityAndPersistenceGameTests {
      * a compatible transfer machine to each face in turn. Each attachment can access contents. The
      * unsided lookup has no direct player gesture.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void itemCapabilityIsAvailableFromEverySide(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
@@ -91,34 +90,41 @@ public final class CapabilityAndPersistenceGameTests {
     }
 
     /**
-     * Internal Forge slot-count check: single Storage, Singles, and Bar blocks advertise two blocks
-     * of slots when maximum height exceeds one, otherwise one. This does not insert or grow.
+     * Internal Forge slot-count check: with max_pile_height pinned to 2, single Storage, Singles,
+     * and Bar blocks advertise two blocks of slots; pinned to 1, they advertise one. This does not
+     * insert or grow.
      *
      * <p>Nearest manual check: configure max_pile_height above one, place one block of each type,
      * and use slot-addressing automation to inspect advertised capacity. Repeat with height one.
      * Actual growth is covered by the growth tests.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void singleBlockCapabilitiesAdvertiseConfiguredHeadroom(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
         BarStackBE bar = placeBar(helper, ORIGIN.east(6));
 
-        int storageLevels = StoragePile.maxHeight() > 1 ? 2 : 1;
-        int singlesLevels = SinglesColumn.maxHeight() > 1 ? 2 : 1;
-        int barLevels = BarColumn.maxHeight() > 1 ? 2 : 1;
-        checkEquals(
-                StorageStackBE.SLOTS * storageLevels,
-                GameTestSupport.capability(storage).getSlots(),
-                "Storage advertised slots");
-        checkEquals(
-                SinglesStackBE.SLOTS * singlesLevels,
-                GameTestSupport.capability(singles).getSlots(),
-                "Singles advertised slots");
-        checkEquals(
-                BarStackBE.SLOTS * barLevels,
-                GameTestSupport.capability(bar).getSlots(),
-                "Bar advertised slots");
+        // Pinned limits: a lone block advertises one block of headroom under a two-block limit
+        // and none under a one-block limit.
+        int[][] heightAndLevels = {{2, 2}, {1, 1}};
+        for (int[] pinned : heightAndLevels) {
+            withPolicy(
+                    Map.of(ServerConfig.Setting.MAX_PILE_HEIGHT, pinned[0]),
+                    () -> {
+                        checkEquals(
+                                StorageStackBE.SLOTS * pinned[1],
+                                ForgeGameTestSupport.capability(storage).getSlots(),
+                                "Storage advertised slots at height " + pinned[0]);
+                        checkEquals(
+                                SinglesStackBE.SLOTS * pinned[1],
+                                ForgeGameTestSupport.capability(singles).getSlots(),
+                                "Singles advertised slots at height " + pinned[0]);
+                        checkEquals(
+                                BarStackBE.SLOTS * pinned[1],
+                                ForgeGameTestSupport.capability(bar).getSlots(),
+                                "Bar advertised slots at height " + pinned[0]);
+                    });
+        }
         helper.succeed();
     }
 
@@ -126,7 +132,7 @@ public final class CapabilityAndPersistenceGameTests {
      * See {@link
      * CapabilityAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(helper);
     }
@@ -134,39 +140,57 @@ public final class CapabilityAndPersistenceGameTests {
     /**
      * See {@link CapabilityAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#barDiskSaveRoundTripsItems}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void barDiskSaveRoundTripsItems(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#releasedStorageFormatLoads}. */
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
+    public static void releasedStorageFormatLoads(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.releasedStorageFormatLoads(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#releasedSinglesFormatLoads}. */
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
+    public static void releasedSinglesFormatLoads(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.releasedSinglesFormatLoads(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#releasedBarFormatLoads}. */
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
+    public static void releasedBarFormatLoads(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.releasedBarFormatLoads(helper);
     }
 
     /**
      * See {@link CapabilityAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#unreadableSavedItemsAreKeptAsideOnDisk}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void unreadableSavedItemsAreKeptAsideOnDisk(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.unreadableSavedItemsAreKeptAsideOnDisk(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#setAsideItemsRecoverIntoFreeSlots}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void setAsideItemsRecoverIntoFreeSlots(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#clientUpdatesRejectMalformedDataAtomically}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void clientUpdatesRejectMalformedDataAtomically(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.clientUpdatesRejectMalformedDataAtomically(helper);
     }
@@ -175,7 +199,7 @@ public final class CapabilityAndPersistenceGameTests {
      * See {@link
      * CapabilityAndPersistenceChecks#clientSinglesUpdatesValidateRotationBeforeInventory}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
     }
@@ -183,7 +207,7 @@ public final class CapabilityAndPersistenceGameTests {
     /**
      * See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(helper);
     }
@@ -193,7 +217,7 @@ public final class CapabilityAndPersistenceGameTests {
      * CapabilityAndPersistenceChecks#cachedShapesInvalidateWhenContentsChange}; see that method for
      * the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(helper);
     }
@@ -206,10 +230,10 @@ public final class CapabilityAndPersistenceGameTests {
      * or test probe that can simulate without committing; the nearest visible behavior is that a
      * dry-run transfer stores nothing.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void capabilitySimulationDoesNotMutateAnyStack(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        IItemHandler capability = GameTestSupport.capability(singles);
+        IItemHandler capability = ForgeGameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.APPLE, 5);
 
         // Cell 0 is a bottom-layer cell of a column standing on the world, so it is grounded
@@ -228,7 +252,7 @@ public final class CapabilityAndPersistenceGameTests {
      * StackFoundationChecks#nestedBatchesPublishOnlyAfterTheOuterBatch}; see that method for the
      * scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void nestedBatchesPublishOnlyAfterTheOuterBatch(GameTestHelper helper) {
         StackFoundationChecks.nestedBatchesPublishOnlyAfterTheOuterBatch(helper);
     }
@@ -238,7 +262,7 @@ public final class CapabilityAndPersistenceGameTests {
      * StackFoundationChecks#structuralEditsInvalidateRunBoundsWithinTheTick}; see that method for
      * the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void structuralEditsInvalidateRunBoundsWithinTheTick(GameTestHelper helper) {
         StackFoundationChecks.structuralEditsInvalidateRunBoundsWithinTheTick(helper);
     }
@@ -248,7 +272,7 @@ public final class CapabilityAndPersistenceGameTests {
      * StackFoundationChecks#loadedContentsRefreshComparatorFillAndShapes}; see that method for the
      * scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void loadedContentsRefreshComparatorFillAndShapes(GameTestHelper helper) {
         StackFoundationChecks.loadedContentsRefreshComparatorFillAndShapes(helper);
     }
@@ -258,22 +282,28 @@ public final class CapabilityAndPersistenceGameTests {
      * StackFoundationChecks#runContractPreservesTypeSpecificMutations}; see that method for the
      * scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void runContractPreservesTypeSpecificMutations(GameTestHelper helper) {
         StackFoundationChecks.runContractPreservesTypeSpecificMutations(helper);
     }
 
     /** See {@link StackFoundationChecks#cachedGeometryPreservesOccupiedUnions}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void cachedGeometryPreservesOccupiedUnions(GameTestHelper helper) {
         StackFoundationChecks.cachedGeometryPreservesOccupiedUnions(helper);
+    }
+
+    /** See {@link StackFoundationChecks#storedLightIsPerOccupiedSlotAndCapped}. */
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
+    public static void storedLightIsPerOccupiedSlotAndCapped(GameTestHelper helper) {
+        StackFoundationChecks.storedLightIsPerOccupiedSlotAndCapped(helper);
     }
 
     /**
      * Loader entry point for {@link ServiceAndConfigChecks#installedServicesAndLogoutResetPacing};
      * see that method for the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void installedServicesAndLogoutResetPacing(GameTestHelper helper) {
         ServiceAndConfigChecks.installedServicesAndLogoutResetPacing(
                 helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
@@ -283,54 +313,60 @@ public final class CapabilityAndPersistenceGameTests {
      * Loader entry point for {@link ServiceAndConfigChecks#listEditsPublishImmutablePolicy}; see
      * that method for the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void listEditsPublishImmutablePolicy(GameTestHelper helper) {
         ServiceAndConfigChecks.listEditsPublishImmutablePolicy(helper);
     }
 
     /** See {@link NetworkPolicyChecks#publicationSyncsOnlyChangedClientPolicy}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void publicationSyncsOnlyChangedClientPolicy(GameTestHelper helper)
             throws ReflectiveOperationException {
         NetworkPolicyChecks.publicationSyncsOnlyChangedClientPolicy(helper);
     }
 
     /** See {@link NetworkPolicyChecks#admissionSeparatesPlayersAutomationAndTypes}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void admissionSeparatesPlayersAutomationAndTypes(GameTestHelper helper) {
         NetworkPolicyChecks.admissionSeparatesPlayersAutomationAndTypes(
                 helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
     }
 
     /** See {@link NetworkPolicyChecks#namespacePolicyIsPreparedAndBounded}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void namespacePolicyIsPreparedAndBounded(GameTestHelper helper) {
         NetworkPolicyChecks.namespacePolicyIsPreparedAndBounded(helper);
     }
 
     /** See {@link NetworkPolicyChecks#policyPacketsValidateBeforePublication}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void policyPacketsValidateBeforePublication(GameTestHelper helper) {
         NetworkPolicyChecks.policyPacketsValidateBeforePublication(helper);
     }
 
     /** See {@link ServiceAndConfigChecks#numericPolicyRangesAreShared}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void numericPolicyRangesAreShared(GameTestHelper helper) {
         ServiceAndConfigChecks.numericPolicyRangesAreShared(helper);
     }
 
     /** See {@link ServiceAndConfigChecks#reloadCommandPublishesStoredPolicy}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void reloadCommandPublishesStoredPolicy(GameTestHelper helper) {
         ServiceAndConfigChecks.reloadCommandPublishesStoredPolicy(helper);
+    }
+
+    /** See {@link ServiceAndConfigChecks#commandHelpAnswersEveryTopic}. */
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
+    public static void commandHelpAnswersEveryTopic(GameTestHelper helper) {
+        ServiceAndConfigChecks.commandHelpAnswersEveryTopic(helper);
     }
 
     /**
      * To reproduce: use /ss deny mod add, inspect somestacks-server.toml, then remove the entry;
      * command edits persist through Forge's native config.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void commandPolicyEditsPersistToNativeForgeConfig(GameTestHelper helper)
             throws IOException {
         String marker = "somestacks_gametest_native_save";
@@ -366,7 +402,7 @@ public final class CapabilityAndPersistenceGameTests {
      * their event count exceeds one.
      */
     @GameTest(
-            template = GameTestSupport.TEMPLATE,
+            template = ForgeGameTestSupport.TEMPLATE,
             batch = "somestacks_native_reload",
             timeoutTicks = CONFIG_RELOAD_TIMEOUT_TICKS)
     public static void nativeForgeReloadPublishesPolicy(GameTestHelper helper) throws IOException {

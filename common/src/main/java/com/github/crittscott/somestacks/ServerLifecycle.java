@@ -3,7 +3,7 @@ package com.github.crittscott.somestacks;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.server.ServerGestureState;
-import com.github.crittscott.somestacks.server.StackSounds;
+import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 
 import net.minecraft.core.BlockPos;
@@ -36,9 +36,9 @@ public final class ServerLifecycle {
     }
 
     /**
-     * Clears galleries, gesture state, and set-aside reports and releases world policy, its saver,
-     * and derived admission sets after server shutdown. Loader-owned cleanup remains the loader's
-     * responsibility.
+     * Performs the same session reset as {@link #starting()}, then releases world policy, its
+     * saver, and derived admission sets after server shutdown. Loader-owned cleanup remains the
+     * loader's responsibility.
      */
     public static void stopped() {
         resetSession();
@@ -47,7 +47,7 @@ public final class ServerLifecycle {
 
     private static void resetSession() {
         RenderGalleryGenerator.clear();
-        StackSounds.clearAll();
+        StackInteractions.clearRotationSoundPacing();
         ServerGestureState.clearAll();
         reportedSavedItems.clear();
     }
@@ -83,7 +83,7 @@ public final class ServerLifecycle {
 
     /** Removes this player's rotation-sound pacing and synchronized mode/modifier state. */
     public static void logout(UUID playerId) {
-        StackSounds.clear(playerId);
+        StackInteractions.clearRotationSoundPacing(playerId);
         ServerGestureState.clear(playerId);
     }
 
@@ -96,12 +96,12 @@ public final class ServerLifecycle {
             server.getCommands().sendCommands(player);
     }
 
-    /** Sends one snapshot of the current policy to every player; policy files are not reread. */
+    /**
+     * Broadcasts one encoded snapshot of the current policy to every player; policy files are not
+     * reread.
+     */
     public static int syncAllPlayers(MinecraftServer server) {
-        ConfigSyncPkt packet = ConfigSyncPkt.snapshot(ServerConfig.settings());
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            PlatformServices.sendConfig(player, packet);
-        }
+        PlatformServices.broadcastConfig(server, ConfigSyncPkt.snapshot(ServerConfig.settings()));
         return server.getPlayerList().getPlayerCount();
     }
 }

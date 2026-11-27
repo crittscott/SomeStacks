@@ -226,6 +226,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Removes the set-aside tags from serialized storage, which clients have no use for.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripUndrawnItemData(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripUndrawnItemData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Removes item data no renderer draws from serialized storage: the container contents a block
+ item carries in its <code>BlockEntityTag</code> (a filled shulker box) and a book's pages.</div>
+</div>
 </div>
 </div>
 </div>
@@ -432,6 +438,18 @@ loadScripts(document, 'script');</script>
 <h3>stripSetAside</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stripSetAside</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
 <div class="block">Removes the set-aside tags from serialized storage, which clients have no use for.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="stripUndrawnItemData(net.minecraft.nbt.CompoundTag)">
+<h3>stripUndrawnItemData</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stripUndrawnItemData</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
+<div class="block">Removes item data no renderer draws from serialized storage: the container contents a block
+ item carries in its <code>BlockEntityTag</code> (a filled shulker box) and a book's pages. Every
+ player near a stack block receives its stored items, unlike a chest's, so this keeps a block
+ of filled containers or books from sending all of their contents to each of them. Data that
+ affects appearance stays, including the rest of <code>BlockEntityTag</code>, where banner patterns
+ live. Edits only the serialized entries, never the stored stacks.</div>
 </section>
 </li>
 </ul>

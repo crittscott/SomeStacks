@@ -2,12 +2,14 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.BarStackBlock;
+import com.github.crittscott.somestacks.block.FabricStorageOwner;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +17,10 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-/** Fabric registration for the shared blocks, block entities, and sound events. */
+/**
+ * Fabric registration for the shared blocks, block entities, sound events, and the block entities'
+ * Transfer API item storage.
+ */
 public final class FabricRegistry {
     private FabricRegistry() {}
 
@@ -51,25 +56,10 @@ public final class FabricRegistry {
                     FabricBlockEntityTypeBuilder.create(StorageStackBE::new, STORAGE_STACK_BLOCK)
                             .build());
 
-    public static final SoundEvent STORAGE_DEPOSIT_SOUND =
-            registerSound(CommonRegistry.STORAGE_DEPOSIT_SOUND_PATH);
-    public static final SoundEvent STORAGE_EXTRACT_SOUND =
-            registerSound(CommonRegistry.STORAGE_EXTRACT_SOUND_PATH);
-    public static final SoundEvent STORAGE_ROTATE_SOUND =
-            registerSound(CommonRegistry.STORAGE_ROTATE_SOUND_PATH);
-    public static final SoundEvent SINGLES_DEPOSIT_SOUND =
-            registerSound(CommonRegistry.SINGLES_DEPOSIT_SOUND_PATH);
-    public static final SoundEvent SINGLES_EXTRACT_SOUND =
-            registerSound(CommonRegistry.SINGLES_EXTRACT_SOUND_PATH);
-    public static final SoundEvent SINGLES_ROTATE_SOUND =
-            registerSound(CommonRegistry.SINGLES_ROTATE_SOUND_PATH);
-    public static final SoundEvent SINGLES_ROTATE_ITEM_SOUND =
-            registerSound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND_PATH);
-    public static final SoundEvent BAR_DEPOSIT_SOUND =
-            registerSound(CommonRegistry.BAR_DEPOSIT_SOUND_PATH);
-    public static final SoundEvent BAR_EXTRACT_SOUND =
-            registerSound(CommonRegistry.BAR_EXTRACT_SOUND_PATH);
-
+    /**
+     * Publishes the registered objects to {@link CommonRegistry}, registers the sound events, and
+     * registers each block entity's whole-run Transfer API storage for every side.
+     */
     public static void init() {
         CommonRegistry.STORAGE_STACK_BLOCK = () -> STORAGE_STACK_BLOCK;
         CommonRegistry.SINGLES_STACK_BLOCK = () -> SINGLES_STACK_BLOCK;
@@ -77,15 +67,15 @@ public final class FabricRegistry {
         CommonRegistry.STORAGE_STACK_BE = () -> STORAGE_STACK_BE;
         CommonRegistry.SINGLES_STACK_BE = () -> SINGLES_STACK_BE;
         CommonRegistry.BAR_STACK_BE = () -> BAR_STACK_BE;
-        CommonRegistry.STORAGE_DEPOSIT_SOUND = () -> STORAGE_DEPOSIT_SOUND;
-        CommonRegistry.STORAGE_EXTRACT_SOUND = () -> STORAGE_EXTRACT_SOUND;
-        CommonRegistry.STORAGE_ROTATE_SOUND = () -> STORAGE_ROTATE_SOUND;
-        CommonRegistry.SINGLES_DEPOSIT_SOUND = () -> SINGLES_DEPOSIT_SOUND;
-        CommonRegistry.SINGLES_EXTRACT_SOUND = () -> SINGLES_EXTRACT_SOUND;
-        CommonRegistry.SINGLES_ROTATE_SOUND = () -> SINGLES_ROTATE_SOUND;
-        CommonRegistry.SINGLES_ROTATE_ITEM_SOUND = () -> SINGLES_ROTATE_ITEM_SOUND;
-        CommonRegistry.BAR_DEPOSIT_SOUND = () -> BAR_DEPOSIT_SOUND;
-        CommonRegistry.BAR_EXTRACT_SOUND = () -> BAR_EXTRACT_SOUND;
+        for (CommonRegistry.Sound sound : CommonRegistry.Sound.values()) {
+            SoundEvent registered = registerSound(sound.path());
+            sound.bind(() -> registered);
+        }
+        ItemStorage.SIDED.registerForBlockEntities(
+                (blockEntity, direction) -> ((FabricStorageOwner) blockEntity).someStacksStorage(),
+                STORAGE_STACK_BE,
+                SINGLES_STACK_BE,
+                BAR_STACK_BE);
     }
 
     private static Block registerBlock(String path, Block block) {

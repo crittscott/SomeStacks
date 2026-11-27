@@ -18,7 +18,7 @@
       "com.github.crittscott.somestacks.SomeStacksFabric"
     ],
     "client": [
-      "com.github.crittscott.somestacks.SomeStacksFabricClient"
+      "com.github.crittscott.somestacks.client.SomeStacksFabricClient"
     ]
   },
   "mixins": [

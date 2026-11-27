@@ -1,18 +1,15 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import net.minecraft.world.item.Items;
+import com.github.crittscott.somestacks.util.StackGestures;
 
 /**
  * Consumes a sneaking redstone-torch click on Storage or Singles so local item use does not run.
- * The server handles the layout rotation; Bar has no layout-rotation gesture.
+ * The server handles the layout rotation.
  */
 public final class RotateBlockWithRedstoneTorchRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {
-        return ctx.isShift()
-                && ctx.hasItemInHand()
-                && ctx.getPlayer().getMainHandItem().is(Items.REDSTONE_TORCH)
-                && ctx.isRotatableStack();
+        return StackGestures.rotatesBlock(ctx.isShift(), ctx.getHeld(), ctx.getClickedType());
     }
 
     @Override

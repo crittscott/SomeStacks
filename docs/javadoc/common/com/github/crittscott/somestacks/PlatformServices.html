@@ -77,7 +77,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">PlatformServices</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">The active loader's paths, networking, and world-edit services.</div>
+<div class="block">The active loader's paths, player reach, networking, and world-edit services.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -109,6 +109,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#blockReach(net.minecraft.world.entity.player.Player)" class="member-name-link">blockReach</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">How far, in blocks, this player can reach a block.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#broadcastConfig(net.minecraft.server.MinecraftServer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">broadcastConfig</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server,
+ <a href="network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sends one encoding of the policy snapshot to every connected player.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#configFolder()" class="member-name-link">configFolder</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -116,11 +127,15 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="server/EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#editAuthority()" class="member-name-link">editAuthority</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The loader's half of world edits: the automation actor, protection vetoes, and how placement
+ and removal are reported.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#install(com.github.crittscott.somestacks.PlatformServices.Backend)" class="member-name-link">install</a><wbr>(<a href="PlatformServices.Backend.html" title="interface in com.github.crittscott.somestacks">PlatformServices.Backend</a>&nbsp;implementation)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Installs one complete backend before common client or world logic can run.</div>
+<div class="block">Installs the loader's backend; each loader's entry point calls this once, before common client
+ or world logic can run.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#modConfigFolder()" class="member-name-link">modConfigFolder</a>()</code></div>
@@ -135,7 +150,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sendConfig(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">sendConfig</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  <a href="network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sends the policy snapshot to one player, as at login.</div>
+</div>
 </div>
 </div>
 </div>
@@ -154,10 +171,18 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="install(com.github.crittscott.somestacks.PlatformServices.Backend)">
-<h3>install</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">install</span><wbr><span class="parameters">(<a href="PlatformServices.Backend.html" title="interface in com.github.crittscott.somestacks">PlatformServices.Backend</a>&nbsp;implementation)</span></div>
-<div class="block">Installs one complete backend before common client or world logic can run.</div>
+<section class="detail" id="blockReach(net.minecraft.world.entity.player.Player)">
+<h3>blockReach</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">blockReach</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;player)</span></div>
+<div class="block">How far, in blocks, this player can reach a block.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="broadcastConfig(net.minecraft.server.MinecraftServer,com.github.crittscott.somestacks.network.ConfigSyncPkt)">
+<h3>broadcastConfig</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">broadcastConfig</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server,
+ <a href="network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</span></div>
+<div class="block">Sends one encoding of the policy snapshot to every connected player.</div>
 </section>
 </li>
 <li>
@@ -165,6 +190,22 @@ loadScripts(document, 'script');</script>
 <h3>configFolder</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">configFolder</span>()</div>
 <div class="block">The game's config directory.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="editAuthority()">
+<h3>editAuthority</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="server/EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a></span>&nbsp;<span class="element-name">editAuthority</span>()</div>
+<div class="block">The loader's half of world edits: the automation actor, protection vetoes, and how placement
+ and removal are reported. <a href="server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server"><code>WorldEdits</code></a> is its consumer.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="install(com.github.crittscott.somestacks.PlatformServices.Backend)">
+<h3>install</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">install</span><wbr><span class="parameters">(<a href="PlatformServices.Backend.html" title="interface in com.github.crittscott.somestacks">PlatformServices.Backend</a>&nbsp;implementation)</span></div>
+<div class="block">Installs the loader's backend; each loader's entry point calls this once, before common client
+ or world logic can run.</div>
 </section>
 </li>
 <li>
@@ -186,12 +227,7 @@ loadScripts(document, 'script');</script>
 <h3>sendConfig</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendConfig</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
  <a href="network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="editAuthority()">
-<h3>editAuthority</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="server/EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a></span>&nbsp;<span class="element-name">editAuthority</span>()</div>
+<div class="block">Sends the policy snapshot to one player, as at login.</div>
 </section>
 </li>
 </ul>

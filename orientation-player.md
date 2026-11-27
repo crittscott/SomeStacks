@@ -20,21 +20,21 @@ Contiguous same-type vertical blocks form a run, default limit eight blocks (216
 
 ## Controls
 
-Hold `V` for the Stack Modifier; rebind under **Options -> Controls -> Some Stacks -> Stack Modifier (Hold)**.
+Hold `V` (rebindable) for the Stack Modifier.
 
-Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Toggle Permanent. Mode shows above the hotbar; disabled types are skipped; Toggle Permanent stays available. Mode selects new blocks; existing stacks keep their type.
+Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Toggle Permanent. Mode shows above the hotbar. Disabled types are skipped, and a selected type the server disables advances at once; Toggle Permanent stays available. Mode selects new blocks only.
 
 | Gesture | Result |
 | --- | --- |
 | Hold `V`, right-click air | Cycle placement mode |
 | Hold `V` + item, right-click a stack | Deposit into that stack, whatever the selected mode |
-| Hold `V` + item, right-click another block | Deposit into an adjacent Singles/Bar Stack when applicable; otherwise place the selected type against that face and make the first deposit |
-| Right-click a stack, no `V`, no Shift | Extract the nearest stored item on the view ray |
-| Toggle Permanent mode, hold `V`, empty hand, right-click a Storage Stack | Toggle whether that pile keeps empty blocks |
+| Hold `V` + item, right-click another block | Deposit into a Singles/Bar Stack on that face; otherwise place the selected type there, depositing into it |
+| Right-click a stack, no `V`, no Shift | Extract the nearest item on the view ray |
+| Toggle Permanent mode, hold `V`, empty hand, right-click Storage | Toggle whether that pile keeps empty blocks |
 | Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-Only the main hand acts; torches are not spent. Holding `V` prevents main-hand item use on air. Rotation shows its angle and can occur every tick; sound is limited to once per four ticks per player. Sneaking retains ordinary interaction except for torch gestures.
+Only the main hand acts; torches are not spent. Holding `V` blocks main-hand item use. Rotation shows its angle; its sound plays at most every four ticks per player. Sneaking keeps ordinary use except torch gestures.
 
 ## Depositing and placing
 
@@ -140,7 +140,7 @@ World policy: Forge uses `<world>/serverconfig/somestacks-server.toml`, reloaded
 | `render_gallery.gen_mods` | empty | Namespaces used by `list` gallery/write forms |
 | `render_gallery.gen_items` | empty | Items used by `/ss gallery items` |
 
-Disabled types keep existing blocks and extraction. Policy/tag changes never eject contents. Client settings sync on login and when changed; cycling skips disabled types.
+Disabled types keep existing blocks and extraction; placing one is refused with a message. Policy/tag changes never eject contents. Client settings sync on login and when changed. A full Storage pile at maximum height refuses deposits with the maximum-height message.
 
 ## Commands
 
@@ -168,7 +168,7 @@ Storage/Singles modes: `2d` projects item art onto cube faces; `3d` uses the FIX
 
 Resolution order: local override, resource-pack data (including server packs), then automatic measurement. Unconfigured items are measured and fitted to a cell; results cache at `config/somestacks/measured_cache.json`. Pack selection changes between sessions, owning-mod version changes, and resource reload invalidate relevant measurements.
 
-`/ss item` edits the local in-memory layer. `/ss write changed` saves explicit edits to `config/somestacks/item_overrides.json`. Namespace forms write complete files to output-only `config/somestacks/generated_overrides/`, never loaded automatically.
+`/ss item` edits the local in-memory layer. `/ss write changed` saves explicit edits to `config/somestacks/item_overrides.json`, keeping unusable entries as written, and refuses while that file cannot be read. Namespace forms write complete files to output-only `config/somestacks/generated_overrides/`, never loaded automatically.
 
 A failing `2d` model shows a red "ERR" cube until resource reload, logged once.
 
@@ -181,9 +181,9 @@ Bar appearance is separate: resource packs map item ids to textures and optional
 
 ## Protection and validation
 
-Player placement, deposit, extraction, and rotation honor build limits, obstruction, border, and spawn protection. Forge uses its interaction/place/break events; Fabric uses `UseBlockCallback` and `PlayerBlockBreakEvents`. Adjacent deposits validate the clicked block and destination. Automatic growth/removal acts as `[SomeStacks]`; cleanup caused only by one player's extraction or permanence toggle acts as that player. Fabric placement and growth also consult Common Protection API, FTB Chunks, and Open Parties and Claims when installed, before space is offered to automation; adjacent deposits also ask Common Protection API.
+Player gestures honor build limits, obstruction, border, and spawn protection; placement and growth also apply Adventure `CanPlaceOn`. Forge uses interaction/place/break events; Fabric, `UseBlockCallback`/`PlayerBlockBreakEvents`. Adjacent deposits validate the clicked block and destination. Automatic growth/removal acts as `[SomeStacks]`; cleanup from one player's extraction, toggle, or break acts as that player. Fabric placement and growth also consult Common Protection API, FTB Chunks, and Open Parties and Claims when installed, before offering space to automation; adjacent deposits also ask Common Protection API.
 
 Fabric removal asks Common Protection API and reports cancellation/completion with the original actor, state, and entity.
 
-Block-use clicks use synchronized mode/modifier state. Existing-stack gestures are block use, so a Forge rule denying only item use does not stop them. Vanilla checks reach and loaded chunks; the server validates player status, hand, items, adjacency, support, enablement, height, and protection. Forge restores denied placement state/NBT and publishes neighbor updates after acceptance.
+Clicks use synchronized mode/modifier state. Existing-stack gestures are block use; a Forge item-only denial does not stop them. Vanilla checks reach and loaded chunks; the server validates player status, hand, items, adjacency, support, enablement, height, and protection. Forge restores denied placement state/NBT and publishes neighbor updates after acceptance.
 

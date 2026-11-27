@@ -77,7 +77,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">TomlPolicyChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">File-boundary checks; they do not install a backend or change the running world's policy.</div>
+<div class="block">Fabric policy file checks on scratch files beside the world's serverconfig folder; they do not
+ install a backend or change the running world's policy. Run from <a href="CapabilityAndPersistenceGameTests.html#tomlPolicyParsesRoundTripsAndMigrates(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceGameTests.tomlPolicyParsesRoundTripsAndMigrates(net.minecraft.gametest.framework.GameTestHelper)</code></a>, which describes the
+ in-game check.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -93,12 +95,8 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#verify(java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">verify</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;directory,
- com.github.crittscott.somestacks.ServerConfig.Settings&nbsp;defaults)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce: edit a Fabric TOML using comments, multiline lists and quoted item ids; run /ss
- reload, then /ss deny item add minecraft:diamond and inspect the saved file.</div>
-</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#verify(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">verify</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -117,13 +115,9 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="verify(java.nio.file.Path,com.github.crittscott.somestacks.ServerConfig.Settings)">
+<section class="detail" id="verify(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>verify</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">verify</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;directory,
- com.github.crittscott.somestacks.ServerConfig.Settings&nbsp;defaults)</span></div>
-<div class="block">To reproduce: edit a Fabric TOML using comments, multiline lists and quoted item ids; run /ss
- reload, then /ss deny item add minecraft:diamond and inspect the saved file. A world JSON
- from the preceding release becomes a world TOML override with a JSON archive.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">verify</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 </section>
 </li>
 </ul>

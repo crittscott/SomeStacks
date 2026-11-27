@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import net.minecraft.world.item.Items;
+import com.github.crittscott.somestacks.util.StackGestures;
 
 /**
  * Consumes a sneaking soul-torch click on Singles so local item use does not run. The server
@@ -9,15 +9,7 @@ import net.minecraft.world.item.Items;
 public final class RotateItemWithSoulTorchRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {
-        if (!ctx.isShift() || !ctx.hasItemInHand()) {
-            return false;
-        }
-
-        if (!ctx.getPlayer().getMainHandItem().is(Items.SOUL_TORCH)) {
-            return false;
-        }
-
-        return ctx.isSinglesStack();
+        return StackGestures.rotatesItem(ctx.isShift(), ctx.getHeld(), ctx.getClickedType());
     }
 
     @Override

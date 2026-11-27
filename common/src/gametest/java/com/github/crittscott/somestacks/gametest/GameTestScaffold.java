@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -25,13 +26,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
  * Scaffolding shared by both loaders' GameTests: placing each stack type on the empty template
  * through {@link CommonRegistry}, seeding handlers directly, and the assertion helpers every test
  * reads through. Loader-native automation access (Forge's {@code IItemHandler}, Fabric's Transfer
- * API storage) stays in each loader's own {@code GameTestSupport}/{@code FabricGameTestSupport}.
+ * API storage) stays in {@code ForgeGameTestSupport} and {@code FabricGameTestSupport}.
  *
  * <p>Seeding writes to a handler rather than going through a deposit, so a test can build a state
  * the ordinary rules would not produce and check what happens next.
@@ -40,6 +42,33 @@ public final class GameTestScaffold {
     public static final BlockPos ORIGIN = new BlockPos(2, 1, 2);
 
     private GameTestScaffold() {}
+
+    /**
+     * One loader's automation view of a stack block, reached the way a hopper or pipe reaches it:
+     * Forge's {@code IItemHandler} capability or Fabric's Transfer API storage. Each call is its
+     * own operation, a simulation commits nothing, and no call mutates the stack it is given. Each
+     * loader supplies one implementation in its own test support class.
+     */
+    public interface Automation {
+        /** Takes up to {@code amount} from {@code slot}, returning what was taken. */
+        ItemStack extract(int slot, int amount, boolean simulate);
+
+        /** Offers {@code stack} to {@code slot}, returning the remainder left over. */
+        ItemStack insert(int slot, ItemStack stack, boolean simulate);
+
+        /**
+         * Offers {@code stack} to every advertised slot from 0 upward, as a machine that walks the
+         * slots does, returning the remainder left over.
+         */
+        ItemStack insertStacked(ItemStack stack, boolean simulate);
+
+        int slotLimit(int slot);
+
+        /** Advertised slot count, including any headroom the run offers above itself. */
+        int slots();
+
+        ItemStack stackAt(int slot);
+    }
 
     public static StorageStackBE placeStorage(GameTestHelper helper, BlockPos relative) {
         return place(
@@ -97,6 +126,33 @@ public final class GameTestScaffold {
             }
         }
         return total;
+    }
+
+    /**
+     * {@code base} with only the named settings replaced. Each value has its setting's {@link
+     * ServerConfig.Setting.Kind} type ({@code Integer}, {@code Boolean}, or {@code List<String>});
+     * naming settings rather than listing every record component keeps a swapped pair of same-typed
+     * values from compiling into the wrong policy.
+     */
+    public static ServerConfig.Settings policy(
+            ServerConfig.Settings base, Map<ServerConfig.Setting, ?> changes) {
+        return ServerConfig.Settings.from(
+                setting -> changes.containsKey(setting) ? changes.get(setting) : setting.get(base));
+    }
+
+    /**
+     * Runs {@code body} with the published policy changed only by {@code changes}, then publishes
+     * the previous policy again, including when {@code body} fails. The body runs synchronously on
+     * the server thread, so tests sharing the batch never observe the pinned policy.
+     */
+    public static void withPolicy(Map<ServerConfig.Setting, ?> changes, Runnable body) {
+        ServerConfig.Settings before = ServerConfig.settings();
+        check(ServerConfig.publish(policy(before, changes)), "Pinned policy was refused");
+        try {
+            body.run();
+        } finally {
+            ServerConfig.publish(before);
+        }
     }
 
     /**

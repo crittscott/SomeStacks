@@ -6,13 +6,13 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.withPolicy;
 
-import com.github.crittscott.somestacks.block.BarColumn;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.SinglesColumn;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.network.FabricHandshakeChecks;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
@@ -27,6 +27,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.Map;
 
 /**
  * The automation surface and the saved state behind it: the whole-run storage exposed on every
@@ -69,8 +71,9 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
     }
 
     /**
-     * Internal Fabric slot-count check: single Storage, Singles, and Bar blocks advertise two
-     * blocks of slots when maximum height exceeds one, otherwise one. This does not commit growth.
+     * Internal Fabric slot-count check: with max_pile_height pinned to 2, single Storage, Singles,
+     * and Bar blocks advertise two blocks of slots; pinned to 1, they advertise one. This does not
+     * commit growth.
      *
      * <p>Nearest manual check: inspect slot counts with Transfer API automation at max_pile_height
      * above one and then at one. Growth itself is covered by the growth tests.
@@ -81,21 +84,27 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
         BarStackBE bar = placeBar(helper, ORIGIN.east(6));
 
-        int storageLevels = StoragePile.maxHeight() > 1 ? 2 : 1;
-        int singlesLevels = SinglesColumn.maxHeight() > 1 ? 2 : 1;
-        int barLevels = BarColumn.maxHeight() > 1 ? 2 : 1;
-        checkEquals(
-                StorageStackBE.SLOTS * storageLevels,
-                FabricGameTestSupport.capability(storage).getSlotCount(),
-                "Storage advertised slots");
-        checkEquals(
-                SinglesStackBE.SLOTS * singlesLevels,
-                FabricGameTestSupport.capability(singles).getSlotCount(),
-                "Singles advertised slots");
-        checkEquals(
-                BarStackBE.SLOTS * barLevels,
-                FabricGameTestSupport.capability(bar).getSlotCount(),
-                "Bar advertised slots");
+        // Pinned limits: a lone block advertises one block of headroom under a two-block limit
+        // and none under a one-block limit.
+        int[][] heightAndLevels = {{2, 2}, {1, 1}};
+        for (int[] pinned : heightAndLevels) {
+            withPolicy(
+                    Map.of(ServerConfig.Setting.MAX_PILE_HEIGHT, pinned[0]),
+                    () -> {
+                        checkEquals(
+                                StorageStackBE.SLOTS * pinned[1],
+                                FabricGameTestSupport.capability(storage).getSlotCount(),
+                                "Storage advertised slots at height " + pinned[0]);
+                        checkEquals(
+                                SinglesStackBE.SLOTS * pinned[1],
+                                FabricGameTestSupport.capability(singles).getSlotCount(),
+                                "Singles advertised slots at height " + pinned[0]);
+                        checkEquals(
+                                BarStackBE.SLOTS * pinned[1],
+                                FabricGameTestSupport.capability(bar).getSlotCount(),
+                                "Bar advertised slots at height " + pinned[0]);
+                    });
+        }
         helper.succeed();
     }
 
@@ -120,6 +129,24 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void barDiskSaveRoundTripsItems(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#releasedStorageFormatLoads}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void releasedStorageFormatLoads(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.releasedStorageFormatLoads(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#releasedSinglesFormatLoads}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void releasedSinglesFormatLoads(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.releasedSinglesFormatLoads(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#releasedBarFormatLoads}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void releasedBarFormatLoads(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.releasedBarFormatLoads(helper);
     }
 
     /**
@@ -249,6 +276,12 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
         StackFoundationChecks.cachedGeometryPreservesOccupiedUnions(helper);
     }
 
+    /** See {@link StackFoundationChecks#storedLightIsPerOccupiedSlotAndCapped}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void storedLightIsPerOccupiedSlotAndCapped(GameTestHelper helper) {
+        StackFoundationChecks.storedLightIsPerOccupiedSlotAndCapped(helper);
+    }
+
     /**
      * Loader entry point for {@link ServiceAndConfigChecks#installedServicesAndLogoutResetPacing};
      * see that method for the scenario, manual check, and any internal-only assertions.
@@ -268,14 +301,10 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
         ServiceAndConfigChecks.listEditsPublishImmutablePolicy(helper);
     }
 
-    /**
-     * See {@link
-     * com.github.crittscott.somestacks.network.FabricHandshakeChecks#loginProtocolPayloadIsBounded}.
-     */
+    /** See {@link FabricHandshakeChecks#loginProtocolPayloadIsBounded}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void loginProtocolPayloadIsBounded(GameTestHelper helper) {
-        com.github.crittscott.somestacks.network.FabricHandshakeChecks
-                .loginProtocolPayloadIsBounded(helper);
+        FabricHandshakeChecks.loginProtocolPayloadIsBounded(helper);
     }
 
     /** See {@link NetworkPolicyChecks#publicationSyncsOnlyChangedClientPolicy}. */
@@ -314,5 +343,28 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void reloadCommandPublishesStoredPolicy(GameTestHelper helper) {
         ServiceAndConfigChecks.reloadCommandPublishesStoredPolicy(helper);
+    }
+
+    /** See {@link ServiceAndConfigChecks#commandHelpAnswersEveryTopic}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void commandHelpAnswersEveryTopic(GameTestHelper helper) {
+        ServiceAndConfigChecks.commandHelpAnswersEveryTopic(helper);
+    }
+
+    /**
+     * Fabric's own TOML policy file: generated explanations and ranges, malformed fields beside
+     * valid ones, literal strings and trailing commas, out-of-range values corrected to their
+     * bounds, a written file read back, and the preceding release's world JSON migrated once.
+     *
+     * <p>To reproduce: on a Fabric server, delete config/somestacks-server.toml and start; the file
+     * is recreated with explanations and "Range:" lines. Edit it using comments, multiline lists,
+     * and quoted item ids, set max_pile_height = 99, and run /ss reload; the log names the file and
+     * reports the height corrected to 64. Run /ss deny item add minecraft:diamond and inspect the
+     * saved file. A world serverconfig/somestacks-server.json from the preceding release becomes a
+     * world TOML override with a .migrated archive at the next start.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void tomlPolicyParsesRoundTripsAndMigrates(GameTestHelper helper) {
+        TomlPolicyChecks.verify(helper);
     }
 }

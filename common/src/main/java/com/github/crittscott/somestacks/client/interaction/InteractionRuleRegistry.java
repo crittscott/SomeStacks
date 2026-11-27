@@ -3,39 +3,37 @@ package com.github.crittscott.somestacks.client.interaction;
 import java.util.List;
 
 /**
- * The ordered rule lists behind each loader's right-click callbacks, one list per kind of click.
+ * The ordered rule lists behind each loader's right-click callbacks: one for clicks on a block, one
+ * for clicks that reach no block (an empty-hand click at air, or a held-item use).
  *
  * <p>Order is the precedence rule: the first match wins and the walk stops. The block list starts
- * with the empty-handed permanence toggle, then runs through the item gestures from the most
- * specific to the least: the torch gestures precede deposit, deposit into the clicked stack
- * precedes deposit into its neighbor, generic placement catches the modified clicks none of those
- * claimed, and unmodified extraction sits last.
+ * with the empty-handed permanence toggle, then the sneaking torch gestures, then the modified-item
+ * click that the server resolves into a deposit or placement, and ends with unmodified extraction.
+ * The air list cycles the mode at open air before refusing any other modifier item use.
  */
 public final class InteractionRuleRegistry {
     private InteractionRuleRegistry() {}
 
-    private static final List<InteractionRule> EMPTY_HAND_RULES = List.of(new ModeCycleRule());
-
-    private static final List<InteractionRule> ITEM_RULES = List.of(new ModeCycleRule());
+    private static final List<InteractionRule> AIR_RULES =
+            List.of(new ModeCycleRule(), new ModifierItemUseRule());
 
     private static final List<InteractionRule> BLOCK_RULES =
             List.of(
                     new TogglePermanentRule(),
                     new RotateBlockWithRedstoneTorchRule(),
                     new RotateItemWithSoulTorchRule(),
-                    new DepositIntoClickedStackRule(),
-                    new DepositIntoAdjacentStackRule(),
-                    new PlaceAdjacentGenericRule(),
+                    new ModifiedItemClickRule(),
                     new ExtractionRule());
 
-    public static InteractionRule processEmptyHandRules(InteractionContext ctx) {
-        return processFirstMatch(EMPTY_HAND_RULES, ctx);
+    /**
+     * Executes the first air rule that matches and returns it, or null when none does; the caller
+     * reads the context to learn whether to cancel the click.
+     */
+    public static InteractionRule processAirRules(InteractionContext ctx) {
+        return processFirstMatch(AIR_RULES, ctx);
     }
 
-    public static InteractionRule processItemRules(InteractionContext ctx) {
-        return processFirstMatch(ITEM_RULES, ctx);
-    }
-
+    /** Like {@link #processAirRules}, over the block rules. */
     public static InteractionRule processBlockRules(InteractionContext ctx) {
         return processFirstMatch(BLOCK_RULES, ctx);
     }

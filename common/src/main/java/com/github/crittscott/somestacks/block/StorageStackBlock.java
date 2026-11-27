@@ -1,38 +1,27 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
+import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
@@ -44,95 +33,31 @@ import javax.annotation.Nullable;
  * <p>Breaking drops only this block's own contents. What that does to the rest of the pile, which
  * may need to settle or shrink around the gap, belongs to {@link StoragePile}.
  */
-public class StorageStackBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
-    /**
-     * Light this block emits, derived from the {@code BlockItem}s stored in it and kept in the
-     * block state so lighting updates travel by the ordinary block-state path.
-     */
-    public static final IntegerProperty LIGHT_LEVEL =
-            IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
-
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-
+public class StorageStackBlock extends StackBlock {
     /** The layout rotation, so structure rotation and mirroring turn the layout with the block. */
     public static final DirectionProperty HORIZONTAL_FACING =
             BlockStateProperties.HORIZONTAL_FACING;
 
-    /** Shared mining, lighting, collision, and piston settings for this stack type. */
-    public static Properties properties() {
-        return Properties.of()
-                .mapColor(MapColor.METAL)
-                .noOcclusion()
-                .pushReaction(PushReaction.BLOCK)
-                .strength(0.5F, 6.0F)
-                .lightLevel(state -> state.getValue(LIGHT_LEVEL));
+    public StorageStackBlock(Properties props) {
+        super(props, BlockType.STORAGE_STACK);
+        registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
-    public StorageStackBlock(Properties props) {
-        super(props);
-        registerDefaultState(
-                defaultBlockState()
-                        .setValue(LIGHT_LEVEL, 0)
-                        .setValue(WATERLOGGED, false)
-                        .setValue(HORIZONTAL_FACING, Direction.NORTH));
+    /** Shared mining, lighting, collision, and piston settings for this stack type. */
+    public static Properties properties() {
+        return properties(MapColor.METAL);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL, WATERLOGGED, HORIZONTAL_FACING);
+        super.createBlockStateDefinition(builder);
+        builder.add(HORIZONTAL_FACING);
     }
 
+    /** A Storage block takes any deposit and keeps its full collision whatever it holds. */
     @Override
-    public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(
-                HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, Mirror mirror) {
-        return rotate(state, mirror.getRotation(state.getValue(HORIZONTAL_FACING)));
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED)
-                ? Fluids.WATER.getSource(false)
-                : super.getFluidState(state);
-    }
-
-    @Override
-    public BlockState updateShape(
-            BlockState state,
-            Direction direction,
-            BlockState neighborState,
-            LevelAccessor level,
-            BlockPos pos,
-            BlockPos neighborPos) {
-        if (state.getValue(WATERLOGGED)) {
-            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-        }
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new StorageStackBE(pos, state);
-    }
-
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
-        return 1.0F;
+    public VoxelShape firstDepositShape(Level level, BlockPos pos, BlockState state, ViewRay ray) {
+        return state.getCollisionShape(level, pos, CollisionContext.empty());
     }
 
     @Override
@@ -141,45 +66,19 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState state) {
-        return true;
-    }
-
-    /** Reports the whole pile's fill, so a comparator reads the same value anywhere along it. */
-    @Override
-    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
-        StoragePile pile = StoragePile.at(level, pos);
-        if (pile == null) {
-            return 0;
-        }
-        return pile.comparatorSignal();
+    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        return 1.0F;
     }
 
     @Override
-    public InteractionResult use(
-            BlockState state,
-            Level level,
-            BlockPos pos,
-            Player player,
-            InteractionHand hand,
-            BlockHitResult hit) {
-        if (!level.isClientSide) {
-            StackInteractions.handleExistingStack(
-                    (ServerPlayer) player, hand, hit, BlockType.STORAGE_STACK);
-        }
-        return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return rotate(state, mirror.getRotation(state.getValue(HORIZONTAL_FACING)));
     }
 
-    /**
-     * Runs a pile pass scheduled at its base. Structural changes can leave an older tick at a
-     * former base, so only the current base performs the settle.
-     */
+    @Nullable
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        StoragePile pile = StoragePile.at(level, pos);
-        if (pile != null && pile.basePos().equals(pos)) {
-            pile.settle();
-        }
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new StorageStackBE(pos, state);
     }
 
     /** Repairs the run-wide state and derived values affected when this block joins a pile. */
@@ -200,8 +99,10 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
     public void onRemove(
             BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
+            ServerPlayer breaker = null;
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof StorageStackBE sbe) {
+                breaker = sbe.takeBreakingPlayer();
                 ItemOps.dropAllItems(sbe.getItems(), level, pos);
             }
             super.onRemove(state, level, pos, newState, isMoving);
@@ -211,9 +112,33 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
             StoragePile.invalidateAround(level, pos);
 
             // Losing a block splits one pile into two, or shortens one. Settle both sides rather
-            // than leaving the remains unpacked until something else touches them.
-            StoragePile.markDirtyAt(level, pos.below());
-            StoragePile.markDirtyAt(level, pos.above());
+            // than leaving the remains unpacked until something else touches them. A player's
+            // break is charged with any block that settlement empties away.
+            StoragePile.markDirtyAt(level, pos.below(), breaker);
+            StoragePile.markDirtyAt(level, pos.above(), breaker);
+        }
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(
+                HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
+    }
+
+    /**
+     * Runs a pile pass scheduled at its base. Structural changes can leave an older tick at a
+     * former base, so only the current base performs the settle.
+     */
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        StoragePile pile = StoragePile.at(level, pos);
+        if (pile != null && pile.basePos().equals(pos)) {
+            pile.settle();
         }
     }
 }

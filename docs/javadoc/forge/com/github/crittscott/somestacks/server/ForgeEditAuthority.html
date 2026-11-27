@@ -120,12 +120,15 @@ implements com.github.crittscott.somestacks.server.EditAuthority</span></div>
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">place</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#place(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">place</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.core.Direction&nbsp;placedAgainst)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Places under Forge's snapshot capture, the way Forge's own item placement does, rather than
+ with the shorter snapshot, <code>setBlock</code>, place event, restore-on-veto pattern.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#vetoesRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">vetoesRemoval</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.server.level.ServerPlayer&nbsp;actor,
@@ -189,13 +192,21 @@ implements com.github.crittscott.somestacks.server.EditAuthority</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)">
+<section class="detail" id="place(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)">
 <h3>place</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">place</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;placer,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">place</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.core.Direction&nbsp;placedAgainst)</span></div>
+<div class="block">Places under Forge's snapshot capture, the way Forge's own item placement does, rather than
+ with the shorter snapshot, <code>setBlock</code>, place event, restore-on-veto pattern. Outside
+ capture, <code>setBlock</code> runs the new block's <code>onPlace</code> and notifies neighbors before
+ the event can veto: a Storage stack would inherit permanence and schedule settlement, and
+ neighbors would react to a block that is then rolled back. Under capture those side effects
+ are held back, so they run here only after the event allows the placement. Any captured
+ snapshots beyond the first are reported through the multi-place event, as Forge's item
+ placement reports them.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>place</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.EditAuthority</code></dd>

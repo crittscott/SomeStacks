@@ -120,7 +120,11 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#saveCache()" class="member-name-link">saveCache</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Writes the measured profiles to <code>measured_cache.json</code>, stamped with the selected packs
+ and each namespace's mod version, when they changed since the last write; a write failure is
+ logged and leaves the cache dirty for the next call.</div>
+</div>
 </div>
 </div>
 </div>
@@ -159,6 +163,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="saveCache()">
 <h3>saveCache</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">saveCache</span>()</div>
+<div class="block">Writes the measured profiles to <code>measured_cache.json</code>, stamped with the selected packs
+ and each namespace's mod version, when they changed since the last write; a write failure is
+ logged and leaves the cache dirty for the next call.</div>
 </section>
 </li>
 </ul>

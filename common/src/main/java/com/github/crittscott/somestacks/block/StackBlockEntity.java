@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
@@ -13,6 +14,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -20,7 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,10 +34,10 @@ public abstract class StackBlockEntity extends BlockEntity {
     private static final String TAG_DATA_VERSION = "DataVersion";
 
     protected final StackItemStorage items;
-    private final IntegerProperty lightProperty;
     @Nullable private StackItemStorage.LoadResult pendingLoadResult;
     private int batchDepth;
     private boolean batchTouched;
+    @Nullable private ServerPlayer breakingPlayer;
     private boolean publishPending;
     private int publishedSignal = -1;
     private double comparatorContribution;
@@ -47,14 +49,8 @@ public abstract class StackBlockEntity extends BlockEntity {
     private long cachedRunTick = Long.MIN_VALUE;
 
     /** Creates local storage with subtype admission and a deferred publication callback. */
-    protected StackBlockEntity(
-            BlockEntityType<?> type,
-            BlockPos pos,
-            BlockState state,
-            int slots,
-            IntegerProperty lightProperty) {
+    protected StackBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, int slots) {
         super(type, pos, state);
-        this.lightProperty = lightProperty;
         slotContributions = new double[slots];
         items =
                 new StackItemStorage(slots) {
@@ -72,21 +68,64 @@ public abstract class StackBlockEntity extends BlockEntity {
 
                     @Override
                     public int getSlotLimit(int slot) {
-                        return localSlotLimit();
+                        return slotLimit();
                     }
 
                     @Override
                     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                        return isStoredItemValid(stack);
+                        return admits(stack);
                     }
                 };
     }
 
-    /** Admission for new items; saved contents and internal moves bypass this check. */
-    protected abstract boolean isStoredItemValid(ItemStack stack);
+    /**
+     * New-item admission for players' and automation's insertions alike, excluding support and
+     * growth feasibility; saved contents and internal moves bypass this check.
+     */
+    public abstract boolean admits(ItemStack stack);
+
+    /** Block-local box of one cell at this block's current layout. */
+    protected abstract AABB cellBox(int index);
+
+    /**
+     * Whether a player's deposit along {@code ray} has somewhere to go in this block. A top-face
+     * click that has none places a new block above instead.
+     */
+    public abstract boolean acceptsDepositAlong(ViewRay ray);
+
+    /**
+     * A player's deposit from {@code fromHand}, aimed along {@code ray}. Admission, support, and
+     * any growth are checked here; the caller has already applied the player's item policy.
+     *
+     * @return how many items moved; {@code fromHand} shrinks by that many
+     */
+    public abstract int depositFromHand(ViewRay ray, ItemStack fromHand, ServerPlayer player);
+
+    /**
+     * A player's extraction from cell {@code index} into a main hand holding {@code hand}, taking
+     * only what that hand can accept and charging any cleanup to {@code player}.
+     *
+     * @return what was taken, or empty when nothing moved
+     */
+    public abstract ItemStack extractIntoHand(int index, ItemStack hand, ServerPlayer player);
 
     /** Resolves the server run without consulting this entity's per-tick cache. */
     protected abstract StackRun<?> resolveRun(ServerLevel serverLevel);
+
+    /** The cell a deposit along {@code ray} targets; see {@link ViewRay#depositTarget}. */
+    public final int depositTarget(ViewRay ray) {
+        return ray.depositTarget(getBlockPos(), items.getSlots(), this::cellBox, this::isOccupied);
+    }
+
+    /** The cell a player's extraction along {@code ray} takes from, or -1 on a miss. */
+    public final int extractionTarget(ViewRay ray) {
+        return ray.nearestOccupied(
+                getBlockPos(), items.getSlots(), this::cellBox, this::isOccupied);
+    }
+
+    private boolean isOccupied(int index) {
+        return !items.getStackInSlot(index).isEmpty();
+    }
 
     /** Current server run, or null on the client or when the entity is removed. */
     @Nullable
@@ -109,6 +148,19 @@ public abstract class StackBlockEntity extends BlockEntity {
         return run != null ? run.advertisedSlots() : items.getSlots();
     }
 
+    /**
+     * Contents at an advertised position: the run's slot when a server run resolves, otherwise this
+     * block's own local slot, and empty for headroom or a position outside either. Every loader
+     * adapter reads positions through this.
+     */
+    public final ItemStack advertisedStack(int slot) {
+        StackRun<?> run = itemRun();
+        if (run != null) {
+            return run.getSlot(slot);
+        }
+        return slot >= 0 && slot < items.getSlots() ? items.getStackInSlot(slot) : ItemStack.EMPTY;
+    }
+
     /** Invalidates bounds after a structural edit within the same tick. */
     final void invalidateRunCache() {
         cachedRun = null;
@@ -120,8 +172,28 @@ public abstract class StackBlockEntity extends BlockEntity {
         cachedRunTick = tick;
     }
 
-    /** Capacity before the item's own stack limit. */
-    protected int localSlotLimit() {
+    /**
+     * Records the player whose break is about to remove this block, so the removal hook can charge
+     * the cleanup it causes to that player. Only a player's break records one; explosions,
+     * commands, and other removals leave it null.
+     */
+    final void noteBreakingPlayer(ServerPlayer player) {
+        breakingPlayer = player;
+    }
+
+    /** Takes and clears the player recorded for this block's removal, or null when none was. */
+    @Nullable
+    final ServerPlayer takeBreakingPlayer() {
+        ServerPlayer player = breakingPlayer;
+        breakingPlayer = null;
+        return player;
+    }
+
+    /**
+     * Per-position capacity before the item's own stack limit. A limit of one marks a structural
+     * stack, whose every position holds a single item.
+     */
+    public int slotLimit() {
         return StackItemStorage.DEFAULT_SLOT_LIMIT;
     }
 
@@ -147,7 +219,7 @@ public abstract class StackBlockEntity extends BlockEntity {
         double current =
                 stack.isEmpty()
                         ? 0.0
-                        : localSlotLimit() == 1
+                        : slotLimit() == 1
                                 ? 1.0
                                 : (double) stack.getCount() / stack.getMaxStackSize();
         slotContributions[slot] = current;
@@ -211,16 +283,11 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     /**
-     * Changes an in-world block's facing; the block-state update performs client synchronization.
+     * Changes a server block's facing; the block-state update performs client synchronization. Only
+     * Storage and Singles blocks, which have a facing, are rotated.
      */
     public final void setRotation(int rotation) {
-        if (level == null || level.isClientSide) {
-            return;
-        }
         BlockState state = getBlockState();
-        if (!state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
-            return;
-        }
         BlockState rotated =
                 state.setValue(BlockStateProperties.HORIZONTAL_FACING, facingOf(rotation));
         if (state == rotated) {
@@ -251,22 +318,10 @@ public abstract class StackBlockEntity extends BlockEntity {
         };
     }
 
-    /** Per-position automation capacity before the item's own stack limit. */
-    public final int automationSlotLimit() {
-        return localSlotLimit();
-    }
-
-    /** New-item automation admission, excluding support and growth feasibility. */
-    public final boolean acceptsAutomation(ItemStack stack) {
-        return isStoredItemValid(stack);
-    }
-
     /** Immediately synchronizes this entity's local contents and presentation. */
     public final void syncToClients() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
-        }
+        BlockState state = getBlockState();
+        level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
     }
 
     /** Records a comparator publication, returning whether neighbors need notification. */
@@ -327,9 +382,9 @@ public abstract class StackBlockEntity extends BlockEntity {
         syncToClients();
         int light = ItemOps.calculateLightLevelFromItems(items);
         BlockState state = getBlockState();
-        if (state.getValue(lightProperty) != light) {
+        if (state.getValue(StackBlock.LIGHT_LEVEL) != light) {
             currentLevel.setBlock(
-                    getBlockPos(), state.setValue(lightProperty, light), Block.UPDATE_ALL);
+                    getBlockPos(), state.setValue(StackBlock.LIGHT_LEVEL, light), Block.UPDATE_ALL);
         }
         return true;
     }
@@ -408,7 +463,9 @@ public abstract class StackBlockEntity extends BlockEntity {
     public final CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
         saveAdditional(tag);
-        StackItemStorage.stripSetAside(tag.getCompound(StackItemStorage.TAG_ITEMS));
+        CompoundTag storage = tag.getCompound(StackItemStorage.TAG_ITEMS);
+        StackItemStorage.stripSetAside(storage);
+        StackItemStorage.stripUndrawnItemData(storage);
         stripServerOnlyUpdateData(tag);
         return tag;
     }

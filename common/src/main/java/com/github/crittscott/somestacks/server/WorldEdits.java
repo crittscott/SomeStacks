@@ -18,10 +18,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 /**
- * Vanilla world-edit mechanics for automated growth and removal: world border and spawn protection,
- * entity obstruction, and the actual block placement/removal. The one loader-specific authority —
- * the automation actor, protection callbacks, and loader completion notifications — is delegated to
- * {@link EditAuthority}.
+ * Vanilla world-edit mechanics for player placement, growth, and removal: the one placement gate,
+ * world border and spawn protection, entity obstruction, and the actual block placement/removal.
+ * The one loader-specific authority — the automation actor, protection callbacks, and loader
+ * completion notifications — is delegated to {@link EditAuthority}.
  */
 public final class WorldEdits {
     private WorldEdits() {}
@@ -29,29 +29,40 @@ public final class WorldEdits {
     private static final ThreadLocal<Boolean> consultingAdjacent =
             ThreadLocal.withInitial(() -> false);
 
-    private static EditAuthority authority() {
-        return PlatformServices.editAuthority();
-    }
-
     /** Vanilla's own gate on a block interaction: world border and spawn protection. */
     public static boolean isProtected(ServerPlayer sp, BlockPos pos) {
         return !sp.serverLevel().mayInteract(sp, pos);
     }
 
     /**
-     * Whether the actor may place a block: build ability, vanilla protection, and loader queries. A
-     * null actor uses the level's automation identity. Growth checks this before promising space.
+     * The one gate on putting a block at {@code pos}, without side effects: build height,
+     * replaceability, vanilla's item-placement check ({@link Player#mayUseItemAt}) for the actor's
+     * main-hand item against the block at {@code pos.relative(placedAgainst)}, world border and
+     * spawn protection, and the loader's protection queries. {@link #placeChecked} applies it to
+     * every placement; player placement and growth ask it first to refuse before promising
+     * anything. A null actor uses the level's automation identity.
+     *
+     * <p>The item-placement check rather than {@link Player#mayBuild} alone is what an Adventure
+     * mode player's {@code CanPlaceOn} item answers to, so a player who may place a stack by
+     * gesture may also grow one by depositing that item. Automation holds nothing, so only its
+     * build ability counts.
      */
-    public static boolean mayPlace(@Nullable ServerPlayer actor, ServerLevel level, BlockPos pos) {
+    public static boolean mayPlace(
+            @Nullable ServerPlayer actor,
+            ServerLevel level,
+            BlockPos pos,
+            Direction placedAgainst) {
         ServerPlayer editor = actor != null ? actor : automationActor(level);
-        return editor.mayBuild()
+        return !level.isOutsideBuildHeight(pos)
+                && level.getBlockState(pos).canBeReplaced()
+                && editor.mayUseItemAt(pos, placedAgainst.getOpposite(), editor.getMainHandItem())
                 && !isProtected(editor, pos)
-                && authority().mayPlace(editor, level, pos);
+                && PlatformServices.editAuthority().mayPlace(editor, level, pos);
     }
 
     /** The actor automation-driven growth and removal are attributed to. */
     public static ServerPlayer automationActor(ServerLevel level) {
-        return authority().automationActor(level);
+        return PlatformServices.editAuthority().automationActor(level);
     }
 
     /** Consults destination protection without allowing the consultation to run a gesture. */
@@ -59,12 +70,16 @@ public final class WorldEdits {
         if (isConsultingAdjacent() || isProtected(player, pos)) return false;
         consultingAdjacent.set(true);
         try {
-            return authority().mayUseAdjacent(player, pos);
+            return PlatformServices.editAuthority().mayUseAdjacent(player, pos);
         } finally {
             consultingAdjacent.remove();
         }
     }
 
+    /**
+     * Whether {@link #mayUseAdjacent} is consulting destination protection on this thread; every
+     * gesture entry point refuses while it is, so the probe cannot run a gesture.
+     */
     public static boolean isConsultingAdjacent() {
         return consultingAdjacent.get();
     }
@@ -89,24 +104,26 @@ public final class WorldEdits {
     }
 
     /**
-     * Places {@code state} through the loader transaction, restoring captured state and
-     * block-entity data when protection denies it. {@code finalCollision} is the completed
-     * placement's collision shape, since a block-entity stack can start empty and acquire its real
-     * shape only with its first deposit. A null placer uses the level's automation identity for
-     * both placement and its game event.
+     * Places {@code state} after {@link #mayPlace} and an obstruction test, through the loader
+     * transaction, restoring captured state and block-entity data when protection denies it. {@code
+     * finalCollision} is the completed placement's collision shape, since a block-entity stack can
+     * start empty and acquire its real shape only with its first deposit. {@code placedAgainst}
+     * points from {@code pos} to the block the new one is placed against. A null placer uses the
+     * level's automation identity for both placement and its game event.
      */
     public static boolean placeChecked(
-            @Nullable Player placer,
+            @Nullable ServerPlayer placer,
             ServerLevel level,
             BlockPos pos,
             BlockState state,
             Direction placedAgainst,
             VoxelShape finalCollision) {
-        if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
+        ServerPlayer editor = placer != null ? placer : automationActor(level);
+        if (!mayPlace(editor, level, pos, placedAgainst)
+                || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
-        Player editor = placer != null ? placer : automationActor(level);
-        if (!authority().place(editor, level, pos, state, placedAgainst)) {
+        if (!PlatformServices.editAuthority().place(editor, level, pos, state, placedAgainst)) {
             return false;
         }
         level.gameEvent(
@@ -127,13 +144,14 @@ public final class WorldEdits {
         }
         BlockState state = level.getBlockState(pos);
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (authority().vetoesRemoval(level, editor, pos, state, blockEntity)) {
+        if (PlatformServices.editAuthority()
+                .vetoesRemoval(level, editor, pos, state, blockEntity)) {
             return false;
         }
         if (!level.removeBlock(pos, false)) {
             return false;
         }
-        authority().afterRemoval(level, editor, pos, state, blockEntity);
+        PlatformServices.editAuthority().afterRemoval(level, editor, pos, state, blockEntity);
         level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(editor, state));
         return true;
     }

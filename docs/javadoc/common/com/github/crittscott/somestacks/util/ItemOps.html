@@ -43,7 +43,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -78,10 +78,29 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ItemOps</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Item handling shared by all three stack types: what a hand can accept, how a taken stack reaches
- the player, how a broken block sheds its contents, and how stored items add up to a light level.</div>
+ the player, how loose stacks pack into whole ones, how a broken block sheds its contents, and how
+ stored items add up to a light level.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ItemOps.Piece.html" class="type-name-link" title="class in com.github.crittscott.somestacks.util">ItemOps.Piece</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">One output stack of <a href="#consolidate(java.lang.Iterable)"><code>consolidate(java.lang.Iterable&lt;net.minecraft.world.item.ItemStack&gt;)</code></a>: <code>count</code> items of <code>model</code>'s exact
+ identity.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -122,30 +141,33 @@ loadScripts(document, 'script');</script>
 <div class="block">Whether an extraction may land in this hand: it must be empty, or hold the same item and tags
  with room left.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#dropAllItems(com.github.crittscott.somestacks.util.StackItemStorage,net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">dropAllItems</a><wbr>(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ItemOps.Piece.html" title="class in com.github.crittscott.somestacks.util">ItemOps.Piece</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#consolidate(java.lang.Iterable)" class="member-name-link">consolidate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;net.minecraft.world.item.ItemStack&gt;&nbsp;stacks)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#dropAllItems(com.github.crittscott.somestacks.util.StackItemStorage,net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">dropAllItems</a><wbr>(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler,
  net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Drops every nonempty handler slot at the block position without mutating the handler.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#giveToPlayerOrDrop(net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.item.ItemStack)" class="member-name-link">giveToPlayerOrDrop</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#giveToPlayerOrDrop(net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.item.ItemStack)" class="member-name-link">giveToPlayerOrDrop</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player,
  net.minecraft.world.InteractionHand&nbsp;hand,
  net.minecraft.world.item.ItemStack&nbsp;taken)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Puts an extracted stack in the player's hand, merging with what is already there, and drops
  whatever will not fit at their feet.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isHandlerEmpty(com.github.crittscott.somestacks.util.StackItemStorage)" class="member-name-link">isHandlerEmpty</a><wbr>(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isHandlerEmpty(com.github.crittscott.somestacks.util.StackItemStorage)" class="member-name-link">isHandlerEmpty</a><wbr>(<a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a>&nbsp;handler)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether every slot in the handler is empty.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mergeIntoStack(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemStack)" class="member-name-link">mergeIntoStack</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;hand,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mergeIntoStack(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemStack)" class="member-name-link">mergeIntoStack</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;hand,
  net.minecraft.world.item.ItemStack&nbsp;incoming)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Moves as much of <code>incoming</code> into <code>hand</code> as it will hold, growing the hand in
  place.</div>
 </div>
@@ -197,6 +219,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Whether an extraction may land in this hand: it must be empty, or hold the same item and tags
  with room left. This is the rule that keeps a player's hand from being swapped out
  mid-gesture.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="consolidate(java.lang.Iterable)">
+<h3>consolidate</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ItemOps.Piece.html" title="class in com.github.crittscott.somestacks.util">ItemOps.Piece</a>&gt;</span>&nbsp;<span class="element-name">consolidate</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;net.minecraft.world.item.ItemStack&gt;&nbsp;stacks)</span></div>
 </section>
 </li>
 <li>

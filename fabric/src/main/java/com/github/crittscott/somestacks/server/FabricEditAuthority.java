@@ -9,10 +9,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -38,23 +40,35 @@ public final class FabricEditAuthority implements EditAuthority {
         return FakePlayer.get(level, AutomationActor.PROFILE);
     }
 
-    @Override
-    public boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
-        ServerPlayer actor = (ServerPlayer) placer;
-        return !(CommonProtectionQueries.isLoaded()
-                        && !CommonProtectionQueries.mayPlace(actor, level, pos))
-                && !(FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(actor, pos))
-                && !(OpacProtection.isLoaded() && OpacProtection.prevents(level, actor, pos));
+    /**
+     * The claim-protection integrations this authority consults, by display name. Presence of
+     * Common Protection API does not show that any claim mod has registered a provider with it.
+     */
+    public static List<String> detectedIntegrations() {
+        List<String> names = new ArrayList<>();
+        if (CommonProtectionQueries.isLoaded()) names.add("Common Protection API");
+        if (FtbChunksProtection.isLoaded()) names.add("FTB Chunks");
+        if (OpacProtection.isLoaded()) names.add("Open Parties and Claims");
+        return names;
     }
 
     @Override
+    public boolean mayPlace(ServerPlayer placer, ServerLevel level, BlockPos pos) {
+        return !(CommonProtectionQueries.isLoaded()
+                        && !CommonProtectionQueries.mayPlace(placer, level, pos))
+                && !(FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(placer, pos))
+                && !(OpacProtection.isLoaded() && OpacProtection.prevents(level, placer, pos));
+    }
+
+    /** Fabric has no placement event; the providers were asked through {@link #mayPlace}. */
+    @Override
     public boolean place(
-            Player placer,
+            ServerPlayer placer,
             ServerLevel level,
             BlockPos pos,
             BlockState state,
             Direction placedAgainst) {
-        return mayPlace(placer, level, pos) && level.setBlock(pos, state, Block.UPDATE_ALL);
+        return level.setBlock(pos, state, Block.UPDATE_ALL);
     }
 
     @Override

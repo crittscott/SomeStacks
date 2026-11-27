@@ -110,6 +110,15 @@ implements com.github.crittscott.somestacks.PlatformServices.Backend</span></div
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#blockReach(net.minecraft.world.entity.player.Player)" class="member-name-link">blockReach</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Forge's block-reach attribute, so reach-extending gear and mods apply to cell targeting.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#broadcastConfig(net.minecraft.server.MinecraftServer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">broadcastConfig</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server,
+ com.github.crittscott.somestacks.network.ConfigSyncPkt&nbsp;packet)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#configFolder()" class="member-name-link">configFolder</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -155,12 +164,44 @@ implements com.github.crittscott.somestacks.PlatformServices.Backend</span></div
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="blockReach(net.minecraft.world.entity.player.Player)">
+<h3>blockReach</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">blockReach</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;player)</span></div>
+<div class="block">Forge's block-reach attribute, so reach-extending gear and mods apply to cell targeting.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>blockReach</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.PlatformServices.Backend</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="broadcastConfig(net.minecraft.server.MinecraftServer,com.github.crittscott.somestacks.network.ConfigSyncPkt)">
+<h3>broadcastConfig</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">broadcastConfig</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server,
+ com.github.crittscott.somestacks.network.ConfigSyncPkt&nbsp;packet)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>broadcastConfig</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.PlatformServices.Backend</code></dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="configFolder()">
 <h3>configFolder</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">configFolder</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>configFolder</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.PlatformServices.Backend</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="editAuthority()">
+<h3>editAuthority</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="server/ForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a></span>&nbsp;<span class="element-name">editAuthority</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>editAuthority</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.PlatformServices.Backend</code></dd>
 </dl>
 </section>
 </li>
@@ -182,16 +223,6 @@ implements com.github.crittscott.somestacks.PlatformServices.Backend</span></div
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>sendConfig</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.PlatformServices.Backend</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="editAuthority()">
-<h3>editAuthority</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="server/ForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a></span>&nbsp;<span class="element-name">editAuthority</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>editAuthority</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.PlatformServices.Backend</code></dd>
 </dl>
 </section>
 </li>

@@ -2,17 +2,6 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 /**
  * Geometry and slot indexing shared by Singles Stack rendering, collision, ray targeting, and
  * support.
@@ -42,7 +31,7 @@ public final class SinglesCubeIdx {
     public static final int TOP_LAYER_Y = LAYERS - 1;
 
     /** Edge of one cell, in pixels. */
-    private static final double CELL_PIXELS = 4.0;
+    public static final double CELL_PIXELS = 4.0;
 
     /** Cached coordinate transforms, bounds, and shapes for the Singles layout. */
     public static final CubeGrid GRID = new CubeGrid(GRID_EDGE, CELL_PIXELS, 0, 4, 8, 12);
@@ -133,78 +122,6 @@ public final class SinglesCubeIdx {
     }
 
     /**
-     * Finds the deposit target for a Singles Stack that does not yet exist and therefore has no
-     * occupied slots. Placement uses this to validate the initial deposit and its resulting
-     * collision shape before adding the block to the world. New blocks are unrotated.
-     */
-    public static int traceAllPositions(ViewRay ray, BlockPos blockPos) {
-        return traceAllPositions(ray, blockPos, null, 0);
-    }
-
-    /**
-     * Finds the slot a deposit targets: the last empty slot along the view ray before the first
-     * occupied one, or the farthest intersected slot if the ray meets no occupied item. A null
-     * handler describes a prospective, entirely empty block.
-     */
-    public static int traceAllPositions(
-            ViewRay ray, BlockPos blockPos, @Nullable StackItemStorage handler, int blockRotation) {
-        List<Hit> hits = new ArrayList<>();
-
-        for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
-            AABB cubeBox = GRID.worldBox(storageIndex, blockRotation, blockPos);
-            Vec3 hitPos = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
-
-            if (hitPos != null) {
-                double dist = hitPos.distanceTo(ray.eye());
-                hits.add(new Hit(storageIndex, dist));
-            }
-        }
-
-        if (hits.isEmpty()) {
-            return -1;
-        }
-
-        hits.sort(Comparator.comparingDouble(h -> h.distance));
-
-        int lastEmpty = -1;
-        for (Hit hit : hits) {
-            if (handler != null && !handler.getStackInSlot(hit.index).isEmpty()) {
-                return lastEmpty;
-            }
-            lastEmpty = hit.index;
-        }
-
-        return lastEmpty;
-    }
-
-    /** Returns the nearest occupied cell intersected by the view ray, or {@code -1} on a miss. */
-    public static int traceCubes(ViewRay ray, BlockPos blockPos, SinglesStackBE be) {
-        StackItemStorage handler = be.getItems();
-
-        int blockRotation = be.getRotation();
-        double closestDist = Double.MAX_VALUE;
-        int closestIndex = -1;
-
-        for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
-            ItemStack stack = handler.getStackInSlot(storageIndex);
-            if (stack.isEmpty()) continue;
-
-            AABB cubeBox = GRID.worldBox(storageIndex, blockRotation, blockPos);
-            Vec3 hit = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
-
-            if (hit != null) {
-                double dist = hit.distanceTo(ray.eye());
-                if (dist < closestDist) {
-                    closestDist = dist;
-                    closestIndex = storageIndex;
-                }
-            }
-        }
-
-        return closestIndex;
-    }
-
-    /**
      * The visual column a storage column occupies under a block rotation. Rotation permutes x and z
      * but never y, so columns always map to columns and only their horizontal identity moves.
      */
@@ -221,6 +138,4 @@ public final class SinglesCubeIdx {
     public static int indexFromColumn(int storageColumn, int y) {
         return y * LAYER_SIZE + storageColumn;
     }
-
-    private record Hit(int index, double distance) {}
 }

@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -25,16 +24,20 @@ public interface EditAuthority {
     ServerPlayer automationActor(ServerLevel level);
 
     /**
-     * Side-effect-free placement permission, where the loader offers protection queries. Growth
-     * consults it before promising space, and {@link #place} answers to it as well.
+     * Side-effect-free placement permission, where the loader offers protection queries. It is the
+     * loader's part of {@link WorldEdits#mayPlace}, which every placement passes before {@link
+     * #place}.
      */
-    default boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
+    default boolean mayPlace(ServerPlayer placer, ServerLevel level, BlockPos pos) {
         return true;
     }
 
-    /** Places through loader-native protection, restoring denied state before publication. */
+    /**
+     * Places a block {@link #mayPlace} has allowed, through any loader-native placement event,
+     * restoring denied state before publication.
+     */
     boolean place(
-            Player placer,
+            ServerPlayer placer,
             ServerLevel level,
             BlockPos pos,
             BlockState state,

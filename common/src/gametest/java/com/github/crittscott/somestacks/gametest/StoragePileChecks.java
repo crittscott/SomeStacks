@@ -3,35 +3,46 @@ package com.github.crittscott.somestacks.gametest;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalAt;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.withPolicy;
 
 import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+import com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation;
+import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.StackPlacement;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ComparatorBlockEntity;
 import net.minecraft.world.phys.shapes.Shapes;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
- * Storage pile behavior in a live level that does not touch loader-native automation directly:
- * deposits filling partial stacks before empty ones, growth when a pile fills, and settling
- * consolidating, packing, and sorting. Capability/Transfer-API-facing tests stay in each loader's
- * own {@code StoragePileGameTests}.
+ * Storage pile behavior in a live level: deposits filling partial stacks before empty ones, growth
+ * when a pile fills, automation insertion addressing the slot it names, obstruction refusing
+ * growth, and settling consolidating, packing, and sorting. Player scenarios take the loader's
+ * click; automation scenarios take the loader's {@link Automation} view.
  */
 public final class StoragePileChecks {
     private StoragePileChecks() {}
@@ -197,19 +208,20 @@ public final class StoragePileChecks {
     }
 
     /**
-     * The fixture seeds 60 stone in local slot 5 and offers eight more; slot 5 reaches 64 and slot
-     * 0 receives four.
+     * Internal deposit-placement check: the fixture seeds 60 stone in local slot 5 and deposits
+     * eight more through the block entity, with no player; slot 5 reaches 64 and slot 0 receives
+     * four. It pins which slots a deposit fills before settlement, which no click shows.
      *
-     * <p>To check manually, V-deposit 60 stone into Storage, then eight more in Survival. All eight
-     * leave the hand; one full stack and a four-item remainder occupy the pile. The exact
-     * pre-settlement slot placement is an internal assertion.
+     * <p>The nearest real-trigger check is {@link #fullPileGrowsByOneBlock}. To see the visible
+     * part, V-deposit 60 stone into Storage, then eight more in Survival: all eight leave the hand,
+     * and one full stack and a four-item remainder occupy the pile.
      */
     public static void depositFillsCompatiblePartialBeforeEmptySlot(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         storage.getItems().insertItem(5, new ItemStack(Items.STONE, 60), false);
         ItemStack offered = new ItemStack(Items.STONE, 8);
 
-        int moved = storage.deposit(offered);
+        int moved = storage.deposit(offered, null);
 
         checkEquals(8, moved, "Moved count");
         checkEquals(0, offered.getCount(), "Offered remainder");
@@ -220,36 +232,61 @@ public final class StoragePileChecks {
 
     /**
      * To reproduce: allow pile height of at least two, fill all 27 slots of a Storage block with
-     * full dirt stacks, and leave replaceable, unobstructed space above. V-deposit one stone. A
-     * second Storage block appears and stores it; the hand is emptied in Survival.
+     * full dirt stacks, and leave replaceable, unobstructed space above. Select Storage and
+     * V-deposit one stone into its side. A second Storage block appears and stores it; the hand is
+     * emptied in Survival.
      */
-    public static void fullPileGrowsByOneBlock(GameTestHelper helper) {
+    public static void fullPileGrowsByOneBlock(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
             storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
-        ItemStack offered = new ItemStack(Items.STONE, 1);
-
-        int moved = storage.deposit(offered);
+        withPolicy(
+                Map.of(ServerConfig.Setting.MAX_PILE_HEIGHT, 2),
+                () -> {
+                    try (InteractionChecks.PlayerScope scope =
+                            new InteractionChecks.PlayerScope(
+                                    factory.apply(new ItemStack(Items.STONE)))) {
+                        var player = scope.player;
+                        ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+                        click.click(
+                                player,
+                                InteractionChecks.HAND,
+                                InteractionChecks.aim(player, storage.getBlockPos(), 0.2, 0.2));
+                        check(player.getMainHandItem().isEmpty(), "Growth deposit kept the stone");
+                    }
+                });
         StoragePile pile = storage.pile();
-
-        checkEquals(1, moved, "Moved count");
-        checkEquals(0, offered.getCount(), "Offered remainder");
         check(pile != null, "Pile did not resolve");
         checkEquals(2, pile.height(), "Pile height");
-        checkEquals(
-                Items.STONE,
-                pile.getSlot(StorageStackBE.SLOTS).getItem(),
-                "First slot in grown block");
+        checkEquals(Items.STONE, pile.getSlot(27).getItem(), "First slot in grown block");
         helper.succeed();
     }
 
     /**
      * To reproduce: build a two-block Storage pile, give its base one redstone-torch turn and its
-     * top block three, fill both blocks with full dirt stacks, then V-deposit one stone. The new
-     * third block shows the base's layout, not the top block's.
+     * top block three, fill both blocks with full dirt stacks, then select Storage and V-deposit
+     * one stone into the base. The new third block shows the base's layout, not the top block's.
      */
-    public static void grownBlockTakesTheBaseFacing(GameTestHelper helper) {
+    public static void grownBlockTakesTheBaseFacing(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
+        growThreeBlockPileFromRotatedBase(helper, factory, click);
+        helper.succeed();
+    }
+
+    /**
+     * The scenario of {@link #grownBlockTakesTheBaseFacing} without its success call, for a loader
+     * wrapper that asserts more about the same growth afterward.
+     */
+    public static void growThreeBlockPileFromRotatedBase(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
         lower.setRotation(1);
@@ -259,15 +296,27 @@ public final class StoragePileChecks {
                 block.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
             }
         }
-
-        checkEquals(1, lower.deposit(new ItemStack(Items.STONE)), "Moved count");
+        withPolicy(
+                Map.of(ServerConfig.Setting.MAX_PILE_HEIGHT, 3),
+                () -> {
+                    try (InteractionChecks.PlayerScope scope =
+                            new InteractionChecks.PlayerScope(
+                                    factory.apply(new ItemStack(Items.STONE)))) {
+                        var player = scope.player;
+                        ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+                        click.click(
+                                player,
+                                InteractionChecks.HAND,
+                                InteractionChecks.aim(player, lower.getBlockPos(), 0.2, 0.2));
+                        check(player.getMainHandItem().isEmpty(), "Growth deposit kept the stone");
+                    }
+                });
 
         StorageStackBE grown =
                 (StorageStackBE) helper.getLevel().getBlockEntity(upper.getBlockPos().above());
         check(grown != null, "Pile did not grow");
         checkEquals(1, grown.getRotation(), "Grown block rotation");
         checkEquals(3, upper.getRotation(), "Old top rotation changed");
-        helper.succeed();
     }
 
     /**
@@ -385,9 +434,11 @@ public final class StoragePileChecks {
 
     /**
      * Internal settlement fixture: directly seed stone stacks of 40 and 30 with {variant:1} and two
-     * stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, and two wooden
-     * pickaxes with different damage. Settlement orders dirt, untagged stone, tagged stone stacks
-     * of 64, 6, and 10, then the pickaxes in ascending damage order.
+     * stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, stone with an
+     * explicit empty tag, and two wooden pickaxes with different damage. Settlement orders dirt,
+     * untagged stone, tagged stone stacks of 64, 6, and 10, the empty-tag stone (its tag text "{}"
+     * sorts after "{variant:...}", and it stays apart from untagged stone), then the pickaxes in
+     * ascending damage order.
      *
      * <p>For a visible check, /give stone with those tags and deposit the same totals into Storage.
      * Also deposit dirt, untagged stone, and wooden pickaxes with different damage. After
@@ -419,6 +470,9 @@ public final class StoragePileChecks {
         storage.getItems().insertItem(2, new ItemStack(Items.STONE), false);
         storage.getItems().insertItem(3, undamaged, false);
         storage.getItems().insertItem(4, new ItemStack(Items.DIRT), false);
+        ItemStack emptyTag = new ItemStack(Items.STONE);
+        emptyTag.setTag(new CompoundTag());
+        storage.getItems().insertItem(5, emptyTag, false);
 
         StoragePile pile = storage.pile();
         check(pile != null, "Pile did not resolve");
@@ -433,11 +487,15 @@ public final class StoragePileChecks {
         checkEquals(firstTag, pile.getSlot(2).getTag(), "First tag identity");
         checkEquals(firstTag, pile.getSlot(3).getTag(), "Partial stack tag identity");
         checkEquals(secondTag, pile.getSlot(4).getTag(), "Distinct tag identity");
-        checkEquals(Items.WOODEN_PICKAXE, pile.getSlot(5).getItem(), "First pickaxe item");
-        checkEquals(Items.WOODEN_PICKAXE, pile.getSlot(6).getItem(), "Second pickaxe item");
-        checkEquals(0, pile.getSlot(5).getDamageValue(), "Undamaged pickaxe ordering");
-        checkEquals(1, pile.getSlot(6).getDamageValue(), "Damaged pickaxe ordering");
-        check(pile.getSlot(7).isEmpty(), "Packed contents left a gap");
+        checkEquals(Items.STONE, pile.getSlot(5).getItem(), "Empty-tag stone item");
+        checkEquals(1, pile.getSlot(5).getCount(), "Empty-tag stone merged with untagged stone");
+        checkEquals(new CompoundTag(), pile.getSlot(5).getTag(), "Empty tag treated as absent");
+        checkEquals(1, pile.getSlot(1).getCount(), "Untagged stone absorbed empty-tag stone");
+        checkEquals(Items.WOODEN_PICKAXE, pile.getSlot(6).getItem(), "First pickaxe item");
+        checkEquals(Items.WOODEN_PICKAXE, pile.getSlot(7).getItem(), "Second pickaxe item");
+        checkEquals(0, pile.getSlot(6).getDamageValue(), "Undamaged pickaxe ordering");
+        checkEquals(1, pile.getSlot(7).getDamageValue(), "Damaged pickaxe ordering");
+        check(pile.getSlot(8).isEmpty(), "Packed contents left a gap");
         checkEquals(40, first.getCount(), "Settlement mutated its first source stack");
         checkEquals(30, compatible.getCount(), "Settlement mutated its second source stack");
         check(
@@ -447,18 +505,70 @@ public final class StoragePileChecks {
     }
 
     /**
+     * To reproduce: rename stone "Alpha" and "Beta" in an anvil. Store a full stack of dirt in a
+     * Storage Stack, then three Alpha, two Beta, and four Alpha in separate later cells. After
+     * settlement the dirt stays in the base cell, the two Alpha stacks merge into one cell of
+     * seven, and Beta keeps its own cell of two. The test seeds the separated cells directly; that
+     * each written cell holds its own stack, and that the already-settled dirt cell is not
+     * rewritten, are internal ownership checks.
+     */
+    public static void settleMergesOnlyIdenticalNames(GameTestHelper helper) {
+        StorageStackBE storage = placeStorage(helper, ORIGIN);
+        ItemStack dirt = new ItemStack(Items.DIRT, 64);
+        ItemStack alphaFirst =
+                new ItemStack(Items.STONE, 3).setHoverName(Component.literal("Alpha"));
+        ItemStack beta = new ItemStack(Items.STONE, 2).setHoverName(Component.literal("Beta"));
+        ItemStack alphaSecond =
+                new ItemStack(Items.STONE, 4).setHoverName(Component.literal("Alpha"));
+        storage.getItems().setStackInSlot(0, dirt);
+        storage.getItems().setStackInSlot(5, alphaFirst);
+        storage.getItems().setStackInSlot(10, beta);
+        storage.getItems().setStackInSlot(15, alphaSecond);
+
+        StoragePile pile = storage.pile();
+        check(pile != null, "Pile did not resolve");
+        pile.settle();
+
+        check(pile.getSlot(0) == dirt, "A settled cell was rewritten");
+        checkEquals(7, pile.getSlot(1).getCount(), "Identically named stacks did not merge");
+        checkEquals("Alpha", pile.getSlot(1).getHoverName().getString(), "Merged name");
+        checkEquals(2, pile.getSlot(2).getCount(), "Differently named stack count");
+        checkEquals("Beta", pile.getSlot(2).getHoverName().getString(), "Separate name");
+        check(pile.getSlot(3).isEmpty(), "Packed contents left a gap");
+        check(
+                pile.getSlot(1) != alphaFirst && pile.getSlot(1) != alphaSecond,
+                "A written cell kept a source stack");
+        check(pile.getSlot(1).getTag() != alphaFirst.getTag(), "A written cell shares source NBT");
+        check(pile.getSlot(1) != pile.getSlot(2), "Two cells share one stack");
+        checkEquals(3, alphaFirst.getCount(), "Settlement mutated a source stack");
+        checkEquals(4, alphaSecond.getCount(), "Settlement mutated a source stack");
+        helper.succeed();
+    }
+
+    /**
      * To reproduce: store one full stone stack and one dirt item in Storage. Plain-right-click the
      * stone cell with an empty hand. The stone enters the hand, and after the scheduled block
      * update the remaining dirt packs into the base slot. The test directly seeds the initial order
      * and waits two ticks.
      */
-    public static void extractionSettlesOnScheduledBlockTick(GameTestHelper helper) {
+    public static void extractionSettlesOnScheduledBlockTick(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         storage.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
         storage.getItems().insertItem(1, new ItemStack(Items.DIRT, 1), false);
 
-        ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY, null);
-        checkEquals(64, extracted.getCount(), "Extracted count");
+        try (InteractionChecks.PlayerScope scope =
+                new InteractionChecks.PlayerScope(factory.apply(ItemStack.EMPTY))) {
+            var player = scope.player;
+            click.click(
+                    player,
+                    InteractionChecks.HAND,
+                    InteractionChecks.aim(player, storage.getBlockPos(), 0.2, 0.2));
+            checkEquals(Items.STONE, player.getMainHandItem().getItem(), "Extracted item");
+            checkEquals(64, player.getMainHandItem().getCount(), "Extracted count");
+        }
 
         helper.runAfterDelay(
                 2,
@@ -509,34 +619,24 @@ public final class StoragePileChecks {
     }
 
     /**
-     * The fixture puts a full stone stack in the lower block of a two-block pile and checks that
-     * both blocks return the pile signal.
+     * The fixture fills every slot of the lower block of a two-block pile with full stone stacks
+     * and leaves the upper block empty, so the pile is half full. Both blocks read 8: a lower-only
+     * read would give 15 and an upper-only read 0.
      *
      * <p>To reproduce: create a permanent two-block Storage pile by filling until it grows, then
-     * toggling permanence. Extract until only one full stack remains. Put outward-facing
-     * comparators beside both blocks on solid supports; both read the same whole-pile fill.
+     * toggling permanence. Extract until exactly 27 full stacks remain, which settle into the lower
+     * block. Put outward-facing comparators beside both blocks on solid supports; both output 8.
      */
     public static void comparatorReadsTheWholePileFromEveryBlock(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
-        StoragePile pile = lower.pile();
-        check(pile != null, "Pile did not resolve");
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            lower.getItems().insertItem(slot, new ItemStack(Items.STONE, 64), false);
+        }
+        check(lower.pile() != null, "Pile did not resolve");
 
-        int expected = pile.comparatorSignal();
-        int lowerSignal =
-                lower.getBlockState()
-                        .getBlock()
-                        .getAnalogOutputSignal(
-                                lower.getBlockState(), helper.getLevel(), lower.getBlockPos());
-        int upperSignal =
-                upper.getBlockState()
-                        .getBlock()
-                        .getAnalogOutputSignal(
-                                upper.getBlockState(), helper.getLevel(), upper.getBlockPos());
-
-        checkEquals(expected, lowerSignal, "Lower comparator signal");
-        checkEquals(expected, upperSignal, "Upper comparator signal");
+        checkEquals(8, signalAt(helper, ORIGIN), "Lower comparator signal");
+        checkEquals(8, signalAt(helper, ORIGIN.above()), "Upper comparator signal");
         helper.succeed();
     }
 
@@ -632,27 +732,119 @@ public final class StoragePileChecks {
     }
 
     /**
-     * The fixture reads an empty pile, adds one stone, then fills all 27 slots with full stone
-     * stacks: signals are 0, 1, and 15.
+     * Internal Storage slot check: insert eight stone into local slot 20 through the loader's
+     * automation view, reject dirt offered to that now-incompatible slot, then wait for the
+     * settlement the insertion scheduled. Before settlement stone occupies slot 20; afterward it
+     * occupies slot 0. Simulation and caller-owned input are unchanged.
      *
-     * <p>To reproduce: make a permanent one-block Storage pile with an outward-facing comparator.
-     * Empty it, deposit one stone, then fill it without allowing growth. Read 0, 1, and 15 after
-     * updates.
+     * <p>To check manually, use slot-addressing automation to insert into an empty Storage slot,
+     * then observe the next settlement pack its contents toward the base. Precise pre-tick
+     * placement and dry-run results require an automation probe.
      */
-    public static void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
+    public static void capabilityInsertionAnswersForTheSlotItIsGiven(
+            GameTestHelper helper, Function<BlockEntity, Automation> automation) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
-        StoragePile pile = storage.pile();
-        check(pile != null, "Pile did not resolve");
+        Automation capability = automation.apply(storage);
+        ItemStack offered = new ItemStack(Items.STONE, 8);
 
-        checkEquals(0, pile.comparatorSignal(), "Empty pile signal");
+        // A pile is a bag, so the slot named takes what a slot takes — here all eight, in slot 20
+        // rather than at the base a deposit would have filled.
+        checkEquals(
+                0,
+                capability.insert(20, offered, true).getCount(),
+                "Simulated insertion into an empty slot");
+        checkEquals(
+                0,
+                capability.insert(20, offered, false).getCount(),
+                "Committed insertion into an empty slot");
+        checkEquals(8, offered.getCount(), "Capability mutated caller input");
+        checkEquals(
+                8,
+                storage.getItems().getStackInSlot(20).getCount(),
+                "The slot named should hold the items");
 
-        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 1), false);
-        checkEquals(1, pile.comparatorSignal(), "Signal for a single item in a whole pile");
+        // An incompatible slot takes nothing rather than redirecting to available space elsewhere.
+        checkEquals(
+                8,
+                capability.insert(20, new ItemStack(Items.DIRT, 8), true).getCount(),
+                "Simulated insertion into an occupied incompatible slot");
 
+        // Nothing here settles the pile: the settlement the insertion scheduled does.
+        helper.runAfterDelay(
+                2,
+                () -> {
+                    checkEquals(
+                            8,
+                            storage.getItems().getStackInSlot(0).getCount(),
+                            "Scheduled settlement did not pack the insertion down to the base");
+                    check(
+                            storage.getItems().getStackInSlot(20).isEmpty(),
+                            "Scheduled settlement left the inserted slot occupied");
+                    checkEquals(
+                            0,
+                            count(storage.getItems(), Items.DIRT),
+                            "Refused insertion stored something");
+                    helper.succeed();
+                });
+    }
+
+    /**
+     * To reproduce: fill all 27 slots of a Storage block with full dirt stacks, allow height above
+     * one, and put solid stone directly above. Offer four stone through automation to first
+     * headroom slot 27. All four are refused and the obstruction remains. A simulated offer must
+     * report the same refusal without modifying input.
+     */
+    public static void obstructionPreventsGrowthAndSimulationReportsNoRoom(
+            GameTestHelper helper, Function<BlockEntity, Automation> automation) {
+        StorageStackBE storage = placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.STONE, 64), false);
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
-        checkEquals(15, pile.comparatorSignal(), "Full pile signal");
+        BlockPos above = helper.absolutePos(ORIGIN.above());
+        helper.getLevel().setBlock(above, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+        ItemStack offered = new ItemStack(Items.STONE, 4);
+
+        withPolicy(
+                Map.of(ServerConfig.Setting.MAX_PILE_HEIGHT, 2),
+                () -> {
+                    Automation capability = automation.apply(storage);
+                    // The first advertised slot past what the pile holds: the one insertion grows
+                    // into, and so the only one an obstruction can refuse.
+                    int headroom = 27;
+                    checkEquals(
+                            4,
+                            capability.insert(headroom, offered, true).getCount(),
+                            "Simulated remainder");
+                    checkEquals(
+                            4,
+                            capability.insert(headroom, offered, false).getCount(),
+                            "Committed remainder");
+                });
+
+        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
+        check(helper.getLevel().getBlockState(above).is(Blocks.STONE), "Obstruction changed");
+        helper.succeed();
+    }
+
+    /**
+     * Internal shared-view check: seed twelve stone in the base of two contiguous Storage blocks.
+     * Slot 0 and advertised slot count agree through automation views attached to either block.
+     *
+     * <p>To reproduce visibly, make a permanent two-block Storage pile, leave twelve stone stored,
+     * and attach machines at different heights. Both access the same inventory and capacity.
+     */
+    public static void capabilityFromEveryBlockAddressesTheSamePile(
+            GameTestHelper helper, Function<BlockEntity, Automation> automation) {
+        StorageStackBE lower = placeStorage(helper, ORIGIN);
+        StorageStackBE upper = placeStorage(helper, ORIGIN.above());
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12), false);
+
+        Automation lowerCapability = automation.apply(lower);
+        Automation upperCapability = automation.apply(upper);
+
+        checkEquals(12, lowerCapability.stackAt(0).getCount(), "Lower capability count");
+        checkEquals(12, upperCapability.stackAt(0).getCount(), "Upper capability count");
+        checkEquals(lowerCapability.slots(), upperCapability.slots(), "Capability shape");
         helper.succeed();
     }
 }

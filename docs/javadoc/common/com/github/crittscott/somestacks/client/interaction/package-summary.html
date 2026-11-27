@@ -87,22 +87,14 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="DepositIntoAdjacentStackRule.html" title="class in com.github.crittscott.somestacks.client.interaction">DepositIntoAdjacentStackRule</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Consumes a modifier-plus-item click whose neighboring destination is Singles or Bar.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DepositIntoClickedStackRule.html" title="class in com.github.crittscott.somestacks.client.interaction">DepositIntoClickedStackRule</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Consumes a modifier-plus-item click classified as a deposit into the clicked stack.</div>
-</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="ExtractionRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ExtractionRule</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Consumes an unmodified, nonsneaking click on a stack, suppressing local item use.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">One right-click, in the terms the rules ask about: who clicked, what they hit, which modifiers
- were held, and the placement mode in force.</div>
+<div class="block">One right-click, in the terms the rules ask about: who clicked, with which hand, which stack type
+ they hit, whether the Stack Modifier and sneak were held, and the placement mode in force.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab1"><a href="InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab1">
@@ -110,27 +102,31 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InteractionRuleRegistry.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionRuleRegistry</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">The ordered rule lists behind each loader's right-click callbacks, one list per kind of click.</div>
+<div class="block">The ordered rule lists behind each loader's right-click callbacks: one for clicks on a block,
+ one for clicks that reach no block (an empty-hand click at air, or a held-item use).</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="ModeCycleRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ModeCycleRule</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Modifier plus a right-click at open air cycles the placement mode.</div>
+<div class="block">Modifier plus a main-hand right-click at open air cycles the placement mode.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PlaceAdjacentGenericRule.html" title="class in com.github.crittscott.somestacks.client.interaction">PlaceAdjacentGenericRule</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ModifiedItemClickRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ModifiedItemClickRule</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Consumes a modifier-plus-item click not claimed by an earlier rule when placement/deposit mode is
- selected.</div>
+<div class="block">Consumes a modifier-plus-item click in a placement mode, on any block.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="RotateBlockWithRedstoneTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateBlockWithRedstoneTorchRule</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ModifierItemUseRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ModifierItemUseRule</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Consumes a main-hand item use while the Stack Modifier is held, the same uses the server refuses.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="RotateBlockWithRedstoneTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateBlockWithRedstoneTorchRule</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Consumes a sneaking redstone-torch click on Storage or Singles so local item use does not run.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="RotateItemWithSoulTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateItemWithSoulTorchRule</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="RotateItemWithSoulTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateItemWithSoulTorchRule</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Consumes a sneaking soul-torch click on Singles so local item use does not run.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TogglePermanentRule.html" title="class in com.github.crittscott.somestacks.client.interaction">TogglePermanentRule</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TogglePermanentRule.html" title="class in com.github.crittscott.somestacks.client.interaction">TogglePermanentRule</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Consumes an empty-main-hand modifier click on Storage while Toggle Permanent mode is selected.</div>
 </div>
 </div>

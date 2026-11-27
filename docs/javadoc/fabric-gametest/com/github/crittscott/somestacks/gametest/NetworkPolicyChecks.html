@@ -100,20 +100,25 @@ loadScripts(document, 'script');</script>
  can.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#namespacePolicyIsPreparedAndBounded(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">namespacePolicyIsPreparedAndBounded</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#gestureStatePacketValidatesOnDecode(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">gestureStatePacketValidatesOnDecode</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">No in-game form: an unmodified client only sends modes it can select.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#namespacePolicyIsPreparedAndBounded(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">namespacePolicyIsPreparedAndBounded</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: put mixed-case, duplicate, and malformed namespaces in gen_mods and
  disable_mods, then reload and inspect both lists.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#policyPacketsValidateBeforePublication(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">policyPacketsValidateBeforePublication</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#policyPacketsValidateBeforePublication(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">policyPacketsValidateBeforePublication</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: disable Storage and Bar, enable Singles, and reload; mode cycling skips
  the disabled types while /ss write list uses the new gallery list.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#publicationSyncsOnlyChangedClientPolicy(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">publicationSyncsOnlyChangedClientPolicy</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#publicationSyncsOnlyChangedClientPolicy(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">publicationSyncsOnlyChangedClientPolicy</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: change pile height or the exact-item deny list, then change a stack
  enable flag or a gallery/mod-deny namespace.</div>
 </div>
@@ -178,7 +183,18 @@ loadScripts(document, 'script');</script>
  the disabled types while /ss write list uses the new gallery list. Reconnect to a server with
  different lists and enable flags to see the whole snapshot replaced. This fixture also
  injects malformed wire data and checks the maximum legal payload, which ordinary UI cannot
- send.</div>
+ send. Applying a snapshot here may also move the client's selected mode off a disabled type;
+ <a href="ClientGestureChecks.html" title="class in com.github.crittscott.somestacks.gametest"><code>ClientGestureChecks</code></a> owns those mode assertions.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="gestureStatePacketValidatesOnDecode(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>gestureStatePacketValidatesOnDecode</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">gestureStatePacketValidatesOnDecode</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">No in-game form: an unmodified client only sends modes it can select. This guards the one
+ input the server takes from a player's client: every mode survives the trip under its fixed
+ wire id, and an unknown id or a truncated packet is rejected on the network thread before
+ any gesture state changes. The id table is written out here rather than read from <code>StackMode</code>, so reordering the enum cannot change it unnoticed.</div>
 </section>
 </li>
 </ul>

@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.client.ClientServerSettings;
+import com.github.crittscott.somestacks.client.ForgeClientEvents;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,7 +22,7 @@ final class ForgePacketHandlers {
         NetworkEvent.Context ctx = context.get();
         ctx.enqueueWork(() ->
                 DistExecutor.unsafeRunWhenOn(
-                        Dist.CLIENT, () -> () -> ClientServerSettings.apply(msg)));
+                        Dist.CLIENT, () -> () -> ForgeClientEvents.applyServerSettings(msg)));
         ctx.setPacketHandled(true);
     }
 

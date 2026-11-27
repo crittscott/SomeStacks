@@ -76,11 +76,11 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">BarColumnChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Bar support and collapse in a live level that does not touch loader-native automation directly:
- item validity, grounding at the bottom of a column, footprint overlap deciding support across the
- alternating layer orientations, and player extraction dropping what it unsupports.
- Capability/Transfer-API-facing tests, and Forge's event-bus-driven protection test, stay in each
- loader's own <code>BarColumnGameTests</code>.</div>
+<div class="block">Bar support and collapse in a live level: item validity, grounding at the bottom of a column,
+ footprint overlap deciding support across the alternating layer orientations, player extraction
+ dropping what it unsupports, and automated extraction backfilling from the top instead. Player
+ scenarios take the loader's click; automation scenarios take the loader's <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold.Automation</code></a>
+ view. Forge's event-bus-driven protection test stays in Forge's <code>BarColumnGameTests</code>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -95,6 +95,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#automationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">automationBackfillsWithoutDropping</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: allow the chosen ingot for Bar, then use a machine that walks positions
+ bottom-up to insert ten identical ingots.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#backfillKeepsABarItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">backfillKeepsABarItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Synthetic admission fixture: directly seed a refused stick at Bar slot 1 beside an accepted
+ ingot at slot 0, then automate extraction from slot 0.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barAdmissionFollowsTheIngotTag(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barAdmissionFollowsTheIngotTag</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -119,7 +133,23 @@ loadScripts(document, 'script');</script>
 <div class="block">The fixture seeds one top-layer bar below one dependent bar in the next block.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#collapseDoesNotMergeDifferentTags(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">collapseDoesNotMergeDifferentTags</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilityInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">capabilityInsertionAnswersForThePositionItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Internal positional insertion check: offer four accepted ingots to unsupported slot 8, then
+ grounded slot 0, through the loader's automation view.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilitySimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">capabilitySimulationDoesNotMutateExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Internal extraction simulation: put one accepted ingot at Bar slot 0 and simulate extracting
+ up to 64 through the loader's automation view.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#collapseDoesNotMergeDifferentTags(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">collapseDoesNotMergeDifferentTags</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: use /give to obtain two accepted ingots with distinct custom NBT, such as
  {somestacks_test_variant:1} and {somestacks_test_variant:2}.</div>
@@ -137,61 +167,63 @@ loadScripts(document, 'script');</script>
  contiguous upper block empty.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReservesZeroForAnEmptyColumn(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReservesZeroForAnEmptyColumn</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#differentlyOrientedSeamUsesFootprintOverlap(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">differentlyOrientedSeamUsesFootprintOverlap</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The fixture checks an empty Bar block, one occupied position, then all 64 positions: signals
- are 0, 1, and 15.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#differentlyOrientedSeamUsesFootprintOverlap(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">differentlyOrientedSeamUsesFootprintOverlap</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The fixture directly fills a top-layer position of the lower block and deposits into an
  overlapping bottom position of the upper block.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#firstSeamSupportedBy(int)" class="member-name-link">firstSeamSupportedBy</a><wbr>(int&nbsp;seamIndex)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#firstSupportedBy(int,int,int)" class="member-name-link">firstSupportedBy</a><wbr>(int&nbsp;lowerIndex,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#firstSeamSupportedBy(int)" class="member-name-link">firstSeamSupportedBy</a><wbr>(int&nbsp;seamIndex)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#firstSupportedBy(int,int,int)" class="member-name-link">firstSupportedBy</a><wbr>(int&nbsp;lowerIndex,
  int&nbsp;from,
  int&nbsp;to)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCascadeConsolidatesAcrossBlocks</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">playerCascadeConsolidatesAcrossBlocks</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: build a chain of one bar in each of the sixteen layers of two Bar blocks, each
  overlapping its sole support below.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerCascadeDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCascadeDropsWithBlockDropsDisabled</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerCascadeDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">playerCascadeDropsWithBlockDropsDisabled</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: set /gamerule doTileDrops false and build a chain of one supported bar in each
  layer of two Bar blocks.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerExtractionDropsUnsupportedBars</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">playerExtractionDropsUnsupportedBars</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: deposit one accepted ingot on the bottom layer and one overlapping bar on the
  next layer, with no other supports.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedBy(int,int,int)" class="member-name-link">supportedBy</a><wbr>(int&nbsp;lowerIndex,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedBy(int,int,int)" class="member-name-link">supportedBy</a><wbr>(int&nbsp;lowerIndex,
  int&nbsp;from,
  int&nbsp;to)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">supportedNeighborSurvivesPlayerExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">supportedNeighborSurvivesPlayerExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: place two neighboring bottom bars and an upper bar overlapping the second.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upperBarRequiresOverlappingSupport(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">upperBarRequiresOverlappingSupport</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upperBarRequiresOverlappingSupport(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">upperBarRequiresOverlappingSupport</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: create one bottom-layer Bar with an accepted ingot.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#validityAndBottomGroundingAreEnforced(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">validityAndBottomGroundingAreEnforced</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#validityAndBottomGroundingAreEnforced(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">validityAndBottomGroundingAreEnforced</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: select Bar with V + right-click air, then V + right-click a floor with two
  accepted ingots.</div>
 </div>
@@ -240,9 +272,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
 <h3>playerExtractionDropsUnsupportedBars</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerExtractionDropsUnsupportedBars</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerExtractionDropsUnsupportedBars</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
 <div class="block">To reproduce: deposit one accepted ingot on the bottom layer and one overlapping bar on the
  next layer, with no other supports. Release V and plain-right-click the bottom bar with an
  empty hand. One ingot enters the hand, the unsupported upper bar drops, and the empty block
@@ -250,9 +284,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
 <h3>supportedNeighborSurvivesPlayerExtraction</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">supportedNeighborSurvivesPlayerExtraction</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">supportedNeighborSurvivesPlayerExtraction</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
 <div class="block">To reproduce: place two neighboring bottom bars and an upper bar overlapping the second.
  Plain-right-click the first bottom bar with an empty hand. The upper bar remains supported by
  the second bottom bar and no bar drops.</div>
@@ -301,9 +337,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="playerCascadeDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="playerCascadeDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
 <h3>playerCascadeDropsWithBlockDropsDisabled</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCascadeDropsWithBlockDropsDisabled</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCascadeDropsWithBlockDropsDisabled</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
 <div class="block">To reproduce: set /gamerule doTileDrops false and build a chain of one supported bar in each
  layer of two Bar blocks. Extract the lowest bar with an empty hand. One ingot enters the
  hand, fifteen drop from their originating blocks, and both blocks disappear. Restore the
@@ -311,9 +349,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
 <h3>playerCascadeConsolidatesAcrossBlocks</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCascadeConsolidatesAcrossBlocks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCascadeConsolidatesAcrossBlocks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
 <div class="block">To reproduce: build a chain of one bar in each of the sixteen layers of two Bar blocks, each
  overlapping its sole support below. Plain-right-click the lowest bar with an empty hand. One
  ingot enters the hand and fifteen drop; both empty blocks disappear. The check inspects drops
@@ -321,25 +361,16 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="collapseDoesNotMergeDifferentTags(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="collapseDoesNotMergeDifferentTags(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
 <h3>collapseDoesNotMergeDifferentTags</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">collapseDoesNotMergeDifferentTags</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">collapseDoesNotMergeDifferentTags</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
 <div class="block">To reproduce: use /give to obtain two accepted ingots with distinct custom NBT, such as
  {somestacks_test_variant:1} and {somestacks_test_variant:2}. Place them in the two
  second-layer positions supported by a single bottom bar. Extract that support with an empty
- hand. Both upper bars drop with their original tags and remain distinct stacks.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="comparatorReservesZeroForAnEmptyColumn(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>comparatorReservesZeroForAnEmptyColumn</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReservesZeroForAnEmptyColumn</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">The fixture checks an empty Bar block, one occupied position, then all 64 positions: signals
- are 0, 1, and 15.
-
- <p>To reproduce the visible readings: place a comparator facing away from a Bar block,
- deposit one accepted ingot, then fill all positions. Read 1 and 15; after extracting all
- bars, the block disappears and the comparator reads 0.</div>
+ hand. Both upper bars drop with their original tags and remain distinct stacks; the support
+ goes to the hand.</div>
 </section>
 </li>
 <li>
@@ -365,6 +396,61 @@ loadScripts(document, 'script');</script>
  <p>To check the visible capacity change, fill a lower Bar block and add one bar in a
  supported block above. The comparator reads 8. Extract the upper bar; its empty block
  disappears and the full remaining block reads 15.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="automationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>automationBackfillsWithoutDropping</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">automationBackfillsWithoutDropping</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce: allow the chosen ingot for Bar, then use a machine that walks positions
+ bottom-up to insert ten identical ingots. Extract one from bottom position 0 through
+ automation. Nine remain, position 0 is backfilled from the topmost bar, and no ingot item
+ entity is dropped.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="capabilityInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>capabilityInsertionAnswersForThePositionItIsGiven</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">capabilityInsertionAnswersForThePositionItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">Internal positional insertion check: offer four accepted ingots to unsupported slot 8, then
+ grounded slot 0, through the loader's automation view. Slot 8 refuses all four; slot 0
+ accepts exactly one, leaving the caller's offer unchanged. Simulation reports the same
+ capacity without storing.
+
+ <p>To check manually, use slot-addressing automation on an empty Bar fixture. An unsupported
+ target must not redirect to another position; a bottom target stores one bar. Simulation
+ requires a machine or probe exposing that operation.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="backfillKeepsABarItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>backfillKeepsABarItWouldNoLongerAccept</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">backfillKeepsABarItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">Synthetic admission fixture: directly seed a refused stick at Bar slot 1 beside an accepted
+ ingot at slot 0, then automate extraction from slot 0. The ingot is extracted and the stick
+ moves into slot 0 without dropping. A per-run tag isolates its drops from other fixtures. The
+ test does not change policy.
+
+ <p>To check manually, enable a data pack adding minecraft:oak_planks to the somestacks:ingots
+ item tag and run /reload. Store an ordinary ingot at bottom position 0 and oak planks at
+ position 1, then disable the data pack and /reload. Automate extraction from position 0; the
+ stored plank remains conserved despite its new refusal.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="capabilitySimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>capabilitySimulationDoesNotMutateExtraction</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">capabilitySimulationDoesNotMutateExtraction</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">Internal extraction simulation: put one accepted ingot at Bar slot 0 and simulate extracting
+ up to 64 through the loader's automation view. The result is one ingot and the stored bar
+ remains unchanged.
+
+ <p>No player gesture performs this dry run. Use slot-addressing automation or a probe that
+ simulates extraction without committing; the bar should remain visible.</div>
 </section>
 </li>
 <li>

@@ -83,6 +83,9 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         if (maxAmount == 0 || RunEdit.isInProgress()) return 0;
         Access access = access();
         if (access.run == null) return 0;
+        // Admission does not depend on the position, so a refused resource stops here rather
+        // than being offered to every slot of the run.
+        if (!blockEntity.admits(resource.toStack())) return 0;
         FabricRunItemStorage ledger = access.ledger;
         StackRun.InsertionTest insertion = access.run.insertionTest();
         long inserted = 0;
@@ -90,7 +93,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         // Match Transfer API stacking order: occupied slots first, then all positions bottom-up.
         for (int pass = 0; pass < 2; pass++) {
             for (int slot = 0; slot < slotCount && inserted < maxAmount; slot++) {
-                if (pass == 0 && ledger.currentStack(slot, access.run).isEmpty()) continue;
+                if (pass == 0 && ledger.currentStack(slot).isEmpty()) continue;
                 inserted +=
                         ledger.insertSlot(
                                 slot,
@@ -132,28 +135,27 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
 
     private record Access(FabricRunItemStorage ledger, StackRun<?> run) {}
 
-    /** Reads this ledger directly after its owner has been resolved by the caller. */
-    private ItemStack currentStack(int slot, StackRun<?> run) {
+    /**
+     * Reads this ledger's transaction-visible value at a position. Called on a resolved ledger,
+     * whose entity is its run's base, so the position reads the same run the caller resolved.
+     */
+    private ItemStack currentStack(int slot) {
         ItemStack pending = staged.get(slot);
-        return pending != null ? pending : run != null ? run.getSlot(slot) : ItemStack.EMPTY;
+        return pending != null ? pending : blockEntity.advertisedStack(slot);
     }
 
     /** A standalone slot view must resolve again each time; it may outlive a split or growth. */
-    private ItemStack currentStack(int slot) {
-        Access access = access();
-        return access.ledger.currentStack(slot, access.run);
+    private ItemStack resolvedStack(int slot) {
+        return access().ledger.currentStack(slot);
     }
 
-    private boolean isValid(ItemStack stack) {
-        return blockEntity.acceptsAutomation(stack);
-    }
-
+    /** What one position holds at most of this resource: the slot limit within its stack size. */
     private int capacity(ItemVariant resource) {
-        return isStructural() ? 1 : resource.getItem().getMaxStackSize();
+        return Math.min(blockEntity.slotLimit(), resource.getItem().getMaxStackSize());
     }
 
     private boolean isStructural() {
-        return blockEntity.automationSlotLimit() == 1;
+        return blockEntity.slotLimit() == 1;
     }
 
     /** Records a slot's original live value once, then replaces its transaction-visible value. */
@@ -212,8 +214,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
                 if (ItemStack.isSameItemSameTags(original, result)) {
                     int difference = result.getCount() - original.getCount();
                     if (difference > 0) {
-                        ItemStack inserted = result.copy();
-                        inserted.setCount(difference);
+                        ItemStack inserted = result.copyWithCount(difference);
                         commitInsert(slot, inserted);
                     } else if (difference < 0) {
                         commitExtract(slot, -difference);
@@ -261,22 +262,25 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
                         && structuralExtractionSlot != slot) {
             return 0;
         }
-        ItemStack current = currentStack(slot, run);
+        ItemStack current = currentStack(slot);
         if (!current.isEmpty() && !resource.matches(current)) return 0;
         int amount = (int) Math.min(maxAmount, capacity(resource) - current.getCount());
         if (amount <= 0) return 0;
         ItemStack offered = resource.toStack(amount);
-        if (!isValid(offered)) return 0;
+        // The run decides how much this position takes; staging only that keeps the transaction
+        // from reporting more than the commit will insert.
         int accepted =
                 insertion != null
                         ? insertion.test(slot, offered)
                         : run.insertAt(slot, offered, true);
         if (accepted <= 0) return 0;
 
-        ItemStack result = current.isEmpty() ? offered : current.copy();
-        if (!current.isEmpty()) result.grow(amount);
+        ItemStack result =
+                current.isEmpty()
+                        ? offered.copyWithCount(accepted)
+                        : current.copyWithCount(current.getCount() + accepted);
         stage(slot, result, transaction, run);
-        return amount;
+        return accepted;
     }
 
     private long extractSlot(
@@ -295,7 +299,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
                         && structuralExtractionSlot != slot) {
             return 0;
         }
-        ItemStack current = currentStack(slot, run);
+        ItemStack current = currentStack(slot);
         if (current.isEmpty() || !resource.matches(current)) return 0;
         int amount = (int) Math.min(maxAmount, current.getCount());
         ItemStack result = current.copy();
@@ -316,7 +320,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
             StoragePreconditions.notBlankNotNegative(resource, maxAmount);
             Access access = access();
-            if (access.run == null) return 0;
+            if (access.run == null || !blockEntity.admits(resource.toStack())) return 0;
             return access.ledger.insertSlot(
                     slot, resource, maxAmount, transaction, access.run, null);
         }
@@ -330,25 +334,23 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
 
         @Override
         public boolean isResourceBlank() {
-            return currentStack(slot).isEmpty();
+            return resolvedStack(slot).isEmpty();
         }
 
         @Override
         public ItemVariant getResource() {
-            return ItemVariant.of(currentStack(slot));
+            return ItemVariant.of(resolvedStack(slot));
         }
 
         @Override
         public long getAmount() {
-            return currentStack(slot).getCount();
+            return resolvedStack(slot).getCount();
         }
 
         @Override
         public long getCapacity() {
             ItemVariant resource = getResource();
-            return resource.isBlank() && !isStructural()
-                    ? blockEntity.automationSlotLimit()
-                    : capacity(resource);
+            return resource.isBlank() ? blockEntity.slotLimit() : capacity(resource);
         }
     }
 }

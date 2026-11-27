@@ -15,10 +15,15 @@ public final class ServerGestureState {
 
     private ServerGestureState() {}
 
+    /**
+     * The player's last reported state, or Storage mode with the modifier up when this session has
+     * no report from them; reading never records a state.
+     */
     public static State get(ServerPlayer player) {
         return states.getOrDefault(player.getUUID(), DEFAULT);
     }
 
+    /** Records a decoded report from the player's client; called on the server thread. */
     public static void set(ServerPlayer player, StackMode mode, boolean modifierDown) {
         states.put(player.getUUID(), new State(mode, modifierDown));
     }

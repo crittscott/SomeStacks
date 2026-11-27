@@ -77,7 +77,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ModelMeasurement</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Loader-neutral access to model geometry measurement.</div>
+<div class="block">Loader-neutral access to model geometry measurement, and the quad walk and bounds collection
+ both loaders' measurers share. Each loader keeps its own orchestration: how the display
+ transform is applied, when the model's dimensionality is read, and what a custom-renderer item
+ measures as.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -92,10 +95,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="ModelMeasurement.Backend.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Backend</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">The loader's measurer, installed once by its client initializer.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="ModelMeasurement.BoundsCollector.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.BoundsCollector</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Accumulates the axis-aligned bounds of the points it is given.</div>
+</div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ModelMeasurement.Result.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final record&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="ModelMeasurement.Result.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -112,25 +122,40 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#measure(net.minecraft.world.item.ItemStack)" class="member-name-link">measure</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Measures <code>stack</code> as the <code>3d</code> path draws it, through the installed backend.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#measureGui(net.minecraft.world.item.ItemStack)" class="member-name-link">measureGui</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Like <a href="#measure(net.minecraft.world.item.ItemStack)"><code>measure(net.minecraft.world.item.ItemStack)</code></a>, as the <code>gui</code> path draws <code>stack</code>.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onResourceReload()" class="member-name-link">onResourceReload</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">New models may fail differently after a resource reload.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reportFailure(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemDisplayContext,java.lang.Exception)" class="member-name-link">reportFailure</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.AABB</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#quadBounds(net.minecraft.world.item.ItemStack,net.minecraft.client.resources.model.BakedModel,net.minecraft.world.item.ItemDisplayContext,com.mojang.blaze3d.vertex.PoseStack)" class="member-name-link">quadBounds</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
+ net.minecraft.client.resources.model.BakedModel&nbsp;model,
  net.minecraft.world.item.ItemDisplayContext&nbsp;context,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&nbsp;exception)</code></div>
+ com.mojang.blaze3d.vertex.PoseStack&nbsp;pose)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Reports exceptional model failures once per item until resources are reloaded.</div>
+<div class="block">The bounds, under <code>pose</code>, of the quads <code>model</code> exposes across the loader's render
+ passes for <code>stack</code> in <code>context</code>, or null when it exposes none.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setBackend(com.github.crittscott.somestacks.client.measure.ModelMeasurement.Backend)" class="member-name-link">setBackend</a><wbr>(<a href="ModelMeasurement.Backend.html" title="interface in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Backend</a>&nbsp;backend)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reportFailure(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemDisplayContext,java.lang.Exception)" class="member-name-link">reportFailure</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
+ net.minecraft.world.item.ItemDisplayContext&nbsp;context,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&nbsp;exception)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Reports exceptional model failures once per item until resources are reloaded.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setBackend(com.github.crittscott.somestacks.client.measure.ModelMeasurement.Backend)" class="member-name-link">setBackend</a><wbr>(<a href="ModelMeasurement.Backend.html" title="interface in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Backend</a>&nbsp;backend)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Installs the loader's measurer; each loader's client initializer calls this once.</div>
+</div>
 </div>
 </div>
 </div>
@@ -149,12 +174,17 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="reportFailure(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemDisplayContext,java.lang.Exception)">
-<h3>reportFailure</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reportFailure</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack,
- net.minecraft.world.item.ItemDisplayContext&nbsp;context,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&nbsp;exception)</span></div>
-<div class="block">Reports exceptional model failures once per item until resources are reloaded.</div>
+<section class="detail" id="measure(net.minecraft.world.item.ItemStack)">
+<h3>measure</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></span>&nbsp;<span class="element-name">measure</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="block">Measures <code>stack</code> as the <code>3d</code> path draws it, through the installed backend.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="measureGui(net.minecraft.world.item.ItemStack)">
+<h3>measureGui</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></span>&nbsp;<span class="element-name">measureGui</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="block">Like <a href="#measure(net.minecraft.world.item.ItemStack)"><code>measure(net.minecraft.world.item.ItemStack)</code></a>, as the <code>gui</code> path draws <code>stack</code>.</div>
 </section>
 </li>
 <li>
@@ -165,21 +195,32 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="quadBounds(net.minecraft.world.item.ItemStack,net.minecraft.client.resources.model.BakedModel,net.minecraft.world.item.ItemDisplayContext,com.mojang.blaze3d.vertex.PoseStack)">
+<h3>quadBounds</h3>
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.phys.AABB</span>&nbsp;<span class="element-name">quadBounds</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack,
+ net.minecraft.client.resources.model.BakedModel&nbsp;model,
+ net.minecraft.world.item.ItemDisplayContext&nbsp;context,
+ com.mojang.blaze3d.vertex.PoseStack&nbsp;pose)</span></div>
+<div class="block">The bounds, under <code>pose</code>, of the quads <code>model</code> exposes across the loader's render
+ passes for <code>stack</code> in <code>context</code>, or null when it exposes none. Each direction
+ group and then the unculled group is read with the seed reset, as ItemRenderer draws them.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="reportFailure(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemDisplayContext,java.lang.Exception)">
+<h3>reportFailure</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reportFailure</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack,
+ net.minecraft.world.item.ItemDisplayContext&nbsp;context,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&nbsp;exception)</span></div>
+<div class="block">Reports exceptional model failures once per item until resources are reloaded.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="setBackend(com.github.crittscott.somestacks.client.measure.ModelMeasurement.Backend)">
 <h3>setBackend</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setBackend</span><wbr><span class="parameters">(<a href="ModelMeasurement.Backend.html" title="interface in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Backend</a>&nbsp;backend)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="measure(net.minecraft.world.item.ItemStack)">
-<h3>measure</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></span>&nbsp;<span class="element-name">measure</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="measureGui(net.minecraft.world.item.ItemStack)">
-<h3>measureGui</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></span>&nbsp;<span class="element-name">measureGui</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="block">Installs the loader's measurer; each loader's client initializer calls this once.</div>
 </section>
 </li>
 </ul>

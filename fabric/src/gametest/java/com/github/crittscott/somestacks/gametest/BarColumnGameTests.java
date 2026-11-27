@@ -1,28 +1,8 @@
 package com.github.crittscott.somestacks.gametest;
 
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedNear;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.heldAt;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
-
-import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.util.BlockType;
-
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
-import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 /**
  * Bar support and collapse in a live level: item validity, grounding at the bottom of a column,
@@ -61,7 +41,8 @@ public final class BarColumnGameTests implements FabricGameTest {
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void playerExtractionDropsUnsupportedBars(GameTestHelper helper) {
-        BarColumnChecks.playerExtractionDropsUnsupportedBars(helper);
+        BarColumnChecks.playerExtractionDropsUnsupportedBars(
+                helper, FabricGameTestSupport.players(helper), FabricGameTestSupport::click);
     }
 
     /**
@@ -70,7 +51,8 @@ public final class BarColumnGameTests implements FabricGameTest {
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void supportedNeighborSurvivesPlayerExtraction(GameTestHelper helper) {
-        BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(helper);
+        BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(
+                helper, FabricGameTestSupport.players(helper), FabricGameTestSupport::click);
     }
 
     /**
@@ -83,149 +65,44 @@ public final class BarColumnGameTests implements FabricGameTest {
     }
 
     /**
-     * To reproduce: allow the chosen ingot for Bar, then use a machine that walks positions
-     * bottom-up to insert ten identical ingots. Extract one from bottom position 0 through
-     * automation. Nine remain, position 0 is backfilled from the topmost bar, and no ingot item
-     * entity is dropped.
+     * Loader entry point for {@link BarColumnChecks#automationBackfillsWithoutDropping}; see that
+     * method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automationBackfillsWithoutDropping(GameTestHelper helper) {
-        BarStackBE bars = placeBar(helper, ORIGIN);
-        Item barItem = firstBarItem();
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(bars);
-        ItemStack offered = new ItemStack(barItem, 10);
-
-        // A walk of the advertised positions fills the block from the bottom, because each bar
-        // placed supports the layer above it before the walk reaches it.
-        ItemStack remainder = FabricGameTestSupport.insertWalkingSlots(capability, offered, false);
-        check(remainder.isEmpty(), "A walk of the positions left a remainder");
-        checkEquals(10, count(bars.getItems(), barItem), "Inserted bar count");
-
-        ItemStack extracted = FabricGameTestSupport.extractAt(capability, 0, 64, false);
-
-        checkEquals(1, extracted.getCount(), "Automated extracted count");
-        checkEquals(9, count(bars.getItems(), barItem), "Count after automated extraction");
-        checkEquals(
-                barItem, bars.getItems().getStackInSlot(0).getItem(), "Hole was not backfilled");
-        checkEquals(
-                0, droppedNear(helper, bars.getBlockPos(), barItem), "Automation dropped a bar");
-        helper.succeed();
+        BarColumnChecks.automationBackfillsWithoutDropping(
+                helper, FabricGameTestSupport::automation);
     }
 
     /**
-     * Internal positional insertion check: offer four accepted ingots to unsupported slot 8, then
-     * grounded slot 0. Slot 8 refuses all four; slot 0 accepts exactly one, leaving the caller's
-     * offer unchanged. Simulation reports the same capacity without storing.
-     *
-     * <p>To check manually, use slot-addressing automation on an empty Bar fixture. An unsupported
-     * target must not redirect to another position; a bottom target stores one bar. Simulation
-     * requires a machine or probe exposing that operation.
+     * Loader entry point for {@link
+     * BarColumnChecks#capabilityInsertionAnswersForThePositionItIsGiven}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void capabilityInsertionAnswersForThePositionItIsGiven(GameTestHelper helper) {
-        BarStackBE bars = placeBar(helper, ORIGIN);
-        Item barItem = firstBarItem();
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(bars);
-        ItemStack offered = new ItemStack(barItem, 4);
-
-        // Position 8 is the first of layer 1, with an empty layer 0 beneath it, so it is refused
-        // rather than redirected to a position that would take the bar.
-        checkEquals(
-                4,
-                FabricGameTestSupport.insertAt(capability, 8, offered, true).getCount(),
-                "Simulated insertion into an unsupported position");
-        checkEquals(
-                4,
-                FabricGameTestSupport.insertAt(capability, 8, offered, false).getCount(),
-                "Committed insertion into an unsupported position");
-        checkEquals(0, occupied(bars.getItems()), "An unsupported position stored something");
-
-        // Position 0 is in the bottom layer of a column standing on the world, so it is grounded
-        // outright and takes exactly the one bar a position holds.
-        checkEquals(
-                3,
-                FabricGameTestSupport.insertAt(capability, 0, offered, true).getCount(),
-                "Simulated insertion into a grounded position");
-        checkEquals(
-                3,
-                FabricGameTestSupport.insertAt(capability, 0, offered, false).getCount(),
-                "Committed insertion into a grounded position");
-        checkEquals(4, offered.getCount(), "Capability mutated caller input");
-        checkEquals(1, occupied(bars.getItems()), "One call should store one bar");
-        checkEquals(
-                1,
-                FabricGameTestSupport.slotLimit(capability, 0),
-                "A position's slot limit should be what one call takes");
-        helper.succeed();
+        BarColumnChecks.capabilityInsertionAnswersForThePositionItIsGiven(
+                helper, FabricGameTestSupport::automation);
     }
 
     /**
-     * Synthetic admission fixture: directly seed a refused stick at Bar slot 1 beside an accepted
-     * ingot at slot 0, then automate extraction from slot 0. The ingot is extracted and the stick
-     * moves into slot 0 without dropping. A per-run tag isolates its drops from other fixtures. The
-     * test does not change policy.
-     *
-     * <p>To check manually, enable a data pack adding minecraft:oak_planks to the somestacks:ingots
-     * item tag and run /reload. Store an ordinary ingot at bottom position 0 and oak planks at
-     * position 1, then disable the data pack and /reload. Automate extraction from position 0; the
-     * stored plank remains conserved despite its new refusal.
+     * Loader entry point for {@link BarColumnChecks#backfillKeepsABarItWouldNoLongerAccept}; see
+     * that method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void backfillKeepsABarItWouldNoLongerAccept(GameTestHelper helper) {
-        BarStackBE bars = placeBar(helper, ORIGIN);
-        Item barItem = firstBarItem();
-        BlockPos pos = bars.getBlockPos();
-        check(
-                !BlockType.BAR_STACK.admits(new ItemStack(Items.STICK), null),
-                "Test needs an item a Bar Stack refuses");
-        bars.getItems().insertItem(0, new ItemStack(barItem), false);
-        String marker = java.util.UUID.randomUUID().toString();
-        ItemStack refused = GameTestScaffold.markedStack(Items.STICK, 1, marker);
-        seedSlot(bars.getItems(), 1, refused.copy());
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(bars);
-
-        ItemStack extracted = FabricGameTestSupport.extractAt(capability, 0, 64, false);
-
-        checkEquals(barItem, extracted.getItem(), "Automated extracted item");
-        checkEquals(1, extracted.getCount(), "Automated extraction took more than one bar");
-        check(
-                ItemStack.isSameItemSameTags(refused, bars.getItems().getStackInSlot(0)),
-                "Backfill did not preserve the refused bar and its tags in the hole");
-        checkEquals(1, bars.getItems().getStackInSlot(0).getCount(), "Backfilled bar count");
-        check(bars.getItems().getStackInSlot(1).isEmpty(), "Backfill left its source occupied");
-        checkEquals(1, heldAt(helper, pos, Items.STICK), "Stored refused bar count");
-        checkEquals(
-                0L,
-                GameTestScaffold.droppedInColumn(helper, pos, pos).stream()
-                        .filter(entity -> GameTestScaffold.hasMarker(entity.getItem(), marker))
-                        .count(),
-                "Automation dropped the backfilled bar");
-        helper.succeed();
+        BarColumnChecks.backfillKeepsABarItWouldNoLongerAccept(
+                helper, FabricGameTestSupport::automation);
     }
 
     /**
-     * Internal extraction simulation: put one accepted ingot at Bar slot 0 and simulate extracting
-     * up to 64. The result is one ingot and the stored bar remains unchanged.
-     *
-     * <p>No player gesture performs this dry run. Use slot-addressing automation or a probe that
-     * simulates extraction without committing; the bar should remain visible.
+     * Loader entry point for {@link BarColumnChecks#capabilitySimulationDoesNotMutateExtraction};
+     * see that method for the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void capabilitySimulationDoesNotMutateExtraction(GameTestHelper helper) {
-        BarStackBE bars = placeBar(helper, ORIGIN);
-        Item barItem = firstBarItem();
-        bars.depositAt(0, new ItemStack(barItem));
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(bars);
-
-        ItemStack simulated = FabricGameTestSupport.extractAt(capability, 0, 64, true);
-
-        checkEquals(barItem, simulated.getItem(), "Simulated item");
-        checkEquals(1, simulated.getCount(), "Simulated count");
-        checkEquals(
-                barItem,
-                bars.getItems().getStackInSlot(0).getItem(),
-                "Simulation mutated contents");
-        helper.succeed();
+        BarColumnChecks.capabilitySimulationDoesNotMutateExtraction(
+                helper, FabricGameTestSupport::automation);
     }
 
     /**
@@ -262,7 +139,8 @@ public final class BarColumnGameTests implements FabricGameTest {
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void playerCascadeDropsWithBlockDropsDisabled(GameTestHelper helper) {
-        BarColumnChecks.playerCascadeDropsWithBlockDropsDisabled(helper);
+        BarColumnChecks.playerCascadeDropsWithBlockDropsDisabled(
+                helper, FabricGameTestSupport.players(helper), FabricGameTestSupport::click);
     }
 
     /**
@@ -271,7 +149,8 @@ public final class BarColumnGameTests implements FabricGameTest {
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void playerCascadeConsolidatesAcrossBlocks(GameTestHelper helper) {
-        BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(helper);
+        BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(
+                helper, FabricGameTestSupport.players(helper), FabricGameTestSupport::click);
     }
 
     /**
@@ -280,16 +159,8 @@ public final class BarColumnGameTests implements FabricGameTest {
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void collapseDoesNotMergeDifferentTags(GameTestHelper helper) {
-        BarColumnChecks.collapseDoesNotMergeDifferentTags(helper);
-    }
-
-    /**
-     * Loader entry point for {@link BarColumnChecks#comparatorReservesZeroForAnEmptyColumn}; see
-     * that method for the scenario, manual check, and any internal-only assertions.
-     */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
-        BarColumnChecks.comparatorReservesZeroForAnEmptyColumn(helper);
+        BarColumnChecks.collapseDoesNotMergeDifferentTags(
+                helper, FabricGameTestSupport.players(helper), FabricGameTestSupport::click);
     }
 
     /**

@@ -92,26 +92,32 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#installedServicesAndLogoutResetPacing(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">installedServicesAndLogoutResetPacing</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#commandHelpAnswersEveryTopic(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">commandHelpAnswersEveryTopic</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: reconnect and rotate a stack; a previous session's rotation-sound
- pacing must not silence the new session.</div>
+<div class="block">To reproduce in-game: without operator permission, run /ss help followed by each of item,
+ write, gallery, ingotgallery, reload, gen, deny, and help.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#listEditsPublishImmutablePolicy(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">listEditsPublishImmutablePolicy</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#installedServicesAndLogoutResetPacing(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">installedServicesAndLogoutResetPacing</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">No in-game form: rotation sounds are paced only a few ticks apart, and any reconnect takes
+ far longer, so a player cannot see whether logout cleared the pacing.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#listEditsPublishImmutablePolicy(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">listEditsPublishImmutablePolicy</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: add then remove a namespace through /ss deny mod; policy and admission
  change immediately while other settings remain unchanged.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#numericPolicyRangesAreShared(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">numericPolicyRangesAreShared</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#numericPolicyRangesAreShared(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">numericPolicyRangesAreShared</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Synthetic raw policy inputs obey the same numeric ranges before either loader publishes them.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reloadCommandPublishesStoredPolicy(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">reloadCommandPublishesStoredPolicy</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reloadCommandPublishesStoredPolicy(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">reloadCommandPublishesStoredPolicy</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: while the server runs, add a mod id to render_gallery.gen_mods in the
  active somestacks-server.toml, then run /ss reload.</div>
 </div>
@@ -133,12 +139,24 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="commandHelpAnswersEveryTopic(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>commandHelpAnswersEveryTopic</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">commandHelpAnswersEveryTopic</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce in-game: without operator permission, run /ss help followed by each of item,
+ write, gallery, ingotgallery, reload, gen, deny, and help. Every topic prints its usage and
+ audience, including the operator-only topics.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="installedServicesAndLogoutResetPacing(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)">
 <h3>installedServicesAndLogoutResetPacing</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">installedServicesAndLogoutResetPacing</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
-<div class="block">To reproduce in-game: reconnect and rotate a stack; a previous session's rotation-sound
- pacing must not silence the new session.</div>
+<div class="block">No in-game form: rotation sounds are paced only a few ticks apart, and any reconnect takes
+ far longer, so a player cannot see whether logout cleared the pacing. It guards that a repeated
+ rotation sound within the pacing window is refused and that logout clears the player's
+ pacing. It also asserts that the loader installed <code>PlatformServices</code>: a config folder,
+ the mod's version (not "unknown"), and an edit authority.</div>
 </section>
 </li>
 <li>

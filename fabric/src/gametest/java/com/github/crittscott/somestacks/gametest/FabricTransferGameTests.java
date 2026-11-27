@@ -8,6 +8,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBa
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 
+import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -52,6 +53,34 @@ public final class FabricTransferGameTests implements FabricGameTest {
                 4,
                 GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
                 "Committed insertion did not reach the world");
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce: on Fabric, point a hopper holding sticks and then one holding an iron ingot
+     * into an empty Bar Stack. The sticks stay in their hopper and the Bar Stack stays empty; the
+     * ingot moves in. The test offers both through the whole-run storage and through one position's
+     * view.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void refusedResourceIsTurnedAwayBeforeAnyPosition(GameTestHelper helper) {
+        BarStackBE bars = placeBar(helper, ORIGIN);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.capability(bars);
+        ItemVariant stick = ItemVariant.of(Items.STICK);
+        check(!new ItemStack(Items.STICK).is(BarStackBE.INGOTS), "Test needs a refused item");
+        try (Transaction transaction = Transaction.openOuter()) {
+            checkEquals(0L, storage.insert(stick, 4, transaction), "Whole-run insertion");
+            checkEquals(0L, storage.getSlot(0).insert(stick, 1, transaction), "Slot insertion");
+            transaction.commit();
+        }
+        checkEquals(0, occupied(bars.getItems()), "Refused resource reached the Bar Stack");
+
+        ItemVariant bar = ItemVariant.of(GameTestScaffold.firstBarItem());
+        try (Transaction transaction = Transaction.openOuter()) {
+            checkEquals(1L, storage.insert(bar, 1, transaction), "Accepted bar insertion");
+            transaction.commit();
+        }
+        checkEquals(1, occupied(bars.getItems()), "Accepted bar did not reach the Bar Stack");
         helper.succeed();
     }
 

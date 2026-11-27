@@ -15,7 +15,9 @@ Hold `V` and right-click the air to cycle through:
 3. **Bar Stack**
 4. **Toggle Permanent**
 
-The current mode is shown above your hotbar. Stack types the server has disabled are skipped by the cycle; Toggle Permanent is always available.
+The current mode is shown above your hotbar. Stack types the server has disabled are skipped by the cycle; Toggle Permanent is always available. If the server disables the type you have selected, your mode moves on to the next enabled one straight away. Trying to place a disabled type tells you so above the hotbar.
+
+While you hold `V`, the item in your main hand is never used: food is not eaten, bows are not drawn, and buckets are not emptied, even when the click does nothing else.
 
 The mode decides only what gets *placed*. Depositing into a stack that already exists always goes into that stack, whatever mode you are in.
 
@@ -28,7 +30,7 @@ Hold `V` with something in your hand and right-click:
 
 If you click the **top face** of a Singles or Bar Stack and the cell you are aiming at cannot take the item — it is occupied, or nothing is under it to hold it up — the gesture places a new stack on top instead and deposits there. That is how you build a column upward by hand.
 
-A deposit that would create a block only happens if the deposit itself would succeed, so you never end up with an empty block you did not ask for.
+A deposit that would create a block only happens if the deposit itself would succeed, so you never end up with an empty block you did not ask for. A stack that is full and already at the server's maximum height says so above the hotbar instead of taking the deposit.
 
 In **creative mode**, depositing does not spend the stack in your hand, the same way placing a block does not.
 

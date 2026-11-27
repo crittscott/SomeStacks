@@ -82,7 +82,9 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ClientCallbackGameTests</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements net.fabricmc.api.ClientModInitializer</span></div>
-<div class="block">Registers the development-only /ssclienttest local callback smoke command.</div>
+<div class="block">Registers the development-only /ssclienttest local callback smoke command; see <a href="ClientCallbackChecks.html#run(boolean,java.util.function.BiFunction)"><code>ClientCallbackChecks.run(boolean, java.util.function.BiFunction&lt;net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult, com.github.crittscott.somestacks.gametest.ClientCallbackChecks.Result&gt;)</code></a> for how to run it. Fabric's <code>UseBlockCallback</code> returns one
+ <code>InteractionResult</code> with no separate block-use and item-use denial, so this reports only
+ whether the callback consumed the click.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

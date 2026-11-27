@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,12 +48,24 @@ public final class ForgeEditAuthority implements EditAuthority {
         return FakePlayerFactory.get(level, AutomationActor.PROFILE);
     }
 
+    /** The update depth vanilla's {@code Level.setBlock(pos, state, flags)} passes on. */
     private static final int UPDATE_RECURSION_LIMIT = 512;
+
     private boolean placing;
 
+    /**
+     * Places under Forge's snapshot capture, the way Forge's own item placement does, rather than
+     * with the shorter snapshot, {@code setBlock}, place event, restore-on-veto pattern. Outside
+     * capture, {@code setBlock} runs the new block's {@code onPlace} and notifies neighbors before
+     * the event can veto: a Storage stack would inherit permanence and schedule settlement, and
+     * neighbors would react to a block that is then rolled back. Under capture those side effects
+     * are held back, so they run here only after the event allows the placement. Any captured
+     * snapshots beyond the first are reported through the multi-place event, as Forge's item
+     * placement reports them.
+     */
     @Override
     public boolean place(
-            Player placer,
+            ServerPlayer placer,
             ServerLevel level,
             BlockPos pos,
             BlockState state,

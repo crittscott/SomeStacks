@@ -77,7 +77,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ServerConfig</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Per-world immutable policy and resolved admission sets; loaders own persistence.</div>
+<div class="block">Per-world immutable policy, its file declaration (<a href="ServerConfig.Section.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Section</code></a>, <a href="ServerConfig.Setting.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Setting</code></a>), and
+ resolved admission sets; loaders own persistence.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -99,6 +100,17 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="ServerConfig.ListSetting.html" class="type-name-link" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">The named lists edited by /ss; each edit replaces the complete policy snapshot.</div>
+</div>
+<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ServerConfig.Section.html" class="type-name-link" title="enum class in com.github.crittscott.somestacks">ServerConfig.Section</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">A table of the server policy file; its declaration order is the order in the file.</div>
+</div>
+<div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="ServerConfig.Setting.html" class="type-name-link" title="enum class in com.github.crittscott.somestacks">ServerConfig.Setting</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">One field of the server policy file: its table, key, kind, bounds, explanation, and the
+ <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks"><code>ServerConfig.Settings</code></a> component it holds.</div>
 </div>
 <div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="ServerConfig.Settings.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
@@ -185,43 +197,25 @@ loadScripts(document, 'script');</script>
 <div class="block">Releases the world reader, saver, and derived admission state on server shutdown.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableBarStackBlock()" class="member-name-link">enableBarStackBlock</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableSinglesStackBlock()" class="member-name-link">enableSinglesStackBlock</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableStorageStackBlock()" class="member-name-link">enableStorageStackBlock</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#galleryEnabled()" class="member-name-link">galleryEnabled</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#galleryRequiredPermissionLevel()" class="member-name-link">galleryRequiredPermissionLevel</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isItemDisabled(net.minecraft.resources.ResourceLocation)" class="member-name-link">isItemDisabled</a><wbr>(net.minecraft.resources.ResourceLocation&nbsp;itemId)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isItemDisabled(net.minecraft.resources.ResourceLocation)" class="member-name-link">isItemDisabled</a><wbr>(net.minecraft.resources.ResourceLocation&nbsp;itemId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether the item registered as <code>itemId</code> is barred from stacks.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isModDisabled(java.lang.String)" class="member-name-link">isModDisabled</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isModDisabled(java.lang.String)" class="member-name-link">isModDisabled</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether items from <code>namespace</code>, in any case, are barred from stacks.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isValidNamespace(java.lang.String)" class="member-name-link">isValidNamespace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isValidNamespace(java.lang.String)" class="member-name-link">isValidNamespace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Validates namespace syntax through the public identifier parser with a fixed valid path.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#logActivePolicy()" class="member-name-link">logActivePolicy</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#logActivePolicy()" class="member-name-link">logActivePolicy</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Reports active policy at startup, explicit reload, or a changed loader file reload.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxPileHeight()" class="member-name-link">maxPileHeight</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#publish(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">publish</a><wbr>(<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;replacement)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -238,22 +232,19 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Removes an entry from one of the server's text lists, re-bakes the lookup sets, and saves.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#renderGalleryPlacementsPerTick()" class="member-name-link">renderGalleryPlacementsPerTick</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#save()" class="member-name-link">save</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#save()" class="member-name-link">save</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Writes command edits through the current world's loader.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settings()" class="member-name-link">settings</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#start(java.util.function.Supplier,java.util.function.Consumer,java.lang.Runnable)" class="member-name-link">start</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&gt;&nbsp;readPolicy,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settings()" class="member-name-link">settings</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#start(java.util.function.Supplier,java.util.function.Consumer,java.lang.Runnable)" class="member-name-link">start</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&gt;&nbsp;readPolicy,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&gt;&nbsp;savePolicy,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;synchronizeClients)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Starts a world with its loader's policy reader and command-save boundary, and publishes the
  policy read now.</div>
 </div>
@@ -434,48 +425,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="settings()">
 <h3>settings</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></span>&nbsp;<span class="element-name">settings</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="maxPileHeight()">
-<h3>maxPileHeight</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">maxPileHeight</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="enableStorageStackBlock()">
-<h3>enableStorageStackBlock</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">enableStorageStackBlock</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="enableSinglesStackBlock()">
-<h3>enableSinglesStackBlock</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">enableSinglesStackBlock</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="enableBarStackBlock()">
-<h3>enableBarStackBlock</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">enableBarStackBlock</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="renderGalleryPlacementsPerTick()">
-<h3>renderGalleryPlacementsPerTick</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">renderGalleryPlacementsPerTick</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="galleryEnabled()">
-<h3>galleryEnabled</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">galleryEnabled</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="galleryRequiredPermissionLevel()">
-<h3>galleryRequiredPermissionLevel</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">galleryRequiredPermissionLevel</span>()</div>
 </section>
 </li>
 <li>

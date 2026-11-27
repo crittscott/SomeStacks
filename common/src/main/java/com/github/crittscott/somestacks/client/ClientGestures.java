@@ -3,12 +3,13 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.util.StackMode;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.HitResult;
 
 import org.lwjgl.glfw.GLFW;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /** Shared client gesture state and the loader-specific packet sender behind its rules. */
@@ -43,19 +44,14 @@ public final class ClientGestures {
     }
 
     /**
-     * Advances the selected mode, skipping server-disabled block types. Toggle Permanent remains
-     * available. This changes local selection only; it neither sends state nor displays a message.
+     * Advances the selected mode along {@link StackMode#next()}, skipping server-disabled block
+     * types. Toggle Permanent is always available, so the walk ends there at the latest. This
+     * changes local selection only; it neither sends state nor displays a message.
      */
     public static void cycleMode() {
-        StackMode startMode = stackMode;
         do {
-            stackMode =
-                    StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
-            if (stackMode == StackMode.TOGGLE_PERMANENT) break;
-            if (stackMode.isBlockType()
-                    && ClientServerSettings.isBlockTypeEnabled(stackMode.toBlockType())) break;
-            if (stackMode == startMode) break;
-        } while (true);
+            stackMode = stackMode.next();
+        } while (!isSelectable(stackMode));
     }
 
     public static void displayModeMessage(Player player) {
@@ -64,11 +60,37 @@ public final class ClientGestures {
                 Component.translatable("somestacks.message.storage_mode", modeComponent), true);
     }
 
+    /**
+     * Whether the player's crosshair is on a block. Distinguishes a click at open air, which cycles
+     * the placement mode, from an item use that follows a block click no gesture claimed.
+     */
+    public static boolean isHittingBlock() {
+        HitResult hit = Minecraft.getInstance().hitResult;
+        return hit != null && hit.getType() == HitResult.Type.BLOCK;
+    }
+
+    /**
+     * Moves the selection off a block type the current server policy disables, as {@link
+     * #cycleMode()} would, so a placement never names a type the server refuses.
+     *
+     * @return whether the selected mode changed
+     */
+    public static boolean leaveDisabledMode() {
+        if (isSelectable(stackMode)) {
+            return false;
+        }
+        cycleMode();
+        return true;
+    }
+
+    private static boolean isSelectable(StackMode mode) {
+        return !mode.isBlockType() || ClientServerSettings.isBlockTypeEnabled(mode.toBlockType());
+    }
+
     /** Sends changed state before the loader allows the ordinary use packet to proceed. */
     public static void syncState(boolean modifierDown) {
         if (lastSentMode == stackMode && lastSentModifier == modifierDown) return;
-        Objects.requireNonNull(sender, "Client gesture sender is not installed")
-                .accept(new GestureStatePkt(stackMode, modifierDown));
+        sender.accept(new GestureStatePkt(stackMode, modifierDown));
         lastSentMode = stackMode;
         lastSentModifier = modifierDown;
     }

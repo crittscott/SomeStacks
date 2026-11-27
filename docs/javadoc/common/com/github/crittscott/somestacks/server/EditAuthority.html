@@ -108,7 +108,7 @@ loadScripts(document, 'script');</script>
 <div class="block">The actor automation-driven growth and removal are attributed to.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#mayPlace(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
@@ -121,13 +121,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Whether a neighboring click may deposit into an existing destination stack.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">place</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#place(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">place</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.core.Direction&nbsp;placedAgainst)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Places through loader-native protection, restoring denied state before publication.</div>
+<div class="block">Places a block <a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)"><code>mayPlace(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos)</code></a> has allowed, through any loader-native placement event,
+ restoring denied state before publication.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#vetoesRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">vetoesRemoval</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
@@ -160,24 +161,25 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="mayPlace(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
+<section class="detail" id="mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
 <h3>mayPlace</h3>
-<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayPlace</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;placer,
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayPlace</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Side-effect-free placement permission, where the loader offers protection queries. Growth
- consults it before promising space, and <a href="#place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)"><code>place(net.minecraft.world.entity.player.Player, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.core.Direction)</code></a> answers to it as well.</div>
+<div class="block">Side-effect-free placement permission, where the loader offers protection queries. It is the
+ loader's part of <a href="WorldEdits.html#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)"><code>WorldEdits.mayPlace(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.core.Direction)</code></a>, which every placement passes before <a href="#place(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)"><code>place(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.core.Direction)</code></a>.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)">
+<section class="detail" id="place(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)">
 <h3>place</h3>
-<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">place</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;placer,
+<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">place</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.core.Direction&nbsp;placedAgainst)</span></div>
-<div class="block">Places through loader-native protection, restoring denied state before publication.</div>
+<div class="block">Places a block <a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)"><code>mayPlace(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos)</code></a> has allowed, through any loader-native placement event,
+ restoring denied state before publication.</div>
 </section>
 </li>
 <li>

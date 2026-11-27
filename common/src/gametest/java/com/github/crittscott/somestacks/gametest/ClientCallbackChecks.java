@@ -14,15 +14,33 @@ import java.util.function.BiFunction;
 public final class ClientCallbackChecks {
     private ClientCallbackChecks() {}
 
-    /** Observable local callback outputs; none of these performs the server's world action. */
-    public record Result(boolean consumed, boolean blockDenied, boolean itemDenied) {}
+    /**
+     * Observable local callback outputs; none of these performs the server's world action. A loader
+     * whose callback returns a single result, with no separate block-use and item-use denial,
+     * reports only {@code consumed}; {@code reportsDenials} is then false and the denial fields are
+     * not asserted.
+     */
+    public record Result(
+            boolean consumed, boolean reportsDenials, boolean blockDenied, boolean itemDenied) {
+        /** A callback that reports only whether it consumed the click. */
+        public static Result consumedOnly(boolean consumed) {
+            return new Result(consumed, false, false, false);
+        }
+
+        /** A callback that also reports separate block-use and item-use denial. */
+        public static Result withDenials(
+                boolean consumed, boolean blockDenied, boolean itemDenied) {
+            return new Result(consumed, true, blockDenied, itemDenied);
+        }
+    }
 
     /**
      * To reproduce in-game: launch the loader's runClientGameTests client, join a world, aim at any
      * stack, release Shift and the Stack Modifier, and run /ssclienttest. It invokes the actual
-     * loader callback for main/off hand and checks consumption plus block/item suppression. It does
-     * not send a vanilla use packet or extract contents. A translated success/failure message
-     * reports the assertions; server GameTests cannot exercise this client-only boundary.
+     * loader callback for main/off hand and checks that it consumes the click and, where the loader
+     * reports them separately, that it denies both block use and item use. It does not send a
+     * vanilla use packet or extract contents. A translated success/failure message reports the
+     * assertions; server GameTests cannot exercise this client-only boundary.
      */
     public static int run(
             boolean modifierDown, BiFunction<InteractionHand, BlockHitResult, Result> callback) {
@@ -40,14 +58,8 @@ public final class ClientCallbackChecks {
             }
             var main = client.player.getMainHandItem().copy();
             var off = client.player.getOffhandItem().copy();
-            GameTestScaffold.checkEquals(
-                    new Result(true, true, true),
-                    callback.apply(InteractionHand.MAIN_HAND, hit),
-                    "Main-hand callback outputs");
-            GameTestScaffold.checkEquals(
-                    new Result(true, true, true),
-                    callback.apply(InteractionHand.OFF_HAND, hit),
-                    "Off-hand callback outputs");
+            checkConsumedAndDenied(callback.apply(InteractionHand.MAIN_HAND, hit), "Main-hand");
+            checkConsumedAndDenied(callback.apply(InteractionHand.OFF_HAND, hit), "Off-hand");
             GameTestScaffold.check(
                     ItemStack.matches(main, client.player.getMainHandItem()),
                     "Local callback changed main-hand contents");
@@ -67,6 +79,14 @@ public final class ClientCallbackChecks {
                         false);
             }
             return 0;
+        }
+    }
+
+    private static void checkConsumedAndDenied(Result result, String hand) {
+        GameTestScaffold.check(result.consumed(), hand + " callback did not consume the click");
+        if (result.reportsDenials()) {
+            GameTestScaffold.check(result.blockDenied(), hand + " callback allowed block use");
+            GameTestScaffold.check(result.itemDenied(), hand + " callback allowed item use");
         }
     }
 }

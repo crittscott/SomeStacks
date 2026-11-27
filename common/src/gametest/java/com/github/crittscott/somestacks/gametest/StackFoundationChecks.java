@@ -7,11 +7,13 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBa
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.withPolicy;
 
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
+import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StackRun;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -26,6 +28,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -38,6 +41,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /** Shared regression checks for local batching, cached run bounds, and persisted fill. */
 public final class StackFoundationChecks {
@@ -99,9 +103,7 @@ public final class StackFoundationChecks {
             invoke(BEGIN_BATCH, block);
             try {
                 block.getItems().setStackInSlot(0, item.copy());
-                checkLocalFill(
-                        block,
-                        block.automationSlotLimit() == 1 ? 1.0 : 1.0 / item.getMaxStackSize());
+                checkLocalFill(block, block.slotLimit() == 1 ? 1.0 : 1.0 / item.getMaxStackSize());
             } finally {
                 invoke(END_BATCH, block);
             }
@@ -109,8 +111,7 @@ public final class StackFoundationChecks {
                     !(boolean) invoke(PUBLISH, block, helper.getLevel()),
                     "Inner batch published contents");
             block.getItems().setStackInSlot(1, item.copy());
-            checkLocalFill(
-                    block, block.automationSlotLimit() == 1 ? 2.0 : 2.0 / item.getMaxStackSize());
+            checkLocalFill(block, block.slotLimit() == 1 ? 2.0 : 2.0 / item.getMaxStackSize());
             check(
                     !(boolean) invoke(PUBLISH, block, helper.getLevel()),
                     "Outer batch published before ending");
@@ -137,6 +138,47 @@ public final class StackFoundationChecks {
     }
 
     /**
+     * To reproduce in-game: deposit a full stack of glowstone into one Storage Stack slot; the
+     * block gives off light level 3, the same as a single glowstone would. Deposit one each of sea
+     * lantern, jack o'lantern, lantern, shroomlight, and beacon, so six slots hold different
+     * full-brightness blocks; the light reaches 15, not 18.
+     *
+     * <p>The contents are written straight to the slots; the light comes from the publication those
+     * writes schedule. The six items differ so settlement cannot merge them into fewer slots.
+     */
+    public static void storedLightIsPerOccupiedSlotAndCapped(GameTestHelper helper) {
+        StorageStackBE storage = placeStorage(helper, ORIGIN);
+        storage.getItems().setStackInSlot(0, new ItemStack(Items.GLOWSTONE, 64));
+        helper.runAfterDelay(
+                2,
+                () -> {
+                    checkEquals(
+                            3,
+                            storage.getBlockState().getValue(StackBlock.LIGHT_LEVEL),
+                            "Light of one full glowstone slot");
+                    Item[] bright = {
+                        Items.SEA_LANTERN,
+                        Items.JACK_O_LANTERN,
+                        Items.LANTERN,
+                        Items.SHROOMLIGHT,
+                        Items.BEACON
+                    };
+                    for (int i = 0; i < bright.length; i++) {
+                        storage.getItems().setStackInSlot(i + 1, new ItemStack(bright[i]));
+                    }
+                    helper.runAfterDelay(
+                            2,
+                            () -> {
+                                checkEquals(
+                                        15,
+                                        storage.getBlockState().getValue(StackBlock.LIGHT_LEVEL),
+                                        "Light of six glowstone slots");
+                                helper.succeed();
+                            });
+                });
+    }
+
+    /**
      * To reproduce in-game: attach automation at different heights, add and remove stack blocks,
      * and split a Storage or Singles run. Every attachment sees the new bounds immediately.
      */
@@ -147,10 +189,15 @@ public final class StackFoundationChecks {
             placeBar(helper, ORIGIN.east(6))
         };
         StackRun<?>[] runs = new StackRun<?>[blocks.length];
-        for (int i = 0; i < blocks.length; i++) {
-            checkBounds(helper, blocks[i], ORIGIN.east(i * 3));
-            runs[i] = blocks[i].itemRun();
-        }
+        // A three-block limit gives a two-block run one block of advertised headroom.
+        withPolicy(
+                Map.of(ServerConfig.Setting.MAX_PILE_HEIGHT, 3),
+                () -> {
+                    for (int i = 0; i < blocks.length; i++) {
+                        checkBounds(helper, blocks[i], ORIGIN.east(i * 3));
+                        runs[i] = blocks[i].itemRun();
+                    }
+                });
         helper.runAfterDelay(
                 2,
                 () -> {
@@ -181,8 +228,7 @@ public final class StackFoundationChecks {
         check(joined != initial, "Placement retained stale run bounds");
         checkEquals(2, joined.height(), "Joined height");
         checkEquals(Items.PAPER, joined.getSlot(localSlots).getItem(), "Flat slot mapping");
-        int advertisedLevels = ServerConfig.maxPileHeight() > 2 ? 3 : 2;
-        checkEquals(localSlots * advertisedLevels, joined.advertisedSlots(), "Joined headroom");
+        checkEquals(localSlots * 3, joined.advertisedSlots(), "Joined headroom");
         check(joined == top.itemRun(), "Members did not share the resolved run");
         helper.getLevel().setBlock(topPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         StackRun<?> remaining = (StackRun<?>) bottom.itemRun();
@@ -266,7 +312,7 @@ public final class StackFoundationChecks {
     private static void checkGrowth(
             GameTestHelper helper, StackBlockEntity bottom, ItemStack item) {
         int slots = bottom.getItems().getSlots();
-        if (bottom.automationSlotLimit() == 1) {
+        if (bottom.slotLimit() == 1) {
             for (int slot = 0; slot < slots; slot++) {
                 bottom.getItems().setStackInSlot(slot, item.copy());
             }
@@ -452,13 +498,10 @@ public final class StackFoundationChecks {
         try {
             for (int cycle = 0; cycle < 32; cycle++) {
                 ItemStack partial =
-                        block.automationSlotLimit() == 1
-                                ? fullSlot.copy()
-                                : new ItemStack(Items.ENDER_PEARL);
+                        block.slotLimit() == 1 ? fullSlot.copy() : new ItemStack(Items.ENDER_PEARL);
                 block.getItems().setStackInSlot(0, partial);
                 checkLocalFill(
-                        block,
-                        block.automationSlotLimit() == 1 ? 1.0 : 1.0 / partial.getMaxStackSize());
+                        block, block.slotLimit() == 1 ? 1.0 : 1.0 / partial.getMaxStackSize());
                 block.getItems().setStackInSlot(0, ItemStack.EMPTY);
                 checkEquals(
                         0, ((StackRun<?>) block.itemRun()).comparatorSignal(), "Empty endpoint");

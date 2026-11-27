@@ -19,12 +19,17 @@ public final class ForgeRenderPlatform implements ClientRenderPlatform.Backend {
         return model.getRenderPasses(stack, fabulousFlag(stack, context));
     }
 
+    @Override
+    public int itemColor(ItemStack stack, int tintIndex) {
+        return Minecraft.getInstance().getItemColors().getColor(stack, tintIndex);
+    }
+
     /**
      * The flag Forge's item renderer uses when selecting a model's passes and render types: false
      * only for the translucent blocks vanilla draws through the indirect buffers outside GUI and
      * first-person contexts.
      */
-    public static boolean fabulousFlag(ItemStack stack, ItemDisplayContext context) {
+    private static boolean fabulousFlag(ItemStack stack, ItemDisplayContext context) {
         if (context == ItemDisplayContext.GUI
                 || context.firstPerson()
                 || !(stack.getItem() instanceof BlockItem blockItem)) {
@@ -33,10 +38,5 @@ public final class ForgeRenderPlatform implements ClientRenderPlatform.Backend {
         Block block = blockItem.getBlock();
         return !(block instanceof HalfTransparentBlock)
                 && !(block instanceof StainedGlassPaneBlock);
-    }
-
-    @Override
-    public int itemColor(ItemStack stack, int tintIndex) {
-        return Minecraft.getInstance().getItemColors().getColor(stack, tintIndex);
     }
 }

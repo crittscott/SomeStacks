@@ -77,7 +77,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">WorldEditChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">World edits and their notifications, observed through the world's native game-event dispatcher.</div>
+<div class="block">World edits and their notifications, observed through the world's native game-event dispatcher,
+ and the rules that keep a gesture or automation from writing where it should not: build height,
+ entity obstruction, the world border, and waterlogging. Automation scenarios take the loader's
+ <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold.Automation</code></a> view.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -116,26 +119,118 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce: have a claim or logging mod report who grows a Storage pile through a hopper.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#cleanupOfWaterloggedStackKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cleanupOfWaterloggedStackKeepsTheWater</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">barGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">World-border fixture: fill one Bar block, first confirm a free headroom offer has capacity,
+ then move the border to exclude the target and try simulation and commit.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">barGrowthRejectsAnObstructingEntityInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: allow height above one, fill one Bar block, and confine a cow in the
+ prospective upper block's first occupied position.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#breakingAStackChargesItsCleanupToTheBreaker(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">breakingAStackChargesItsCleanupToTheBreaker</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: in a claim that admits a player but denies [SomeStacks], stack two Bar Stacks
+ with one bar per layer in the lower block holding up one bar in the upper block, and break the
+ lower block by hand.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Internal checked-placement test: place stone at an in-bounds position, then try a position
+ one below the minimum build height.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#checkedPlacementRejectsAnObstructingEntity(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">checkedPlacementRejectsAnObstructingEntity</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The fixture puts a cow inside the proposed full stone shape and calls checked placement;
+ placement fails.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#cleanupOfWaterloggedStackKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cleanupOfWaterloggedStackKeepsTheWater</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: V-place a temporary Storage Stack into a water source and extract its only
  item.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#completedShapesDistinguishOccupiedCellsFromEmptySpace(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">completedShapesDistinguishOccupiedCellsFromEmptySpace</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Internal obstruction-shape check: a cow overlaps one edge of the target position.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementGrowthAndCleanupNotify(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer,java.util.function.Consumer)" class="member-name-link">placementGrowthAndCleanupNotify</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- net.minecraft.server.level.ServerPlayer&nbsp;player,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.server.level.ServerPlayer&gt;&nbsp;placeGesture)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#creativeDepositFillsTheStackWithoutSpendingTheHand(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">creativeDepositFillsTheStackWithoutSpendingTheHand</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce: put a sculk sensor near a floor, V-place Storage holding dirt, fill its slots,
- and deposit stone to grow it.</div>
+<div class="block">To reproduce: enter Creative, hold 64 dirt, select Storage, and V-right-click an existing
+ Storage block.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerCausedCleanupCarriesThePlayer(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">playerCausedCleanupCarriesThePlayer</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#outsideTheBorder(net.minecraft.gametest.framework.GameTestHelper,java.lang.Runnable)" class="member-name-link">outsideTheBorder</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;action)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Runs <code>action</code> with the world border moved off the test structure, and restores it
+ before returning.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementGrowthAndCleanupNotify(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">placementGrowthAndCleanupNotify</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.server.level.ServerPlayer&nbsp;player,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: put a sculk sensor near a floor, V-place Storage holding dirt, fill its slots,
+ and have a hopper deposit stone to grow it.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementIntoWaterKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)" class="member-name-link">placementIntoWaterKeepsTheWater</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: place source water above a solid floor, select Storage, and V-right-click the
+ floor with dirt.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerCausedCleanupCarriesThePlayer(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">playerCausedCleanupCarriesThePlayer</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce: in a claim that admits a player but denies [SomeStacks], extract the last item
  from a temporary Storage, Singles, and Bar Stack, and toggle an empty permanent Storage pile
  back to temporary.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">singlesGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">World-border fixture: fill one Singles block, first confirm a free headroom offer has
+ capacity, then move the border to exclude the target and try simulation and commit.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: allow height above one, fill one Singles block, and confine a cow in the
+ prospective upper block's first occupied position.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">storageGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">World-border fixture: fill one Storage block, first confirm a free headroom offer has
+ capacity, then move the border to exclude the target and try simulation and commit.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">storageGrowthRejectsAnObstructingEntityInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: allow height above one, fill one Storage block, and confine a cow in the
+ prospective upper block's first occupied position.</div>
 </div>
 </div>
 </div>
@@ -184,15 +279,180 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="placementGrowthAndCleanupNotify(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer,java.util.function.Consumer)">
+<section class="detail" id="breakingAStackChargesItsCleanupToTheBreaker(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)">
+<h3>breakingAStackChargesItsCleanupToTheBreaker</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">breakingAStackChargesItsCleanupToTheBreaker</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">To reproduce: in a claim that admits a player but denies [SomeStacks], stack two Bar Stacks
+ with one bar per layer in the lower block holding up one bar in the upper block, and break the
+ lower block by hand. The upper bar falls and its emptied block is removed on the player's
+ behalf, so the claim allows it and logging mods record the player. Then build a temporary
+ Storage pile three blocks high with one stack in each block and break its base: the two
+ remaining stacks settle into the lower block and the emptied top is removed, again under the
+ player. Removing the lower block any other way, such as /setblock or an explosion, charges
+ the same cleanup to [SomeStacks].</div>
+</section>
+</li>
+<li>
+<section class="detail" id="placementGrowthAndCleanupNotify(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
 <h3>placementGrowthAndCleanupNotify</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementGrowthAndCleanupNotify</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.server.level.ServerPlayer&nbsp;player,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.server.level.ServerPlayer&gt;&nbsp;placeGesture)</span></div>
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
 <div class="block">To reproduce: put a sculk sensor near a floor, V-place Storage holding dirt, fill its slots,
- and deposit stone to grow it. Extract the stone and let settlement trim the upper block. Each
- structural edit produces its placement or destruction vibration, subject to ordinary sculk
- filtering. Inventory edits alone do not produce these structural events.</div>
+ and have a hopper deposit stone to grow it. Extract the stone and let settlement trim the
+ upper block. Each structural edit produces its placement or destruction vibration, subject to
+ ordinary sculk filtering. Inventory edits alone do not produce these structural events.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)">
+<h3>checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">Internal checked-placement test: place stone at an in-bounds position, then try a position
+ one below the minimum build height. Only the in-bounds call succeeds. The out-of-world call
+ has no direct player reproduction.
+
+ <p>Nearest manual check: select Storage and V-place an admissible item against a floor in
+ bounds, then try to grow a stack beyond the world's upper build limit. No out-of-bounds block
+ should appear.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="checkedPlacementRejectsAnObstructingEntity(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)">
+<h3>checkedPlacementRejectsAnObstructingEntity</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkedPlacementRejectsAnObstructingEntity</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">The fixture puts a cow inside the proposed full stone shape and calls checked placement;
+ placement fails.
+
+ <p>Nearest manual check: confine a cow in the destination above a floor, select Storage, and
+ V-right-click the floor holding dirt. The obstructed Storage block must not appear.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="creativeDepositFillsTheStackWithoutSpendingTheHand(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
+<h3>creativeDepositFillsTheStackWithoutSpendingTheHand</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">creativeDepositFillsTheStackWithoutSpendingTheHand</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
+<div class="block">To reproduce: enter Creative, hold 64 dirt, select Storage, and V-right-click an existing
+ Storage block. All 64 dirt enter the pile and the hand still holds 64.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="placementIntoWaterKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)">
+<h3>placementIntoWaterKeepsTheWater</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementIntoWaterKeepsTheWater</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;factory,
+ <a href="InteractionChecks.LoaderClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderClick</a>&nbsp;click)</span></div>
+<div class="block">To reproduce: place source water above a solid floor, select Storage, and V-right-click the
+ floor with dirt. The new Storage block is waterlogged and water remains at that position.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>storageGrowthAnswersToProtectionInSimulationAndCommit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageGrowthAnswersToProtectionInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">World-border fixture: fill one Storage block, first confirm a free headroom offer has
+ capacity, then move the border to exclude the target and try simulation and commit. Both
+ refuse the entire four-item offer without growth or input mutation.
+
+ <p>To reproduce, allow height above one, fill a Storage pile, and use /worldborder center and
+ /worldborder set to exclude its prospective growth position. Offer admissible items to first
+ headroom through slot-addressing automation. No upper block appears. Restore the original
+ border after the check; dry-run results require simulation/abort support.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>singlesGrowthAnswersToProtectionInSimulationAndCommit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesGrowthAnswersToProtectionInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">World-border fixture: fill one Singles block, first confirm a free headroom offer has
+ capacity, then move the border to exclude the target and try simulation and commit. Both
+ refuse the entire four-item offer without growth or input mutation.
+
+ <p>To reproduce, allow height above one, fill a Singles column, and use /worldborder center
+ and /worldborder set to exclude its prospective growth position. Offer admissible items to
+ first headroom through slot-addressing automation. No upper block appears. Restore the
+ original border after the check; dry-run results require simulation/abort support.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="barGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>barGrowthAnswersToProtectionInSimulationAndCommit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barGrowthAnswersToProtectionInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">World-border fixture: fill one Bar block, first confirm a free headroom offer has capacity,
+ then move the border to exclude the target and try simulation and commit. Both refuse the
+ entire four-item offer without growth or input mutation.
+
+ <p>To reproduce, allow height above one, fill a Bar column, and use /worldborder center and
+ /worldborder set to exclude its prospective growth position. Offer admissible items to first
+ headroom through slot-addressing automation. No upper block appears. Restore the original
+ border after the check; dry-run results require simulation/abort support.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>storageGrowthRejectsAnObstructingEntityInSimulationAndCommit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageGrowthRejectsAnObstructingEntityInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce: allow height above one, fill one Storage block, and confine a cow in the
+ prospective upper block's first occupied position. Offer four admissible items to first
+ headroom through automation. Commit refuses them all and creates no block. The automated
+ check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
+ automation probe.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce: allow height above one, fill one Singles block, and confine a cow in the
+ prospective upper block's first occupied position. Offer four admissible items to first
+ headroom through automation. Commit refuses them all and creates no block. The automated
+ check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
+ automation probe.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="barGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>barGrowthRejectsAnObstructingEntityInSimulationAndCommit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barGrowthRejectsAnObstructingEntityInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce: allow height above one, fill one Bar block, and confine a cow in the
+ prospective upper block's first occupied position. Offer four admissible items to first
+ headroom through automation. Commit refuses them all and creates no block. The automated
+ check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
+ automation probe.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="completedShapesDistinguishOccupiedCellsFromEmptySpace(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>completedShapesDistinguishOccupiedCellsFromEmptySpace</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">completedShapesDistinguishOccupiedCellsFromEmptySpace</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Internal obstruction-shape check: a cow overlaps one edge of the target position. Full and
+ occupied-edge shapes are obstructed; empty shapes and distant Singles/Bar positions are
+ clear. No block placement or deposit is performed.
+
+ <p>Nearest manual check: hold a cow at one edge of a destination and attempt first placement
+ of Singles or Bar into occupied-edge and clear positions. Only shapes overlapping the cow
+ should prevent placement.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="outsideTheBorder(net.minecraft.gametest.framework.GameTestHelper,java.lang.Runnable)">
+<h3>outsideTheBorder</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">outsideTheBorder</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;action)</span></div>
+<div class="block">Runs <code>action</code> with the world border moved off the test structure, and restores it
+ before returning. The border is level-wide state, but the move and the restore both happen
+ inside this one synchronous call, so no other test observes it moved.</div>
 </section>
 </li>
 </ul>

@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -50,6 +51,11 @@ public class BarTextureStore extends SimpleJsonResourceReloadListener {
             new ResourceLocation(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
     private static final BarTextureData FALLBACK =
             BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
+
+    /** Mapping files: {@code assets/<namespace>/textures/bars/**.json}. */
+    private static final String DIRECTORY = "textures/bars";
+
+    private static final FileToIdConverter FILES = FileToIdConverter.json(DIRECTORY);
     private static final int OPAQUE_ALPHA_THRESHOLD = 127;
     private static final int MAX_CHANNEL = 255;
     private static final float BRIGHTEN_FACTOR = 0.1f;
@@ -92,7 +98,7 @@ public class BarTextureStore extends SimpleJsonResourceReloadListener {
     }
 
     public BarTextureStore() {
-        super(new Gson(), "textures/bars");
+        super(new Gson(), DIRECTORY);
     }
 
     /** Parses files in id order so duplicate item mappings resolve consistently. */
@@ -102,36 +108,28 @@ public class BarTextureStore extends SimpleJsonResourceReloadListener {
         prepared.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .forEach(fileEntry -> {
-                    ResourceLocation source =
-                            new ResourceLocation(
-                                    fileEntry.getKey().getNamespace(),
-                                    "textures/bars/" + fileEntry.getKey().getPath() + ".json");
-                    try {
-                        JsonObject root = fileEntry.getValue().getAsJsonObject();
-                        for (String key : root.keySet()) {
-                            if (key.startsWith("_comment")) continue;
-                            try {
-                                ResourceLocation itemLoc = new ResourceLocation(key);
-                                BarTextureData data = parseEntry(root.get(key));
-                                if (data == null) {
-                                    SomeStacksCommon.LOGGER.warn(
-                                            "Invalid Bar texture mapping for '{}' in {}: expected string or object",
-                                            key,
-                                            source);
-                                    continue;
-                                }
-                                configMap.put(itemLoc, data);
-                            } catch (Exception e) {
-                                SomeStacksCommon.LOGGER.warn(
-                                        "Invalid Bar texture mapping for '{}' in {}: {}",
-                                        key,
-                                        source,
-                                        e.getMessage());
-                            }
-                        }
-                    } catch (Exception e) {
+                    ResourceLocation source = FILES.idToFile(fileEntry.getKey());
+                    if (!fileEntry.getValue().isJsonObject()) {
                         SomeStacksCommon.LOGGER.warn(
-                                "Failed to process file {}: {}", source, e.getMessage());
+                                "Skipping Bar texture file {}: expected an object", source);
+                        return;
+                    }
+                    JsonObject root = fileEntry.getValue().getAsJsonObject();
+                    for (String key : root.keySet()) {
+                        if (key.startsWith("_comment")) continue;
+                        ResourceLocation itemLoc = ResourceLocation.tryParse(key);
+                        BarTextureData data = itemLoc == null ? null : parseEntry(root.get(key));
+                        if (data == null) {
+                            SomeStacksCommon.LOGGER.warn(
+                                    "Invalid Bar texture mapping for '{}' in {}: expected an item id"
+                                            + " mapped to a texture id, or to an object with an"
+                                            + " optional texture id and an optional RRGGBB or"
+                                            + " AARRGGBB tint",
+                                    key,
+                                    source);
+                            continue;
+                        }
+                        configMap.put(itemLoc, data);
                     }
                 });
         return configMap;
@@ -142,26 +140,37 @@ public class BarTextureStore extends SimpleJsonResourceReloadListener {
      * An explicit tint is final, including white to disable tinting. Omitting the tint requests
      * automatic tinting from the item.
      *
-     * @return the mapping, or null when the value is neither a string nor an object.
-     * @throws IllegalArgumentException for a malformed id or color, which the caller reports.
+     * @return the mapping, or null when the value or one of its fields is malformed.
      */
     @Nullable
-    static BarTextureData parseEntry(JsonElement value) {
-        if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()) {
-            return BarTextureData.auto(new ResourceLocation(value.getAsString()));
+    private static BarTextureData parseEntry(JsonElement value) {
+        if (isString(value)) {
+            ResourceLocation texture = ResourceLocation.tryParse(value.getAsString());
+            return texture == null ? null : BarTextureData.auto(texture);
         }
         if (!value.isJsonObject()) {
             return null;
         }
 
         JsonObject obj = value.getAsJsonObject();
-        ResourceLocation texture =
-                obj.has("texture")
-                        ? new ResourceLocation(obj.get("texture").getAsString())
-                        : DEFAULT_TEXTURE;
-        return obj.has("tint")
-                ? BarTextureData.tinted(texture, parseColor(obj.get("tint").getAsString()))
-                : BarTextureData.auto(texture);
+        ResourceLocation texture = DEFAULT_TEXTURE;
+        if (obj.has("texture")) {
+            JsonElement named = obj.get("texture");
+            texture = isString(named) ? ResourceLocation.tryParse(named.getAsString()) : null;
+            if (texture == null) {
+                return null;
+            }
+        }
+        if (!obj.has("tint")) {
+            return BarTextureData.auto(texture);
+        }
+        JsonElement tint = obj.get("tint");
+        Integer color = isString(tint) ? parseColor(tint.getAsString()) : null;
+        return color == null ? null : BarTextureData.tinted(texture, color);
+    }
+
+    private static boolean isString(JsonElement element) {
+        return element.isJsonPrimitive() && element.getAsJsonPrimitive().isString();
     }
 
     @Override
@@ -335,22 +344,32 @@ public class BarTextureStore extends SimpleJsonResourceReloadListener {
         return FastColor.ARGB32.color(MAX_CHANNEL, brightR, brightG, brightB);
     }
 
-    private static int parseColor(String colorStr) {
+    /** An {@code RRGGBB} or {@code AARRGGBB} color, optionally after {@code #}; null otherwise. */
+    @Nullable
+    private static Integer parseColor(String colorStr) {
         if (colorStr.startsWith("#")) {
             colorStr = colorStr.substring(1);
         }
 
-        if (colorStr.length() == 6) {
-            // RGB input: add full alpha.
-            return (int) Long.parseLong("FF" + colorStr, 16);
-        } else if (colorStr.length() == 8) {
-            // ARGB input.
-            return (int) Long.parseLong(colorStr, 16);
+        try {
+            if (colorStr.length() == 6) {
+                // RGB input: add full alpha.
+                return (int) Long.parseLong("FF" + colorStr, 16);
+            } else if (colorStr.length() == 8) {
+                // ARGB input.
+                return (int) Long.parseLong(colorStr, 16);
+            }
+        } catch (NumberFormatException e) {
+            return null;
         }
-
-        throw new IllegalArgumentException("Invalid color format: " + colorStr);
+        return null;
     }
 
+    /**
+     * The bar texture for {@code stack}'s item: its mapping when one exists, otherwise the default
+     * bar tinted from the item's own texture, resolved once per item until the next reload. An
+     * empty stack gets the fallback texture.
+     */
     public static BarTextureData getTexture(ItemStack stack) {
         if (stack.isEmpty()) return FALLBACK;
 

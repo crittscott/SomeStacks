@@ -117,6 +117,111 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
+     * A Storage block entity saved by the previous release loads its contents, item tags, and
+     * permanence. The fixture is written from string-literal keys in the released layout ({@code
+     * Items} holding an {@code Items} list of {@code Slot}/{@code id}/{@code Count}/{@code tag}
+     * entries, plus {@code Permanent}), not from the current save code. No in-game form beyond
+     * opening a world from the previous release: its Storage Stacks keep their items, and an
+     * emptied permanent pile stays.
+     */
+    public static void releasedStorageFormatLoads(GameTestHelper helper) {
+        StorageStackBE loaded = placeStorage(helper, ORIGIN);
+        CompoundTag identity = new CompoundTag();
+        identity.putString("test", "released");
+        CompoundTag tagged = releasedEntry(7, "minecraft:stone", 23);
+        tagged.put("tag", identity.copy());
+        CompoundTag saved = releasedInventory(tagged, releasedEntry(0, "minecraft:dirt", 64));
+        saved.putBoolean("Permanent", true);
+
+        loaded.load(saved);
+
+        checkEquals(Items.DIRT, loaded.getItems().getStackInSlot(0).getItem(), "Released dirt");
+        checkEquals(64, loaded.getItems().getStackInSlot(0).getCount(), "Released dirt count");
+        ItemStack stone = loaded.getItems().getStackInSlot(7);
+        checkEquals(Items.STONE, stone.getItem(), "Released stone");
+        checkEquals(23, stone.getCount(), "Released stone count");
+        checkEquals(identity, stone.getTag(), "Released stone tag");
+        checkEquals(2, GameTestScaffold.occupied(loaded.getItems()), "Released occupied slots");
+        check(loaded.isPermanent(), "Released permanence was lost");
+        helper.succeed();
+    }
+
+    /**
+     * A Singles block entity saved by the previous release loads its items and their per-item
+     * rotations. The fixture is written from string-literal keys in the released layout ({@code
+     * Items} holding an {@code Items} list, plus a 64-entry {@code CubeRotations} int array), not
+     * from the current save code. No in-game form beyond opening a world from the previous release:
+     * its Singles Stacks keep their items, each turned as it was.
+     */
+    public static void releasedSinglesFormatLoads(GameTestHelper helper) {
+        SinglesStackBE loaded = placeSingles(helper, ORIGIN);
+        CompoundTag saved =
+                releasedInventory(
+                        releasedEntry(0, "minecraft:apple", 1),
+                        releasedEntry(21, "minecraft:stick", 1));
+        int[] rotations = new int[64];
+        rotations[0] = 1;
+        rotations[21] = 3;
+        saved.putIntArray("CubeRotations", rotations);
+
+        loaded.load(saved);
+
+        checkEquals(Items.APPLE, loaded.getItems().getStackInSlot(0).getItem(), "Released apple");
+        checkEquals(Items.STICK, loaded.getItems().getStackInSlot(21).getItem(), "Released stick");
+        checkEquals(2, GameTestScaffold.occupied(loaded.getItems()), "Released occupied cells");
+        checkEquals(1, loaded.getCubeRotation(0), "Released apple rotation");
+        checkEquals(3, loaded.getCubeRotation(21), "Released stick rotation");
+        checkEquals(0, loaded.getCubeRotation(1), "Released unrotated cell");
+        helper.succeed();
+    }
+
+    /**
+     * A Bar block entity saved by the previous release loads the ingot in each position. The
+     * fixture is written from string-literal keys in the released layout ({@code Items} holding an
+     * {@code Items} list), not from the current save code. No in-game form beyond opening a world
+     * from the previous release: its Bar Stacks keep the same positions occupied.
+     */
+    public static void releasedBarFormatLoads(GameTestHelper helper) {
+        BarStackBE loaded = placeBar(helper, ORIGIN);
+        CompoundTag saved =
+                releasedInventory(
+                        releasedEntry(0, "minecraft:iron_ingot", 1),
+                        releasedEntry(37, "minecraft:gold_ingot", 1));
+
+        loaded.load(saved);
+
+        checkEquals(
+                Items.IRON_INGOT, loaded.getItems().getStackInSlot(0).getItem(), "Released iron");
+        checkEquals(
+                Items.GOLD_INGOT, loaded.getItems().getStackInSlot(37).getItem(), "Released gold");
+        checkEquals(1, loaded.getItems().getStackInSlot(37).getCount(), "Released gold count");
+        checkEquals(2, GameTestScaffold.occupied(loaded.getItems()), "Released occupied positions");
+        helper.succeed();
+    }
+
+    /** One released-format item entry, written key by key. */
+    private static CompoundTag releasedEntry(int slot, String id, int count) {
+        CompoundTag entry = new CompoundTag();
+        entry.putInt("Slot", slot);
+        entry.putString("id", id);
+        entry.putByte("Count", (byte) count);
+        return entry;
+    }
+
+    /** A released-format block-entity tag whose inventory holds {@code entries}. */
+    private static CompoundTag releasedInventory(CompoundTag... entries) {
+        ListTag list = new ListTag();
+        for (CompoundTag entry : entries) {
+            list.add(entry);
+        }
+        CompoundTag inventory = new CompoundTag();
+        inventory.put("Items", list);
+        CompoundTag saved = new CompoundTag();
+        saved.put("Items", inventory);
+        return saved;
+    }
+
+    /**
      * Client update tags carry every field the renderers need while omitting server-only state. To
      * reproduce the visible portion in-game: deposit into all three types, rotate Storage and
      * Singles, and join with another client. Contents and rotations appear. Verifying omission of

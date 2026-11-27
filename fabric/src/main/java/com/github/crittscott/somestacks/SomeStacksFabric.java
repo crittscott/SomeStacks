@@ -1,9 +1,9 @@
 package com.github.crittscott.somestacks;
 
-import com.github.crittscott.somestacks.block.FabricItemStorage;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.FabricNetworking;
+import com.github.crittscott.somestacks.server.FabricEditAuthority;
 import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;
 
 import net.fabricmc.api.ModInitializer;
@@ -12,13 +12,14 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
+import java.util.List;
+
 /** Fabric's common entry point and server lifecycle wiring. */
 public final class SomeStacksFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         PlatformServices.install(new FabricPlatformServices());
         FabricRegistry.init();
-        FabricItemStorage.init();
         FabricNetworking.initServer();
         FabricStackInteractionEvents.init();
 
@@ -36,5 +37,14 @@ public final class SomeStacksFabric implements ModInitializer {
                 (handler, sender, server) -> ServerLifecycle.login(handler.player));
         ServerPlayConnectionEvents.DISCONNECT.register(
                 (handler, server) -> ServerLifecycle.logout(handler.player.getUUID()));
+
+        SomeStacksCommon.LOGGER.info(
+                "Some Stacks {} initialized on Fabric (network protocol {})",
+                PlatformServices.modVersion(SomeStacksCommon.MODID),
+                SomeStacksCommon.PROTOCOL_VERSION);
+        List<String> integrations = FabricEditAuthority.detectedIntegrations();
+        SomeStacksCommon.LOGGER.info(
+                "Claim protection integrations for automated edits: {}",
+                integrations.isEmpty() ? "none detected" : String.join(", ", integrations));
     }
 }

@@ -5,7 +5,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.WrittenBookItem;
 
 import java.util.Arrays;
 
@@ -28,6 +30,12 @@ public class StackItemStorage {
     public static final String TAG_ITEMS = "Items";
     public static final String TAG_SET_ASIDE = "SetAside";
     private static final String TAG_ID = "id";
+
+    /** Where vanilla container block entities save their contents. */
+    private static final String TAG_CONTAINER_ITEMS = "Items";
+
+    /** Where {@link ItemStack#save} writes a stack's data. */
+    private static final String TAG_ITEM_DATA = "tag";
 
     /** Default per-slot capacity before the item's own maximum applies. */
     public static final int DEFAULT_SLOT_LIMIT = 64;
@@ -107,14 +115,14 @@ public class StackItemStorage {
 
         if (!simulate) {
             if (existing.isEmpty()) {
-                stacks[slot] = reachedLimit ? copyWithSize(stack, limit) : stack;
+                stacks[slot] = reachedLimit ? stack.copyWithCount(limit) : stack;
             } else {
                 existing.grow(reachedLimit ? limit : stack.getCount());
             }
             onContentsChanged(slot);
         }
 
-        return reachedLimit ? copyWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
+        return reachedLimit ? stack.copyWithCount(stack.getCount() - limit) : ItemStack.EMPTY;
     }
 
     /** Removes up to the requested amount from one slot; simulation leaves contents unchanged. */
@@ -141,10 +149,10 @@ public class StackItemStorage {
         }
 
         if (!simulate) {
-            stacks[slot] = copyWithSize(existing, existing.getCount() - toExtract);
+            stacks[slot] = existing.copyWithCount(existing.getCount() - toExtract);
             onContentsChanged(slot);
         }
-        return copyWithSize(existing, toExtract);
+        return existing.copyWithCount(toExtract);
     }
 
     /** Capacity of one local slot before the item's own maximum applies. */
@@ -159,15 +167,6 @@ public class StackItemStorage {
 
     /** Called after a slot's contents change, including a direct {@link #setStackInSlot}. */
     protected void onContentsChanged(int slot) {}
-
-    private static ItemStack copyWithSize(ItemStack stack, int size) {
-        if (size <= 0) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack copy = stack.copy();
-        copy.setCount(size);
-        return copy;
-    }
 
     /**
      * Creates an NBT snapshot containing nonempty {@code Items} entries with local slot indices and
@@ -265,5 +264,22 @@ public class StackItemStorage {
     /** Removes the set-aside tags from serialized storage, which clients have no use for. */
     public static void stripSetAside(CompoundTag nbt) {
         nbt.remove(TAG_SET_ASIDE);
+    }
+
+    /**
+     * Removes item data no renderer draws from serialized storage: the container contents a block
+     * item carries in its {@code BlockEntityTag} (a filled shulker box) and a book's pages. Every
+     * player near a stack block receives its stored items, unlike a chest's, so this keeps a block
+     * of filled containers or books from sending all of their contents to each of them. Data that
+     * affects appearance stays, including the rest of {@code BlockEntityTag}, where banner patterns
+     * live. Edits only the serialized entries, never the stored stacks.
+     */
+    public static void stripUndrawnItemData(CompoundTag nbt) {
+        ListTag list = nbt.getList(TAG_ITEMS, Tag.TAG_COMPOUND);
+        for (int i = 0; i < list.size(); i++) {
+            CompoundTag data = list.getCompound(i).getCompound(TAG_ITEM_DATA);
+            data.remove(WrittenBookItem.TAG_PAGES);
+            data.getCompound(BlockItem.BLOCK_ENTITY_TAG).remove(TAG_CONTAINER_ITEMS);
+        }
     }
 }

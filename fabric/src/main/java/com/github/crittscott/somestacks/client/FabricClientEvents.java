@@ -6,14 +6,12 @@ import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;
 
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 
 /** Feeds Fabric interaction callbacks into the shared ordered gesture rules. */
 public final class FabricClientEvents {
@@ -32,20 +30,17 @@ public final class FabricClientEvents {
                         return InteractionResultHolder.pass(player.getItemInHand(hand));
                     }
 
+                    // Vanilla calls this only for a nonempty hand; MinecraftMixin covers the empty
+                    // main hand at air.
                     InteractionContext context =
                             InteractionContext.forAirClick(
                                             player,
-                                            level,
                                             hand,
                                             ClientGestures.currentMode(),
-                                            FabricKeyMappings.STACK_MODE_KEY.isDown())
-                                    .withHittingBlock(isHittingBlock());
-                    if (player.getItemInHand(hand).isEmpty()) {
-                        InteractionRuleRegistry.processEmptyHandRules(context);
-                    } else {
-                        InteractionRuleRegistry.processItemRules(context);
-                    }
-                    ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
+                                            FabricClientRendering.STACK_MODE_KEY.isDown())
+                                    .withHittingBlock(ClientGestures.isHittingBlock());
+                    InteractionRuleRegistry.processAirRules(context);
+                    ClientGestures.syncState(FabricClientRendering.STACK_MODE_KEY.isDown());
                     return context.shouldCancel()
                             ? InteractionResultHolder.consume(player.getItemInHand(hand))
                             : InteractionResultHolder.pass(player.getItemInHand(hand));
@@ -65,16 +60,10 @@ public final class FabricClientEvents {
                         level,
                         hand,
                         hit.getBlockPos(),
-                        hit.getDirection(),
                         ClientGestures.currentMode(),
-                        FabricKeyMappings.STACK_MODE_KEY.isDown());
-        ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
+                        FabricClientRendering.STACK_MODE_KEY.isDown());
+        ClientGestures.syncState(FabricClientRendering.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processBlockRules(context);
         return context.shouldCancel() ? InteractionResult.SUCCESS : InteractionResult.PASS;
-    }
-
-    private static boolean isHittingBlock() {
-        HitResult hit = Minecraft.getInstance().hitResult;
-        return hit != null && hit.getType() == HitResult.Type.BLOCK;
     }
 }

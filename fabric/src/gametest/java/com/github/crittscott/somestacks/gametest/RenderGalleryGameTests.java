@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 /**
  * The render-gallery world builder: that a queued gallery lays out its floor and rows as described
  * and reports the totals it finished with, spread across ticks by the configured placement limit.
+ * Also the render tools' client file: the user override file that {@code /ss write changed} saves.
  */
 public final class RenderGalleryGameTests implements FabricGameTest {
     /**
@@ -36,5 +37,22 @@ public final class RenderGalleryGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE, batch = "somestacks_commands")
     public void galleryItemsAreInIdOrderWithoutDeniedItems(GameTestHelper helper) {
         RenderGalleryChecks.galleryItemsAreInIdOrderWithoutDeniedItems(helper);
+    }
+
+    /** See {@link RenderOverrideChecks#malformedFieldsKeepTheEntrysValidFields}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void malformedFieldsKeepTheEntrysValidFields(GameTestHelper helper) {
+        RenderOverrideChecks.malformedFieldsKeepTheEntrysValidFields(helper);
+    }
+
+    /**
+     * See {@link
+     * RenderOverrideChecks#userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries}.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries(
+            GameTestHelper helper) {
+        RenderOverrideChecks.userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries(
+                helper);
     }
 }

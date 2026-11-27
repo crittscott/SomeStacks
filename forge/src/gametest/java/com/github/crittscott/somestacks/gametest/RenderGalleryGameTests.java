@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -12,8 +12,9 @@ import net.minecraftforge.gametest.PrefixGameTestTemplate;
 /**
  * The render-gallery world builder: that a queued gallery lays out its floor and rows as described
  * and reports the totals it finished with, spread across ticks by the configured placement limit.
+ * Also the render tools' client file: the user override file that {@code /ss write changed} saves.
  */
-@GameTestHolder(SomeStacks.MODID)
+@GameTestHolder(SomeStacksCommon.MODID)
 @PrefixGameTestTemplate(false)
 public final class RenderGalleryGameTests {
     private RenderGalleryGameTests() {}
@@ -23,7 +24,7 @@ public final class RenderGalleryGameTests {
      * RenderGalleryChecks#queuedStorageGalleryBuildsFloorRowsAndCompletionTotals}; see that method
      * for the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 100)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE, timeoutTicks = 100)
     public static void queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(
             GameTestHelper helper) {
         ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
@@ -34,15 +35,32 @@ public final class RenderGalleryGameTests {
      * See {@link RenderGalleryChecks#commandsEnforcePolicyAndGalleryPermissions} for permissions
      * and manual checks.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE, batch = "somestacks_commands")
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE, batch = "somestacks_commands")
     public static void commandsEnforcePolicyAndGalleryPermissions(GameTestHelper helper) {
         RenderGalleryChecks.commandsEnforcePolicyAndGalleryPermissions(
                 helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
     }
 
     /** See {@link RenderGalleryChecks#galleryItemsAreInIdOrderWithoutDeniedItems}. */
-    @GameTest(template = GameTestSupport.TEMPLATE, batch = "somestacks_commands")
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE, batch = "somestacks_commands")
     public static void galleryItemsAreInIdOrderWithoutDeniedItems(GameTestHelper helper) {
         RenderGalleryChecks.galleryItemsAreInIdOrderWithoutDeniedItems(helper);
+    }
+
+    /** See {@link RenderOverrideChecks#malformedFieldsKeepTheEntrysValidFields}. */
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
+    public static void malformedFieldsKeepTheEntrysValidFields(GameTestHelper helper) {
+        RenderOverrideChecks.malformedFieldsKeepTheEntrysValidFields(helper);
+    }
+
+    /**
+     * See {@link
+     * RenderOverrideChecks#userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries}.
+     */
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
+    public static void userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries(
+            GameTestHelper helper) {
+        RenderOverrideChecks.userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries(
+                helper);
     }
 }

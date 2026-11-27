@@ -125,6 +125,11 @@ public final class AutoRenderProfiles {
         }
     }
 
+    /**
+     * Writes the measured profiles to {@code measured_cache.json}, stamped with the selected packs
+     * and each namespace's mod version, when they changed since the last write; a write failure is
+     * logged and leaves the cache dirty for the next call.
+     */
     public static void saveCache() {
         if (!dirty) {
             return;
@@ -138,7 +143,8 @@ public final class AutoRenderProfiles {
             entries.put(
                     id, new ItemRenderConfig(profile.mode(), profile.scale(), profile.offset()));
             if (!versions.has(id.getNamespace())) {
-                versions.addProperty(id.getNamespace(), modVersion(id.getNamespace()));
+                versions.addProperty(
+                        id.getNamespace(), PlatformServices.modVersion(id.getNamespace()));
             }
         }
 
@@ -195,7 +201,7 @@ public final class AutoRenderProfiles {
 
             JsonObject encodedEntries = root.getAsJsonObject(KEY_ENTRIES);
             Map<ResourceLocation, ItemRenderConfig> entries =
-                    OverrideJsonCodec.parse(encodedEntries, cacheFile.toString());
+                    OverrideJsonCodec.parse(encodedEntries, cacheFile.toString()).entries();
             int skipped = encodedEntries.size() - entries.size();
             for (Map.Entry<ResourceLocation, ItemRenderConfig> entry : entries.entrySet()) {
                 ResourceLocation id = entry.getKey();
@@ -207,7 +213,8 @@ public final class AutoRenderProfiles {
                 }
                 JsonElement recorded = versions.get(id.getNamespace());
                 if (recorded == null
-                        || !recorded.getAsString().equals(modVersion(id.getNamespace()))) {
+                        || !recorded.getAsString()
+                                .equals(PlatformServices.modVersion(id.getNamespace()))) {
                     dirty = true;
                     skipped++;
                     continue;
@@ -249,10 +256,6 @@ public final class AutoRenderProfiles {
     private static String selectedPackIds() {
         return String.join(
                 "\n", Minecraft.getInstance().getResourcePackRepository().getSelectedIds());
-    }
-
-    private static String modVersion(String namespace) {
-        return PlatformServices.modVersion(namespace);
     }
 
     private static RenderProfile compute(ItemStack stack) {

@@ -19,14 +19,6 @@ public record ConfigSyncPkt(
         List<String> genMods,
         List<String> disabledMods) {
 
-    // Valid namespaces are ASCII: at most two length bytes and MAX_NAMESPACE_LENGTH bytes each.
-    public static final int MAX_PACKET_BYTES =
-            3
-                    + 2
-                            * (2
-                                    + ServerConfig.MAX_NAMESPACE_ENTRIES
-                                            * (2 + ServerConfig.MAX_NAMESPACE_LENGTH));
-
     public ConfigSyncPkt {
         genMods = List.copyOf(genMods);
         disabledMods = List.copyOf(disabledMods);
@@ -56,9 +48,6 @@ public record ConfigSyncPkt(
 
     /** Validates the entire snapshot on the network thread before any client state is changed. */
     public static ConfigSyncPkt decode(FriendlyByteBuf buf) {
-        if (buf.readableBytes() > MAX_PACKET_BYTES) {
-            throw new DecoderException("Config synchronization packet exceeds byte limit");
-        }
         boolean enableStack = buf.readBoolean();
         boolean enableSingles = buf.readBoolean();
         boolean enableBar = buf.readBoolean();

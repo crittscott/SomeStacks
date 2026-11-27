@@ -18,10 +18,12 @@ public final class CubeGrid {
     private final VoxelShape[] localShapes;
     private final int[][] rotatedIndices;
 
+    /**
+     * Builds an {@code edge}-cubed grid of cells {@code cellPixels} wide, where {@code starts}
+     * gives one pixel offset per axis cell (shared by x, y, and z), and precomputes every cell's
+     * box, shape, and rotated index.
+     */
     public CubeGrid(int edge, double cellPixels, int... starts) {
-        if (edge < 1 || starts.length != edge) {
-            throw new IllegalArgumentException("A cube grid needs one start for each axis cell");
-        }
         this.edge = edge;
         this.layerSize = edge * edge;
         this.cells = layerSize * edge;
@@ -71,6 +73,7 @@ public final class CubeGrid {
         };
     }
 
+    /** Returns one stored cell's bounds at the given layout rotation, in world coordinates. */
     public AABB worldBox(int storageIndex, int rotation, BlockPos blockPos) {
         return localBox(storageIndex, rotation)
                 .move(blockPos.getX(), blockPos.getY(), blockPos.getZ());
@@ -86,6 +89,7 @@ public final class CubeGrid {
         return localBoxes[visualIndex(storageIndex, rotation)];
     }
 
+    /** Returns the cached block-local shape for one stored cell at the given layout rotation. */
     public VoxelShape localShape(int storageIndex, int rotation) {
         return localShapes[visualIndex(storageIndex, rotation)];
     }

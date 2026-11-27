@@ -77,8 +77,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">WorldEdits</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Vanilla world-edit mechanics for automated growth and removal: world border and spawn protection,
- entity obstruction, and the actual block placement/removal. The one loader-specific authority â€”
+<div class="block">Vanilla world-edit mechanics for player placement, growth, and removal: the one placement gate,
+ world border and spawn protection, entity obstruction, and the actual block placement/removal.
+ The one loader-specific authority â€”
  the automation actor, protection callbacks, and loader completion notifications â€” is delegated to
  <a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server"><code>EditAuthority</code></a>.</div>
 </section>
@@ -108,7 +109,10 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isConsultingAdjacent()" class="member-name-link">isConsultingAdjacent</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether <a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)"><code>mayUseAdjacent(net.minecraft.server.level.ServerPlayer, net.minecraft.core.BlockPos)</code></a> is consulting destination protection on this thread; every
+ gesture entry point refuses while it is, so the probe cannot run a gesture.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isProtected(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">isProtected</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
@@ -123,11 +127,15 @@ loadScripts(document, 'script');</script>
 <div class="block">Vanilla's placement obstruction test for a block-local collision shape.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
  net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.core.Direction&nbsp;placedAgainst)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Whether the actor may place a block: build ability, vanilla protection, and loader queries.</div>
+<div class="block">The one gate on putting a block at <code>pos</code>, without side effects: build height,
+ replaceability, vanilla's item-placement check (<code>Player.mayUseItemAt(net.minecraft.core.BlockPos, net.minecraft.core.Direction, net.minecraft.world.item.ItemStack)</code>) for the actor's
+ main-hand item against the block at <code>pos.relative(placedAgainst)</code>, world border and
+ spawn protection, and the loader's protection queries.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseAdjacent</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
@@ -136,15 +144,15 @@ loadScripts(document, 'script');</script>
 <div class="block">Consults destination protection without allowing the consultation to run a gesture.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placeChecked(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction,net.minecraft.world.phys.shapes.VoxelShape)" class="member-name-link">placeChecked</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction,net.minecraft.world.phys.shapes.VoxelShape)" class="member-name-link">placeChecked</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.core.Direction&nbsp;placedAgainst,
  net.minecraft.world.phys.shapes.VoxelShape&nbsp;finalCollision)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Places <code>state</code> through the loader transaction, restoring captured state and
- block-entity data when protection denies it.</div>
+<div class="block">Places <code>state</code> after <a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)"><code>mayPlace(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.core.Direction)</code></a> and an obstruction test, through the loader
+ transaction, restoring captured state and block-entity data when protection denies it.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">removeChecked</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
@@ -180,14 +188,24 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
+<section class="detail" id="mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)">
 <h3>mayPlace</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayPlace</span><wbr><span class="parameters">(@Nullable
  net.minecraft.server.level.ServerPlayer&nbsp;actor,
  net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Whether the actor may place a block: build ability, vanilla protection, and loader queries. A
- null actor uses the level's automation identity. Growth checks this before promising space.</div>
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.core.Direction&nbsp;placedAgainst)</span></div>
+<div class="block">The one gate on putting a block at <code>pos</code>, without side effects: build height,
+ replaceability, vanilla's item-placement check (<code>Player.mayUseItemAt(net.minecraft.core.BlockPos, net.minecraft.core.Direction, net.minecraft.world.item.ItemStack)</code>) for the actor's
+ main-hand item against the block at <code>pos.relative(placedAgainst)</code>, world border and
+ spawn protection, and the loader's protection queries. <a href="#placeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction,net.minecraft.world.phys.shapes.VoxelShape)"><code>placeChecked(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.core.Direction, net.minecraft.world.phys.shapes.VoxelShape)</code></a> applies it to
+ every placement; player placement and growth ask it first to refuse before promising
+ anything. A null actor uses the level's automation identity.
+
+ <p>The item-placement check rather than <code>Player.mayBuild()</code> alone is what an Adventure
+ mode player's <code>CanPlaceOn</code> item answers to, so a player who may place a stack by
+ gesture may also grow one by depositing that item. Automation holds nothing, so only its
+ build ability counts.</div>
 </section>
 </li>
 <li>
@@ -209,6 +227,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="isConsultingAdjacent()">
 <h3>isConsultingAdjacent</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isConsultingAdjacent</span>()</div>
+<div class="block">Whether <a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)"><code>mayUseAdjacent(net.minecraft.server.level.ServerPlayer, net.minecraft.core.BlockPos)</code></a> is consulting destination protection on this thread; every
+ gesture entry point refuses while it is, so the probe cannot run a gesture.</div>
 </section>
 </li>
 <li>
@@ -229,20 +249,21 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="placeChecked(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction,net.minecraft.world.phys.shapes.VoxelShape)">
+<section class="detail" id="placeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction,net.minecraft.world.phys.shapes.VoxelShape)">
 <h3>placeChecked</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">placeChecked</span><wbr><span class="parameters">(@Nullable
- net.minecraft.world.entity.player.Player&nbsp;placer,
+ net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.core.Direction&nbsp;placedAgainst,
  net.minecraft.world.phys.shapes.VoxelShape&nbsp;finalCollision)</span></div>
-<div class="block">Places <code>state</code> through the loader transaction, restoring captured state and
- block-entity data when protection denies it. <code>finalCollision</code> is the completed
- placement's collision shape, since a block-entity stack can start empty and acquire its real
- shape only with its first deposit. A null placer uses the level's automation identity for
- both placement and its game event.</div>
+<div class="block">Places <code>state</code> after <a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)"><code>mayPlace(net.minecraft.server.level.ServerPlayer, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.core.Direction)</code></a> and an obstruction test, through the loader
+ transaction, restoring captured state and block-entity data when protection denies it.
+ <code>finalCollision</code> is the completed placement's collision shape, since a block-entity
+ stack can start empty and acquire its real shape only with its first deposit. <code>
+ placedAgainst</code> points from <code>pos</code> to the block the new one is placed against. A null
+ placer uses the level's automation identity for both placement and its game event.</div>
 </section>
 </li>
 <li>

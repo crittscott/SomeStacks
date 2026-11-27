@@ -1,39 +1,26 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -51,98 +38,45 @@ import javax.annotation.Nullable;
  * <p>It also carries the deferred publication tick that content edits schedule on the bottom block
  * of the column.
  */
-public class SinglesStackBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
-    /**
-     * Light this block emits, derived from the {@code BlockItem}s stored in it and kept in the
-     * block state so lighting updates travel by the ordinary block-state path.
-     */
-    public static final IntegerProperty LIGHT_LEVEL =
-            IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
-
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-
+public class SinglesStackBlock extends StackBlock {
     /** The layout rotation, so structure rotation and mirroring turn the layout with the block. */
     public static final DirectionProperty HORIZONTAL_FACING =
             BlockStateProperties.HORIZONTAL_FACING;
 
     private static final VoxelShape FULL_BLOCK_SHAPE = Shapes.block();
 
-    /** Shared mining, lighting, collision, and piston settings for this stack type. */
-    public static Properties properties() {
-        return Properties.of()
-                .dynamicShape()
-                .mapColor(MapColor.WOOD)
-                .noOcclusion()
-                .pushReaction(PushReaction.BLOCK)
-                .strength(0.5F, 6.0F)
-                .lightLevel(state -> state.getValue(LIGHT_LEVEL));
+    public SinglesStackBlock(Properties props) {
+        super(props, BlockType.SINGLES_STACK);
+        registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
-    public SinglesStackBlock(Properties props) {
-        super(props);
-        registerDefaultState(
-                defaultBlockState()
-                        .setValue(LIGHT_LEVEL, 0)
-                        .setValue(WATERLOGGED, false)
-                        .setValue(HORIZONTAL_FACING, Direction.NORTH));
+    /** Shared mining, lighting, collision, and piston settings for this stack type. */
+    public static Properties properties() {
+        return properties(MapColor.WOOD).dynamicShape();
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL, WATERLOGGED, HORIZONTAL_FACING);
+        super.createBlockStateDefinition(builder);
+        builder.add(HORIZONTAL_FACING);
     }
 
-    @Override
-    public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(
-                HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, Mirror mirror) {
-        return rotate(state, mirror.getRotation(state.getValue(HORIZONTAL_FACING)));
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED)
-                ? Fluids.WATER.getSource(false)
-                : super.getFluidState(state);
-    }
-
-    @Override
-    public BlockState updateShape(
-            BlockState state,
-            Direction direction,
-            BlockState neighborState,
-            LevelAccessor level,
-            BlockPos pos,
-            BlockPos neighborPos) {
-        if (state.getValue(WATERLOGGED)) {
-            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-        }
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
-
+    /**
+     * The one cell the deposit would fill: the target along the ray in a new block, which is
+     * unrotated, provided it is supported, which in an empty block means a bottom cell over an
+     * occupied seam or the world.
+     */
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new SinglesStackBE(pos, state);
-    }
-
-    @Override
-    public VoxelShape getShape(
-            BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof SinglesStackBE ssbe) {
-            return ssbe.getCachedShape();
-        }
-        return Shapes.empty();
+    public VoxelShape firstDepositShape(Level level, BlockPos pos, BlockState state, ViewRay ray) {
+        int index =
+                ray.depositTarget(
+                        pos, SinglesStackBE.SLOTS, i -> SinglesCubeIdx.GRID.localBox(i, 0), null);
+        return index >= 0
+                        && SinglesCubeIdx.freshBlockSupports(
+                                index, SinglesStackBE.seamBeneath(level, pos))
+                ? SinglesCubeIdx.GRID.localShape(index, 0)
+                : null;
     }
 
     @Override
@@ -159,6 +93,16 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
         return FULL_BLOCK_SHAPE;
+    }
+
+    @Override
+    public VoxelShape getShape(
+            BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof SinglesStackBE ssbe) {
+            return ssbe.getCachedShape();
+        }
+        return Shapes.empty();
     }
 
     /**
@@ -183,30 +127,14 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     @Override
-    public InteractionResult use(
-            BlockState state,
-            Level level,
-            BlockPos pos,
-            Player player,
-            InteractionHand hand,
-            BlockHitResult hit) {
-        if (!level.isClientSide) {
-            StackInteractions.handleExistingStack(
-                    (ServerPlayer) player, hand, hit, BlockType.SINGLES_STACK);
-        }
-        return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return rotate(state, mirror.getRotation(state.getValue(HORIZONTAL_FACING)));
     }
 
-    /**
-     * Publishes deferred content, lighting, and comparator changes. Edits schedule this tick on the
-     * column's bottom block, coalescing a burst of changes anywhere in the run into one pass.
-     */
+    @Nullable
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        SinglesColumn column = SinglesColumn.at(level, pos);
-        if (column != null) {
-            column.publishPending();
-        }
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new SinglesStackBE(pos, state);
     }
 
     /** Invalidates cached columns and schedules publication after this block joins a run. */
@@ -242,17 +170,20 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState state) {
-        return true;
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(
+                HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
     }
 
-    /** Reports the whole column's fill, so a comparator reads the same value anywhere along it. */
+    /**
+     * Publishes deferred content, lighting, and comparator changes. Edits schedule this tick on the
+     * column's bottom block, coalescing a burst of changes anywhere in the run into one pass.
+     */
     @Override
-    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         SinglesColumn column = SinglesColumn.at(level, pos);
-        if (column == null) {
-            return 0;
+        if (column != null) {
+            column.publishPending();
         }
-        return column.comparatorSignal();
     }
 }

@@ -3,6 +3,8 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.renderconfig.RenderOffset;
 import com.github.crittscott.somestacks.client.renderconfig.RenderProfile;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -81,21 +83,31 @@ public final class CubeRenderHelper {
      */
     private static final float CUBE_INSET = 0.9f;
 
+    /** Block pixels an item's unit cube spans once a stack block's renderer has scaled it. */
+    private static final float RENDER_UNIT_PIXELS = 8.0f;
+
     /**
      * Scale a stack block's renderer applies before handing a cell's contents here: an item's unit
-     * cube becomes eight pixels.
+     * cube becomes {@link #RENDER_UNIT_PIXELS} pixels of the 16-pixel block.
      */
-    public static final float CELL_RENDER_SCALE = 8.0f / 16.0f;
+    public static final float CELL_RENDER_SCALE = RENDER_UNIT_PIXELS / 16.0f;
 
     /**
-     * Storage's own cell-render scale, grown so a cell's rendered content fills more of its
-     * 4.5-pixel cell, halving the gap between Storage's cells. Storage-only: Singles' cells already
-     * tile edge to edge with no gap to absorb growth into.
+     * Storage's own cell-render scale, grown by the ratio of a Storage cell to a Singles cell so a
+     * cell's rendered content fills more of its larger cell, halving the gap between Storage's
+     * cells. Storage-only: Singles' cells already tile edge to edge with no gap to absorb growth
+     * into.
      */
-    public static final float STORAGE_CELL_RENDER_SCALE = CELL_RENDER_SCALE * 4.5f / 4.0f;
+    public static final float STORAGE_CELL_RENDER_SCALE =
+            CELL_RENDER_SCALE * (float) (StorageCubeIdx.CELL_PIXELS / SinglesCubeIdx.CELL_PIXELS);
 
-    /** One four-pixel cell in those local units, where 1.0 is the eight pixels above. */
-    public static final float CELL_LOCAL_SIZE = 4.0f / 8.0f;
+    /**
+     * One Singles cell in those local units, where 1.0 is {@link #RENDER_UNIT_PIXELS}. Storage
+     * cells occupy the same local size, because {@link #STORAGE_CELL_RENDER_SCALE} grows the whole
+     * frame instead.
+     */
+    public static final float CELL_LOCAL_SIZE =
+            (float) SinglesCubeIdx.CELL_PIXELS / RENDER_UNIT_PIXELS;
 
     /** The cell's center in the same units, which a cell's contents are drawn about. */
     public static final float CELL_LOCAL_CENTRE = CELL_LOCAL_SIZE / 2.0f;
@@ -232,9 +244,7 @@ public final class CubeRenderHelper {
                 CELL_LOCAL_CENTRE / finalScale);
         pose.translate(offset.x() / finalScale, offset.y() / finalScale, offset.z() / finalScale);
 
-        // Counter-rotate the GUI display context transforms
-        pose.mulPose(Axis.YP.rotationDegrees(-45.0f));
-        pose.mulPose(Axis.XP.rotationDegrees(-30.0f));
+        ClientRenderPlatform.applyGuiCounterRotation(pose);
 
         Minecraft.getInstance()
                 .getItemRenderer()
@@ -535,16 +545,17 @@ public final class CubeRenderHelper {
 
             int[] vertices = quad.getVertices();
             for (FaceTarget target : faces) {
-                for (int i = 0; i < 4; i++) {
-                    int base = i * 8;
+                for (int i = 0; i < ClientRenderPlatform.QUAD_VERTICES; i++) {
+                    int base = i * ClientRenderPlatform.VERTEX_STRIDE;
+                    int uv = base + ClientRenderPlatform.VERTEX_UV_OFFSET;
                     vertex(
                             vc,
                             target.art(),
                             Float.intBitsToFloat(vertices[base]),
                             Float.intBitsToFloat(vertices[base + 1]),
                             Float.intBitsToFloat(vertices[base + 2]),
-                            Float.intBitsToFloat(vertices[base + 4]),
-                            Float.intBitsToFloat(vertices[base + 5]),
+                            Float.intBitsToFloat(vertices[uv]),
+                            Float.intBitsToFloat(vertices[uv + 1]),
                             r,
                             g,
                             b,

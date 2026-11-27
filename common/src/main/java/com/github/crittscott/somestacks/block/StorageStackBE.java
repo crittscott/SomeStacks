@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
 
@@ -21,8 +23,8 @@ import javax.annotation.Nullable;
  * {@link StoragePile}, and deposits, capability access, sorting and packing all act on the whole
  * run. Everything here that reaches past this block's own slots resolves the pile first.
  *
- * <p>Capability exposure ({@code ForgeCapabilities.ITEM_HANDLER} or its Fabric equivalent) is
- * loader-specific and lives outside this class. Automation adapts {@link
+ * <p>Automation exposure (a Forge {@code IItemHandler} capability or a Fabric Transfer API {@code
+ * Storage}) is loader-specific and lives outside this class. Automation adapts {@link
  * StackBlockEntity#itemRun()} for whole-pile access; {@link #getItems()} exposes only this block's
  * local slots.
  */
@@ -37,12 +39,7 @@ public class StorageStackBE extends StackBlockEntity {
     private boolean pendingCleanupUsesAutomation;
 
     public StorageStackBE(BlockPos pos, BlockState state) {
-        super(
-                CommonRegistry.STORAGE_STACK_BE.get(),
-                pos,
-                state,
-                SLOTS,
-                StorageStackBlock.LIGHT_LEVEL);
+        super(CommonRegistry.STORAGE_STACK_BE.get(), pos, state, SLOTS);
     }
 
     /**
@@ -100,12 +97,7 @@ public class StorageStackBE extends StackBlockEntity {
     /**
      * Deposits into the pile this block belongs to, filling from its base upward and growing the
      * column if it must. Which block of the pile the items were offered to makes no difference.
-     */
-    public int deposit(ItemStack fromHand) {
-        return deposit(fromHand, null);
-    }
-
-    /**
+     *
      * @param placer the player responsible for any block this deposit creates, or null for
      *     automation. See {@link StoragePile#deposit}.
      */
@@ -114,16 +106,32 @@ public class StorageStackBE extends StackBlockEntity {
         return pile == null ? 0 : pile.deposit(fromHand, placer);
     }
 
+    /** Fills the pile from its base wherever the ray was aimed; see {@link StoragePile#deposit}. */
+    @Override
+    public int depositFromHand(ViewRay ray, ItemStack fromHand, ServerPlayer player) {
+        return deposit(fromHand, player);
+    }
+
+    /** A Storage pile takes a deposit wherever it is aimed, so it never yields to placement. */
+    @Override
+    public boolean acceptsDepositAlong(ViewRay ray) {
+        return true;
+    }
+
+    /** Takes as many as the hand has room for, or the whole slot into an empty hand. */
+    @Override
+    public ItemStack extractIntoHand(int index, ItemStack hand, ServerPlayer player) {
+        int room = hand.isEmpty() ? Integer.MAX_VALUE : hand.getMaxStackSize() - hand.getCount();
+        return extractAt(index, room, hand, player);
+    }
+
     /**
-     * Takes from one of this block's own slots, the cell the player targeted, and schedules the
-     * settle that packs the rest of the pile down over the gap.
+     * Takes up to {@code maxCount} from one of this block's own slots, the cell the player
+     * targeted, when {@code playerHand} can hold it, and schedules the settle that packs the rest
+     * of the pile down over the gap.
      */
     public ItemStack extractAt(
-            int index, int maxCount, @Nullable ItemStack playerHand, @Nullable ServerPlayer actor) {
-        if (index < 0 || index >= items.getSlots()) {
-            return ItemStack.EMPTY;
-        }
-
+            int index, int maxCount, ItemStack playerHand, @Nullable ServerPlayer actor) {
         ItemStack inSlot = items.getStackInSlot(index);
         if (inSlot.isEmpty()) {
             return ItemStack.EMPTY;
@@ -134,8 +142,7 @@ public class StorageStackBE extends StackBlockEntity {
         }
 
         int toTake = Math.min(maxCount, inSlot.getCount());
-        ItemStack taken = inSlot.copy();
-        taken.setCount(toTake);
+        ItemStack taken = inSlot.copyWithCount(toTake);
         items.extractItem(index, toTake, false);
 
         StoragePile pile = pile();
@@ -147,19 +154,24 @@ public class StorageStackBE extends StackBlockEntity {
     }
 
     /**
-     * Writes a slot only when it does not already hold exactly that stack, so a pile-wide rewrite
-     * leaves untouched blocks clean and unsynced.
+     * Writes a slot only when it does not already hold exactly that piece, so a pile-wide rewrite
+     * leaves untouched blocks clean and unsynced, and copies the piece only for a slot it writes.
+     *
+     * @param desired what the slot should hold, or null for empty
      */
-    void setSlotIfChanged(int slot, ItemStack desired) {
+    void setSlotIfChanged(int slot, @Nullable ItemOps.Piece desired) {
         ItemStack current = items.getStackInSlot(slot);
-        if (current.isEmpty() && desired.isEmpty()) {
+        if (desired == null) {
+            if (!current.isEmpty()) {
+                items.setStackInSlot(slot, ItemStack.EMPTY);
+            }
             return;
         }
-        if (current.getCount() == desired.getCount()
-                && ItemStack.isSameItemSameTags(current, desired)) {
+        if (current.getCount() == desired.count()
+                && ItemStack.isSameItemSameTags(current, desired.model())) {
             return;
         }
-        items.setStackInSlot(slot, desired);
+        items.setStackInSlot(slot, desired.toStack());
     }
 
     @Override
@@ -183,8 +195,13 @@ public class StorageStackBE extends StackBlockEntity {
     }
 
     @Override
-    protected boolean isStoredItemValid(ItemStack stack) {
+    public boolean admits(ItemStack stack) {
         return BlockType.STORAGE_STACK.admits(stack, null);
+    }
+
+    @Override
+    protected AABB cellBox(int index) {
+        return StorageCubeIdx.GRID.localBox(index, getRotation());
     }
 
     @Override

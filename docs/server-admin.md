@@ -2,7 +2,7 @@
 
 ## The config file
 
-Some Stacks uses documented `somestacks-server.toml` on both loaders. Forge stores it at `<world>/serverconfig/somestacks-server.toml` and watches edits. Fabric uses `config/somestacks-server.toml`, optionally overridden by `<world>/serverconfig/somestacks-server.toml`; run `/ss reload` after editing the active Fabric file. `/ss` list edits update the running values and save immediately.
+Some Stacks uses documented `somestacks-server.toml` on both loaders. Forge stores it at `<world>/serverconfig/somestacks-server.toml` and watches edits. Fabric uses `config/somestacks-server.toml`, optionally overridden by `<world>/serverconfig/somestacks-server.toml`; run `/ss reload` after editing the active Fabric file. Fabric reads only the active file; its warnings name that file and say which values were corrected or defaulted. `/ss` list edits update the running values and save immediately.
 
 | Setting | Section | Default | Effect |
 | --- | --- | --- | --- |
@@ -15,7 +15,7 @@ Some Stacks uses documented `somestacks-server.toml` on both loaders. Forge stor
 | `placements_per_tick` | `render_gallery` | `64` | Blocks the gallery commands place per tick, floor included. |
 | `enabled` | `render_gallery` | `false` | Whether `/ss gallery` and `/ss ingotgallery` can be run at all. |
 | `required_permission_level` | `render_gallery` | `3` | Permission level `/ss gallery` and `/ss ingotgallery` require. Range 0–4. |
-| `gen_mods` | `render_gallery` | empty | Namespaces the `list` gallery forms build, in the order given. |
+| `gen_mods` | `render_gallery` | empty | Namespaces the `list` gallery and `/ss write list` forms build, in alphabetical order. |
 | `gen_items` | `render_gallery` | empty | Items `/ss gallery items` builds a row from. |
 
 Disabling a mod or an item bars *new* contents. Anything already stored can still be taken out.
@@ -24,7 +24,7 @@ Disabling a mod or an item bars *new* contents. Anything already stored can stil
 
 The `somestacks:ingots` item tag decides what a Bar Stack holds — and, by complement, what a Singles Stack refuses. Widening one narrows the other by exactly as much. The shipped tag includes `#forge:ingots`, `#c:ingots`, and `#c:bricks` where those tags exist, the vanilla ingots and bricks, and a list of modded ingots and bricks. A data pack adds to it (see [Pack authors](pack-authors.md)), and `/reload` applies the change.
 
-Existing world JSON policy is migrated once to a world TOML override; the original is retained as `somestacks-server.json.migrated`. An existing TOML takes precedence. Invalid JSON that cannot be migrated is retained for repair. Custom `compatibility.ingots` entries are logged for transfer to a data-pack item tag.
+On Fabric, a world's `serverconfig/somestacks-server.json` from the previous release is migrated once to a world TOML override; the original is retained as `somestacks-server.json.migrated`. An existing TOML takes precedence. Invalid JSON that cannot be migrated is retained for repair. Custom `compatibility.ingots` entries found during that migration are logged for transfer to a data-pack item tag. Forge worlds have no JSON policy to migrate.
 
 ## Item placement conflicts
 
@@ -83,8 +83,8 @@ Item appearance is client resource data. To give players shared render profiles 
 
 ## Protection and claim mods
 
-On both loaders, the mod checks build limits, replaceability, entity obstruction, the world border, and spawn protection before structural edits. Player gestures use the real vanilla interaction pipeline, so claim and protection mods that veto block use through Forge's `RightClickBlock` or Fabric API's `UseBlockCallback` also veto deposits, extraction, placement, rotation, and permanence toggles. Gestures on an existing stack are the block's own use, so a rule that denies only item use does not stop them. Forge fires its native placement event before publishing a new block, restoring full snapshots on denial. Fabric has no equivalent placement event, so placement and growth query the installed claim mods instead: Common Protection API, which covers every claim mod implementing it, and FTB Chunks and Open Parties and Claims directly. A deposit into a neighboring Singles or Bar Stack also asks Common Protection API about the destination. Growth asks before automation is promised the space, so a claimed position is never advertised as insertable.
+On both loaders, the mod checks build limits, replaceability, entity obstruction, the world border, and spawn protection before structural edits. A player's placement and the growth their deposit causes also need vanilla's item-placement permission for the held item, so in Adventure mode its `CanPlaceOn` list decides both. Player gestures use the real vanilla interaction pipeline, so claim and protection mods that veto block use through Forge's `RightClickBlock` or Fabric API's `UseBlockCallback` also veto deposits, extraction, placement, rotation, and permanence toggles. Gestures on an existing stack are the block's own use, so a rule that denies only item use does not stop them. Forge fires its native placement event before publishing a new block, restoring full snapshots on denial. Fabric has no equivalent placement event, so placement and growth query the installed claim mods instead: Common Protection API, which covers every claim mod implementing it, and FTB Chunks and Open Parties and Claims directly; the server log lists at startup which of these are installed. A deposit into a neighboring Singles or Bar Stack also asks Common Protection API about the destination. Growth asks before automation is promised the space, so a claimed position is never advertised as insertable.
 
-Blocks the mod removes on its own — an emptied block a settle or a collapse leaves behind — are reported through a real break event on both loaders: Forge's `BreakEvent`, Fabric API's `PlayerBlockBreakEvents`. Cleanup caused by one player's extraction or permanence toggle is attributed to that player; anything else is attributed to the `[SomeStacks]` automation actor. **A refused removal leaves the block standing**, and the run carries on around it: the mod will not delete where it may not build.
+Blocks the mod removes on its own — an emptied block a settle or a collapse leaves behind — are reported through a real break event on both loaders: Forge's `BreakEvent`, Fabric API's `PlayerBlockBreakEvents`. Cleanup caused by one player's extraction, permanence toggle, or breaking of a stack block is attributed to that player; anything else is attributed to the `[SomeStacks]` automation actor. **A refused removal leaves the block standing**, and the run carries on around it: the mod will not delete where it may not build.
 
 The gesture packet carries only placement mode and modifier state; actions arrive as vanilla block-use packets, whose reach and loaded-chunk checks vanilla performs. The server then validates the main hand, spectator state, held item, target, support, enablement, height, obstruction, and edit authority. Cell targeting is recomputed server-side along the reach ray through the packet's hit point.

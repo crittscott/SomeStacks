@@ -109,7 +109,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#register(net.minecraftforge.eventbus.api.IEventBus)" class="member-name-link">register</a><wbr>(net.minecraftforge.eventbus.api.IEventBus&nbsp;modBus)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers the spec as the per-world <code>SERVER</code> config and listens for its load and file
+ reload events; runs once from the mod constructor.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#start(net.minecraft.server.MinecraftServer)" class="member-name-link">start</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;startingServer)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -117,7 +120,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stop()" class="member-name-link">stop</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Forgets the stopped server, so a config event queued for it no longer publishes.</div>
+</div>
 </div>
 </div>
 </div>
@@ -153,6 +158,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="register(net.minecraftforge.eventbus.api.IEventBus)">
 <h3>register</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">register</span><wbr><span class="parameters">(net.minecraftforge.eventbus.api.IEventBus&nbsp;modBus)</span></div>
+<div class="block">Registers the spec as the per-world <code>SERVER</code> config and listens for its load and file
+ reload events; runs once from the mod constructor. Publication waits for <a href="#start(net.minecraft.server.MinecraftServer)"><code>start(net.minecraft.server.MinecraftServer)</code></a>.</div>
 </section>
 </li>
 <li>
@@ -167,6 +174,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="stop()">
 <h3>stop</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stop</span>()</div>
+<div class="block">Forgets the stopped server, so a config event queued for it no longer publishes.</div>
 </section>
 </li>
 </ul>

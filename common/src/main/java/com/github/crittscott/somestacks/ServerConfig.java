@@ -1,21 +1,29 @@
 package com.github.crittscott.somestacks;
 
+import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
+import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 
 import net.minecraft.commands.Commands;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-/** Per-world immutable policy and resolved admission sets; loaders own persistence. */
+/**
+ * Per-world immutable policy, its file declaration ({@link Section}, {@link Setting}), and resolved
+ * admission sets; loaders own persistence.
+ */
 public final class ServerConfig {
     private ServerConfig() {}
 
@@ -92,6 +100,26 @@ public final class ServerConfig {
             genItems = List.copyOf(genItems);
         }
 
+        /**
+         * Builds a policy from one raw value per declared setting, typed by its {@link
+         * Setting.Kind}.
+         */
+        @SuppressWarnings("unchecked")
+        public static Settings from(Function<Setting, Object> value) {
+            return new Settings(
+                    (Integer) value.apply(Setting.MAX_PILE_HEIGHT),
+                    (Boolean) value.apply(Setting.ENABLE_STORAGE_STACK_BLOCK),
+                    (Boolean) value.apply(Setting.ENABLE_SINGLES_STACK_BLOCK),
+                    (Boolean) value.apply(Setting.ENABLE_BAR_STACK_BLOCK),
+                    (List<String>) value.apply(Setting.DISABLE_MODS),
+                    (List<String>) value.apply(Setting.DISABLE_ITEMS),
+                    (Integer) value.apply(Setting.PLACEMENTS_PER_TICK),
+                    (Boolean) value.apply(Setting.GALLERY_ENABLED),
+                    (Integer) value.apply(Setting.REQUIRED_PERMISSION_LEVEL),
+                    (List<String>) value.apply(Setting.GEN_MODS),
+                    (List<String>) value.apply(Setting.GEN_ITEMS));
+        }
+
         public static Settings defaults() {
             return new Settings(
                     DEFAULT_MAX_PILE_HEIGHT,
@@ -141,36 +169,226 @@ public final class ServerConfig {
         }
     }
 
+    /** A table of the server policy file; its declaration order is the order in the file. */
+    public enum Section {
+        PILES(Keys.PILES, "Stack piles: vertical runs of one stack type that share one inventory."),
+        STACKS(
+                Keys.STACKS,
+                "Which stack types players and automation may create.",
+                "Turning a type off blocks new placement and growth only; existing stacks keep working and their contents stay extractable."),
+        COMPATIBILITY(
+                Keys.COMPATIBILITY,
+                "Items refused by stacks. Disabling never removes or ejects existing contents."),
+        RENDER_GALLERY(
+                Keys.RENDER_GALLERY,
+                "Render galleries: /ss gallery and /ss ingotgallery build rows of stacks showing every item of chosen mods,",
+                "for checking how items render. Galleries bypass placement protection, so they are off by default.");
+
+        private final List<String> comment;
+        private final String key;
+
+        Section(String key, String... comment) {
+            this.key = key;
+            this.comment = List.of(comment);
+        }
+
+        /** Explanation lines written above the table. */
+        public List<String> comment() {
+            return comment;
+        }
+
+        public String key() {
+            return key;
+        }
+
+        /** This table's settings, in file order. */
+        public List<Setting> settings() {
+            return Arrays.stream(Setting.values()).filter(s -> s.section == this).toList();
+        }
+    }
+
+    /**
+     * One field of the server policy file: its table, key, kind, bounds, explanation, and the
+     * {@link Settings} component it holds. Each loader builds its file, defaults, and range checks
+     * from these; declaration order within a table is the order in the file.
+     */
+    public enum Setting {
+        MAX_PILE_HEIGHT(
+                Section.PILES,
+                Keys.MAX_PILE_HEIGHT,
+                Settings::maxPileHeight,
+                MIN_PILE_HEIGHT,
+                MAX_PILE_HEIGHT_LIMIT,
+                "Tallest a run of one stack type may grow, in blocks. Player deposits and automation stop growing a run at this height."),
+        ENABLE_STORAGE_STACK_BLOCK(
+                Section.STACKS,
+                Keys.ENABLE_STORAGE_STACK_BLOCK,
+                Kind.BOOLEAN,
+                Settings::enableStorageStackBlock,
+                "Storage Stack: %d item stacks per block that merge, sort, and pack down."
+                        .formatted(StorageCubeIdx.CELLS)),
+        ENABLE_SINGLES_STACK_BLOCK(
+                Section.STACKS,
+                Keys.ENABLE_SINGLES_STACK_BLOCK,
+                Kind.BOOLEAN,
+                Settings::enableSinglesStackBlock,
+                "Singles Stack: a %d x %d x %d display grid holding one item per cell."
+                        .formatted(
+                                SinglesCubeIdx.GRID_EDGE,
+                                SinglesCubeIdx.GRID_EDGE,
+                                SinglesCubeIdx.GRID_EDGE)),
+        ENABLE_BAR_STACK_BLOCK(
+                Section.STACKS,
+                Keys.ENABLE_BAR_STACK_BLOCK,
+                Kind.BOOLEAN,
+                Settings::enableBarStackBlock,
+                "Bar Stack: %d ingots per block in %d alternating layers; ingots are the %s item tag."
+                        .formatted(
+                                BarCubeIdx.CELLS,
+                                BarCubeIdx.CELLS / BarCubeIdx.LAYER_SIZE,
+                                BarStackBE.INGOTS.location())),
+        DISABLE_MODS(
+                Section.COMPATIBILITY,
+                Keys.DISABLE_MODS,
+                Kind.STRINGS,
+                Settings::disableMods,
+                "Mod ids (item namespaces) whose items players and automation may not put into stacks, e.g. [\"examplemod\"].",
+                "Galleries skip these mods. Edit in game with /ss deny."),
+        DISABLE_ITEMS(
+                Section.COMPATIBILITY,
+                Keys.DISABLE_ITEMS,
+                Kind.STRINGS,
+                Settings::disableItems,
+                "Item ids players may not deposit into stacks, e.g. [\"minecraft:stone\"]. Automation is not affected.",
+                "Galleries skip these items. The default lists items known to crash clients when drawn. Edit in game with /ss deny."),
+        GALLERY_ENABLED(
+                Section.RENDER_GALLERY,
+                Keys.ENABLED,
+                Kind.BOOLEAN,
+                Settings::galleryEnabled,
+                "Whether /ss gallery and /ss ingotgallery are available."),
+        REQUIRED_PERMISSION_LEVEL(
+                Section.RENDER_GALLERY,
+                Keys.REQUIRED_PERMISSION_LEVEL,
+                Settings::galleryPermissionLevel,
+                MIN_GALLERY_PERMISSION_LEVEL,
+                GALLERY_PERMISSION_LEVEL_MAX,
+                "Permission level needed to run the gallery commands (%d = everyone, %d = owner)."
+                        .formatted(MIN_GALLERY_PERMISSION_LEVEL, GALLERY_PERMISSION_LEVEL_MAX)),
+        PLACEMENTS_PER_TICK(
+                Section.RENDER_GALLERY,
+                Keys.PLACEMENTS_PER_TICK,
+                Settings::renderGalleryPlacementsPerTick,
+                MIN_PLACEMENTS_PER_TICK,
+                Integer.MAX_VALUE,
+                "Stacks a gallery places per server tick; lower values spread the work over more ticks."),
+        GEN_MODS(
+                Section.RENDER_GALLERY,
+                Keys.GEN_MODS,
+                Kind.STRINGS,
+                Settings::genMods,
+                "Mod ids the gallery 'list' form builds, one column per mod. Edit in game with /ss gen."),
+        GEN_ITEMS(
+                Section.RENDER_GALLERY,
+                Keys.GEN_ITEMS,
+                Kind.STRINGS,
+                Settings::genItems,
+                "Item ids the gallery 'items' form builds as a single column. Edit in game with /ss gen.");
+
+        private final List<String> comment;
+        private final Function<Settings, Object> component;
+        private final String key;
+        private final Kind kind;
+        private final int max;
+        private final int min;
+        private final Section section;
+
+        /** An unbounded boolean or string-list field. */
+        Setting(
+                Section section,
+                String key,
+                Kind kind,
+                Function<Settings, Object> component,
+                String... comment) {
+            this(section, key, kind, component, 0, 0, comment);
+        }
+
+        /** A bounded integer field. */
+        Setting(
+                Section section,
+                String key,
+                Function<Settings, Object> component,
+                int min,
+                int max,
+                String... comment) {
+            this(section, key, Kind.INTEGER, component, min, max, comment);
+        }
+
+        Setting(
+                Section section,
+                String key,
+                Kind kind,
+                Function<Settings, Object> component,
+                int min,
+                int max,
+                String... comment) {
+            this.section = section;
+            this.key = key;
+            this.kind = kind;
+            this.component = component;
+            this.min = min;
+            this.max = max;
+            this.comment = List.of(comment);
+        }
+
+        /** The value type a loader stores for a setting. */
+        public enum Kind {
+            BOOLEAN,
+            INTEGER,
+            STRINGS
+        }
+
+        /** Explanation lines written above the field, without any range line. */
+        public List<String> comment() {
+            return comment;
+        }
+
+        /** This setting's value in {@code settings}: an Integer, Boolean, or List of String. */
+        public Object get(Settings settings) {
+            return component.apply(settings);
+        }
+
+        /** The field name within its table. */
+        public String key() {
+            return key;
+        }
+
+        public Kind kind() {
+            return kind;
+        }
+
+        /** Largest accepted value of an {@link Kind#INTEGER} setting. */
+        public int max() {
+            return max;
+        }
+
+        /** Smallest accepted value of an {@link Kind#INTEGER} setting. */
+        public int min() {
+            return min;
+        }
+
+        /** The dotted {@code table.field} path. */
+        public String path() {
+            return section.key + "." + key;
+        }
+
+        public Section section() {
+            return section;
+        }
+    }
+
     public static Settings settings() {
         return settings;
-    }
-
-    public static int maxPileHeight() {
-        return settings.maxPileHeight();
-    }
-
-    public static boolean enableStorageStackBlock() {
-        return settings.enableStorageStackBlock();
-    }
-
-    public static boolean enableSinglesStackBlock() {
-        return settings.enableSinglesStackBlock();
-    }
-
-    public static boolean enableBarStackBlock() {
-        return settings.enableBarStackBlock();
-    }
-
-    public static int renderGalleryPlacementsPerTick() {
-        return settings.renderGalleryPlacementsPerTick();
-    }
-
-    public static boolean galleryEnabled() {
-        return settings.galleryEnabled();
-    }
-
-    public static int galleryRequiredPermissionLevel() {
-        return settings.galleryPermissionLevel();
     }
 
     /**
@@ -181,9 +399,9 @@ public final class ServerConfig {
             Supplier<Settings> readPolicy,
             Consumer<Settings> savePolicy,
             Runnable synchronizeClients) {
-        reader = Objects.requireNonNull(readPolicy, "Policy reader");
-        saver = Objects.requireNonNull(savePolicy, "Policy saver");
-        syncClients = Objects.requireNonNull(synchronizeClients, "Policy synchronization");
+        reader = readPolicy;
+        saver = savePolicy;
+        syncClients = synchronizeClients;
         publish(reader.get());
         logActivePolicy();
     }
@@ -202,7 +420,6 @@ public final class ServerConfig {
 
     /** Publishes prepared policy; an over-limit replacement leaves the current policy intact. */
     public static boolean publish(Settings replacement) {
-        Objects.requireNonNull(replacement, "Server policy");
         try {
             replacement =
                     replacement.withList(
@@ -221,7 +438,7 @@ public final class ServerConfig {
                 !ConfigSyncPkt.snapshot(settings).equals(ConfigSyncPkt.snapshot(replacement));
         settings = replacement;
         bakeServerLists();
-        if (syncedFieldsChanged && syncClients != null) {
+        if (syncedFieldsChanged) {
             syncClients.run();
         }
         return true;
@@ -260,9 +477,7 @@ public final class ServerConfig {
 
     /** Writes command edits through the current world's loader. */
     public static void save() {
-        if (saver != null) {
-            saver.accept(settings);
-        }
+        saver.accept(settings);
     }
 
     /** Releases the world reader, saver, and derived admission state on server shutdown. */
@@ -302,13 +517,16 @@ public final class ServerConfig {
     public static void logActivePolicy() {
         Settings current = settings;
         SomeStacksCommon.LOGGER.info(
-                "Server policy active: Storage={}, Singles={}, Bar={}; maximum pile height={}; disabled mods={}, disabled items={}, gallery mods={}, gallery items={}",
+                "Server policy active: Storage={}, Singles={}, Bar={}; maximum pile height={}; disabled mods={}, disabled items={}; gallery enabled={}, gallery permission level={}, gallery placements per tick={}, gallery mods={}, gallery items={}",
                 current.enableStorageStackBlock(),
                 current.enableSinglesStackBlock(),
                 current.enableBarStackBlock(),
                 current.maxPileHeight(),
                 disabledMods.size(),
                 disabledItems.size(),
+                current.galleryEnabled(),
+                current.galleryPermissionLevel(),
+                current.renderGalleryPlacementsPerTick(),
                 current.genMods().size(),
                 current.genItems().size());
     }

@@ -88,7 +88,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li>
 <div id="class-summary">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab3" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab3', 2)" class="table-tab">Enum Classes</button><button id="class-summary-tab4" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab4', 2)" class="table-tab">Record Classes</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab3" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab3', 2)" class="table-tab">Enum Classes</button><button id="class-summary-tab4" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab4', 2)" class="table-tab">Record Classes</button></div>
 <div id="class-summary.tabpanel" role="tabpanel" aria-labelledby="class-summary-tab0">
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
@@ -99,7 +99,8 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab3"><a href="BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab3">
-<div class="block">The three stack types and their registered blocks and server enablement settings.</div>
+<div class="block">The three stack types: their registered blocks, server enablement settings, item admission, and
+ the sounds player deposits and extractions play.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -108,18 +109,23 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ItemOps.html" title="class in com.github.crittscott.somestacks.util">ItemOps</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Item handling shared by all three stack types: what a hand can accept, how a taken stack reaches
- the player, how a broken block sheds its contents, and how stored items add up to a light level.</div>
+ the player, how loose stacks pack into whole ones, how a broken block sheds its contents, and how
+ stored items add up to a light level.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="PlayerReach.html" title="class in com.github.crittscott.somestacks.util">PlayerReach</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Loader-neutral access to each loader's block-reach implementation.</div>
+<div class="col-first even-row-color class-summary class-summary-tab4"><a href="ItemOps.Piece.html" title="class in com.github.crittscott.somestacks.util">ItemOps.Piece</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab4">
+<div class="block">One output stack of <a href="ItemOps.html#consolidate(java.lang.Iterable)"><code>ItemOps.consolidate(java.lang.Iterable&lt;net.minecraft.world.item.ItemStack&gt;)</code></a>: <code>count</code> items of <code>model</code>'s exact
+ identity.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="PlayerReach.Provider.html" title="interface in com.github.crittscott.somestacks.util">PlayerReach.Provider</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">&nbsp;</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Geometry and slot indexing shared by Singles Stack rendering, collision, ray targeting, and
  support.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StackGestures.html" title="class in com.github.crittscott.somestacks.util">StackGestures</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Which stack gesture a right-click makes, from the inputs both sides know: the Stack Modifier,
+ sneaking, the selected mode, the main-hand item, and the clicked block's stack type.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -142,17 +148,20 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Ordering used to lay out the contents of a settled Storage pile.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab4"><a href="StackSort.SortKey.html" title="class in com.github.crittscott.somestacks.util">StackSort.SortKey</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab4">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StackSort.SortKey.html" title="class in com.github.crittscott.somestacks.util">StackSort.SortKey</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Sort fields of one settlement identity: item id, then damage, then tag text.</div>
+</div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StorageCubeIdx.html" title="class in com.github.crittscott.somestacks.util">StorageCubeIdx</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">The geometry of a Storage Stack's 3 x 3 x 3 grid: where each of the 27 cells sits in the block,
- what box it occupies, and which one a player's reach ray hits first.</div>
+<div class="block">The geometry of a Storage Stack's 3 x 3 x 3 grid: where each of the 27 cells sits in the block
+ and what box it occupies.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab4"><a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab4">
 <div class="block">The segment a player's view ray sweeps against a block they are interacting with: their eye
- position out to the far end of their block reach.</div>
+ position out to the far end of their block reach, and the two walks that pick a cell inside a
+ stack along it.</div>
 </div>
 </div>
 </div>

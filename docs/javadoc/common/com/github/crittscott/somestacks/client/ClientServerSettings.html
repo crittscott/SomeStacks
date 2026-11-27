@@ -93,23 +93,30 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">apply</a><wbr>(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt,net.minecraft.world.entity.player.Player)" class="member-name-link">apply</a><wbr>(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet,
+ net.minecraft.world.entity.player.Player&nbsp;localPlayer)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Installs a received policy snapshot.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#disabledMods()" class="member-name-link">disabledMods</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#genMods()" class="member-name-link">genMods</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isBlockTypeEnabled(com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">isBlockTypeEnabled</a><wbr>(<a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#genMods()" class="member-name-link">genMods</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isDisabled(java.lang.String)" class="member-name-link">isDisabled</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#snapshot()" class="member-name-link">snapshot</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isBlockTypeEnabled(com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">isBlockTypeEnabled</a><wbr>(<a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether the server's policy lets players place this stack type.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isDisabled(java.lang.String)" class="member-name-link">isDisabled</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether the server's policy disables items from this namespace.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#snapshot()" class="member-name-link">snapshot</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The last policy the server sent, or everything enabled with empty lists before the first
+ arrives.</div>
+</div>
 </div>
 </div>
 </div>
@@ -131,18 +138,26 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="snapshot()">
 <h3>snapshot</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></span>&nbsp;<span class="element-name">snapshot</span>()</div>
+<div class="block">The last policy the server sent, or everything enabled with empty lists before the first
+ arrives.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)">
+<section class="detail" id="apply(com.github.crittscott.somestacks.network.ConfigSyncPkt,net.minecraft.world.entity.player.Player)">
 <h3>apply</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet,
+ @Nullable
+ net.minecraft.world.entity.player.Player&nbsp;localPlayer)</span></div>
+<div class="block">Installs a received policy snapshot. A selected placement type the new policy disables is
+ advanced at once, with the mode message when a local player exists to show it; the login-time
+ sync can arrive before one does.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="isBlockTypeEnabled(com.github.crittscott.somestacks.util.BlockType)">
 <h3>isBlockTypeEnabled</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isBlockTypeEnabled</span><wbr><span class="parameters">(<a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</span></div>
+<div class="block">Whether the server's policy lets players place this stack type.</div>
 </section>
 </li>
 <li>
@@ -152,15 +167,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="disabledMods()">
-<h3>disabledMods</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">disabledMods</span>()</div>
-</section>
-</li>
-<li>
 <section class="detail" id="isDisabled(java.lang.String)">
 <h3>isDisabled</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isDisabled</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</span></div>
+<div class="block">Whether the server's policy disables items from this namespace.</div>
 </section>
 </li>
 </ul>

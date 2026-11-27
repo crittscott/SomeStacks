@@ -114,12 +114,36 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#initServer()" class="member-name-link">initServer</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sendConfig(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">sendConfig</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#broadcastConfig(net.minecraft.server.MinecraftServer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">broadcastConfig</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server,
  com.github.crittscott.somestacks.network.ConfigSyncPkt&nbsp;packet)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Encodes the snapshot once and sends that one packet to every connected player.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#initServer()" class="member-name-link">initServer</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers the server half of the protocol: every login is queried with the protocol version
+ and disconnected, with an English fallback message, when the client does not understand the
+ query or answers a different version; the gesture-state receiver decodes on the network
+ thread and runs its handler on the server thread.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#matchesProtocol(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">matchesProtocol</a><wbr>(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether a received handshake payload is exactly this side's protocol version with nothing
+ after it; a malformed payload is a mismatch, not an error.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.network.FriendlyByteBuf</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#protocolPayload()" class="member-name-link">protocolPayload</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A fresh handshake payload holding this side's protocol version, for either direction.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sendConfig(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">sendConfig</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ com.github.crittscott.somestacks.network.ConfigSyncPkt&nbsp;packet)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sends one player a policy snapshot; requires the player's play connection.</div>
+</div>
 </div>
 </div>
 </div>
@@ -167,6 +191,33 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="initServer()">
 <h3>initServer</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">initServer</span>()</div>
+<div class="block">Registers the server half of the protocol: every login is queried with the protocol version
+ and disconnected, with an English fallback message, when the client does not understand the
+ query or answers a different version; the gesture-state receiver decodes on the network
+ thread and runs its handler on the server thread. Runs once from the common entry point.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="protocolPayload()">
+<h3>protocolPayload</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.network.FriendlyByteBuf</span>&nbsp;<span class="element-name">protocolPayload</span>()</div>
+<div class="block">A fresh handshake payload holding this side's protocol version, for either direction.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="matchesProtocol(net.minecraft.network.FriendlyByteBuf)">
+<h3>matchesProtocol</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">matchesProtocol</span><wbr><span class="parameters">(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</span></div>
+<div class="block">Whether a received handshake payload is exactly this side's protocol version with nothing
+ after it; a malformed payload is a mismatch, not an error.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="broadcastConfig(net.minecraft.server.MinecraftServer,com.github.crittscott.somestacks.network.ConfigSyncPkt)">
+<h3>broadcastConfig</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">broadcastConfig</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server,
+ com.github.crittscott.somestacks.network.ConfigSyncPkt&nbsp;packet)</span></div>
+<div class="block">Encodes the snapshot once and sends that one packet to every connected player.</div>
 </section>
 </li>
 <li>
@@ -174,6 +225,7 @@ loadScripts(document, 'script');</script>
 <h3>sendConfig</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendConfig</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
  com.github.crittscott.somestacks.network.ConfigSyncPkt&nbsp;packet)</span></div>
+<div class="block">Sends one player a policy snapshot; requires the player's play connection.</div>
 </section>
 </li>
 </ul>

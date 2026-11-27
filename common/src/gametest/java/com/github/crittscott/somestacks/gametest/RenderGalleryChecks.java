@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.gametest;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.policy;
 
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.BarStackBE;
@@ -30,6 +31,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -238,18 +240,25 @@ public final class RenderGalleryChecks {
 
     private static ServerConfig.Settings commandSettings(
             boolean galleryEnabled, List<String> disabledItems) {
-        return new ServerConfig.Settings(
-                8,
-                true,
-                true,
-                true,
-                List.of(),
-                disabledItems,
-                64,
-                galleryEnabled,
-                GALLERY_PERMISSION,
-                List.of("minecraft"),
-                List.of("minecraft:stone"));
+        return policy(
+                ServerConfig.Settings.defaults(),
+                Map.of(
+                        ServerConfig.Setting.ENABLE_STORAGE_STACK_BLOCK,
+                        true,
+                        ServerConfig.Setting.ENABLE_BAR_STACK_BLOCK,
+                        true,
+                        ServerConfig.Setting.DISABLE_MODS,
+                        List.of(),
+                        ServerConfig.Setting.DISABLE_ITEMS,
+                        disabledItems,
+                        ServerConfig.Setting.GALLERY_ENABLED,
+                        galleryEnabled,
+                        ServerConfig.Setting.REQUIRED_PERMISSION_LEVEL,
+                        GALLERY_PERMISSION,
+                        ServerConfig.Setting.GEN_MODS,
+                        List.of("minecraft"),
+                        ServerConfig.Setting.GEN_ITEMS,
+                        List.of("minecraft:stone")));
     }
 
     private static void assertRefused(

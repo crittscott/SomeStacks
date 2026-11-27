@@ -5,6 +5,9 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.ItemOps;
+import com.github.crittscott.somestacks.util.StackItemStorage;
+import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -13,15 +16,21 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -49,12 +58,49 @@ public class BarStackBE extends StackBlockEntity {
     private boolean removedByCascade = false;
 
     public BarStackBE(BlockPos pos, BlockState state) {
-        super(CommonRegistry.BAR_STACK_BE.get(), pos, state, SLOTS, BarStackBlock.LIGHT_LEVEL);
+        super(CommonRegistry.BAR_STACK_BE.get(), pos, state, SLOTS);
     }
 
     /** The item tag defining what a Bar Stack holds; data packs add to it. */
     public static final TagKey<Item> INGOTS =
             TagKey.create(Registries.ITEM, new ResourceLocation(SomeStacksCommon.MODID, "ingots"));
+
+    /**
+     * The drops produced by one Bar collapse, packed by exact identity at each block they fell
+     * from.
+     */
+    static final class DropBatch {
+        private final Map<BlockPos, List<ItemStack>> dropsByPosition = new LinkedHashMap<>();
+
+        /** Records a copy of {@code stack}, so the caller may go on to change or discard it. */
+        void add(BlockPos pos, ItemStack stack) {
+            if (!stack.isEmpty()) {
+                dropsByPosition
+                        .computeIfAbsent(pos.immutable(), ignored -> new ArrayList<>())
+                        .add(stack.copy());
+            }
+        }
+
+        void addAll(BlockPos pos, StackItemStorage handler) {
+            for (int slot = 0; slot < handler.getSlots(); slot++) {
+                add(pos, handler.getStackInSlot(slot));
+            }
+        }
+
+        void spawn(Level level) {
+            if (level.isClientSide) {
+                return;
+            }
+
+            for (Map.Entry<BlockPos, List<ItemStack>> position : dropsByPosition.entrySet()) {
+                BlockPos pos = position.getKey();
+                for (ItemOps.Piece piece : ItemOps.consolidate(position.getValue())) {
+                    Containers.dropItemStack(
+                            level, pos.getX(), pos.getY(), pos.getZ(), piece.toStack());
+                }
+            }
+        }
+    }
 
     /**
      * Returns the server column containing this block, or null on the client or when removed.
@@ -91,36 +137,46 @@ public class BarStackBE extends StackBlockEntity {
         return cachedShape;
     }
 
+    /** Whether position {@code index} is empty and overlapping a bar or the seam beneath it. */
+    public boolean canDepositAt(int index) {
+        return items.getStackInSlot(index).isEmpty()
+                && BarCubeIdx.isGrounded(index, items, seamBeneath());
+    }
+
+    @Override
+    public boolean acceptsDepositAlong(ViewRay ray) {
+        int index = depositTarget(ray);
+        return index >= 0 && canDepositAt(index);
+    }
+
+    /** Puts one bar into the position the ray targets; see {@link #depositAt}. */
+    @Override
+    public int depositFromHand(ViewRay ray, ItemStack fromHand, ServerPlayer player) {
+        int index = depositTarget(ray);
+        return index >= 0 && depositAt(index, fromHand) ? 1 : 0;
+    }
+
+    /** Takes the one bar only when the hand can hold it; see {@link #extractAt}. */
+    @Override
+    public ItemStack extractIntoHand(int index, ItemStack hand, ServerPlayer player) {
+        return ItemOps.canTakeIntoHand(hand, items.getStackInSlot(index))
+                ? extractAt(index, player)
+                : ItemStack.EMPTY;
+    }
+
     /**
-     * Puts one bar from the given stack into the named position, if that position is empty, valid,
-     * and overlapping a bar below. Refuses rather than redirecting the item elsewhere, so a caller
-     * walking positions from the bottom fills the supported ones in order.
+     * Puts one bar from the given stack into the named position, if that position is empty and
+     * overlapping a bar below and the item is admitted. Refuses rather than redirecting the item
+     * elsewhere, so a caller walking positions from the bottom fills the supported ones in order.
      *
      * @return whether the bar moved; the hand shrinks by one only then
      */
     public boolean depositAt(int index, ItemStack fromHand) {
-        if (fromHand.isEmpty()) {
+        if (fromHand.isEmpty() || !canDepositAt(index)) {
             return false;
         }
 
-        if (index < 0 || index >= SLOTS) {
-            return false;
-        }
-
-        if (!items.getStackInSlot(index).isEmpty()) {
-            return false;
-        }
-
-        if (!BlockType.BAR_STACK.admits(fromHand, null)) {
-            return false;
-        }
-
-        if (!BarCubeIdx.isGrounded(index, items, seamBeneath())) {
-            return false;
-        }
-
-        ItemStack toInsert = fromHand.copy();
-        toInsert.setCount(1);
+        ItemStack toInsert = fromHand.copyWithCount(1);
         ItemStack remainder = items.insertItem(index, toInsert, false);
 
         if (remainder.isEmpty()) {
@@ -139,28 +195,22 @@ public class BarStackBE extends StackBlockEntity {
      *     automation
      */
     public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
-        if (index < 0 || index >= SLOTS) {
-            return ItemStack.EMPTY;
-        }
-
         boolean[] topBefore = BarCubeIdx.topLayerOccupancy(items);
-        BarDropBatch drops = new BarDropBatch();
+        DropBatch drops = new DropBatch();
 
         ItemStack extracted;
         beginBatch();
         try {
             extracted = items.extractItem(index, 1, false);
 
-            if (!extracted.isEmpty() && level instanceof ServerLevel serverLevel) {
-                cascadeFrom(serverLevel, this, seamBeneath(), topBefore, drops, actor);
+            if (!extracted.isEmpty()) {
+                cascadeFrom((ServerLevel) level, this, seamBeneath(), topBefore, drops, actor);
             }
         } finally {
             endBatch();
         }
 
-        if (level != null) {
-            drops.spawn(level);
-        }
+        drops.spawn(level);
         return extracted;
     }
 
@@ -174,14 +224,19 @@ public class BarStackBE extends StackBlockEntity {
         items.setStackInSlot(index, bar);
     }
 
-    /**
-     * The support this block's bottom layer rests on: the top-layer occupancy of the Bar Stack
-     * directly below, or null when this block stands on the world instead of on another Bar Stack.
-     */
+    /** This block's own seam; see {@link #seamBeneath(Level, BlockPos)}. */
     @Nullable
     private boolean[] seamBeneath() {
-        if (level != null
-                && level.getBlockEntity(getBlockPos().below()) instanceof BarStackBE below) {
+        return seamBeneath(level, getBlockPos());
+    }
+
+    /**
+     * The support the bottom layer of a Bar Stack at {@code pos} rests on: the top-layer occupancy
+     * of the Bar Stack directly below, or null when it stands on the world instead.
+     */
+    @Nullable
+    static boolean[] seamBeneath(Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos.below()) instanceof BarStackBE below) {
             return BarCubeIdx.topLayerOccupancy(below.items);
         }
         return null;
@@ -201,7 +256,7 @@ public class BarStackBE extends StackBlockEntity {
             BarStackBE start,
             @Nullable boolean[] seamBelow,
             boolean[] topBefore,
-            BarDropBatch drops,
+            DropBatch drops,
             @Nullable ServerPlayer actor) {
         BarStackBE be = start;
         boolean[] seam = seamBelow;
@@ -257,8 +312,11 @@ public class BarStackBE extends StackBlockEntity {
      * air on its own authority — deciding a collapse the server has already decided and is sending.
      * The re-entrancy flag a cascade sets is runtime state that is never synced, so a client could
      * not even tell it was inside one.
+     *
+     * @param actor the player whose break removed the block, or null for any other removal
      */
-    static void collapseAbove(Level level, BlockPos removed, BarDropBatch drops) {
+    static void collapseAbove(
+            Level level, BlockPos removed, DropBatch drops, @Nullable ServerPlayer actor) {
         if (level.isClientSide) {
             return;
         }
@@ -269,7 +327,7 @@ public class BarStackBE extends StackBlockEntity {
                     BarCubeIdx.emptySeam(),
                     BarCubeIdx.topLayerOccupancy(above.items),
                     drops,
-                    null);
+                    actor);
         }
     }
 
@@ -283,7 +341,7 @@ public class BarStackBE extends StackBlockEntity {
      * the time a layer is reached, the layer it rests on is final, whether that is the layer below
      * it here or the seam. Callers batch; this does not publish.
      */
-    private void dropUnsupported(@Nullable boolean[] seamBelow, BarDropBatch drops) {
+    private void dropUnsupported(@Nullable boolean[] seamBelow, DropBatch drops) {
         boolean[] occupancy = BarCubeIdx.occupancyOf(items);
 
         for (int i = 0; i < SLOTS; i++) {
@@ -305,8 +363,14 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     @Override
-    protected boolean isStoredItemValid(ItemStack stack) {
+    public boolean admits(ItemStack stack) {
         return BlockType.BAR_STACK.admits(stack, null);
+    }
+
+    /** Bars keep their layer's orientation however the block turns. */
+    @Override
+    protected AABB cellBox(int index) {
+        return BarCubeIdx.localBox(index);
     }
 
     @Override
@@ -315,7 +379,7 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     @Override
-    protected int localSlotLimit() {
+    public int slotLimit() {
         return 1;
     }
 

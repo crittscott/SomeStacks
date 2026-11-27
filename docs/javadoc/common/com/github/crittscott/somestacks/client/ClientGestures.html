@@ -119,11 +119,22 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#cycleMode()" class="member-name-link">cycleMode</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Advances the selected mode, skipping server-disabled block types.</div>
+<div class="block">Advances the selected mode along <a href="../util/StackMode.html#next()"><code>StackMode.next()</code></a>, skipping server-disabled block
+ types.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#displayModeMessage(net.minecraft.world.entity.player.Player)" class="member-name-link">displayModeMessage</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isHittingBlock()" class="member-name-link">isHittingBlock</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether the player's crosshair is on a block.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#leaveDisabledMode()" class="member-name-link">leaveDisabledMode</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Moves the selection off a block type the current server policy disables, as <a href="#cycleMode()"><code>cycleMode()</code></a> would, so a placement never names a type the server refuses.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resetSync()" class="member-name-link">resetSync</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -231,14 +242,34 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="cycleMode()">
 <h3>cycleMode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">cycleMode</span>()</div>
-<div class="block">Advances the selected mode, skipping server-disabled block types. Toggle Permanent remains
- available. This changes local selection only; it neither sends state nor displays a message.</div>
+<div class="block">Advances the selected mode along <a href="../util/StackMode.html#next()"><code>StackMode.next()</code></a>, skipping server-disabled block
+ types. Toggle Permanent is always available, so the walk ends there at the latest. This
+ changes local selection only; it neither sends state nor displays a message.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="displayModeMessage(net.minecraft.world.entity.player.Player)">
 <h3>displayModeMessage</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">displayModeMessage</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;player)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="isHittingBlock()">
+<h3>isHittingBlock</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isHittingBlock</span>()</div>
+<div class="block">Whether the player's crosshair is on a block. Distinguishes a click at open air, which cycles
+ the placement mode, from an item use that follows a block click no gesture claimed.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="leaveDisabledMode()">
+<h3>leaveDisabledMode</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">leaveDisabledMode</span>()</div>
+<div class="block">Moves the selection off a block type the current server policy disables, as <a href="#cycleMode()"><code>cycleMode()</code></a> would, so a placement never names a type the server refuses.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>whether the selected mode changed</dd>
+</dl>
 </section>
 </li>
 <li>

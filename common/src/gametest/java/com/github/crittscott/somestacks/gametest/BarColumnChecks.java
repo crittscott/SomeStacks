@@ -3,20 +3,25 @@ package com.github.crittscott.somestacks.gametest;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedInColumn;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedNear;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.heldAt;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalAt;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,16 +29,19 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Function;
 
 /**
- * Bar support and collapse in a live level that does not touch loader-native automation directly:
- * item validity, grounding at the bottom of a column, footprint overlap deciding support across the
- * alternating layer orientations, and player extraction dropping what it unsupports.
- * Capability/Transfer-API-facing tests, and Forge's event-bus-driven protection test, stay in each
- * loader's own {@code BarColumnGameTests}.
+ * Bar support and collapse in a live level: item validity, grounding at the bottom of a column,
+ * footprint overlap deciding support across the alternating layer orientations, player extraction
+ * dropping what it unsupports, and automated extraction backfilling from the top instead. Player
+ * scenarios take the loader's click; automation scenarios take the loader's {@link Automation}
+ * view. Forge's event-bus-driven protection test stays in Forge's {@code BarColumnGameTests}.
  */
 public final class BarColumnChecks {
     private BarColumnChecks() {}
@@ -112,14 +120,17 @@ public final class BarColumnChecks {
      * empty hand. One ingot enters the hand, the unsupported upper bar drops, and the empty block
      * disappears.
      */
-    public static void playerExtractionDropsUnsupportedBars(GameTestHelper helper) {
+    public static void playerExtractionDropsUnsupportedBars(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
         int upper = firstSupportedBy(0, 8, 16);
         bars.depositAt(0, new ItemStack(barItem));
         bars.depositAt(upper, new ItemStack(barItem));
 
-        ItemStack extracted = bars.extractAt(0, null);
+        ItemStack extracted = extractFirstBarByHand(factory, click, bars.getBlockPos());
 
         checkEquals(barItem, extracted.getItem(), "Extracted item");
         checkEquals(1, extracted.getCount(), "Extracted count");
@@ -136,7 +147,10 @@ public final class BarColumnChecks {
      * Plain-right-click the first bottom bar with an empty hand. The upper bar remains supported by
      * the second bottom bar and no bar drops.
      */
-    public static void supportedNeighborSurvivesPlayerExtraction(GameTestHelper helper) {
+    public static void supportedNeighborSurvivesPlayerExtraction(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
         int removedSupport = 0;
@@ -146,7 +160,12 @@ public final class BarColumnChecks {
         bars.depositAt(survivingSupport, new ItemStack(barItem));
         bars.depositAt(upper, new ItemStack(barItem));
 
-        bars.extractAt(removedSupport, null);
+        ItemStack extracted = extractFirstBarByHand(factory, click, bars.getBlockPos());
+
+        checkEquals(1, extracted.getCount(), "Extracted count");
+        check(
+                bars.getItems().getStackInSlot(removedSupport).isEmpty(),
+                "The aimed support was not the one extracted");
 
         checkEquals(
                 barItem,
@@ -272,8 +291,12 @@ public final class BarColumnChecks {
      * hand, fifteen drop from their originating blocks, and both blocks disappear. Restore the
      * gamerule afterward.
      */
-    public static void playerCascadeDropsWithBlockDropsDisabled(GameTestHelper helper) {
-        withBlockDropsDisabled(helper, () -> playerCascadeConsolidatesAcrossBlocks(helper));
+    public static void playerCascadeDropsWithBlockDropsDisabled(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
+        withBlockDropsDisabled(
+                helper, () -> playerCascadeConsolidatesAcrossBlocks(helper, factory, click));
     }
 
     private static void withBlockDropsDisabled(GameTestHelper helper, Runnable scenario) {
@@ -294,7 +317,10 @@ public final class BarColumnChecks {
      * ingot enters the hand and fifteen drop; both empty blocks disappear. The check inspects drops
      * before vanilla merging: seven from below and eight from above.
      */
-    public static void playerCascadeConsolidatesAcrossBlocks(GameTestHelper helper) {
+    public static void playerCascadeConsolidatesAcrossBlocks(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
         Item barItem = firstBarItem();
@@ -315,7 +341,7 @@ public final class BarColumnChecks {
             seedSlot(upper.getItems(), slot, new ItemStack(barItem));
         }
 
-        ItemStack extracted = lower.extractAt(0, null);
+        ItemStack extracted = extractFirstBarByHand(factory, click, lowerPos);
 
         checkEquals(barItem, extracted.getItem(), "Extracted support item");
         checkEquals(1, extracted.getCount(), "Extracted support count");
@@ -361,9 +387,13 @@ public final class BarColumnChecks {
      * To reproduce: use /give to obtain two accepted ingots with distinct custom NBT, such as
      * {somestacks_test_variant:1} and {somestacks_test_variant:2}. Place them in the two
      * second-layer positions supported by a single bottom bar. Extract that support with an empty
-     * hand. Both upper bars drop with their original tags and remain distinct stacks.
+     * hand. Both upper bars drop with their original tags and remain distinct stacks; the support
+     * goes to the hand.
      */
-    public static void collapseDoesNotMergeDifferentTags(GameTestHelper helper) {
+    public static void collapseDoesNotMergeDifferentTags(
+            GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
         BlockPos pos = bars.getBlockPos();
@@ -378,7 +408,8 @@ public final class BarColumnChecks {
         seedSlot(bars.getItems(), upper[0], first);
         seedSlot(bars.getItems(), upper[1], second);
 
-        bars.extractAt(0, null);
+        checkEquals(
+                barItem, extractFirstBarByHand(factory, click, pos).getItem(), "Extracted support");
 
         List<ItemEntity> drops =
                 droppedInColumn(helper, pos, pos).stream()
@@ -393,30 +424,6 @@ public final class BarColumnChecks {
         check(
                 Arrays.equals(new int[] {1, 2}, variants),
                 "Different tags were merged or changed: " + Arrays.toString(variants));
-        helper.succeed();
-    }
-
-    /**
-     * The fixture checks an empty Bar block, one occupied position, then all 64 positions: signals
-     * are 0, 1, and 15.
-     *
-     * <p>To reproduce the visible readings: place a comparator facing away from a Bar block,
-     * deposit one accepted ingot, then fill all positions. Read 1 and 15; after extracting all
-     * bars, the block disappears and the comparator reads 0.
-     */
-    public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
-        BarStackBE bars = placeBar(helper, ORIGIN);
-        Item barItem = firstBarItem();
-
-        checkEquals(0, signalAt(helper, ORIGIN), "Empty column signal");
-
-        bars.getItems().insertItem(0, new ItemStack(barItem, 1), false);
-        checkEquals(1, signalAt(helper, ORIGIN), "Signal for a single bar in a whole column");
-
-        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(barItem, 1), false);
-        }
-        checkEquals(15, signalAt(helper, ORIGIN), "Full column signal");
         helper.succeed();
     }
 
@@ -465,6 +472,172 @@ public final class BarColumnChecks {
 
         checkEquals(15, signalAt(helper, ORIGIN), "Signal after the block was lost");
         helper.succeed();
+    }
+
+    /**
+     * To reproduce: allow the chosen ingot for Bar, then use a machine that walks positions
+     * bottom-up to insert ten identical ingots. Extract one from bottom position 0 through
+     * automation. Nine remain, position 0 is backfilled from the topmost bar, and no ingot item
+     * entity is dropped.
+     */
+    public static void automationBackfillsWithoutDropping(
+            GameTestHelper helper, Function<BlockEntity, Automation> automation) {
+        BarStackBE bars = placeBar(helper, ORIGIN);
+        Item barItem = firstBarItem();
+        Automation capability = automation.apply(bars);
+        ItemStack offered = new ItemStack(barItem, 10);
+
+        // A walk of the advertised positions fills the block from the bottom, because each bar
+        // placed supports the layer above it before the walk reaches it.
+        ItemStack remainder = capability.insertStacked(offered, false);
+        check(remainder.isEmpty(), "A walk of the positions left a remainder");
+        checkEquals(10, count(bars.getItems(), barItem), "Inserted bar count");
+
+        ItemStack extracted = capability.extract(0, 64, false);
+
+        checkEquals(1, extracted.getCount(), "Automated extracted count");
+        checkEquals(9, count(bars.getItems(), barItem), "Count after automated extraction");
+        checkEquals(
+                barItem, bars.getItems().getStackInSlot(0).getItem(), "Hole was not backfilled");
+        checkEquals(
+                0, droppedNear(helper, bars.getBlockPos(), barItem), "Automation dropped a bar");
+        helper.succeed();
+    }
+
+    /**
+     * Internal positional insertion check: offer four accepted ingots to unsupported slot 8, then
+     * grounded slot 0, through the loader's automation view. Slot 8 refuses all four; slot 0
+     * accepts exactly one, leaving the caller's offer unchanged. Simulation reports the same
+     * capacity without storing.
+     *
+     * <p>To check manually, use slot-addressing automation on an empty Bar fixture. An unsupported
+     * target must not redirect to another position; a bottom target stores one bar. Simulation
+     * requires a machine or probe exposing that operation.
+     */
+    public static void capabilityInsertionAnswersForThePositionItIsGiven(
+            GameTestHelper helper, Function<BlockEntity, Automation> automation) {
+        BarStackBE bars = placeBar(helper, ORIGIN);
+        Item barItem = firstBarItem();
+        Automation capability = automation.apply(bars);
+        ItemStack offered = new ItemStack(barItem, 4);
+
+        // Position 8 is the first of layer 1, with an empty layer 0 beneath it, so it is refused
+        // rather than redirected to a position that would take the bar.
+        checkEquals(
+                4,
+                capability.insert(8, offered, true).getCount(),
+                "Simulated insertion into an unsupported position");
+        checkEquals(
+                4,
+                capability.insert(8, offered, false).getCount(),
+                "Committed insertion into an unsupported position");
+        checkEquals(0, occupied(bars.getItems()), "An unsupported position stored something");
+
+        // Position 0 is in the bottom layer of a column standing on the world, so it is grounded
+        // outright and takes exactly the one bar a position holds.
+        checkEquals(
+                3,
+                capability.insert(0, offered, true).getCount(),
+                "Simulated insertion into a grounded position");
+        checkEquals(
+                3,
+                capability.insert(0, offered, false).getCount(),
+                "Committed insertion into a grounded position");
+        checkEquals(4, offered.getCount(), "Capability mutated caller input");
+        checkEquals(1, occupied(bars.getItems()), "One call should store one bar");
+        checkEquals(
+                1,
+                capability.slotLimit(0),
+                "A position's slot limit should be what one call takes");
+        helper.succeed();
+    }
+
+    /**
+     * Synthetic admission fixture: directly seed a refused stick at Bar slot 1 beside an accepted
+     * ingot at slot 0, then automate extraction from slot 0. The ingot is extracted and the stick
+     * moves into slot 0 without dropping. A per-run tag isolates its drops from other fixtures. The
+     * test does not change policy.
+     *
+     * <p>To check manually, enable a data pack adding minecraft:oak_planks to the somestacks:ingots
+     * item tag and run /reload. Store an ordinary ingot at bottom position 0 and oak planks at
+     * position 1, then disable the data pack and /reload. Automate extraction from position 0; the
+     * stored plank remains conserved despite its new refusal.
+     */
+    public static void backfillKeepsABarItWouldNoLongerAccept(
+            GameTestHelper helper, Function<BlockEntity, Automation> automation) {
+        BarStackBE bars = placeBar(helper, ORIGIN);
+        Item barItem = firstBarItem();
+        BlockPos pos = bars.getBlockPos();
+        check(
+                !BlockType.BAR_STACK.admits(new ItemStack(Items.STICK), null),
+                "Test needs an item a Bar Stack refuses");
+        bars.getItems().insertItem(0, new ItemStack(barItem), false);
+        String marker = UUID.randomUUID().toString();
+        ItemStack refused = GameTestScaffold.markedStack(Items.STICK, 1, marker);
+        seedSlot(bars.getItems(), 1, refused.copy());
+
+        ItemStack extracted = automation.apply(bars).extract(0, 64, false);
+
+        checkEquals(barItem, extracted.getItem(), "Automated extracted item");
+        checkEquals(1, extracted.getCount(), "Automated extraction took more than one bar");
+        check(
+                ItemStack.isSameItemSameTags(refused, bars.getItems().getStackInSlot(0)),
+                "Backfill did not preserve the refused bar and its tags in the hole");
+        checkEquals(1, bars.getItems().getStackInSlot(0).getCount(), "Backfilled bar count");
+        check(bars.getItems().getStackInSlot(1).isEmpty(), "Backfill left its source occupied");
+        checkEquals(1, heldAt(helper, pos, Items.STICK), "Stored refused bar count");
+        checkEquals(
+                0L,
+                droppedInColumn(helper, pos, pos).stream()
+                        .filter(entity -> GameTestScaffold.hasMarker(entity.getItem(), marker))
+                        .count(),
+                "Automation dropped the backfilled bar");
+        helper.succeed();
+    }
+
+    /**
+     * Internal extraction simulation: put one accepted ingot at Bar slot 0 and simulate extracting
+     * up to 64 through the loader's automation view. The result is one ingot and the stored bar
+     * remains unchanged.
+     *
+     * <p>No player gesture performs this dry run. Use slot-addressing automation or a probe that
+     * simulates extraction without committing; the bar should remain visible.
+     */
+    public static void capabilitySimulationDoesNotMutateExtraction(
+            GameTestHelper helper, Function<BlockEntity, Automation> automation) {
+        BarStackBE bars = placeBar(helper, ORIGIN);
+        Item barItem = firstBarItem();
+        bars.depositAt(0, new ItemStack(barItem));
+
+        ItemStack simulated = automation.apply(bars).extract(0, 64, true);
+
+        checkEquals(barItem, simulated.getItem(), "Simulated item");
+        checkEquals(1, simulated.getCount(), "Simulated count");
+        checkEquals(
+                barItem,
+                bars.getItems().getStackInSlot(0).getItem(),
+                "Simulation mutated contents");
+        helper.succeed();
+    }
+
+    /**
+     * Plain-clicks the Bar block at {@code pos} with an empty hand, aimed from the west through the
+     * bottom layer's first row, which meets bottom position 0 first, and returns what the hand
+     * received.
+     */
+    private static ItemStack extractFirstBarByHand(
+            Function<ItemStack, ServerPlayer> factory,
+            InteractionChecks.LoaderClick click,
+            BlockPos pos) {
+        try (InteractionChecks.PlayerScope scope =
+                new InteractionChecks.PlayerScope(factory.apply(ItemStack.EMPTY))) {
+            var player = scope.player;
+            click.click(
+                    player,
+                    InteractionChecks.HAND,
+                    InteractionChecks.aim(player, pos, 0.0625, 0.125));
+            return player.getMainHandItem().copy();
+        }
     }
 
     public static int firstSupportedBy(int lowerIndex, int from, int to) {

@@ -1,11 +1,12 @@
 package com.github.crittscott.somestacks.mixin;
 
 import com.github.crittscott.somestacks.client.ClientGestures;
-import com.github.crittscott.somestacks.client.FabricKeyMappings;
+import com.github.crittscott.somestacks.client.FabricClientRendering;
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.HitResult;
@@ -19,18 +20,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import javax.annotation.Nullable;
 
 /**
- * Supplies Fabric's missing empty-main-hand, open-air right-click callback. The off hand does not
- * matter: holding a shield or torch there, hold the Stack Modifier and right-click air with an
- * empty main hand, and the placement mode still cycles.
+ * Supplies Fabric's missing empty-main-hand, open-air right-click callback: vanilla reaches the
+ * item-use path, where Fabric fires {@code UseItemCallback}, only for a nonempty hand, so no Fabric
+ * callback sees an empty main hand clicking air. The hook reads only the main hand and runs before
+ * vanilla tries either hand, so an off-hand item does not keep the gesture from acting.
+ *
+ * <p>The injection sits at the head of {@code startUseItem}, before vanilla's own gates, so it
+ * applies them itself: no right-click acts while the player is breaking a block or has busy hands
+ * (steering a boat, for example), as on the item path and on Forge.
  */
 @Mixin(Minecraft.class)
 abstract class MinecraftMixin {
-    @Shadow @Nullable public LocalPlayer player;
+    @Shadow @Nullable public MultiPlayerGameMode gameMode;
     @Shadow @Nullable public HitResult hitResult;
+    @Shadow @Nullable public LocalPlayer player;
 
     @Inject(method = "startUseItem", at = @At("HEAD"))
     private void somestacks$onEmptyHandAirClick(CallbackInfo callback) {
         if (player == null
+                || gameMode == null
+                || gameMode.isDestroying()
+                || player.isHandsBusy()
                 || !player.getMainHandItem().isEmpty()
                 || hitResult == null
                 || hitResult.getType() != HitResult.Type.MISS) {
@@ -40,11 +50,10 @@ abstract class MinecraftMixin {
         InteractionContext context =
                 InteractionContext.forAirClick(
                         player,
-                        player.level(),
                         InteractionHand.MAIN_HAND,
                         ClientGestures.currentMode(),
-                        FabricKeyMappings.STACK_MODE_KEY.isDown());
-        InteractionRuleRegistry.processEmptyHandRules(context);
-        ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
+                        FabricClientRendering.STACK_MODE_KEY.isDown());
+        InteractionRuleRegistry.processAirRules(context);
+        ClientGestures.syncState(FabricClientRendering.STACK_MODE_KEY.isDown());
     }
 }

@@ -1,31 +1,23 @@
 package com.github.crittscott.somestacks.gametest;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 
-import com.github.crittscott.somestacks.SomeStacks;
-import com.github.crittscott.somestacks.block.StoragePile;
-import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
-import net.minecraftforge.items.IItemHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -33,7 +25,7 @@ import java.util.function.Consumer;
  * when a pile fills, capability insertion addressing the specified slot, obstruction refusing
  * growth, and settling consolidating, packing, and sorting.
  */
-@GameTestHolder(SomeStacks.MODID)
+@GameTestHolder(SomeStacksCommon.MODID)
 @PrefixGameTestTemplate(false)
 public final class StoragePileGameTests {
     private StoragePileGameTests() {}
@@ -43,7 +35,7 @@ public final class StoragePileGameTests {
      * StoragePileChecks#depositFillsCompatiblePartialBeforeEmptySlot}; see that method for the
      * scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void depositFillsCompatiblePartialBeforeEmptySlot(GameTestHelper helper) {
         StoragePileChecks.depositFillsCompatiblePartialBeforeEmptySlot(helper);
     }
@@ -52,163 +44,101 @@ public final class StoragePileGameTests {
      * Loader entry point for {@link StoragePileChecks#fullPileGrowsByOneBlock}; see that method for
      * the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void fullPileGrowsByOneBlock(GameTestHelper helper) {
-        StoragePileChecks.fullPileGrowsByOneBlock(helper);
+        StoragePileChecks.fullPileGrowsByOneBlock(
+                helper, ForgeGameTestSupport.players(helper), ForgeGameTestSupport::click);
     }
 
     /** See {@link StoragePileChecks#growthRequiresBuildPermission}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void growthRequiresBuildPermission(GameTestHelper helper) {
         StoragePileChecks.growthRequiresBuildPermission(
                 helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
     }
 
     /** See {@link StoragePileChecks#placementChoosesFacingBeforeJoining}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void placementChoosesFacingBeforeJoining(GameTestHelper helper) {
         StoragePileChecks.placementChoosesFacingBeforeJoining(helper);
     }
 
-    /** See {@link StoragePileChecks#grownBlockTakesTheBaseFacing}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    /**
+     * The scenario of {@link StoragePileChecks#grownBlockTakesTheBaseFacing}, which see for the
+     * manual check, plus a Forge-only assertion: the growth posts {@code
+     * BlockEvent.EntityPlaceEvent} exactly once at the new block, and a listener reading the world
+     * during that event already sees the base's facing, not an intermediate one. A protection or
+     * logging mod listening to placements therefore records the block as it ends up.
+     */
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void grownBlockTakesTheBaseFacing(GameTestHelper helper) {
-        int[] placements = {0};
         BlockPos target = helper.absolutePos(ORIGIN.above(2));
+        List<Direction> seen = new ArrayList<>();
         Consumer<BlockEvent.EntityPlaceEvent> observe =
                 event -> {
                     if (event.getLevel() == helper.getLevel() && event.getPos().equals(target)) {
-                        placements[0]++;
-                        checkEquals(
-                                Direction.WEST,
+                        seen.add(
                                 helper.getLevel()
                                         .getBlockState(target)
-                                        .getValue(StorageStackBlock.HORIZONTAL_FACING),
-                                "Placement listener saw intermediate facing");
+                                        .getValue(StorageStackBlock.HORIZONTAL_FACING));
                     }
                 };
         MinecraftForge.EVENT_BUS.addListener(observe);
         try {
-            StorageStackBE lower = placeStorage(helper, ORIGIN);
-            StorageStackBE upper = placeStorage(helper, ORIGIN.above());
-            lower.setRotation(1);
-            upper.setRotation(3);
-            for (StorageStackBE member : new StorageStackBE[] {lower, upper}) {
-                for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-                    member.getItems().setStackInSlot(slot, new ItemStack(Items.DIRT, 64));
-                }
-            }
-            checkEquals(1, lower.deposit(new ItemStack(Items.STONE)), "Growth deposit refused");
-            checkEquals(1, placements[0], "Growth placement event count");
-            checkEquals(
-                    Direction.WEST,
-                    helper.getLevel()
-                            .getBlockState(target)
-                            .getValue(StorageStackBlock.HORIZONTAL_FACING),
-                    "Final growth facing");
-            checkEquals(3, upper.getRotation(), "Old top rotation changed");
+            StoragePileChecks.growThreeBlockPileFromRotatedBase(
+                    helper, ForgeGameTestSupport.players(helper), ForgeGameTestSupport::click);
         } finally {
             MinecraftForge.EVENT_BUS.unregister(observe);
         }
+        checkEquals(List.of(Direction.WEST), seen, "Facing each growth placement event saw");
         helper.succeed();
     }
 
     /**
-     * Internal Storage slot check: insert eight stone into local slot 20, reject dirt offered to
-     * that incompatible slot, then settle. Before settlement stone occupies slot 20; afterward it
-     * occupies slot 0. Simulation and caller-owned input are unchanged.
-     *
-     * <p>To check manually, use slot-addressing automation to insert into an empty Storage slot,
-     * then observe the next settlement pack its contents toward the base. Precise pre-tick
-     * placement and dry-run results require an automation probe.
+     * Loader entry point for {@link
+     * StoragePileChecks#capabilityInsertionAnswersForTheSlotItIsGiven}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void capabilityInsertionAnswersForTheSlotItIsGiven(GameTestHelper helper) {
-        StorageStackBE storage = placeStorage(helper, ORIGIN);
-        IItemHandler capability = GameTestSupport.capability(storage);
-        ItemStack offered = new ItemStack(Items.STONE, 8);
-
-        // A pile is a bag, so the slot named takes what a slot takes — here all eight, in slot 20
-        // rather than at the base a deposit would have filled.
-        checkEquals(
-                0,
-                capability.insertItem(20, offered, true).getCount(),
-                "Simulated insertion into an empty slot");
-        checkEquals(
-                0,
-                capability.insertItem(20, offered, false).getCount(),
-                "Committed insertion into an empty slot");
-        checkEquals(8, offered.getCount(), "Capability mutated caller input");
-        checkEquals(
-                8,
-                storage.getItems().getStackInSlot(20).getCount(),
-                "The slot named should hold the items");
-
-        // An incompatible slot takes nothing rather than redirecting to available space elsewhere.
-        ItemStack other = new ItemStack(Items.DIRT, 8);
-        checkEquals(
-                8,
-                capability.insertItem(20, other, true).getCount(),
-                "Simulated insertion into an occupied incompatible slot");
-
-        // The settle the insertion scheduled is what puts the items at the base.
-        StoragePile pile = storage.pile();
-        check(pile != null, "Pile did not resolve");
-        pile.settle();
-        checkEquals(
-                8,
-                storage.getItems().getStackInSlot(0).getCount(),
-                "Settle should pack the insertion down to the base");
-        checkEquals(0, count(storage.getItems(), Items.DIRT), "Refused insertion stored something");
-        helper.succeed();
+        StoragePileChecks.capabilityInsertionAnswersForTheSlotItIsGiven(
+                helper, ForgeGameTestSupport::automation);
     }
 
     /**
-     * To reproduce: fill all 27 slots of a Storage block with full dirt stacks, allow height above
-     * one, and put solid stone directly above. Offer four stone through automation to first
-     * headroom slot 27. All four are refused and the obstruction remains. A simulated offer must
-     * report the same refusal without modifying input.
+     * Loader entry point for {@link
+     * StoragePileChecks#obstructionPreventsGrowthAndSimulationReportsNoRoom}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void obstructionPreventsGrowthAndSimulationReportsNoRoom(GameTestHelper helper) {
-        StorageStackBE storage = placeStorage(helper, ORIGIN);
-        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
-        }
-        BlockPos above = helper.absolutePos(ORIGIN.above());
-        helper.getLevel().setBlock(above, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
-        IItemHandler capability = GameTestSupport.capability(storage);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-
-        // The first advertised slot past what the pile holds: the one insertion grows into, and so
-        // the only one an obstruction can refuse.
-        int headroom = StorageStackBE.SLOTS;
-        ItemStack simulatedRemainder = capability.insertItem(headroom, offered, true);
-        ItemStack committedRemainder = capability.insertItem(headroom, offered, false);
-
-        checkEquals(4, simulatedRemainder.getCount(), "Simulated remainder");
-        checkEquals(4, committedRemainder.getCount(), "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        check(helper.getLevel().getBlockState(above).is(Blocks.STONE), "Obstruction changed");
-        helper.succeed();
+        StoragePileChecks.obstructionPreventsGrowthAndSimulationReportsNoRoom(
+                helper, ForgeGameTestSupport::automation);
     }
 
     /**
      * Loader entry point for {@link StoragePileChecks#settleConsolidatesExactIdentityAndPacksDown};
      * see that method for the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void settleConsolidatesExactIdentityAndPacksDown(GameTestHelper helper) {
         StoragePileChecks.settleConsolidatesExactIdentityAndPacksDown(helper);
+    }
+
+    /** Loader entry point for {@link StoragePileChecks#settleMergesOnlyIdenticalNames}. */
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
+    public static void settleMergesOnlyIdenticalNames(GameTestHelper helper) {
+        StoragePileChecks.settleMergesOnlyIdenticalNames(helper);
     }
 
     /**
      * Loader entry point for {@link StoragePileChecks#extractionSettlesOnScheduledBlockTick}; see
      * that method for the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE, timeoutTicks = 20)
     public static void extractionSettlesOnScheduledBlockTick(GameTestHelper helper) {
-        StoragePileChecks.extractionSettlesOnScheduledBlockTick(helper);
+        StoragePileChecks.extractionSettlesOnScheduledBlockTick(
+                helper, ForgeGameTestSupport.players(helper), ForgeGameTestSupport::click);
     }
 
     /**
@@ -216,38 +146,27 @@ public final class StoragePileGameTests {
      * StoragePileChecks#emptyTemporaryPileDisappearsButPermanentPileRemains}; see that method for
      * the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void emptyTemporaryPileDisappearsButPermanentPileRemains(GameTestHelper helper) {
         StoragePileChecks.emptyTemporaryPileDisappearsButPermanentPileRemains(helper);
     }
 
     /**
-     * Internal shared-view check: seed twelve stone in the base of two contiguous Storage blocks.
-     * Slot 0 and advertised slot count agree through adapters attached to either block.
-     *
-     * <p>To reproduce visibly, make a permanent two-block Storage pile, leave twelve stone stored,
-     * and attach machines at different heights. Both access the same inventory and capacity.
+     * Loader entry point for {@link
+     * StoragePileChecks#capabilityFromEveryBlockAddressesTheSamePile}; see that method for the
+     * scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void capabilityFromEveryBlockAddressesTheSamePile(GameTestHelper helper) {
-        StorageStackBE lower = placeStorage(helper, ORIGIN);
-        StorageStackBE upper = placeStorage(helper, ORIGIN.above());
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12), false);
-
-        IItemHandler lowerCapability = GameTestSupport.capability(lower);
-        IItemHandler upperCapability = GameTestSupport.capability(upper);
-
-        checkEquals(12, lowerCapability.getStackInSlot(0).getCount(), "Lower capability count");
-        checkEquals(12, upperCapability.getStackInSlot(0).getCount(), "Upper capability count");
-        checkEquals(lowerCapability.getSlots(), upperCapability.getSlots(), "Capability shape");
-        helper.succeed();
+        StoragePileChecks.capabilityFromEveryBlockAddressesTheSamePile(
+                helper, ForgeGameTestSupport::automation);
     }
 
     /**
      * Loader entry point for {@link StoragePileChecks#comparatorReadsTheWholePileFromEveryBlock};
      * see that method for the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void comparatorReadsTheWholePileFromEveryBlock(GameTestHelper helper) {
         StoragePileChecks.comparatorReadsTheWholePileFromEveryBlock(helper);
     }
@@ -257,26 +176,17 @@ public final class StoragePileGameTests {
      * StoragePileChecks#ordinaryPlacementBelowPermanentPileRepairsDerivedState}; see that method
      * for the scenario, manual check, and any internal-only assertions.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE, timeoutTicks = 20)
     public static void ordinaryPlacementBelowPermanentPileRepairsDerivedState(
             GameTestHelper helper) {
         StoragePileChecks.ordinaryPlacementBelowPermanentPileRepairsDerivedState(helper);
     }
 
     /**
-     * Loader entry point for {@link StoragePileChecks#comparatorReservesZeroForAnEmptyPile}; see
-     * that method for the scenario, manual check, and any internal-only assertions.
-     */
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
-        StoragePileChecks.comparatorReservesZeroForAnEmptyPile(helper);
-    }
-
-    /**
      * See {@link StoragePileChecks#middleRemovalSettlesAndPublishesBothSurvivingPiles} for the
      * split scenario and manual procedure.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void middleRemovalSettlesAndPublishesBothSurvivingPiles(GameTestHelper helper) {
         StoragePileChecks.middleRemovalSettlesAndPublishesBothSurvivingPiles(helper);
     }

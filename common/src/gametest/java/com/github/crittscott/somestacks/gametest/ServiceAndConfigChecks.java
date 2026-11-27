@@ -2,12 +2,13 @@ package com.github.crittscott.somestacks.gametest;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.policy;
 
 import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.server.StackSounds;
+import com.github.crittscott.somestacks.server.StackInteractions;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -16,6 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 /** Shared lifecycle and policy checks using the installed loader services. */
@@ -23,8 +25,41 @@ public final class ServiceAndConfigChecks {
     private ServiceAndConfigChecks() {}
 
     /**
-     * To reproduce in-game: reconnect and rotate a stack; a previous session's rotation-sound
-     * pacing must not silence the new session.
+     * To reproduce in-game: without operator permission, run /ss help followed by each of item,
+     * write, gallery, ingotgallery, reload, gen, deny, and help. Every topic prints its usage and
+     * audience, including the operator-only topics.
+     */
+    public static void commandHelpAnswersEveryTopic(GameTestHelper helper) {
+        MinecraftServer server = helper.getLevel().getServer();
+        var source = server.createCommandSourceStack().withPermission(0).withSuppressedOutput();
+        try {
+            for (String topic :
+                    List.of(
+                            "item",
+                            "write",
+                            "gallery",
+                            "ingotgallery",
+                            "reload",
+                            "gen",
+                            "deny",
+                            "help")) {
+                checkEquals(
+                        1,
+                        server.getCommands().getDispatcher().execute("ss help " + topic, source),
+                        "Help failed for " + topic);
+            }
+        } catch (CommandSyntaxException failure) {
+            throw new AssertionError("Registered command help failed", failure);
+        }
+        helper.succeed();
+    }
+
+    /**
+     * No in-game form: rotation sounds are paced only a few ticks apart, and any reconnect takes
+     * far longer, so a player cannot see whether logout cleared the pacing. It guards that a
+     * repeated rotation sound within the pacing window is refused and that logout clears the
+     * player's pacing. It also asserts that the loader installed {@code PlatformServices}: a config
+     * folder, the mod's version (not "unknown"), and an edit authority.
      */
     public static void installedServicesAndLogoutResetPacing(
             GameTestHelper helper, ServerPlayer player) {
@@ -35,10 +70,10 @@ public final class ServiceAndConfigChecks {
         check(PlatformServices.editAuthority() != null, "Missing edit authority");
         ServerLifecycle.logout(player.getUUID());
         try {
-            check(StackSounds.claimRotation(player), "Initial rotation sound refused");
-            check(!StackSounds.claimRotation(player), "Repeated sound accepted");
+            check(StackInteractions.claimRotationSound(player), "Initial rotation sound refused");
+            check(!StackInteractions.claimRotationSound(player), "Repeated sound accepted");
             ServerLifecycle.logout(player.getUUID());
-            check(StackSounds.claimRotation(player), "Logout retained sound pacing");
+            check(StackInteractions.claimRotationSound(player), "Logout retained sound pacing");
         } finally {
             ServerLifecycle.logout(player.getUUID());
         }
@@ -53,12 +88,6 @@ public final class ServiceAndConfigChecks {
      * isolates the shared policy constructor and does not change the running world's policy.
      */
     public static void numericPolicyRangesAreShared(GameTestHelper helper) {
-        TomlPolicyChecks.verify(
-                helper.getLevel()
-                        .getServer()
-                        .getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT)
-                        .resolve("serverconfig"),
-                ServerConfig.Settings.defaults());
         ServerConfig.Settings defaults = ServerConfig.Settings.defaults();
         // Input height/speed/permission, followed by their expected normalized values.
         int[][] cases = {
@@ -67,22 +96,17 @@ public final class ServiceAndConfigChecks {
             {5, 17, 2, 5, 17, 2}
         };
         for (int[] values : cases) {
-            ServerConfig.Settings policy =
-                    new ServerConfig.Settings(
-                            values[0],
-                            defaults.enableStorageStackBlock(),
-                            defaults.enableSinglesStackBlock(),
-                            defaults.enableBarStackBlock(),
-                            defaults.disableMods(),
-                            defaults.disableItems(),
-                            values[1],
-                            defaults.galleryEnabled(),
-                            values[2],
-                            defaults.genMods(),
-                            defaults.genItems());
-            checkEquals(values[3], policy.maxPileHeight(), "Pile height range");
-            checkEquals(values[4], policy.renderGalleryPlacementsPerTick(), "Gallery speed range");
-            checkEquals(values[5], policy.galleryPermissionLevel(), "Gallery permission range");
+            ServerConfig.Settings normalized =
+                    policy(
+                            defaults,
+                            Map.of(
+                                    ServerConfig.Setting.MAX_PILE_HEIGHT, values[0],
+                                    ServerConfig.Setting.PLACEMENTS_PER_TICK, values[1],
+                                    ServerConfig.Setting.REQUIRED_PERMISSION_LEVEL, values[2]));
+            checkEquals(values[3], normalized.maxPileHeight(), "Pile height range");
+            checkEquals(
+                    values[4], normalized.renderGalleryPlacementsPerTick(), "Gallery speed range");
+            checkEquals(values[5], normalized.galleryPermissionLevel(), "Gallery permission range");
         }
         helper.succeed();
     }
@@ -127,24 +151,12 @@ public final class ServiceAndConfigChecks {
      * saver without publishing it, and restores both the file and the published policy afterward.
      */
     public static void reloadCommandPublishesStoredPolicy(GameTestHelper helper) {
-        PolicyParityChecks.verify(helper);
         MinecraftServer server = helper.getLevel().getServer();
         ServerConfig.Settings before = ServerConfig.settings();
         String marker =
                 "somestacks_gametest_reload_" + UUID.randomUUID().toString().replace("-", "");
         ServerConfig.Settings stored =
-                new ServerConfig.Settings(
-                        before.maxPileHeight(),
-                        before.enableStorageStackBlock(),
-                        before.enableSinglesStackBlock(),
-                        before.enableBarStackBlock(),
-                        before.disableMods(),
-                        before.disableItems(),
-                        before.renderGalleryPlacementsPerTick(),
-                        before.galleryEnabled(),
-                        before.galleryPermissionLevel(),
-                        List.of(marker),
-                        before.genItems());
+                policy(before, Map.of(ServerConfig.Setting.GEN_MODS, List.of(marker)));
         try {
             ServerConfig.publish(stored);
             ServerConfig.save();

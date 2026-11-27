@@ -1,10 +1,9 @@
 package com.github.crittscott.somestacks;
 
-import com.github.crittscott.somestacks.client.ClientSetup;
+import com.github.crittscott.somestacks.client.ForgeClientRendering;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
-import com.github.crittscott.somestacks.network.ModNetworking;
-import com.github.crittscott.somestacks.util.PlayerReach;
+import com.github.crittscott.somestacks.network.ForgeNetworking;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,36 +18,35 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-import org.apache.logging.log4j.Logger;
-
 /**
  * The mod entry point: registers the blocks and block entities, the network channel, and the
  * listeners behind server config loading, sound data, login sync, and commands. Client registration
- * is deferred to {@link ClientSetup} so the dedicated server never touches it.
+ * is deferred to {@link ForgeClientRendering} so the dedicated server never touches it.
  *
  * <p>The mod must be present on both sides; there is no client-optional or server-optional mode.
  */
-@Mod(SomeStacks.MODID)
+@Mod(SomeStacksCommon.MODID)
 public class SomeStacks {
-    public static final String MODID = SomeStacksCommon.MODID;
-    public static final Logger LOGGER = SomeStacksCommon.LOGGER;
-
     public SomeStacks() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         PlatformServices.install(new ForgePlatformServices());
-        PlayerReach.setProvider(player -> player.getBlockReach());
 
-        ModRegistry.init(modBus);
+        ForgeRegistry.init(modBus);
         ForgeServerConfig.register(modBus);
-        ModNetworking.init();
+        ForgeNetworking.init();
         MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogout);
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
         MinecraftForge.EVENT_BUS.addListener(this::onServerTick);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ForgeClientRendering.init(modBus));
+
+        SomeStacksCommon.LOGGER.info(
+                "Some Stacks {} initialized on Forge (network protocol {})",
+                PlatformServices.modVersion(SomeStacksCommon.MODID),
+                SomeStacksCommon.PROTOCOL_VERSION);
     }
 
     /** Starts common session state and publishes Forge's already-loaded world policy. */

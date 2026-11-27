@@ -114,8 +114,14 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce in-game: automate insertion and extraction in each type.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#structuralEditsInvalidateRunBoundsWithinTheTick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structuralEditsInvalidateRunBoundsWithinTheTick</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storedLightIsPerOccupiedSlotAndCapped(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storedLightIsPerOccupiedSlotAndCapped</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce in-game: deposit a full stack of glowstone into one Storage Stack slot; the
+ block gives off light level 3, the same as a single glowstone would.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#structuralEditsInvalidateRunBoundsWithinTheTick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structuralEditsInvalidateRunBoundsWithinTheTick</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: attach automation at different heights, add and remove stack blocks,
  and split a Storage or Singles run.</div>
 </div>
@@ -146,7 +152,21 @@ loadScripts(document, 'script');</script>
  Storage and Singles also assert derived light from glowstone; Bar uses an ordinary accepted
  ingot. The fixture performs no extraction or collapse.
 
- <p>For visible Bar collapse checks, see <a href="BarColumnChecks.html#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)</code></a> and <a href="BarColumnChecks.html#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+ <p>For visible Bar collapse checks, see <a href="BarColumnChecks.html#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)"><code>BarColumnChecks.playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)</code></a> and <a href="BarColumnChecks.html#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)"><code>BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storedLightIsPerOccupiedSlotAndCapped(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>storedLightIsPerOccupiedSlotAndCapped</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storedLightIsPerOccupiedSlotAndCapped</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce in-game: deposit a full stack of glowstone into one Storage Stack slot; the
+ block gives off light level 3, the same as a single glowstone would. Deposit one each of
+ sea lantern, jack o'lantern, lantern, shroomlight, and beacon, so six slots hold different
+ full-brightness blocks; the light reaches 15, not 18.
+
+ <p>The contents are written straight to the slots; the light comes from the publication
+ those writes schedule. The six items differ so settlement cannot merge them into fewer
+ slots.</div>
 </section>
 </li>
 <li>

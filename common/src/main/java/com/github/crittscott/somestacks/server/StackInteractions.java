@@ -2,48 +2,85 @@ package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.block.BarColumn;
-import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.SinglesColumn;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.StackBlock;
+import com.github.crittscott.somestacks.block.StackBlockEntity;
+import com.github.crittscott.somestacks.block.StackRun;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.ItemOps;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.StackMode;
+import com.github.crittscott.somestacks.util.StackGestures;
 import com.github.crittscott.somestacks.util.StackPlacement;
-import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Applies server-authoritative stack gestures carried by vanilla right-click interactions. Only the
  * main hand acts. Existing-stack use handles permanence, deposit/top placement, then extraction;
  * loader callbacks supply sneaking torch rotations and adjacent placement/deposit. Gestures use
  * synchronized mode/modifier state and target along the ray through the clicked point. Creative
- * deposits retain held items, and edits retain the player for protection and game events.
+ * deposits retain held items, and edits retain the player for protection and game events. Each
+ * successful action plays its type's sound; rotation sounds are paced per player.
  */
 public final class StackInteractions {
+    /** Minimum ticks between rotation sounds initiated by the same player. */
+    private static final long ROTATION_SOUND_INTERVAL_TICKS = 4L;
+
+    private static final float ROTATION_PITCH_BASE = 0.9f;
+    private static final float ROTATION_PITCH_SPREAD = 0.2f;
+
+    /** Loudness of every stack action sound. */
+    private static final float SOUND_VOLUME = 0.5f;
+
+    /** Server tick of each player's last rotation sound, cleared on logout and session reset. */
+    private static final Map<UUID, Long> lastRotationSoundTick = new HashMap<>();
 
     private StackInteractions() {}
+
+    /**
+     * Claims this player's rotation-sound allowance, returning false while the previous rotation
+     * sound is still within the pacing interval; the rotation itself has already happened.
+     */
+    public static boolean claimRotationSound(ServerPlayer player) {
+        UUID id = player.getUUID();
+        long tick = player.serverLevel().getGameTime();
+        Long last = lastRotationSoundTick.get(id);
+        if (last != null && tick - last < ROTATION_SOUND_INTERVAL_TICKS) {
+            return false;
+        }
+        lastRotationSoundTick.put(id, tick);
+        return true;
+    }
+
+    /** Forgets every player's rotation-sound pacing. */
+    public static void clearRotationSoundPacing() {
+        lastRotationSoundTick.clear();
+    }
+
+    /** Forgets one player's rotation-sound pacing. */
+    public static void clearRotationSoundPacing(UUID playerId) {
+        lastRotationSoundTick.remove(playerId);
+    }
 
     /** Handles a vanilla use call on an existing stack block. */
     public static boolean handleExistingStack(
@@ -65,17 +102,19 @@ public final class StackInteractions {
     }
 
     /**
-     * Whether the Stack Modifier claims a main-hand item use that reached the server. A modifier
-     * right-click at air cycles the placement mode on the client, which may still deliver the
-     * ordinary use-item packet; the held item must not then be used (thrown, eaten, drawn).
+     * Whether the Stack Modifier claims a main-hand item use that reached the server; see {@link
+     * StackGestures#modifierClaimsItemUse}. The client claims the same uses locally but may still
+     * deliver the ordinary use-item packet.
      */
     public static boolean modifierClaimsItemUse(ServerPlayer player, InteractionHand hand) {
-        return hand == InteractionHand.MAIN_HAND && ServerGestureState.get(player).modifierDown();
+        return StackGestures.modifierClaimsItemUse(
+                hand, ServerGestureState.get(player).modifierDown());
     }
 
     /**
      * Handles the sneaking torch gestures, which vanilla never routes to the block's use method.
-     * Loader callbacks call this only after earlier listeners have allowed both block and item use.
+     * {@code blockAllowed} and {@code itemAllowed} carry earlier listeners' verdicts on block and
+     * item use; either false refuses.
      */
     public static boolean handleSneakingRotation(
             ServerPlayer player,
@@ -87,28 +126,32 @@ public final class StackInteractions {
                 || hand != InteractionHand.MAIN_HAND
                 || !blockAllowed
                 || !itemAllowed
-                || !player.isShiftKeyDown()
                 || player.isSpectator()) {
             return false;
         }
 
         BlockPos pos = hit.getBlockPos();
         BlockType type = BlockType.of(player.level().getBlockState(pos).getBlock());
-        if (type == null || WorldEdits.isProtected(player, pos)) {
+        ItemStack held = player.getMainHandItem();
+        boolean sneaking = player.isShiftKeyDown();
+        boolean rotatesBlock = StackGestures.rotatesBlock(sneaking, held, type);
+        if (!(rotatesBlock || StackGestures.rotatesItem(sneaking, held, type))
+                || WorldEdits.isProtected(player, pos)) {
             return false;
         }
 
-        return applySneakingRotation(
-                player,
-                pos,
-                type,
-                ViewRay.through(player, hit.getLocation()),
-                player.getMainHandItem());
+        if (rotatesBlock) {
+            rotateBlock(player, pos, type);
+        } else {
+            rotateItem(player, pos, ViewRay.through(player, hit.getLocation()));
+        }
+        return true;
     }
 
     /**
      * Handles a loader-native server right-click against a non-stack block when the selected stack
-     * belongs in the adjacent position.
+     * belongs in the adjacent position. {@code blockAllowed} and {@code itemAllowed} carry earlier
+     * listeners' verdicts on block and item use; either false refuses.
      */
     public static boolean handleAdjacentClick(
             ServerPlayer player,
@@ -128,10 +171,8 @@ public final class StackInteractions {
 
         ServerGestureState.State gesture = ServerGestureState.get(player);
         ItemStack held = player.getMainHandItem();
-        if (!gesture.modifierDown()
-                || gesture.mode() == StackMode.TOGGLE_PERMANENT
-                || player.isShiftKeyDown()
-                || held.isEmpty()
+        if (!StackGestures.modifiedItemClick(
+                        gesture.modifierDown(), gesture.mode(), player.isShiftKeyDown(), held)
                 || !blockAllowed
                 || !itemAllowed
                 || player.isSpectator()
@@ -144,7 +185,7 @@ public final class StackInteractions {
         BlockType destinationType = BlockType.of(level.getBlockState(destination).getBlock());
         if (destinationType == BlockType.SINGLES_STACK || destinationType == BlockType.BAR_STACK) {
             if (WorldEdits.mayUseAdjacent(player, destination)) {
-                deposit(player, destination, ray);
+                deposit(player, destination, destinationType, ray);
             }
             return true;
         }
@@ -155,8 +196,9 @@ public final class StackInteractions {
 
     /**
      * Gives empty-hand Toggle Permanent on Storage precedence over other modified clicks. Otherwise
-     * a nonsneaking modifier-plus-item click deposits or places against the face; unmodified
-     * nonsneaking use extracts. Recognized gestures consume use even on refusal.
+     * a nonsneaking modifier-plus-item click deposits, or on a top face with no deposit target
+     * places against it; unmodified nonsneaking use extracts. Recognized gestures consume use even
+     * on refusal.
      */
     private static boolean applyExistingStack(
             ServerPlayer player,
@@ -170,20 +212,18 @@ public final class StackInteractions {
             return true;
         }
 
-        if (gesture.modifierDown()
-                && held.isEmpty()
-                && gesture.mode() == StackMode.TOGGLE_PERMANENT
-                && type == BlockType.STORAGE_STACK) {
+        boolean sneaking = player.isShiftKeyDown();
+        if (StackGestures.togglesPermanence(gesture.modifierDown(), gesture.mode(), held, type)) {
             togglePermanent(player, pos);
             return true;
         }
 
-        if (gesture.modifierDown()
-                && gesture.mode() != StackMode.TOGGLE_PERMANENT
-                && !player.isShiftKeyDown()
-                && !held.isEmpty()) {
-            if (depositsIntoClickedBlock(player.level(), pos, type, face, ray)) {
-                deposit(player, pos, ray);
+        if (StackGestures.modifiedItemClick(
+                gesture.modifierDown(), gesture.mode(), sneaking, held)) {
+            if (face != Direction.UP
+                    || !(player.level().getBlockEntity(pos) instanceof StackBlockEntity stack)
+                    || stack.acceptsDepositAlong(ray)) {
+                deposit(player, pos, type, ray);
             } else {
                 placeAndDeposit(
                         player, gesture.mode().toBlockType(), pos.relative(face), face, ray);
@@ -191,8 +231,8 @@ public final class StackInteractions {
             return true;
         }
 
-        if (!gesture.modifierDown() && !player.isShiftKeyDown()) {
-            extract(player, pos, ray);
+        if (StackGestures.extracts(gesture.modifierDown(), sneaking)) {
+            extract(player, pos, type, ray);
             return true;
         }
 
@@ -200,131 +240,36 @@ public final class StackInteractions {
     }
 
     /**
-     * Uses a redstone torch for Storage/Singles layout rotation, or a soul torch for one Singles
-     * item.
+     * Deposits the main-hand item into the stack at {@code pos}; a Storage pile that took nothing
+     * because it reached the height limit says so.
      */
-    private static boolean applySneakingRotation(
-            ServerPlayer player, BlockPos pos, BlockType type, ViewRay ray, ItemStack held) {
-        if (held.is(Items.REDSTONE_TORCH)
-                && (type == BlockType.STORAGE_STACK || type == BlockType.SINGLES_STACK)) {
-            rotateBlock(player, pos, type);
-            return true;
-        }
-        if (held.is(Items.SOUL_TORCH) && type == BlockType.SINGLES_STACK) {
-            rotateItem(player, pos, ray);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Chooses deposit versus top-face placement: Storage always deposits; Singles/Bar require an
-     * empty supported target.
-     */
-    private static boolean depositsIntoClickedBlock(
-            Level level, BlockPos pos, BlockType type, Direction face, ViewRay ray) {
-        if (face != Direction.UP || type == BlockType.STORAGE_STACK) {
-            return true;
-        }
-
-        if (level.getBlockEntity(pos) instanceof SinglesStackBE singles) {
-            int index =
-                    SinglesCubeIdx.traceAllPositions(
-                            ray, pos, singles.getItems(), singles.getRotation());
-            boolean[] seam =
-                    level.getBlockEntity(pos.below()) instanceof SinglesStackBE below
-                            ? SinglesCubeIdx.topLayerOccupancy(
-                                    below.getItems(), below.getRotation())
-                            : null;
-            return index >= 0
-                    && singles.getItems().getStackInSlot(index).isEmpty()
-                    && SinglesCubeIdx.isGrounded(
-                            index, singles.getItems(), singles.getRotation(), seam);
-        }
-
-        if (level.getBlockEntity(pos) instanceof BarStackBE bars) {
-            int index = BarCubeIdx.traceAllPositions(ray, pos, bars.getItems());
-            boolean[] seam =
-                    level.getBlockEntity(pos.below()) instanceof BarStackBE below
-                            ? BarCubeIdx.topLayerOccupancy(below.getItems())
-                            : null;
-            return index >= 0
-                    && bars.getItems().getStackInSlot(index).isEmpty()
-                    && BarCubeIdx.isGrounded(index, bars.getItems(), seam);
-        }
-
-        return true;
-    }
-
-    private static void deposit(ServerPlayer player, BlockPos pos, ViewRay ray) {
+    private static void deposit(ServerPlayer player, BlockPos pos, BlockType type, ViewRay ray) {
         Level level = player.level();
         boolean creative = player.getAbilities().instabuild;
         ItemStack held = player.getMainHandItem();
         ItemStack handStack = creative ? held.copy() : held;
-        if (handStack.isEmpty() || !BlockType.permitsPlayerItemAndNotify(handStack, player)) {
+        if (!BlockType.permitsPlayerItemAndNotify(handStack, player)
+                || !(level.getBlockEntity(pos) instanceof StackBlockEntity stack)) {
             return;
         }
 
-        BlockType type = BlockType.of(level.getBlockState(pos).getBlock());
-        if (type == BlockType.STORAGE_STACK
-                && level.getBlockEntity(pos) instanceof StorageStackBE storage) {
-            int deposited = storage.deposit(handStack, player);
+        if (stack.depositFromHand(ray, handStack, player) > 0) {
             returnToHand(player, creative, handStack);
-            if (deposited > 0) {
-                level.playSound(
-                        null,
-                        pos,
-                        CommonRegistry.STORAGE_DEPOSIT_SOUND.get(),
-                        SoundSource.BLOCKS,
-                        StackSounds.VOLUME,
-                        1.0f);
-                emitBlockChange(player, pos, level.getBlockState(pos));
-            }
-            return;
-        }
-
-        if (type == BlockType.SINGLES_STACK
-                && level.getBlockEntity(pos) instanceof SinglesStackBE singles) {
-            int index =
-                    SinglesCubeIdx.traceAllPositions(
-                            ray, pos, singles.getItems(), singles.getRotation());
-            if (index >= 0
-                    && singles.getItems().getStackInSlot(index).isEmpty()
-                    && singles.depositAt(index, handStack)) {
-                returnToHand(player, creative, handStack);
-                level.playSound(
-                        null,
-                        pos,
-                        CommonRegistry.SINGLES_DEPOSIT_SOUND.get(),
-                        SoundSource.BLOCKS,
-                        StackSounds.VOLUME,
-                        1.0f);
-                emitBlockChange(player, pos, level.getBlockState(pos));
-            }
-            return;
-        }
-
-        if (type == BlockType.BAR_STACK && level.getBlockEntity(pos) instanceof BarStackBE bars) {
-            int index = BarCubeIdx.traceAllPositions(ray, pos, bars.getItems());
-            if (index >= 0
-                    && bars.getItems().getStackInSlot(index).isEmpty()
-                    && bars.depositAt(index, handStack)) {
-                returnToHand(player, creative, handStack);
-                level.playSound(
-                        null,
-                        pos,
-                        CommonRegistry.BAR_DEPOSIT_SOUND.get(),
-                        SoundSource.BLOCKS,
-                        StackSounds.VOLUME,
-                        1.0f);
-                emitBlockChange(player, pos, level.getBlockState(pos));
+            playSound(level, pos, type.depositSound());
+            emitBlockChange(player, pos, level.getBlockState(pos));
+        } else if (stack instanceof StorageStackBE storage) {
+            StoragePile pile = storage.pile();
+            if (pile != null && pile.height() >= ServerConfig.settings().maxPileHeight()) {
+                notifyMaximumHeight(player);
             }
         }
     }
 
     /**
-     * Validates admission, support, height, protection, and final collision before placement and
-     * the first deposit.
+     * Places a new block of {@code type} at {@code pos} holding the main-hand item's first deposit.
+     * Every check runs before placement, so a refused deposit leaves no empty block: the placement
+     * gate, the player's item policy, enablement, column height, admission, a supported cell along
+     * the ray, and obstruction by the block's shape once it holds the deposit.
      */
     private static void placeAndDeposit(
             ServerPlayer player, BlockType type, BlockPos pos, Direction face, ViewRay ray) {
@@ -332,214 +277,77 @@ public final class StackInteractions {
         boolean creative = player.getAbilities().instabuild;
         ItemStack held = player.getMainHandItem();
         ItemStack handStack = creative ? held.copy() : held;
-        if (handStack.isEmpty()
-                || !level.getBlockState(pos).canBeReplaced()
-                || WorldEdits.isProtected(player, pos)
-                || !player.mayUseItemAt(pos, face, handStack)
-                || !BlockType.permitsPlayerItemAndNotify(handStack, player)
-                || !type.isEnabled()) {
+        if (!WorldEdits.mayPlace(player, player.serverLevel(), pos, face.getOpposite())
+                || !BlockType.permitsPlayerItemAndNotify(handStack, player)) {
             return;
         }
-
-        boolean columnFull =
-                switch (type) {
-                    case STORAGE_STACK -> !StoragePile.columnHasRoomFor(level, pos);
-                    case SINGLES_STACK -> !SinglesColumn.columnHasRoomFor(level, pos);
-                    case BAR_STACK -> !BarColumn.columnHasRoomFor(level, pos);
-                };
-        if (columnFull) {
+        if (!type.isEnabled()) {
             player.displayClientMessage(
                     Component.translatable(
-                            "somestacks.message.maximum_height", ServerConfig.maxPileHeight()),
+                            "somestacks.message.type_disabled", type.getBlock().getName()),
                     true);
             return;
         }
-
-        int depositIndex =
-                switch (type) {
-                    case STORAGE_STACK -> -1;
-                    case SINGLES_STACK -> SinglesCubeIdx.traceAllPositions(ray, pos);
-                    case BAR_STACK -> BarCubeIdx.traceAllPositions(ray, pos);
-                };
-        if (type != BlockType.STORAGE_STACK && depositIndex < 0) {
+        if (!StackRun.columnHasRoomFor(level, pos, type)) {
+            notifyMaximumHeight(player);
             return;
         }
-        if (!firstDepositWouldSucceed(type, level, pos, handStack, depositIndex)) {
+        if (!type.admits(handStack, null)) {
             return;
         }
 
         BlockState state = StackPlacement.stateFor(type.getBlock(), level, pos);
         VoxelShape finalCollision =
-                switch (type) {
-                    case STORAGE_STACK ->
-                            state.getCollisionShape(level, pos, CollisionContext.empty());
-                    case SINGLES_STACK -> SinglesCubeIdx.GRID.localShape(depositIndex, 0);
-                    case BAR_STACK -> BarCubeIdx.shapeFor(depositIndex);
-                };
-        if (!WorldEdits.placeChecked(
-                player, player.serverLevel(), pos, state, face.getOpposite(), finalCollision)) {
+                ((StackBlock) type.getBlock()).firstDepositShape(level, pos, state, ray);
+        if (finalCollision == null
+                || !WorldEdits.placeChecked(
+                        player,
+                        player.serverLevel(),
+                        pos,
+                        state,
+                        face.getOpposite(),
+                        finalCollision)) {
             return;
         }
 
-        switch (type) {
-            case STORAGE_STACK -> {
-                StorageStackBE storage = (StorageStackBE) level.getBlockEntity(pos);
-                storage.deposit(handStack, player);
-                level.playSound(
-                        null,
-                        pos,
-                        CommonRegistry.STORAGE_DEPOSIT_SOUND.get(),
-                        SoundSource.BLOCKS,
-                        StackSounds.VOLUME,
-                        1.0f);
-            }
-            case SINGLES_STACK -> {
-                SinglesStackBE singles = (SinglesStackBE) level.getBlockEntity(pos);
-                singles.depositAt(depositIndex, handStack);
-                level.playSound(
-                        null,
-                        pos,
-                        CommonRegistry.SINGLES_DEPOSIT_SOUND.get(),
-                        SoundSource.BLOCKS,
-                        StackSounds.VOLUME,
-                        1.0f);
-            }
-            case BAR_STACK -> {
-                BarStackBE bars = (BarStackBE) level.getBlockEntity(pos);
-                bars.depositAt(depositIndex, handStack);
-                level.playSound(
-                        null,
-                        pos,
-                        CommonRegistry.BAR_DEPOSIT_SOUND.get(),
-                        SoundSource.BLOCKS,
-                        StackSounds.VOLUME,
-                        1.0f);
-            }
-        }
+        ((StackBlockEntity) level.getBlockEntity(pos)).depositFromHand(ray, handStack, player);
+        playSound(level, pos, type.depositSound());
         returnToHand(player, creative, handStack);
     }
 
-    private static boolean firstDepositWouldSucceed(
-            BlockType type, Level level, BlockPos pos, ItemStack handStack, int depositIndex) {
-        if (!type.admits(handStack, null)) return false;
-        return switch (type) {
-            case STORAGE_STACK -> true;
-            case SINGLES_STACK ->
-                    SinglesCubeIdx.freshBlockSupports(
-                            depositIndex,
-                            level.getBlockEntity(pos.below()) instanceof SinglesStackBE below
-                                    ? SinglesCubeIdx.topLayerOccupancy(
-                                            below.getItems(), below.getRotation())
-                                    : null);
-            case BAR_STACK ->
-                    BarCubeIdx.freshBlockSupports(
-                            depositIndex,
-                            level.getBlockEntity(pos.below()) instanceof BarStackBE below
-                                    ? BarCubeIdx.topLayerOccupancy(below.getItems())
-                                    : null);
-        };
-    }
-
-    /**
-     * Takes the nearest occupied target only when the main hand can accept it; Singles/Bar settle
-     * their dependent contents.
-     */
-    private static void extract(ServerPlayer player, BlockPos pos, ViewRay ray) {
+    /** Takes the targeted contents into the main hand, when it can hold them. */
+    private static void extract(ServerPlayer player, BlockPos pos, BlockType type, ViewRay ray) {
         Level level = player.level();
-        var originalStack = level.getBlockEntity(pos);
-        if (originalStack instanceof StorageStackBE storage) {
-            int index = StorageCubeIdx.traceCubes(ray, pos, storage, storage.getRotation());
-            if (index < 0) {
-                return;
-            }
-            ItemStack handStack = player.getMainHandItem();
-            int maxCanTake =
-                    handStack.isEmpty()
-                            ? Integer.MAX_VALUE
-                            : handStack.getMaxStackSize() - handStack.getCount();
-            ItemStack taken =
-                    storage.extractAt(
-                            index,
-                            maxCanTake,
-                            handStack.isEmpty() ? ItemStack.EMPTY : handStack,
-                            player);
-            if (!taken.isEmpty()) {
-                level.playSound(
-                        null,
-                        pos,
-                        CommonRegistry.STORAGE_EXTRACT_SOUND.get(),
-                        SoundSource.BLOCKS,
-                        StackSounds.VOLUME,
-                        1.0f);
-                ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
-                emitSurvivingBlockChange(player, pos, originalStack);
-            }
+        if (!(level.getBlockEntity(pos) instanceof StackBlockEntity stack)) {
             return;
         }
-
-        if (originalStack instanceof SinglesStackBE singles) {
-            int index = SinglesCubeIdx.traceCubes(ray, pos, singles);
-            if (index < 0) {
-                return;
-            }
-            ItemStack stored = singles.getItems().getStackInSlot(index);
-            if (stored.isEmpty() || !ItemOps.canTakeIntoHand(player.getMainHandItem(), stored)) {
-                return;
-            }
-            ItemStack taken = singles.extractAt(index, player);
-            if (!taken.isEmpty()) {
-                level.playSound(
-                        null,
-                        pos,
-                        CommonRegistry.SINGLES_EXTRACT_SOUND.get(),
-                        SoundSource.BLOCKS,
-                        StackSounds.VOLUME,
-                        1.0f);
-                ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
-                emitSurvivingBlockChange(player, pos, originalStack);
-            }
+        int index = stack.extractionTarget(ray);
+        if (index < 0) {
             return;
         }
-
-        if (originalStack instanceof BarStackBE bars) {
-            int index = BarCubeIdx.traceCubes(ray, pos, bars);
-            if (index < 0) {
-                return;
-            }
-            ItemStack stored = bars.getItems().getStackInSlot(index);
-            if (stored.isEmpty() || !ItemOps.canTakeIntoHand(player.getMainHandItem(), stored)) {
-                return;
-            }
-            ItemStack taken = bars.extractAt(index, player);
-            if (!taken.isEmpty()) {
-                level.playSound(
-                        null,
-                        pos,
-                        CommonRegistry.BAR_EXTRACT_SOUND.get(),
-                        SoundSource.BLOCKS,
-                        StackSounds.VOLUME,
-                        1.0f);
-                ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
-                emitSurvivingBlockChange(player, pos, originalStack);
-            }
+        ItemStack taken = stack.extractIntoHand(index, player.getMainHandItem(), player);
+        if (!taken.isEmpty()) {
+            playSound(level, pos, type.extractSound());
+            ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
+            emitSurvivingBlockChange(player, pos, stack);
         }
     }
 
     private static void rotateBlock(ServerPlayer player, BlockPos pos, BlockType type) {
-        int rotation;
-        if (type == BlockType.SINGLES_STACK
-                && player.level().getBlockEntity(pos) instanceof SinglesStackBE singles) {
-            rotation = (singles.getRotation() + 1) % CubeGrid.ROTATIONS;
-            singles.setRotation(rotation);
-            StackSounds.playRotation(player, pos, CommonRegistry.SINGLES_ROTATE_SOUND.get());
-        } else if (type == BlockType.STORAGE_STACK
-                && player.level().getBlockEntity(pos) instanceof StorageStackBE storage) {
-            rotation = (storage.getRotation() + 1) % CubeGrid.ROTATIONS;
-            storage.setRotation(rotation);
-            StackSounds.playRotation(player, pos, CommonRegistry.STORAGE_ROTATE_SOUND.get());
+        if (!(player.level().getBlockEntity(pos) instanceof StackBlockEntity stack)) {
+            return;
+        }
+        CommonRegistry.Sound sound;
+        if (type == BlockType.SINGLES_STACK) {
+            sound = CommonRegistry.Sound.SINGLES_ROTATE;
+        } else if (type == BlockType.STORAGE_STACK) {
+            sound = CommonRegistry.Sound.STORAGE_ROTATE;
         } else {
             return;
         }
+        int rotation = (stack.getRotation() + 1) % CubeGrid.ROTATIONS;
+        stack.setRotation(rotation);
+        playRotation(player, pos, sound.get());
 
         emitBlockChange(player, pos, player.level().getBlockState(pos));
         player.displayClientMessage(
@@ -552,15 +360,15 @@ public final class StackInteractions {
         if (!(player.level().getBlockEntity(pos) instanceof SinglesStackBE singles)) {
             return;
         }
-        int index = SinglesCubeIdx.traceCubes(ray, pos, singles);
-        if (index < 0 || singles.getItems().getStackInSlot(index).isEmpty()) {
+        int index = singles.extractionTarget(ray);
+        if (index < 0) {
             return;
         }
         int rotation = (singles.getCubeRotation(index) + 1) % CubeGrid.ROTATIONS;
         singles.setCubeRotation(index, rotation);
         emitBlockChange(player, pos, player.level().getBlockState(pos));
 
-        StackSounds.playRotation(player, pos, CommonRegistry.SINGLES_ROTATE_ITEM_SOUND.get());
+        playRotation(player, pos, CommonRegistry.Sound.SINGLES_ROTATE_ITEM.get());
         player.displayClientMessage(
                 Component.translatable(
                         "somestacks.message.item_rotation",
@@ -585,6 +393,33 @@ public final class StackInteractions {
                                         ? "somestacks.state.permanent"
                                         : "somestacks.state.temporary")),
                 true);
+    }
+
+    /** Tells the player a stack column cannot grow because it reached the configured height. */
+    private static void notifyMaximumHeight(ServerPlayer player) {
+        player.displayClientMessage(
+                Component.translatable(
+                        "somestacks.message.maximum_height",
+                        ServerConfig.settings().maxPileHeight()),
+                true);
+    }
+
+    /** Broadcasts one stack action sound at the block, heard by every nearby player. */
+    private static void playSound(Level level, BlockPos pos, SoundEvent sound) {
+        level.playSound(null, pos, sound, SoundSource.BLOCKS, SOUND_VOLUME, 1.0f);
+    }
+
+    /**
+     * Broadcasts a slightly pitch-varied rotation sound if the player's sound pacing permits it.
+     */
+    private static void playRotation(ServerPlayer player, BlockPos pos, SoundEvent sound) {
+        if (!claimRotationSound(player)) {
+            return;
+        }
+        float pitch =
+                ROTATION_PITCH_BASE
+                        + player.serverLevel().getRandom().nextFloat() * ROTATION_PITCH_SPREAD;
+        player.serverLevel().playSound(null, pos, sound, SoundSource.BLOCKS, SOUND_VOLUME, pitch);
     }
 
     private static void returnToHand(ServerPlayer player, boolean creative, ItemStack handStack) {

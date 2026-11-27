@@ -1,25 +1,32 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.BooleanSupplier;
 
+import javax.annotation.Nullable;
+
 /**
- * Mechanics shared by every maximal vertical run of one stack type. Concrete runs retain their
- * distinct insertion, extraction, growth, settlement, and collapse rules.
+ * Mechanics shared by every maximal vertical run of one stack type, including the gate on growing
+ * one block taller. Concrete runs retain their distinct insertion, extraction, settlement, and
+ * collapse rules and the shape and state a grown block takes.
  */
 public abstract class StackRun<BE extends StackBlockEntity> {
     /**
@@ -34,6 +41,11 @@ public abstract class StackRun<BE extends StackBlockEntity> {
      */
     public abstract InsertionTest insertionTest();
 
+    /**
+     * How many of {@code stack} the run would accept at flat position {@code slot}, without
+     * changing anything: 0 when the item or the position is refused, never more than the stack's
+     * count.
+     */
     @FunctionalInterface
     public interface InsertionTest {
         int test(int slot, ItemStack stack);
@@ -46,17 +58,17 @@ public abstract class StackRun<BE extends StackBlockEntity> {
     protected final List<BE> blocks;
 
     private final int slotsPerBlock;
-    private final Block block;
+    private final BlockType type;
 
     /**
      * Creates a server-only run over a nonempty bottom-to-top list of same-type block entities.
      * Storage settlement can trim this list to empty; publication and scheduling then do nothing.
      */
-    protected StackRun(ServerLevel level, List<BE> blocks, int slotsPerBlock, Block block) {
+    protected StackRun(ServerLevel level, List<BE> blocks, int slotsPerBlock, BlockType type) {
         this.level = level;
         this.blocks = blocks;
         this.slotsPerBlock = slotsPerBlock;
-        this.block = block;
+        this.type = type;
     }
 
     /** Lazily shares a predicate result only within the caller's read-only insertion sweep. */
@@ -149,19 +161,22 @@ public abstract class StackRun<BE extends StackBlockEntity> {
     }
 
     /**
-     * Tests the height of the same-type run a block at pos would join, including both neighbors.
+     * Whether a block of {@code type} may be created at {@code pos}: the contiguous column it would
+     * form, counting the runs both below and above it, must fit the configured maximum. Testing the
+     * whole resulting column rather than one neighboring run is what stops a block placed into the
+     * gap between two runs from joining them into an over-tall one.
      */
-    protected static boolean columnHasRoomFor(Level level, BlockPos pos, Block block) {
+    public static boolean columnHasRoomFor(Level level, BlockPos pos, BlockType type) {
         return 1
-                        + runLength(level, pos, Direction.DOWN, block)
-                        + runLength(level, pos, Direction.UP, block)
-                <= ServerConfig.maxPileHeight();
+                        + runLength(level, pos, Direction.DOWN, type)
+                        + runLength(level, pos, Direction.UP, type)
+                <= ServerConfig.settings().maxPileHeight();
     }
 
-    private static int runLength(Level level, BlockPos from, Direction direction, Block block) {
+    private static int runLength(Level level, BlockPos from, Direction direction, BlockType type) {
         int length = 0;
         BlockPos current = from.relative(direction);
-        while (level.getBlockState(current).is(block)) {
+        while (level.getBlockState(current).is(type.getBlock())) {
             length++;
             current = current.relative(direction);
         }
@@ -190,9 +205,42 @@ public abstract class StackRun<BE extends StackBlockEntity> {
 
     /** Positions visible to automation, including one block of headroom below the height limit. */
     public final int advertisedSlots() {
-        int levels =
-                blocks.size() < ServerConfig.maxPileHeight() ? blocks.size() + 1 : blocks.size();
+        int levels = isBelowMaximumHeight() ? blocks.size() + 1 : blocks.size();
         return slotsPerBlock * levels;
+    }
+
+    /**
+     * Whether the run may grow one block taller as far as anything without side effects can tell:
+     * the height limit, the type's enablement, and {@link WorldEdits#mayPlace} for the space above,
+     * checked against {@code actor} or, when null, the automation identity. Planning and committing
+     * share this predicate, so a simulated insertion cannot promise a block the insertion itself
+     * would refuse. Spawn protection exempts operators, so the answer depends on who grows the run.
+     */
+    protected final boolean canGrowSpace(@Nullable ServerPlayer actor) {
+        return mayGrowTaller()
+                && WorldEdits.mayPlace(actor, level, topPos().above(), Direction.DOWN);
+    }
+
+    /**
+     * Places {@code state} on top of the run through {@link WorldEdits#placeChecked}, which applies
+     * the placement gate and obstruction by {@code finalCollision}. The caller adds the new block
+     * entity to the run.
+     *
+     * @param actor the player responsible for the new block, or null for automation
+     */
+    protected final boolean placeOnTop(
+            @Nullable ServerPlayer actor, BlockState state, VoxelShape finalCollision) {
+        return mayGrowTaller()
+                && WorldEdits.placeChecked(
+                        actor, level, topPos().above(), state, Direction.DOWN, finalCollision);
+    }
+
+    private boolean isBelowMaximumHeight() {
+        return blocks.size() < ServerConfig.settings().maxPileHeight();
+    }
+
+    private boolean mayGrowTaller() {
+        return isBelowMaximumHeight() && type.isEnabled();
     }
 
     /** Current contents, or empty for headroom and invalid positions. */
@@ -250,7 +298,7 @@ public abstract class StackRun<BE extends StackBlockEntity> {
             return;
         }
         for (BE blockEntity : blocks) {
-            level.updateNeighbourForOutputSignal(blockEntity.getBlockPos(), block);
+            level.updateNeighbourForOutputSignal(blockEntity.getBlockPos(), type.getBlock());
         }
     }
 
@@ -263,8 +311,8 @@ public abstract class StackRun<BE extends StackBlockEntity> {
             return;
         }
         BlockPos bottom = basePos();
-        if (!level.getBlockTicks().hasScheduledTick(bottom, block)) {
-            level.scheduleTick(bottom, block, 1);
+        if (!level.getBlockTicks().hasScheduledTick(bottom, type.getBlock())) {
+            level.scheduleTick(bottom, type.getBlock(), 1);
         }
     }
 

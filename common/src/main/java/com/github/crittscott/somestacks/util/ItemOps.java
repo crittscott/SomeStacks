@@ -1,5 +1,9 @@
 package com.github.crittscott.somestacks.util;
 
+import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenCustomHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -7,19 +11,36 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.lighting.LightEngine;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Item handling shared by all three stack types: what a hand can accept, how a taken stack reaches
- * the player, how a broken block sheds its contents, and how stored items add up to a light level.
+ * the player, how loose stacks pack into whole ones, how a broken block sheds its contents, and how
+ * stored items add up to a light level.
  */
 public final class ItemOps {
     private ItemOps() {}
 
     /** The brightest a block can be, and so the top of each stack block's light property. */
-    public static final int MAX_LIGHT_LEVEL = 15;
+    public static final int MAX_LIGHT_LEVEL = LightEngine.MAX_LEVEL;
 
     /** Share of a stored block's own emission that a cell holding it contributes. */
     private static final int LIGHT_SHARE_DIVISOR = 4;
+
+    /**
+     * One output stack of {@link #consolidate}: {@code count} items of {@code model}'s exact
+     * identity. The model is one of the input stacks, not a copy.
+     */
+    public record Piece(ItemStack model, int count) {
+        /** A new stack holding this piece. */
+        public ItemStack toStack() {
+            return model.copyWithCount(count);
+        }
+    }
 
     /**
      * Whether an extraction may land in this hand: it must be empty, or hold the same item and tags
@@ -31,6 +52,52 @@ public final class ItemOps {
         if (hand.isEmpty()) return true;
         return ItemStack.isSameItemSameTags(hand, offer)
                 && hand.getCount() < hand.getMaxStackSize();
+    }
+
+    /**
+     * Totals stacks by exact identity, keeping first-seen order, and re-cuts each total into whole
+     * stacks of the item's maximum size plus at most one remainder. Grouping by identity rather
+     * than by adjacency means two compatible stacks always merge, wherever they sat.
+     *
+     * <p>Identity is vanilla's item-and-tags test, the same one insertion uses to decide whether
+     * two stacks merge. No stack is copied: each piece refers to the first input stack of its
+     * identity, so the caller must not mutate the inputs while it holds the pieces.
+     */
+    /**
+     * Hashes and compares stacks by item and tags, ignoring count: vanilla's merge identity.
+     * Vanilla's own strategy for this, {@code ItemStackLinkedSet.TYPE_AND_TAG}, is private.
+     */
+    private static final Hash.Strategy<ItemStack> SAME_ITEM_SAME_TAGS =
+            new Hash.Strategy<>() {
+                @Override
+                public int hashCode(ItemStack stack) {
+                    return stack == null ? 0 : Objects.hash(stack.getItem(), stack.getTag());
+                }
+
+                @Override
+                public boolean equals(ItemStack a, ItemStack b) {
+                    return a == b || (a != null && b != null && ItemStack.isSameItemSameTags(a, b));
+                }
+            };
+
+    public static List<Piece> consolidate(Iterable<ItemStack> stacks) {
+        Object2IntLinkedOpenCustomHashMap<ItemStack> totals =
+                new Object2IntLinkedOpenCustomHashMap<>(SAME_ITEM_SAME_TAGS);
+        for (ItemStack stack : stacks) {
+            if (!stack.isEmpty()) {
+                totals.addTo(stack, stack.getCount());
+            }
+        }
+
+        List<Piece> pieces = new ArrayList<>();
+        for (Object2IntMap.Entry<ItemStack> total : totals.object2IntEntrySet()) {
+            ItemStack model = total.getKey();
+            int max = Math.max(1, model.getMaxStackSize());
+            for (int remaining = total.getIntValue(); remaining > 0; remaining -= max) {
+                pieces.add(new Piece(model, Math.min(remaining, max)));
+            }
+        }
+        return pieces;
     }
 
     /**

@@ -104,13 +104,13 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final float</code></div>
 <div class="col-second odd-row-color"><code><a href="#CELL_LOCAL_SIZE" class="member-name-link">CELL_LOCAL_SIZE</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">One four-pixel cell in those local units, where 1.0 is the eight pixels above.</div>
+<div class="block">One Singles cell in those local units, where 1.0 is <code>RENDER_UNIT_PIXELS</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static final float</code></div>
 <div class="col-second even-row-color"><code><a href="#CELL_RENDER_SCALE" class="member-name-link">CELL_RENDER_SCALE</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Scale a stack block's renderer applies before handing a cell's contents here: an item's unit
- cube becomes eight pixels.</div>
+ cube becomes <code>RENDER_UNIT_PIXELS</code> pixels of the 16-pixel block.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second odd-row-color"><code><a href="#STACK_CUBE_ERROR_TEXTURE" class="member-name-link">STACK_CUBE_ERROR_TEXTURE</a></code></div>
@@ -121,8 +121,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final float</code></div>
 <div class="col-second odd-row-color"><code><a href="#STORAGE_CELL_RENDER_SCALE" class="member-name-link">STORAGE_CELL_RENDER_SCALE</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Storage's own cell-render scale, grown so a cell's rendered content fills more of its
- 4.5-pixel cell, halving the gap between Storage's cells.</div>
+<div class="block">Storage's own cell-render scale, grown by the ratio of a Storage cell to a Singles cell so a
+ cell's rendered content fills more of its larger cell, halving the gap between Storage's
+ cells.</div>
 </div>
 </div>
 </section>
@@ -187,7 +188,7 @@ loadScripts(document, 'script');</script>
 <h3>CELL_RENDER_SCALE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">CELL_RENDER_SCALE</span></div>
 <div class="block">Scale a stack block's renderer applies before handing a cell's contents here: an item's unit
- cube becomes eight pixels.</div>
+ cube becomes <code>RENDER_UNIT_PIXELS</code> pixels of the 16-pixel block.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -202,9 +203,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="STORAGE_CELL_RENDER_SCALE">
 <h3>STORAGE_CELL_RENDER_SCALE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">STORAGE_CELL_RENDER_SCALE</span></div>
-<div class="block">Storage's own cell-render scale, grown so a cell's rendered content fills more of its
- 4.5-pixel cell, halving the gap between Storage's cells. Storage-only: Singles' cells already
- tile edge to edge with no gap to absorb growth into.</div>
+<div class="block">Storage's own cell-render scale, grown by the ratio of a Storage cell to a Singles cell so a
+ cell's rendered content fills more of its larger cell, halving the gap between Storage's
+ cells. Storage-only: Singles' cells already tile edge to edge with no gap to absorb growth
+ into.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -219,7 +221,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="CELL_LOCAL_SIZE">
 <h3>CELL_LOCAL_SIZE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">CELL_LOCAL_SIZE</span></div>
-<div class="block">One four-pixel cell in those local units, where 1.0 is the eight pixels above.</div>
+<div class="block">One Singles cell in those local units, where 1.0 is <code>RENDER_UNIT_PIXELS</code>. Storage
+ cells occupy the same local size, because <a href="#STORAGE_CELL_RENDER_SCALE"><code>STORAGE_CELL_RENDER_SCALE</code></a> grows the whole
+ frame instead.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

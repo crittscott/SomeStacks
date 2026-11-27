@@ -5,16 +5,12 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.SomeStacks;
-import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.PlatformServices;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.block.StorageStackBlock;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.BarCubeIdx;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StackMode;
 
 import net.minecraft.core.BlockPos;
@@ -25,21 +21,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Cow;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -48,7 +38,6 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
-import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.Consumer;
 
@@ -59,152 +48,79 @@ import java.util.function.Consumer;
  * <p>These fire the Forge events themselves, so they cover the order a consult and the commit that
  * follows must agree on.
  */
-@GameTestHolder(SomeStacks.MODID)
+@GameTestHolder(SomeStacksCommon.MODID)
 @PrefixGameTestTemplate(false)
 public final class ProtectionGameTests {
     private ProtectionGameTests() {}
 
     /**
-     * To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty
-     * the top; each structural edit emits a vibration.
+     * Loader entry point for {@link WorldEditChecks#placementGrowthAndCleanupNotify}; see that
+     * method for the scenario and manual check.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void placementGrowthAndCleanupNotify(GameTestHelper helper) {
         WorldEditChecks.placementGrowthAndCleanupNotify(
                 helper,
                 FakePlayerFactory.getMinecraft(helper.getLevel()),
-                player -> nativeGesture(player, helper.absolutePos(ORIGIN.below()), Direction.UP));
+                ForgeGameTestSupport::click);
     }
 
     /** Loader entry point for {@link WorldEditChecks#automationUsesSharedIdentity}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void automationUsesSharedIdentity(GameTestHelper helper) {
         WorldEditChecks.automationUsesSharedIdentity(helper);
     }
 
     /** Loader entry point for {@link WorldEditChecks#cleanupOfWaterloggedStackKeepsTheWater}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void cleanupOfWaterloggedStackKeepsTheWater(GameTestHelper helper) {
         WorldEditChecks.cleanupOfWaterloggedStackKeepsTheWater(helper);
     }
 
     /** Loader entry point for {@link WorldEditChecks#playerCausedCleanupCarriesThePlayer}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void playerCausedCleanupCarriesThePlayer(GameTestHelper helper) {
         WorldEditChecks.playerCausedCleanupCarriesThePlayer(
                 helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
     }
 
     /**
-     * Internal checked-placement test: place stone at an in-bounds position, then try a position
-     * one below the minimum build height. Only the in-bounds call succeeds. The out-of-world call
-     * has no direct player reproduction.
-     *
-     * <p>Nearest manual check: select Storage and V-place an admissible item against a floor in
-     * bounds, then try to grow a stack beyond the world's upper build limit. No out-of-bounds block
-     * should appear.
+     * Loader entry point for {@link WorldEditChecks#breakingAStackChargesItsCleanupToTheBreaker}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
+    public static void breakingAStackChargesItsCleanupToTheBreaker(GameTestHelper helper) {
+        WorldEditChecks.breakingAStackChargesItsCleanupToTheBreaker(
+                helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
+    }
+
+    /**
+     * Loader entry point for {@link
+     * WorldEditChecks#checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight}.
+     */
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
             GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
-        BlockPos valid = helper.absolutePos(ORIGIN);
-        BlockPos invalid = new BlockPos(valid.getX(), level.getMinBuildHeight() - 1, valid.getZ());
-
-        check(
-                WorldEdits.placeChecked(
-                        player,
-                        level,
-                        valid,
-                        Blocks.STONE.defaultBlockState(),
-                        Direction.DOWN,
-                        Blocks.STONE
-                                .defaultBlockState()
-                                .getCollisionShape(level, valid, CollisionContext.empty())),
-                "Valid checked placement was rejected");
-        check(
-                level.getBlockState(valid).is(Blocks.STONE),
-                "Valid checked placement did not change the world");
-        check(
-                !WorldEdits.placeChecked(
-                        player,
-                        level,
-                        invalid,
-                        Blocks.STONE.defaultBlockState(),
-                        Direction.DOWN,
-                        Blocks.STONE
-                                .defaultBlockState()
-                                .getCollisionShape(level, invalid, CollisionContext.empty())),
-                "Out-of-height checked placement was accepted");
-        helper.succeed();
+        WorldEditChecks.checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
+                helper, ForgeGameTestSupport.players(helper).apply(ItemStack.EMPTY));
     }
 
     /**
-     * The fixture puts a cow inside the proposed full stone shape and calls checked placement;
-     * placement fails.
-     *
-     * <p>Nearest manual check: confine a cow in the destination above a floor, select Storage, and
-     * V-right-click the floor holding dirt. The obstructed Storage block must not appear.
+     * Loader entry point for {@link WorldEditChecks#checkedPlacementRejectsAnObstructingEntity}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        putCowIn(helper, ORIGIN);
-
-        try (var events = new WorldEditChecks.EventProbe(level, target)) {
-            check(
-                    !WorldEdits.placeChecked(
-                            player,
-                            level,
-                            target,
-                            Blocks.STONE.defaultBlockState(),
-                            Direction.DOWN,
-                            Blocks.STONE
-                                    .defaultBlockState()
-                                    .getCollisionShape(level, target, CollisionContext.empty())),
-                    "Entity-obstructed checked placement was accepted");
-            events.expectNone();
-        }
-        helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
-        helper.succeed();
+        WorldEditChecks.checkedPlacementRejectsAnObstructingEntity(
+                helper, ForgeGameTestSupport.players(helper).apply(ItemStack.EMPTY));
     }
 
     /**
-     * To reproduce: enter Creative, hold 64 dirt, and V-right-click an existing Storage block. All
-     * 64 dirt enter the pile and the hand still holds 64. The test exercises the loader's native
-     * block-use callback.
+     * Loader entry point for {@link
+     * WorldEditChecks#creativeDepositFillsTheStackWithoutSpendingTheHand}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        GameTestScaffold.placeStorage(helper, ORIGIN);
-
-        player.getAbilities().instabuild = true;
-        try {
-            withMainHand(
-                    player,
-                    new ItemStack(Items.DIRT, 64),
-                    () -> {
-                        nativeGesture(player, target, Direction.WEST);
-                        checkEquals(
-                                64,
-                                player.getMainHandItem().getCount(),
-                                "A creative deposit spent the held stack");
-                    });
-        } finally {
-            player.getAbilities().instabuild = false;
-        }
-
-        checkEquals(
-                64,
-                GameTestScaffold.heldAt(helper, target, Items.DIRT),
-                "Creative deposit did not reach the stack");
-        helper.succeed();
+        WorldEditChecks.creativeDepositFillsTheStackWithoutSpendingTheHand(
+                helper, ForgeGameTestSupport.players(helper), ForgeGameTestSupport::click);
     }
 
     // Mod-driven removal under protection
@@ -223,7 +139,7 @@ public final class ProtectionGameTests {
      * upper block and allow settlement; it remains. Lift the denial and trigger another inventory
      * change; subsequent settlement trims it.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper) {
         BlockPos topRelative = ORIGIN.above();
         StorageStackBE base = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -263,399 +179,143 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
-    // Waterlogging
-
-    /**
-     * To reproduce: place source water above a solid floor, select Storage, and V-right-click the
-     * floor with dirt. The new Storage block is waterlogged and water remains at that position. The
-     * test exercises native placement and inspects the fluid state.
-     */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    /** Loader entry point for {@link WorldEditChecks#placementIntoWaterKeepsTheWater}. */
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void placementIntoWaterKeepsTheWater(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        level.setBlock(target, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
-
-        withMainHand(
-                player,
-                new ItemStack(Items.DIRT, 64),
-                () -> nativeGesture(player, target.below(), Direction.UP));
-
-        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        check(
-                level.getBlockState(target).getValue(StorageStackBlock.WATERLOGGED),
-                "A stack placed into water was not waterlogged");
-        check(
-                level.getFluidState(target).getType() == Fluids.WATER,
-                "A stack placed into water swallowed the water");
-        helper.succeed();
+        WorldEditChecks.placementIntoWaterKeepsTheWater(
+                helper, ForgeGameTestSupport.players(helper), ForgeGameTestSupport::click);
     }
 
     /**
-     * Runs {@code action} with {@code stack} held, and empties the hand again before returning. The
-     * fake player is shared across tests, so what it carries has to be put back.
+     * Loader entry point for {@link
+     * WorldEditChecks#storageGrowthAnswersToProtectionInSimulationAndCommit}.
      */
-    private static void withMainHand(ServerPlayer player, ItemStack stack, Runnable action) {
-        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        try {
-            action.run();
-        } finally {
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-        }
-    }
-
-    // Growth under protection
-    //
-    // A capability insertion aimed at a slot past what the run holds is the one that grows it, and
-    // it
-    // checks the position above the run before promising the caller anything, so a simulation and
-    // the
-    // commit that follows agree about a position growth cannot have. The three tests below stage
-    // that
-    // with the world border. Spawn protection, the other half of the same predicate, cannot be
-    // staged
-    // here: it is implemented on DedicatedServer, and the server running these tests is not one.
-
-    /**
-     * World-border fixture: fill one Storage block, first confirm a free headroom offer has
-     * capacity, then move the border to exclude the target and try simulation and commit. Both
-     * refuse the entire four-item offer without growth or input mutation.
-     *
-     * <p>To reproduce, allow height above one, fill a Storage pile, and use /worldborder center and
-     * /worldborder set to exclude its prospective growth position. Offer admissible items to first
-     * headroom through slot-addressing automation. No upper block appears. Restore the original
-     * border after the check; dry-run results require simulation/abort support.
-     */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void storageGrowthAnswersToProtectionInSimulationAndCommit(
             GameTestHelper helper) {
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(storage);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-
-        int headroom = StorageStackBE.SLOTS;
-        check(
-                capability.insertItem(headroom, offered, true).isEmpty(),
-                "A full pile with free headroom did not credit growth");
-
-        outsideTheBorder(
-                helper,
-                () -> {
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, true).getCount(),
-                            "Simulated remainder");
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, false).getCount(),
-                            "Committed remainder");
-                });
-
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
-        helper.succeed();
+        WorldEditChecks.storageGrowthAnswersToProtectionInSimulationAndCommit(
+                helper, ForgeGameTestSupport::automation);
     }
 
     /**
-     * World-border fixture: fill one Singles block, first confirm a free headroom offer has
-     * capacity, then move the border to exclude the target and try simulation and commit. Both
-     * refuse the entire four-item offer without growth or input mutation.
-     *
-     * <p>To reproduce, allow height above one, fill a Singles column, and use /worldborder center
-     * and /worldborder set to exclude its prospective growth position. Offer admissible items to
-     * first headroom through slot-addressing automation. No upper block appears. Restore the
-     * original border after the check; dry-run results require simulation/abort support.
+     * Loader entry point for {@link
+     * WorldEditChecks#singlesGrowthAnswersToProtectionInSimulationAndCommit}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(
             GameTestHelper helper) {
-        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(singles);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-
-        // A cell takes one item, so a credited growth leaves three of the four behind.
-        int headroom = SinglesStackBE.SLOTS;
-        checkEquals(
-                3,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "A full column with free headroom did not credit growth");
-
-        outsideTheBorder(
-                helper,
-                () -> {
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, true).getCount(),
-                            "Simulated remainder");
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, false).getCount(),
-                            "Committed remainder");
-                });
-
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
-        helper.succeed();
+        WorldEditChecks.singlesGrowthAnswersToProtectionInSimulationAndCommit(
+                helper, ForgeGameTestSupport::automation);
     }
 
     /**
-     * World-border fixture: fill one Bar block, first confirm a free headroom offer has capacity,
-     * then move the border to exclude the target and try simulation and commit. Both refuse the
-     * entire four-item offer without growth or input mutation.
-     *
-     * <p>To reproduce, allow height above one, fill a Bar column, and use /worldborder center and
-     * /worldborder set to exclude its prospective growth position. Offer admissible items to first
-     * headroom through slot-addressing automation. No upper block appears. Restore the original
-     * border after the check; dry-run results require simulation/abort support.
+     * Loader entry point for {@link
+     * WorldEditChecks#barGrowthAnswersToProtectionInSimulationAndCommit}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
-        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
-        Item bar = GameTestScaffold.firstBarItem();
-        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar, 1), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(bars);
-        ItemStack offered = new ItemStack(bar, 4);
-
-        // A position takes one bar, so a credited growth leaves three of the four behind.
-        int headroom = BarStackBE.SLOTS;
-        checkEquals(
-                3,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "A full column with free headroom did not credit growth");
-
-        outsideTheBorder(
-                helper,
-                () -> {
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, true).getCount(),
-                            "Simulated remainder");
-                    checkEquals(
-                            4,
-                            capability.insertItem(headroom, offered, false).getCount(),
-                            "Committed remainder");
-                });
-
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
-        helper.succeed();
+        WorldEditChecks.barGrowthAnswersToProtectionInSimulationAndCommit(
+                helper, ForgeGameTestSupport::automation);
     }
 
-    // Growth through entities
-
     /**
-     * To reproduce: allow height above one, fill one Storage block, and confine a cow in the
-     * prospective upper block's first occupied position. Offer four admissible items to first
-     * headroom through automation. Commit refuses them all and creates no block. The automated
-     * check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
-     * automation probe.
+     * Loader entry point for {@link
+     * WorldEditChecks#storageGrowthRejectsAnObstructingEntityInSimulationAndCommit}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(storage);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-        putCowIn(helper, ORIGIN.above());
-
-        int headroom = StorageStackBE.SLOTS;
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
-        helper.succeed();
+        WorldEditChecks.storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, ForgeGameTestSupport::automation);
     }
 
     /**
-     * To reproduce: allow height above one, fill one Singles block, and confine a cow in the
-     * prospective upper block's first occupied position. Offer four admissible items to first
-     * headroom through automation. Commit refuses them all and creates no block. The automated
-     * check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
-     * automation probe.
+     * Loader entry point for {@link
+     * WorldEditChecks#singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(singles);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-        putCowIn(helper, ORIGIN.above());
-
-        int headroom = SinglesStackBE.SLOTS;
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
-        helper.succeed();
+        WorldEditChecks.singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, ForgeGameTestSupport::automation);
     }
 
     /**
-     * To reproduce: allow height above one, fill one Bar block, and confine a cow in the
-     * prospective upper block's first occupied position. Offer four admissible items to first
-     * headroom through automation. Commit refuses them all and creates no block. The automated
-     * check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
-     * automation probe.
+     * Loader entry point for {@link
+     * WorldEditChecks#barGrowthRejectsAnObstructingEntityInSimulationAndCommit}.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
-        Item bar = GameTestScaffold.firstBarItem();
-        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar), false);
-        }
-        IItemHandler capability = GameTestSupport.capability(bars);
-        ItemStack offered = new ItemStack(bar, 4);
-        putCowIn(helper, ORIGIN.above());
-
-        int headroom = BarStackBE.SLOTS;
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
-        helper.succeed();
+        WorldEditChecks.barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, ForgeGameTestSupport::automation);
     }
 
     /**
-     * Puts a living placement-blocking entity across the bottom north-west cell and bar position of
-     * {@code relative}.
+     * Loader entry point for {@link
+     * WorldEditChecks#completedShapesDistinguishOccupiedCellsFromEmptySpace}.
      */
-    /**
-     * Internal obstruction-shape check: a cow overlaps one edge of the target position. Full and
-     * occupied-edge shapes are obstructed; empty shapes and distant Singles/Bar positions are
-     * clear. No block placement or deposit is performed.
-     *
-     * <p>Nearest manual check: hold a cow at one edge of a destination and attempt first placement
-     * of Singles or Bar into occupied-edge and clear positions. Only shapes overlapping the cow
-     * should prevent placement.
-     */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void completedShapesDistinguishOccupiedCellsFromEmptySpace(
             GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        BlockPos target = helper.absolutePos(ORIGIN);
-        Cow cow = EntityType.COW.create(level);
-        check(cow != null, "Could not create obstruction cow");
-        cow.moveTo(target.getX() + 1.25, target.getY(), target.getZ() + 0.5, 0.0F, 0.0F);
-        check(level.addFreshEntity(cow), "Could not add obstruction cow");
-        try {
-            check(
-                    !WorldEdits.isUnobstructed(level, target, Shapes.block()),
-                    "Full block missed obstruction");
-            check(
-                    WorldEdits.isUnobstructed(level, target, Shapes.empty()),
-                    "Empty shape was obstructed");
-            check(
-                    WorldEdits.isUnobstructed(level, target, SinglesCubeIdx.GRID.localShape(0, 0)),
-                    "Free Singles cell was obstructed by another cell's occupant");
-            check(
-                    !WorldEdits.isUnobstructed(
-                            level,
-                            target,
-                            SinglesCubeIdx.GRID.localShape(SinglesCubeIdx.LAYER_SIZE - 1, 0)),
-                    "Occupied Singles shape missed obstruction");
-            check(
-                    WorldEdits.isUnobstructed(level, target, BarCubeIdx.shapeFor(0)),
-                    "Free Bar position was obstructed by another position's occupant");
-            check(
-                    !WorldEdits.isUnobstructed(
-                            level, target, BarCubeIdx.shapeFor(BarCubeIdx.LAYER_SIZE - 1)),
-                    "Occupied Bar shape missed obstruction");
-        } finally {
-            cow.discard();
-        }
-        helper.succeed();
-    }
-
-    private static void putCowIn(GameTestHelper helper, BlockPos relative) {
-        ServerLevel level = helper.getLevel();
-        BlockPos target = helper.absolutePos(relative);
-        Cow cow = EntityType.COW.create(level);
-        check(cow != null, "Could not create obstruction cow");
-        check(cow.blocksBuilding, "Cow does not block building");
-        cow.moveTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5, 0.0F, 0.0F);
-        check(level.addFreshEntity(cow), "Could not add obstruction cow");
+        WorldEditChecks.completedShapesDistinguishOccupiedCellsFromEmptySpace(helper);
     }
 
     /**
-     * Runs {@code action} with the world border moved off the test structure, and restores it
-     * before returning. The border is level-wide state, but the move and the restore both happen
-     * inside this one synchronous call, so no other test observes it moved.
+     * Loader entry point for {@link InteractionChecks#blockUseDenialFreezesStackGestures}; see that
+     * method for the scenario and manual check. The denial is a {@code RightClickBlock} listener at
+     * the default priority that sets {@code setUseBlock(DENY)} for the fixture player at the
+     * gesture's block, so it runs before the mod's own {@code LOWEST} listener, as a protection
+     * mod's would.
      */
-    private static void outsideTheBorder(GameTestHelper helper, Runnable action) {
-        WorldBorder border = helper.getLevel().getWorldBorder();
-        BlockPos above = helper.absolutePos(ORIGIN.above());
-        double centerX = border.getCenterX();
-        double centerZ = border.getCenterZ();
-        double size = border.getSize();
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
+    public static void blockUseDenialFreezesStackGestures(GameTestHelper helper) {
+        ServerPlayer[] deniedPlayer = {null};
+        BlockPos[] deniedPosition = {null};
+        Consumer<PlayerInteractEvent.RightClickBlock> veto =
+                event -> {
+                    if (event.getEntity() == deniedPlayer[0]
+                            && event.getPos().equals(deniedPosition[0])) {
+                        event.setUseBlock(Event.Result.DENY);
+                    }
+                };
+        MinecraftForge.EVENT_BUS.addListener(veto);
         try {
-            border.setCenter(above.getX() + 1000.0, above.getZ());
-            border.setSize(16.0);
-            check(
-                    !border.isWithinBounds(above),
-                    "Test setup left the position inside the world border");
-            action.run();
+            InteractionChecks.blockUseDenialFreezesStackGestures(
+                    helper,
+                    ForgeGameTestSupport.players(helper),
+                    ForgeGameTestSupport::click,
+                    (player, pos) -> {
+                        deniedPlayer[0] = player;
+                        deniedPosition[0] = pos;
+                    },
+                    () -> {
+                        deniedPlayer[0] = null;
+                        deniedPosition[0] = null;
+                    });
         } finally {
-            border.setCenter(centerX, centerZ);
-            border.setSize(size);
+            MinecraftForge.EVENT_BUS.unregister(veto);
         }
     }
 
     /**
-     * Forge permission fixture: a RightClickBlock listener at an existing Storage block first
-     * denies only item use, then only block use. Stack gestures are the block's own use, so with
-     * item use denied a dirt deposit and an extraction both succeed; with block use denied neither
-     * happens.
+     * Forge permission fixture: a RightClickBlock listener at an existing Storage block denies only
+     * item use. Stack gestures are the block's own use, so a dirt deposit and an extraction both
+     * still succeed. The block-use half is {@link #blockUseDenialFreezesStackGestures}.
      *
      * <p>To check manually, use a protection rule or test listener that denies item use at the
      * stack while allowing block use: V-deposit dirt, then release V and extract it; both work.
-     * Then deny block use instead: neither the deposit nor the extraction changes the stack.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void stackGesturesFollowBlockUsePermission(GameTestHelper helper) {
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
+    public static void itemUseDenialLeavesStackGesturesWorking(GameTestHelper helper) {
         var storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         storage.getItems().setStackInSlot(0, new ItemStack(Items.STONE, 3));
         var player = FakePlayerFactory.getMinecraft(helper.getLevel());
-        boolean[] denyBlock = {false};
         Consumer<PlayerInteractEvent.RightClickBlock> deny =
                 event -> {
                     if (event.getEntity() == player
                             && event.getPos().equals(storage.getBlockPos())) {
-                        if (denyBlock[0]) event.setUseBlock(Event.Result.DENY);
-                        else event.setUseItem(Event.Result.DENY);
+                        event.setUseItem(Event.Result.DENY);
                     }
                 };
         MinecraftForge.EVENT_BUS.addListener(deny);
@@ -663,29 +323,17 @@ public final class ProtectionGameTests {
             var hit = InteractionChecks.aim(player, storage.getBlockPos(), 0.2, 0.2);
             player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT));
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
-            useBlock(player, hit);
+            ForgeGameTestSupport.click(player, InteractionHand.MAIN_HAND, hit);
             checkEquals(
                     1,
                     GameTestScaffold.count(storage.getItems(), Items.DIRT),
                     "Item denial blocked deposit");
             ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
-            useBlock(player, hit);
+            ForgeGameTestSupport.click(player, InteractionHand.MAIN_HAND, hit);
             checkEquals(
                     Items.STONE,
                     player.getMainHandItem().getItem(),
                     "Item denial blocked extraction");
-
-            denyBlock[0] = true;
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-            useBlock(player, hit);
-            check(player.getMainHandItem().isEmpty(), "Block denial allowed extraction");
-            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT));
-            ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
-            useBlock(player, hit);
-            checkEquals(
-                    1,
-                    GameTestScaffold.count(storage.getItems(), Items.DIRT),
-                    "Block denial allowed deposit");
         } finally {
             MinecraftForge.EVENT_BUS.unregister(deny);
         }
@@ -704,7 +352,7 @@ public final class ProtectionGameTests {
      * loader-exact callback vetoes require a test listener if the protection mod lacks separate
      * rules.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void nativeAdjacentDepositConsultsBothPositions(GameTestHelper helper) {
         var singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         BlockPos destination = singles.getBlockPos();
@@ -753,10 +401,17 @@ public final class ProtectionGameTests {
     }
 
     /**
-     * To reproduce: deny stack placement in a claim. The rejected block produces no neighbor
-     * update; an accepted placement publishes after the event permits it.
+     * No in-game form: no player-visible stack placement replaces a block that holds data, so there
+     * is nothing a player could see restored. The fixture changes the facing of a named chest
+     * holding seven diamonds through the Forge edit authority's {@code place}, the capture step
+     * behind {@code WorldEdits.placeChecked} (whose gate refuses an occupied position, so it cannot
+     * drive this fixture), and its Forge {@code EntityPlaceEvent} listener alters the chest's
+     * inventory and then cancels the placement. It guards that a vetoed placement restores the
+     * prior block state and block-entity data (items and name) without notifying neighbors or
+     * emitting a game event, leaves no snapshot state behind, and that an accepted placement
+     * notifies neighbors only after the event permits it.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void placementDefersNeighborPublicationAndRestoresDeniedInventory(
             GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -791,13 +446,8 @@ public final class ProtectionGameTests {
         try (var events = new WorldEditChecks.EventProbe(level, target)) {
             var player = FakePlayerFactory.getMinecraft(level);
             check(
-                    !WorldEdits.placeChecked(
-                            player,
-                            level,
-                            target,
-                            placedState,
-                            Direction.DOWN,
-                            placedState.getCollisionShape(level, target, CollisionContext.empty())),
+                    !PlatformServices.editAuthority()
+                            .place(player, level, target, placedState, Direction.DOWN),
                     "Denied placement accepted");
             events.expectNone();
             checkEquals(originalState, level.getBlockState(target), "Denied state not restored");
@@ -812,17 +462,11 @@ public final class ProtectionGameTests {
                     "Snapshot state leaked");
             deny[0] = false;
             check(
-                    WorldEdits.placeChecked(
-                            player,
-                            level,
-                            target,
-                            placedState,
-                            Direction.DOWN,
-                            placedState.getCollisionShape(level, target, CollisionContext.empty())),
+                    PlatformServices.editAuthority()
+                            .place(player, level, target, placedState, Direction.DOWN),
                     "Accepted placement rejected");
             check(neighbors[0] > 0, "Accepted placement never notified neighbors");
             checkEquals(placedState, level.getBlockState(target), "Accepted placement state");
-            events.expectOne(GameEvent.BLOCK_PLACE, player, placedState);
         } finally {
             MinecraftForge.EVENT_BUS.unregister(observe);
             MinecraftForge.EVENT_BUS.unregister(placement);
@@ -831,10 +475,13 @@ public final class ProtectionGameTests {
     }
 
     /**
-     * To reproduce: a placement listener attempts another stack placement. Reentrant edits are
-     * refused without corrupting the outer transaction.
+     * No in-game form: both halves need another mod acting from inside Forge's placement machinery.
+     * It guards that {@code WorldEdits.placeChecked} refuses a nested call made from inside an
+     * {@code EntityPlaceEvent} listener while the outer placement still succeeds, and that it
+     * refuses to run while another party has {@code captureBlockSnapshots} set, leaving that
+     * party's capture flag as it was.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(template = ForgeGameTestSupport.TEMPLATE)
     public static void placementRefusesReentrancyAndForeignCapture(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         BlockPos target = helper.absolutePos(ORIGIN);
@@ -890,28 +537,5 @@ public final class ProtectionGameTests {
             MinecraftForge.EVENT_BUS.unregister(listener);
         }
         helper.succeed();
-    }
-
-    private static void nativeGesture(ServerPlayer player, BlockPos clicked, Direction face) {
-        boolean creative = player.getAbilities().instabuild;
-        ItemStack result;
-        try (InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
-            player.getAbilities().instabuild = creative;
-            ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
-            var hit = InteractionChecks.aim(player, clicked, 0.5, 0.5);
-            useBlock(player, new BlockHitResult(hit.getLocation(), face, clicked, false));
-            result = player.getMainHandItem().copy();
-        }
-        player.setItemInHand(InteractionHand.MAIN_HAND, result);
-    }
-
-    /** Runs vanilla's server block use, which posts Forge's event and then calls the block. */
-    private static void useBlock(ServerPlayer player, BlockHitResult hit) {
-        player.gameMode.useItemOn(
-                player,
-                player.serverLevel(),
-                player.getMainHandItem(),
-                InteractionHand.MAIN_HAND,
-                hit);
     }
 }

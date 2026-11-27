@@ -1,25 +1,90 @@
 package com.github.crittscott.somestacks.gametest;
 
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.BlockHitResult;
+
+import java.util.function.Function;
 
 /**
- * Fabric-native scaffolding for the GameTests: the namespaced template name and Transfer API
- * storage access, including the insert/extract shims that mirror Forge's {@code IItemHandler} call
- * surface. Everything loader-neutral lives in {@link GameTestScaffold}.
+ * Fabric-native scaffolding for the GameTests: the namespaced template name, the shared fake
+ * player, the real block-use click, and Transfer API storage access, including the insert/extract
+ * shims that mirror Forge's {@code IItemHandler} call surface. Everything loader-neutral lives in
+ * {@link GameTestScaffold}.
  */
 public final class FabricGameTestSupport {
     public static final String TEMPLATE = "somestacks:somestacks_empty";
 
     private FabricGameTestSupport() {}
+
+    /**
+     * The {@link GameTestScaffold.Automation} view of {@code blockEntity}'s registered Transfer API
+     * storage, as a hopper or pipe reaches it; each call runs in its own outer transaction.
+     */
+    public static GameTestScaffold.Automation automation(BlockEntity blockEntity) {
+        SlottedStorage<ItemVariant> storage = capability(blockEntity);
+        return new GameTestScaffold.Automation() {
+            @Override
+            public ItemStack extract(int slot, int amount, boolean simulate) {
+                return extractAt(storage, slot, amount, simulate);
+            }
+
+            @Override
+            public ItemStack insert(int slot, ItemStack stack, boolean simulate) {
+                return insertAt(storage, slot, stack, simulate);
+            }
+
+            @Override
+            public ItemStack insertStacked(ItemStack stack, boolean simulate) {
+                return insertWalkingSlots(storage, stack, simulate);
+            }
+
+            @Override
+            public int slotLimit(int slot) {
+                return FabricGameTestSupport.slotLimit(storage, slot);
+            }
+
+            @Override
+            public int slots() {
+                return storage.getSlotCount();
+            }
+
+            @Override
+            public ItemStack stackAt(int slot) {
+                return FabricGameTestSupport.stackAt(storage, slot);
+            }
+        };
+    }
+
+    /**
+     * Runs vanilla's server block use, which invokes Fabric's callback and then calls the block.
+     */
+    public static boolean click(ServerPlayer player, InteractionHand hand, BlockHitResult hit) {
+        return player.gameMode
+                .useItemOn(player, player.serverLevel(), player.getItemInHand(hand), hand, hit)
+                .consumesAction();
+    }
+
+    /** Hands out Fabric's shared fake player for the level, holding the given main-hand stack. */
+    public static Function<ItemStack, ServerPlayer> players(GameTestHelper helper) {
+        return held -> {
+            ServerPlayer player = FakePlayer.get(helper.getLevel());
+            player.setItemInHand(InteractionHand.MAIN_HAND, held);
+            return player;
+        };
+    }
 
     /**
      * The registered whole-run storage for {@code blockEntity}, queried the way an external

@@ -25,7 +25,9 @@ public final class FabricServerConfig {
                 FabricLoader.getInstance()
                         .getConfigDir()
                         .resolve(SomeStacksCommon.MODID + "-server.toml");
-        new TomlPolicyFile(global).read(defaults);
+        // The instance file is created for discovery even while a world override is in effect,
+        // but only the selected file is parsed, so its warnings are the only ones logged.
+        new TomlPolicyFile(global).createIfMissing(defaults);
         Path selected = Files.exists(override) ? override : global;
         TomlPolicyFile persistence = new TomlPolicyFile(selected);
         SomeStacksCommon.LOGGER.info("Reading server policy from {}", selected.toAbsolutePath());

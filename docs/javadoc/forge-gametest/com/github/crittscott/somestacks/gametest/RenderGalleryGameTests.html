@@ -77,7 +77,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">RenderGalleryGameTests</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">The render-gallery world builder: that a queued gallery lays out its floor and rows as described
- and reports the totals it finished with, spread across ticks by the configured placement limit.</div>
+ and reports the totals it finished with, spread across ticks by the configured placement limit.
+ Also the render tools' client file: the user override file that <code>/ss write changed</code> saves.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -104,10 +105,20 @@ loadScripts(document, 'script');</script>
 <div class="block">See <a href="RenderGalleryChecks.html#galleryItemsAreInIdOrderWithoutDeniedItems(net.minecraft.gametest.framework.GameTestHelper)"><code>RenderGalleryChecks.galleryItemsAreInIdOrderWithoutDeniedItems(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">queuedStorageGalleryBuildsFloorRowsAndCompletionTotals</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#malformedFieldsKeepTheEntrysValidFields(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">malformedFieldsKeepTheEntrysValidFields</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="RenderOverrideChecks.html#malformedFieldsKeepTheEntrysValidFields(net.minecraft.gametest.framework.GameTestHelper)"><code>RenderOverrideChecks.malformedFieldsKeepTheEntrysValidFields(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">queuedStorageGalleryBuildsFloorRowsAndCompletionTotals</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Loader entry point for <a href="RenderGalleryChecks.html#queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)"><code>RenderGalleryChecks.queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(net.minecraft.gametest.framework.GameTestHelper, net.minecraft.server.level.ServerPlayer)</code></a>; see that method
  for the scenario, manual check, and any internal-only assertions.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="RenderOverrideChecks.html#userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries(net.minecraft.gametest.framework.GameTestHelper)"><code>RenderOverrideChecks.userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
 </div>
 </div>
@@ -147,6 +158,20 @@ loadScripts(document, 'script');</script>
 <h3>galleryItemsAreInIdOrderWithoutDeniedItems</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">galleryItemsAreInIdOrderWithoutDeniedItems</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">See <a href="RenderGalleryChecks.html#galleryItemsAreInIdOrderWithoutDeniedItems(net.minecraft.gametest.framework.GameTestHelper)"><code>RenderGalleryChecks.galleryItemsAreInIdOrderWithoutDeniedItems(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="malformedFieldsKeepTheEntrysValidFields(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>malformedFieldsKeepTheEntrysValidFields</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">malformedFieldsKeepTheEntrysValidFields</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="RenderOverrideChecks.html#malformedFieldsKeepTheEntrysValidFields(net.minecraft.gametest.framework.GameTestHelper)"><code>RenderOverrideChecks.malformedFieldsKeepTheEntrysValidFields(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="RenderOverrideChecks.html#userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries(net.minecraft.gametest.framework.GameTestHelper)"><code>RenderOverrideChecks.userFileIsNeverOverwrittenWhenUnreadableAndKeepsMalformedEntries(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </section>
 </li>
 </ul>

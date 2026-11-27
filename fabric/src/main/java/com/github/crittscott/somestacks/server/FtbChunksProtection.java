@@ -11,9 +11,10 @@ import net.minecraft.world.InteractionHand;
 /**
  * Optional FTB Chunks integration for {@link FabricEditAuthority}. Fabric API has no generic
  * block-place event the way Forge's does, so automated growth has nothing to fire on this platform;
- * this is the one claim mod SomeStacks consults directly to close that gap. FTB Chunks' types are
- * referenced only inside this class, and only once {@link #isLoaded()} confirms the mod is actually
- * present, so a server without it never touches them.
+ * FTB Chunks is one of the claim mods SomeStacks consults directly to close that gap, alongside
+ * {@link OpacProtection}. FTB Chunks' types are referenced only inside this class, and only once
+ * {@link #isLoaded()} confirms the mod is actually present, so a server without it never touches
+ * them.
  */
 final class FtbChunksProtection {
     private static final boolean LOADED = FabricLoader.getInstance().isModLoaded("ftbchunks");

@@ -96,19 +96,34 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#blockRulesRespectPrecedenceAndHands(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">blockRulesRespectPrecedenceAndHands</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Only the first matching rule consumes local block use; the server acts only for the main
- hand.</div>
+<div class="block">The client claims exactly the block clicks a gesture uses, for either hand; the server acts
+ only for the main hand.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullTopFacesFallThroughToPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">fullTopFacesFallThroughToPlacement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Full top-face display deposits fall through to placement; Storage keeps its own pile deposit.</div>
+<div class="block">A modifier-plus-item click on a stack's top face is claimed locally whether the server will
+ deposit into the stack or place a new block above it.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#gestureSyncSendsChangesAndResets(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">gestureSyncSendsChangesAndResets</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Only changed mode/modifier state is sent; reconnect reset forces the next state packet.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#modeCycleFollowsOrderAndPolicy(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">modeCycleFollowsOrderAndPolicy</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The mode cycle runs Storage, Singles, Bar, Toggle Permanent, and back, skipping types the
+ server disables, and a policy update that disables the selected type moves the selection on
+ at once.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#modifierItemUseIsClaimedOnBlocks(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">modifierItemUseIsClaimedOnBlocks</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">While the Stack Modifier is held, the client claims every main-hand item use, including the
+ one that follows a block click no block gesture claimed; that is the use the server refuses.</div>
 </div>
 </div>
 </div>
@@ -132,11 +147,12 @@ loadScripts(document, 'script');</script>
 <h3>blockRulesRespectPrecedenceAndHands</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">blockRulesRespectPrecedenceAndHands</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Only the first matching rule consumes local block use; the server acts only for the main
- hand. To reproduce in-game: try plain extraction, modified deposit, Shift torch rotation, and
- empty-hand permanence on each stack type, then repeat with an off-hand item and on an
- ordinary block. Unclaimed clicks retain ordinary use. Toggle Permanent reserves modified
- clicks against deposit and placement.</div>
+<div class="block">The client claims exactly the block clicks a gesture uses, for either hand; the server acts
+ only for the main hand. To reproduce in-game: try plain extraction, modified deposit, Shift
+ torch rotation, and empty-hand permanence on each stack type, then repeat with an off-hand
+ item and on an ordinary block, including one beside a Singles Stack. Claimed clicks neither
+ empty a held bucket nor place a held block; unclaimed clicks keep ordinary use. Toggle
+ Permanent reserves modified clicks against deposit and placement.</div>
 </section>
 </li>
 <li>
@@ -144,10 +160,35 @@ loadScripts(document, 'script');</script>
 <h3>fullTopFacesFallThroughToPlacement</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullTopFacesFallThroughToPlacement</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Full top-face display deposits fall through to placement; Storage keeps its own pile deposit.
- To reproduce in-game: fill a Singles or Bar top cell and modifier-click its top face while
- holding an eligible item. Placement handles the new block above. A Storage click deposits
- through its existing pile instead. Empty and supported display positions stay deposits.</div>
+<div class="block">A modifier-plus-item click on a stack's top face is claimed locally whether the server will
+ deposit into the stack or place a new block above it. To reproduce in-game: holding an
+ eligible item and the Stack Modifier, click the top of an empty, a partly filled, and a full
+ Singles or Bar Stack, and of a full Storage Stack. The held item is never used locally; the
+ server deposits, or places the selected type above.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="modifierItemUseIsClaimedOnBlocks(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>modifierItemUseIsClaimedOnBlocks</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">modifierItemUseIsClaimedOnBlocks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">While the Stack Modifier is held, the client claims every main-hand item use, including the
+ one that follows a block click no block gesture claimed; that is the use the server refuses.
+ To reproduce in-game: hold food or a bow and the Stack Modifier, sneak, and right-click a
+ block; then select Toggle Permanent and right-click a block without sneaking. Nothing is
+ eaten or drawn, on either loader. Release the modifier and the same clicks eat or draw as
+ usual. An off-hand item use is never claimed.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="modeCycleFollowsOrderAndPolicy(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>modeCycleFollowsOrderAndPolicy</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">modeCycleFollowsOrderAndPolicy</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">The mode cycle runs Storage, Singles, Bar, Toggle Permanent, and back, skipping types the
+ server disables, and a policy update that disables the selected type moves the selection on
+ at once. To reproduce in-game: cycle through every mode with the Stack Modifier at open air.
+ Then select Storage Stack, have an admin disable Storage Stack and reload: the hotbar shows
+ the next enabled mode, and the next modifier click places that type instead of doing nothing.</div>
 </section>
 </li>
 <li>

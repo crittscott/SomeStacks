@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.util.StackMode;
+import com.github.crittscott.somestacks.util.StackGestures;
 
 /**
  * Consumes an empty-main-hand modifier click on Storage while Toggle Permanent mode is selected.
@@ -9,10 +9,8 @@ import com.github.crittscott.somestacks.util.StackMode;
 public final class TogglePermanentRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {
-        return ctx.isVDown()
-                && !ctx.hasItemInHand()
-                && ctx.getCurrentMode() == StackMode.TOGGLE_PERMANENT
-                && ctx.isStorageStack();
+        return StackGestures.togglesPermanence(
+                ctx.isModifierDown(), ctx.getCurrentMode(), ctx.getHeld(), ctx.getClickedType());
     }
 
     @Override

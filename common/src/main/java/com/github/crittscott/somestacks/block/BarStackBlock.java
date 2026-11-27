@@ -1,36 +1,19 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.server.StackInteractions;
+import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
-import com.github.crittscott.somestacks.util.ItemOps;
+import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -49,79 +32,31 @@ import javax.annotation.Nullable;
  * the column onto the gap. It also carries the deferred publication tick that content edits
  * schedule on the bottom block of the column.
  */
-public class BarStackBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
-    /**
-     * Light this block emits, derived from the {@code BlockItem}s stored in it and kept in the
-     * block state so lighting updates travel by the ordinary block-state path.
-     */
-    public static final IntegerProperty LIGHT_LEVEL =
-            IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
-
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+public class BarStackBlock extends StackBlock {
     private static final VoxelShape FULL_BLOCK_SHAPE = Shapes.block();
+
+    public BarStackBlock(Properties props) {
+        super(props, BlockType.BAR_STACK);
+    }
 
     /** Shared mining, lighting, collision, and piston settings for this stack type. */
     public static Properties properties() {
-        return Properties.of()
-                .dynamicShape()
-                .mapColor(MapColor.METAL)
-                .noOcclusion()
-                .pushReaction(PushReaction.BLOCK)
-                .strength(0.5F, 6.0F)
-                .lightLevel(state -> state.getValue(LIGHT_LEVEL));
+        return properties(MapColor.METAL).dynamicShape();
     }
 
-    public BarStackBlock(Properties props) {
-        super(props);
-        registerDefaultState(
-                defaultBlockState().setValue(LIGHT_LEVEL, 0).setValue(WATERLOGGED, false));
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL, WATERLOGGED);
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED)
-                ? Fluids.WATER.getSource(false)
-                : super.getFluidState(state);
-    }
-
-    @Override
-    public BlockState updateShape(
-            BlockState state,
-            Direction direction,
-            BlockState neighborState,
-            LevelAccessor level,
-            BlockPos pos,
-            BlockPos neighborPos) {
-        if (state.getValue(WATERLOGGED)) {
-            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-        }
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
-
+    /**
+     * The one bar the deposit would place: the target along the ray in a new block, provided it is
+     * supported, which in an empty block means a bottom position over an occupied seam or the
+     * world.
+     */
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new BarStackBE(pos, state);
-    }
-
-    @Override
-    public VoxelShape getShape(
-            BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof BarStackBE barBe) {
-            return barBe.getCachedShape();
-        }
-        return Shapes.empty();
+    public VoxelShape firstDepositShape(Level level, BlockPos pos, BlockState state, ViewRay ray) {
+        int index = ray.depositTarget(pos, BarStackBE.SLOTS, BarCubeIdx::localBox, null);
+        return index >= 0
+                        && BarCubeIdx.freshBlockSupports(index, BarStackBE.seamBeneath(level, pos))
+                ? BarCubeIdx.shapeFor(index)
+                : null;
     }
 
     @Override
@@ -138,6 +73,16 @@ public class BarStackBlock extends Block implements EntityBlock, SimpleWaterlogg
     @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
         return FULL_BLOCK_SHAPE;
+    }
+
+    @Override
+    public VoxelShape getShape(
+            BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof BarStackBE barBe) {
+            return barBe.getCachedShape();
+        }
+        return Shapes.empty();
     }
 
     /**
@@ -161,31 +106,10 @@ public class BarStackBlock extends Block implements EntityBlock, SimpleWaterlogg
         return false;
     }
 
+    @Nullable
     @Override
-    public InteractionResult use(
-            BlockState state,
-            Level level,
-            BlockPos pos,
-            Player player,
-            InteractionHand hand,
-            BlockHitResult hit) {
-        if (!level.isClientSide) {
-            StackInteractions.handleExistingStack(
-                    (ServerPlayer) player, hand, hit, BlockType.BAR_STACK);
-        }
-        return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
-    }
-
-    /**
-     * Publishes deferred content, lighting, and comparator changes. Edits schedule this tick on the
-     * column's bottom block, coalescing a burst of changes anywhere in the run into one pass.
-     */
-    @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        BarColumn column = BarColumn.at(level, pos);
-        if (column != null) {
-            column.publishPending();
-        }
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new BarStackBE(pos, state);
     }
 
     /** Invalidates cached columns and schedules publication after this block joins a run. */
@@ -204,20 +128,23 @@ public class BarStackBlock extends Block implements EntityBlock, SimpleWaterlogg
             BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             boolean cascading = false;
-            BarDropBatch drops = new BarDropBatch();
+            ServerPlayer breaker = null;
+            BarStackBE.DropBatch drops = new BarStackBE.DropBatch();
 
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof BarStackBE barBe) {
                 cascading = barBe.wasRemovedByCascade();
+                breaker = barBe.takeBreakingPlayer();
                 drops.addAll(pos, barBe.getItems());
             }
             super.onRemove(state, level, pos, newState, isMoving);
             BarColumn.invalidateAround(level, pos);
 
             // Removing a block removes the supporting seam beneath the column above. A cascade
-            // already walks upward itself, so only an external removal starts another collapse.
+            // already walks upward itself, so only an external removal starts another collapse,
+            // charged to the player whose break removed the block, if one did.
             if (!isMoving && !cascading) {
-                BarStackBE.collapseAbove(level, pos, drops);
+                BarStackBE.collapseAbove(level, pos, drops, breaker);
             }
 
             // Publish after collapse so surviving runs report their final contents.
@@ -233,18 +160,15 @@ public class BarStackBlock extends Block implements EntityBlock, SimpleWaterlogg
         }
     }
 
+    /**
+     * Publishes deferred content, lighting, and comparator changes. Edits schedule this tick on the
+     * column's bottom block, coalescing a burst of changes anywhere in the run into one pass.
+     */
     @Override
-    public boolean hasAnalogOutputSignal(BlockState state) {
-        return true;
-    }
-
-    /** Reports the whole column's fill, so a comparator reads the same value anywhere along it. */
-    @Override
-    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         BarColumn column = BarColumn.at(level, pos);
-        if (column == null) {
-            return 0;
+        if (column != null) {
+            column.publishPending();
         }
-        return column.comparatorSignal();
     }
 }

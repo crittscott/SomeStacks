@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -29,17 +29,17 @@ import javax.annotation.Nullable;
  * listener hook, the same lifecycle the block entity's own {@code invalidateCaps}/{@code
  * reviveCaps} would have driven if it owned the field itself.
  */
-@Mod.EventBusSubscriber(modid = SomeStacks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = SomeStacksCommon.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ForgeCapabilityAttachment {
     private static final ResourceLocation ITEM_HANDLER_ID =
-            new ResourceLocation(SomeStacks.MODID, "item_handler");
+            new ResourceLocation(SomeStacksCommon.MODID, "item_handler");
 
     private ForgeCapabilityAttachment() {}
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         if (event.getObject() instanceof StackBlockEntity stack) {
-            attach(event, () -> new RunItemHandler(stack));
+            attach(event, () -> new ForgeRunItemStorage(stack));
         }
     }
 
