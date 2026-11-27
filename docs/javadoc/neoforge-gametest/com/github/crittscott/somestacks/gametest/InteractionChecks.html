@@ -104,8 +104,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="InteractionChecks.LoaderBlockClick.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-second even-row-color"><code><a href="InteractionChecks.BlockUseDenial.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.BlockUseDenial</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Makes the loader deny block use at a position, the way a claim or protection mod does; the
+ returned action lifts the denial.</div>
+</div>
 </div>
 </section>
 </li>
@@ -139,11 +142,71 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#adventurePlacementAndGrowthShareTheBuildCheck(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adventurePlacementAndGrowthShareTheBuildCheck</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">In Adventure mode, placing a stack and growing a Storage pile answer to the same build check.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.BlockHitResult</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#aim(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,double,double,double)" class="member-name-link">aim</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ double&nbsp;localX,
+ double&nbsp;localY,
+ double&nbsp;localZ)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A click on the west side of <code>pos</code> through the block-local point, with the player's eye
+ two blocks west at the point's height and depth, so the view ray runs east through the point.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.BlockHitResult</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#aimAt(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.world.phys.AABB)" class="member-name-link">aimAt</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.phys.AABB&nbsp;localBox)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block"><a href="#aim(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,double,double,double)"><code>aim(net.minecraft.server.level.ServerPlayer, net.minecraft.core.BlockPos, double, double, double)</code></a> through the center of a block-local box, such as one stack cell.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.BlockHitResult</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#aimDown(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,double,double)" class="member-name-link">aimDown</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ double&nbsp;localX,
+ double&nbsp;localZ)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A click on the top face of <code>pos</code> at the block-local column, with the player's eye one
+ block above that face, so the view ray runs straight down through the column.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barGestureDepositRefusesNonIngots(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">barGestureDepositRefusesNonIngots</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Bar admits only ingots through a gesture deposit.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#blockUseDenialFreezesStackGestures(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.BlockUseDenial)" class="member-name-link">blockUseDenialFreezesStackGestures</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory,
+ <a href="InteractionChecks.BlockUseDenial.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.BlockUseDenial</a>&nbsp;denial)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A loader's block-use denial, and Spectator mode, stop every gesture on an existing stack;
+ with neither, every gesture applies.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deniedCleanupEmitsOnlyBlockChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)" class="member-name-link">deniedCleanupEmitsOnlyBlockChange</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory,
  <a href="ProtectionChecks.RemovalObserver.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.RemovalObserver</a>&nbsp;observer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: deny cleanup of a Singles or Bar block, then extract its final item.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">An item on <code>disable_items</code> is refused from players only, while a namespace on <code>
+ disable_mods</code> is refused from players and automation, and neither stops a player taking
+ stored contents out.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#disabledTypesRefuseNewBlocksButKeepExistingOnes(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">disabledTypesRefuseNewBlocksButKeepExistingOnes</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A type the server has disabled starts no new block and never grows, while blocks of it that
+ already exist keep taking deposits and giving them back.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#everyStackTypeBlocksPistons(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">everyStackTypeBlocksPistons</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -161,37 +224,52 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionRefusesIncompatibleOrFullHands(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionRefusesIncompatibleOrFullHands</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Extraction refuses an incompatible held item or a compatible stack with no room.</div>
+<div class="block">Extraction refuses an incompatible held item, the same item with different data components,
+ or a compatible stack with no room, and a compatible partial stack takes only what fits.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullTopFacePlacesTheSelectedStackType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">fullTopFacePlacesTheSelectedStackType</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullMaxHeightDepositExplainsRefusal(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">fullMaxHeightDepositExplainsRefusal</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A deposit into a full Storage pile that cannot grow because it is at the configured height is
+ refused with a message.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullTopFacePlacesTheSelectedStackType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">fullTopFacePlacesTheSelectedStackType</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: fill a Singles block, select Storage mode, hold an item, and
  modifier-click its top face.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#gestureStateTracksModeAndModifier(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">gestureStateTracksModeAndModifier</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#gestureStateTracksModeAndModifier(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">gestureStateTracksModeAndModifier</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The server records the client's selected mode and current modifier state.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#interactionReadsOnlyTheMainHand(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">interactionReadsOnlyTheMainHand</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Stack gestures act only from the main hand.</div>
-</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#itemRotationTargetsOnlyAnOccupiedCell(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">itemRotationTargetsOnlyAnOccupiedCell</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#interactionReadsOnlyTheMainHand(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">interactionReadsOnlyTheMainHand</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Item rotation affects only the occupied Singles cell on the view ray.</div>
+<div class="block">Stack gestures act only from the main hand.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#malformedGestureStateFailsDuringDecoding(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">malformedGestureStateFailsDuringDecoding</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#itemRotationTargetsOnlyAnOccupiedCell(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">itemRotationTargetsOnlyAnOccupiedCell</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">A gesture-state packet with an invalid mode ordinal fails during decoding.</div>
+<div class="block">Item rotation affects only the occupied Singles cell on the view ray.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#malformedGestureStateFailsDuringDecoding(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">malformedGestureStateFailsDuringDecoding</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Every mode round-trips through the gesture-state packet under its fixed wire id, and an
+ unknown mode id or a missing modifier flag fails during decoding.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maximumHeightRefusesGrowthAndHidesHeadroom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">maximumHeightRefusesGrowthAndHidesHeadroom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">At the configured maximum height a full run takes nothing more and offers automation no
+ headroom, while one more block of allowed height lets automation grow it.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#permanenceRequiresEmptyHandAndHonorsProtection(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">permanenceRequiresEmptyHandAndHonorsProtection</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
@@ -225,13 +303,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Redstone torches rotate Storage and Singles blocks, soul torches rotate Singles items, and
  Bar blocks do not rotate.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sneakingRotationsReachTheLoaderHook(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderBlockClick)" class="member-name-link">sneakingRotationsReachTheLoaderHook</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory,
- <a href="InteractionChecks.LoaderBlockClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a>&nbsp;loaderClick)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#use(net.minecraft.server.level.ServerPlayer,net.minecraft.world.phys.BlockHitResult)" class="member-name-link">use</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.world.phys.BlockHitResult&nbsp;hit)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Sneaking right-clicks reach the loader's real server interaction hook for both block and item
- rotation.</div>
+<div class="block">Runs vanilla's server block use with the main hand, the path a player's right-click on a
+ block takes: Forge and NeoForge post <code>RightClickBlock</code> and Fabric invokes <code>
+ UseBlockCallback</code> first, then the clicked block's own use runs unless a listener stopped it.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vanillaInteractionReachesDepositExtractAndPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">vanillaInteractionReachesDepositExtractAndPlacement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
@@ -257,15 +335,15 @@ loadScripts(document, 'script');</script>
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="TARGET">
-<h3>TARGET</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.core.BlockPos</span>&nbsp;<span class="element-name">TARGET</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="HAND">
 <h3>HAND</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.world.InteractionHand</span>&nbsp;<span class="element-name">HAND</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="TARGET">
+<h3>TARGET</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.core.BlockPos</span>&nbsp;<span class="element-name">TARGET</span></div>
 </section>
 </li>
 </ul>
@@ -280,8 +358,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="malformedGestureStateFailsDuringDecoding(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>malformedGestureStateFailsDuringDecoding</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">malformedGestureStateFailsDuringDecoding</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">A gesture-state packet with an invalid mode ordinal fails during decoding. No in-game
- reproduction applies: this is a malformed-wire boundary that the normal client cannot send.</div>
+<div class="block">Every mode round-trips through the gesture-state packet under its fixed wire id, and an
+ unknown mode id or a missing modifier flag fails during decoding. No in-game reproduction
+ applies: this guards the one client-to-server input and the stability of its wire ids, which
+ a normal client cannot violate.</div>
 </section>
 </li>
 <li>
@@ -313,17 +393,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Redstone torches rotate Storage and Singles blocks, soul torches rotate Singles items, and
  Bar blocks do not rotate. To reproduce in-game: Shift-right-click each type with those
  torches and observe that only the matching gestures change orientation.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="sneakingRotationsReachTheLoaderHook(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderBlockClick)">
-<h3>sneakingRotationsReachTheLoaderHook</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sneakingRotationsReachTheLoaderHook</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory,
- <a href="InteractionChecks.LoaderBlockClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a>&nbsp;loaderClick)</span></div>
-<div class="block">Sneaking right-clicks reach the loader's real server interaction hook for both block and item
- rotation. To reproduce in-game: Shift-right-click Storage with a redstone torch and an
- occupied Singles cell with a soul torch. The block and item rotate respectively.</div>
 </section>
 </li>
 <li>
@@ -362,9 +431,12 @@ loadScripts(document, 'script');</script>
 <h3>extractionRefusesIncompatibleOrFullHands</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionRefusesIncompatibleOrFullHands</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Extraction refuses an incompatible held item or a compatible stack with no room. To reproduce
- in-game: plain-click stored stone while holding dirt, then while holding a full stack of
- matching stone. The Storage contents and held stacks remain unchanged.</div>
+<div class="block">Extraction refuses an incompatible held item, the same item with different data components,
+ or a compatible stack with no room, and a compatible partial stack takes only what fits. To
+ reproduce in-game: store 8 stone, then plain-click it while holding dirt, while holding
+ renamed stone, and while holding a full stack of plain stone; the Storage contents and held
+ stacks remain unchanged. Then plain-click it holding 60 plain stone: the hand reaches 64 and 4
+ stone stay stored, so none were taken out only to be dropped.</div>
 </section>
 </li>
 <li>
@@ -431,6 +503,145 @@ loadScripts(document, 'script');</script>
  exactly two Dirt, and create a Storage Stack. Its placed-block criterion is awarded using the
  original two-item offer even though the deposit empties the hand. A blocked destination
  awards nothing. Revoke it again and deposit two Dirt into a full pile: growth awards nothing.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="disabledTypesRefuseNewBlocksButKeepExistingOnes(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>disabledTypesRefuseNewBlocksButKeepExistingOnes</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">disabledTypesRefuseNewBlocksButKeepExistingOnes</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">A type the server has disabled starts no new block and never grows, while blocks of it that
+ already exist keep taking deposits and giving them back. To reproduce in-game: build an empty
+ Storage, Singles, and Bar Stack and fill two more of each completely; set every <code>
+ enable_*_stack_block</code> option to false and run /ss reload. Selecting each type and
+ modifier-clicking the top of a stone block places nothing, keeps the held items, and the
+ action bar says that type's placement is disabled. Modifier-clicking the top of the empty
+ block deposits one item and a plain click takes it back. Modifier-clicking the top of a full
+ block, or a hopper feeding the other full block, adds no block above it. Set the options back
+ to true and reload: the stone click places a block of the type, the modifier-click grows the
+ first full block, and the hopper grows the second.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="maximumHeightRefusesGrowthAndHidesHeadroom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>maximumHeightRefusesGrowthAndHidesHeadroom</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">maximumHeightRefusesGrowthAndHidesHeadroom</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">At the configured maximum height a full run takes nothing more and offers automation no
+ headroom, while one more block of allowed height lets automation grow it. To reproduce
+ in-game: set <code>max_pile_height</code> to 1, run /ss reload, and fill a one-block Storage,
+ Singles, and Bar Stack. A hopper feeding each adds nothing, a modifier-click on its top adds
+ no block above, and the action bar says the stack is at its maximum height. With 2 and a
+ full two-block run of each, the same holds. Raising the limit by one lets the hopper grow
+ each run by one block.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">An item on <code>disable_items</code> is refused from players only, while a namespace on <code>
+ disable_mods</code> is refused from players and automation, and neither stops a player taking
+ stored contents out. To reproduce in-game: add <code>minecraft:dirt</code> to <code>
+ disable_items</code> and run /ss reload. Modifier-clicking a Storage Stack holding dirt, or the top
+ of a stone block, deposits and places nothing, keeps the dirt, and the action bar says dirt
+ is disabled; stone still deposits, and a hopper still feeds dirt in. Replace the entry with
+ <code>minecraft</code> on <code>disable_mods</code> and reload: the dirt click is refused with a
+ message naming the mod, the hopper stops, and a plain click still takes stone out. Clear both
+ lists and reload: the dirt deposits.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="blockUseDenialFreezesStackGestures(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.BlockUseDenial)">
+<h3>blockUseDenialFreezesStackGestures</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">blockUseDenialFreezesStackGestures</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory,
+ <a href="InteractionChecks.BlockUseDenial.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.BlockUseDenial</a>&nbsp;denial)</span></div>
+<div class="block">A loader's block-use denial, and Spectator mode, stop every gesture on an existing stack;
+ with neither, every gesture applies. To reproduce in-game: inside a claim that denies you
+ block use, modifier-click a Storage Stack holding dirt, plain-click it empty-handed, toggle
+ its permanence in Toggle Permanent mode, Shift-right-click it with a redstone torch, and
+ Shift-right-click a stored Singles item with a soul torch. Nothing changes and you keep the
+ dirt. Repeat in Spectator mode outside the claim: nothing changes. In Survival outside the
+ claim, the dirt goes in, the plain click takes stone out, the pile becomes permanent, the
+ block turns, and the item turns.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="fullMaxHeightDepositExplainsRefusal(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>fullMaxHeightDepositExplainsRefusal</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullMaxHeightDepositExplainsRefusal</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A deposit into a full Storage pile that cannot grow because it is at the configured height is
+ refused with a message. To reproduce in-game: set <code>max_pile_height = 1</code>, run /ss
+ reload, fill a one-block Storage pile, and modifier-click it with another item. Nothing moves
+ and the action bar says the stack is at its maximum height. After taking one stack out, the
+ same click deposits.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="adventurePlacementAndGrowthShareTheBuildCheck(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>adventurePlacementAndGrowthShareTheBuildCheck</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">adventurePlacementAndGrowthShareTheBuildCheck</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">In Adventure mode, placing a stack and growing a Storage pile answer to the same build check.
+ To reproduce in-game: in Adventure mode, select Storage and modifier-click the top of a stone
+ block holding plain dirt: nothing is placed. Hold dirt whose <code>can_place_on</code> names stone
+ and Storage Stack, and the same click places a Storage Stack holding it. Fill that stack with
+ full stacks of stone and modifier-click it holding plain dirt: it does not grow. Holding the
+ <code>can_place_on</code> dirt, the same click grows a block above holding that dirt.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="barGestureDepositRefusesNonIngots(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>barGestureDepositRefusesNonIngots</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barGestureDepositRefusesNonIngots</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Bar admits only ingots through a gesture deposit. To reproduce in-game: select Bar and
+ modifier-click the side of an empty Bar Stack holding dirt. Nothing moves and the hand keeps
+ the dirt; the same click holding an ingot deposits one.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="aim(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,double,double,double)">
+<h3>aim</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.phys.BlockHitResult</span>&nbsp;<span class="element-name">aim</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ double&nbsp;localX,
+ double&nbsp;localY,
+ double&nbsp;localZ)</span></div>
+<div class="block">A click on the west side of <code>pos</code> through the block-local point, with the player's eye
+ two blocks west at the point's height and depth, so the view ray runs east through the point.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="aimAt(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.world.phys.AABB)">
+<h3>aimAt</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.phys.BlockHitResult</span>&nbsp;<span class="element-name">aimAt</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.phys.AABB&nbsp;localBox)</span></div>
+<div class="block"><a href="#aim(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,double,double,double)"><code>aim(net.minecraft.server.level.ServerPlayer, net.minecraft.core.BlockPos, double, double, double)</code></a> through the center of a block-local box, such as one stack cell.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="aimDown(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,double,double)">
+<h3>aimDown</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.phys.BlockHitResult</span>&nbsp;<span class="element-name">aimDown</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ double&nbsp;localX,
+ double&nbsp;localZ)</span></div>
+<div class="block">A click on the top face of <code>pos</code> at the block-local column, with the player's eye one
+ block above that face, so the view ray runs straight down through the column.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="use(net.minecraft.server.level.ServerPlayer,net.minecraft.world.phys.BlockHitResult)">
+<h3>use</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">use</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.world.phys.BlockHitResult&nbsp;hit)</span></div>
+<div class="block">Runs vanilla's server block use with the main hand, the path a player's right-click on a
+ block takes: Forge and NeoForge post <code>RightClickBlock</code> and Fabric invokes <code>
+ UseBlockCallback</code> first, then the clicked block's own use runs unless a listener stopped it.
+ Returns whether the click was consumed.</div>
 </section>
 </li>
 </ul>

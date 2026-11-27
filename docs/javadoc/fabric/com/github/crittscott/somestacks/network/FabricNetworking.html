@@ -108,7 +108,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#initServer()" class="member-name-link">initServer</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers the server receivers: the configuration-phase protocol marker, whose presence the
+ common entry point checks before play, and the gesture-state payload, handed to <code>GestureStatePkt.handleServer(com.github.crittscott.somestacks.network.GestureStatePkt, net.minecraft.server.level.ServerPlayer)</code> with its sender.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerPayloads()" class="member-name-link">registerPayloads</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -143,6 +146,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="initServer()">
 <h3>initServer</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">initServer</span>()</div>
+<div class="block">Registers the server receivers: the configuration-phase protocol marker, whose presence the
+ common entry point checks before play, and the gesture-state payload, handed to <code>GestureStatePkt.handleServer(com.github.crittscott.somestacks.network.GestureStatePkt, net.minecraft.server.level.ServerPlayer)</code> with its sender.</div>
 </section>
 </li>
 </ul>

@@ -120,8 +120,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilitySimulationDoesNotMutateAnyStack(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">capabilitySimulationDoesNotMutateAnyStack</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">No in-game reproduction applies: this verifies that simulated loader capability insertion and
- extraction leave Storage, Singles, and Bar stacks unchanged.</div>
+<div class="block">See <a href="AutomationChecks.html#singlesSimulationDoesNotMutateAnyStack(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.singlesSimulationDoesNotMutateAnyStack(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clientInventoryUpdatesRejectMalformedDataAtomically(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">clientInventoryUpdatesRejectMalformedDataAtomically</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -142,7 +141,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reentrantStructuralEditIsRefused(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">reentrantStructuralEditIsRefused</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">No in-game reproduction applies: a reentrant NeoForge capability edit is refused.</div>
+<div class="block">See <a href="AutomationChecks.html#reentrantStructuralEditIsRefused(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.reentrantStructuralEditIsRefused(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#releasedBarFormatLoads(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">releasedBarFormatLoads</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="AutomationAndPersistenceChecks.html#releasedBarFormatLoads(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.releasedBarFormatLoads(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#releasedSinglesFormatLoads(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">releasedSinglesFormatLoads</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="AutomationAndPersistenceChecks.html#releasedSinglesFormatLoads(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.releasedSinglesFormatLoads(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">setAsideItemsRecoverIntoFreeSlots</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -152,8 +161,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singleBlockCapabilitiesAdvertiseConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singleBlockCapabilitiesAdvertiseConfiguredHeadroom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: connect item automation to a one-block stack below its height limit and
- verify it can address one additional block of empty positions for growth.</div>
+<div class="block">See <a href="AutomationChecks.html#singleBlocksAdvertiseConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.singleBlocksAdvertiseConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesDiskSaveRoundTripsItemsAndBothRotations</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -181,8 +189,13 @@ loadScripts(document, 'script');</script>
 <div class="block">See <a href="AutomationAndPersistenceChecks.html#unversionedSaveUpgradesItemsOnLoad(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.unversionedSaveUpgradesItemsOnLoad(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateTagOmitsContainerContentsAndBookPages(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagOmitsContainerContentsAndBookPages</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="AutomationAndPersistenceChecks.html#updateTagOmitsContainerContentsAndBookPages(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.updateTagOmitsContainerContentsAndBookPages(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="AutomationAndPersistenceChecks.html#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
 </div>
@@ -214,8 +227,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="singleBlockCapabilitiesAdvertiseConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>singleBlockCapabilitiesAdvertiseConfiguredHeadroom</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singleBlockCapabilitiesAdvertiseConfiguredHeadroom</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: connect item automation to a one-block stack below its height limit and
- verify it can address one additional block of empty positions for growth.</div>
+<div class="block">See <a href="AutomationChecks.html#singleBlocksAdvertiseConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.singleBlocksAdvertiseConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
@@ -247,6 +259,13 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="updateTagOmitsContainerContentsAndBookPages(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>updateTagOmitsContainerContentsAndBookPages</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateTagOmitsContainerContentsAndBookPages</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="AutomationAndPersistenceChecks.html#updateTagOmitsContainerContentsAndBookPages(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.updateTagOmitsContainerContentsAndBookPages(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>unreadableSavedItemsAreKeptAsideOnDisk</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">unreadableSavedItemsAreKeptAsideOnDisk</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
@@ -268,6 +287,20 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="releasedSinglesFormatLoads(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>releasedSinglesFormatLoads</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">releasedSinglesFormatLoads</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="AutomationAndPersistenceChecks.html#releasedSinglesFormatLoads(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.releasedSinglesFormatLoads(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="releasedBarFormatLoads(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>releasedBarFormatLoads</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">releasedBarFormatLoads</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="AutomationAndPersistenceChecks.html#releasedBarFormatLoads(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.releasedBarFormatLoads(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>structureRotationTransformsRotatableStackFacing</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">structureRotationTransformsRotatableStackFacing</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
@@ -285,15 +318,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="reentrantStructuralEditIsRefused(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>reentrantStructuralEditIsRefused</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reentrantStructuralEditIsRefused</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">No in-game reproduction applies: a reentrant NeoForge capability edit is refused.</div>
+<div class="block">See <a href="AutomationChecks.html#reentrantStructuralEditIsRefused(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.reentrantStructuralEditIsRefused(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="capabilitySimulationDoesNotMutateAnyStack(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>capabilitySimulationDoesNotMutateAnyStack</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">capabilitySimulationDoesNotMutateAnyStack</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">No in-game reproduction applies: this verifies that simulated loader capability insertion and
- extraction leave Storage, Singles, and Bar stacks unchanged.</div>
+<div class="block">See <a href="AutomationChecks.html#singlesSimulationDoesNotMutateAnyStack(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.singlesSimulationDoesNotMutateAnyStack(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </section>
 </li>
 <li>

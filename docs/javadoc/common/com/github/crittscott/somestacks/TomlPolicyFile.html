@@ -91,7 +91,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">TomlPolicyFile</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Documented TOML persistence and field validation, independent of loader lifecycle.</div>
+<div class="block">The documented TOML policy file built from the shared <a href="ServerConfig.Setting.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Setting</code></a> declaration. Fabric reads
+ and writes its policy through it; on every loader, world JSON migration writes its TOML with it.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -119,15 +120,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#read(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">read</a><wbr>(<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;defaults)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createIfMissing(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">createIfMissing</a><wbr>(<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;defaults)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">A malformed field uses its default; a syntax error uses the complete default policy.</div>
+<div class="block">Writes documented defaults when the file is absent, so an admin finds every field explained.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#write(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">write</a><wbr>(<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;settings)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#read(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">read</a><wbr>(<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;defaults)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Writes all current fields with the same explanations as the loader-managed TOML.</div>
+<div class="block">A missing file is created with defaults; a syntax error uses the complete default policy.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#write(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">write</a><wbr>(<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;settings)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Writes every field with its explanation and, for bounded numbers, its range.</div>
 </div>
 </div>
 </div>
@@ -161,17 +167,28 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="createIfMissing(com.github.crittscott.somestacks.ServerConfig.Settings)">
+<h3>createIfMissing</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">createIfMissing</span><wbr><span class="parameters">(<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;defaults)</span></div>
+<div class="block">Writes documented defaults when the file is absent, so an admin finds every field explained.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>whether the file was absent</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="read(com.github.crittscott.somestacks.ServerConfig.Settings)">
 <h3>read</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></span>&nbsp;<span class="element-name">read</span><wbr><span class="parameters">(<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;defaults)</span></div>
-<div class="block">A malformed field uses its default; a syntax error uses the complete default policy.</div>
+<div class="block">A missing file is created with defaults; a syntax error uses the complete default policy.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="write(com.github.crittscott.somestacks.ServerConfig.Settings)">
 <h3>write</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">write</span><wbr><span class="parameters">(<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;settings)</span></div>
-<div class="block">Writes all current fields with the same explanations as the loader-managed TOML.</div>
+<div class="block">Writes every field with its explanation and, for bounded numbers, its range.</div>
 </section>
 </li>
 </ul>

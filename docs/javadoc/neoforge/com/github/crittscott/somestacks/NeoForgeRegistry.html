@@ -91,8 +91,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">NeoForgeRegistry</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">The mod's registered blocks and block entity types, and the NeoForge registration glue behind
- them. Common code reads the registered values through <code>CommonRegistry</code>.</div>
+<div class="block">The mod's registered blocks, block entity types, and sounds, the NeoForge registration glue
+ behind them, and the block entities' item-handler capability. Common code reads the registered
+ values through <code>CommonRegistry</code>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -148,7 +149,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#init(net.neoforged.bus.api.IEventBus)" class="member-name-link">init</a><wbr>(net.neoforged.bus.api.IEventBus&nbsp;modBus)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Subscribes the deferred registers, every declared sound, and the capability registration to
+ the mod bus.</div>
+</div>
 </div>
 </div>
 </div>
@@ -232,6 +236,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="init(net.neoforged.bus.api.IEventBus)">
 <h3>init</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">init</span><wbr><span class="parameters">(net.neoforged.bus.api.IEventBus&nbsp;modBus)</span></div>
+<div class="block">Subscribes the deferred registers, every declared sound, and the capability registration to
+ the mod bus. Runs once from the mod constructor.</div>
 </section>
 </li>
 </ul>

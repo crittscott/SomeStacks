@@ -107,8 +107,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">apply</a><wbr>(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;snapshot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt,net.minecraft.world.entity.player.Player)" class="member-name-link">apply</a><wbr>(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;snapshot,
+ net.minecraft.world.entity.player.Player&nbsp;localPlayer)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Publishes a snapshot the server sent, then moves the selected placement mode off a block type
+ it disables and, when a local player exists, shows the new mode.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -120,7 +124,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isBlockTypeEnabled(com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">isBlockTypeEnabled</a><wbr>(<a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether the server enables a stack type.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isDisabled(java.lang.String)" class="member-name-link">isDisabled</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -154,15 +160,22 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)">
+<section class="detail" id="apply(com.github.crittscott.somestacks.network.ConfigSyncPkt,net.minecraft.world.entity.player.Player)">
 <h3>apply</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;snapshot)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;snapshot,
+ @Nullable
+ net.minecraft.world.entity.player.Player&nbsp;localPlayer)</span></div>
+<div class="block">Publishes a snapshot the server sent, then moves the selected placement mode off a block type
+ it disables and, when a local player exists, shows the new mode.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="isBlockTypeEnabled(com.github.crittscott.somestacks.util.BlockType)">
 <h3>isBlockTypeEnabled</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isBlockTypeEnabled</span><wbr><span class="parameters">(<a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;type)</span></div>
+<div class="block">Whether the server enables a stack type. It decides only which modes the placement-mode
+ gesture may select; the server enforces the setting itself, so a stale copy here cannot
+ create a block the server has disabled.</div>
 </section>
 </li>
 <li>

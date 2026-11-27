@@ -104,25 +104,43 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Shared identifiers and access to values after loader-native registration completes.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PlatformServices.html" title="class in com.github.crittscott.somestacks">PlatformServices</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab3"><a href="CommonRegistry.Sound.html" title="enum class in com.github.crittscott.somestacks">CommonRegistry.Sound</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab3">
+<div class="block">The mod's sound events, declared once.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="PlatformServices.html" title="class in com.github.crittscott.somestacks">PlatformServices</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">The active loader's paths, networking, and world-edit services.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="PlatformServices.Backend.html" title="interface in com.github.crittscott.somestacks">PlatformServices.Backend</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="PlatformServices.Backend.html" title="interface in com.github.crittscott.somestacks">PlatformServices.Backend</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">All required services supplied together by the selected loader.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Immutable server policy, command edits, and normalized admission lookups.</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Immutable server policy, its file declaration (<a href="ServerConfig.Section.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Section</code></a>, <a href="ServerConfig.Setting.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Setting</code></a>), command edits,
+ and normalized admission lookups.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Persistence and lifecycle supplied by the selected loader.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab3"><a href="ServerConfig.ListSetting.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab3">
+<div class="col-first even-row-color class-summary class-summary-tab3"><a href="ServerConfig.ListSetting.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab3">
 <div class="block">A command-editable policy list.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab3"><a href="ServerConfig.Section.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.Section</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab3">
+<div class="block">A table of the server policy file; its declaration order is the order in the file.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab3"><a href="ServerConfig.Setting.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.Setting</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab3">
+<div class="block">One field of the server policy file: its table, key, kind, bounds, explanation, and the
+ <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks"><code>ServerConfig.Settings</code></a> component it holds.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab3"><a href="ServerConfig.Setting.Kind.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.Setting.Kind</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab3">
+<div class="block">The value type a loader stores for a setting.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab4"><a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab4">
@@ -130,7 +148,8 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ServerConfigMigration.html" title="class in com.github.crittscott.somestacks">ServerConfigMigration</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">One-time migration of the preceding release's world JSON policy into documented TOML.</div>
+<div class="block">One-time migration of the preceding release's world JSON policy into documented TOML, and the
+ report of custom ingot entries in a JSON policy that stays in the world.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="SomeStacksCommon.html" title="class in com.github.crittscott.somestacks">SomeStacksCommon</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -142,11 +161,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="TomlPolicyFile.html" title="class in com.github.crittscott.somestacks">TomlPolicyFile</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Documented TOML persistence and field validation, independent of loader lifecycle.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TomlServerConfig.html" title="class in com.github.crittscott.somestacks">TomlServerConfig</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Fabric's TOML backend: instance defaults with an optional world policy override.</div>
+<div class="block">The documented TOML policy file built from the shared <a href="ServerConfig.Setting.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Setting</code></a> declaration.</div>
 </div>
 </div>
 </div>

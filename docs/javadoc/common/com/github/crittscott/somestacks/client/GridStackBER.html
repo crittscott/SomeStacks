@@ -96,10 +96,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">GridStackBER&lt;T extends <a href="../block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements net.minecraft.client.renderer.blockentity.BlockEntityRenderer&lt;T&gt;</span></div>
-<div class="block">Loader-neutral renderer for the Storage and Singles cube grids. Each occupied cell is placed at
- its corner, rotated with the block's layout, and handed to <a href="CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client"><code>CubeRenderHelper</code></a>, which
- applies the item's own render profile. Singles items also carry a rotation of their own, applied
- on top of the block's; rotations are read from the entity being rendered each frame.</div>
+<div class="block">Loader-neutral renderer for the Storage and Singles cube grids. <a href="CubeRenderHelper.html#renderGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,int,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,net.minecraft.client.renderer.block.BlockRenderDispatcher)"><code>CubeRenderHelper.renderGridItems(com.github.crittscott.somestacks.util.SlotAccess, int, com.github.crittscott.somestacks.util.CubeGrid, int, float, java.util.function.IntUnaryOperator, net.minecraft.world.level.Level, int, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.MultiBufferSource, net.minecraft.client.renderer.block.BlockRenderDispatcher)</code></a> places each occupied cell at its corner, rotated with the
+ block's layout, and applies the item's own render profile. Singles items also carry a rotation of
+ their own, applied on top of the block's; rotations are read from the entity being rendered each
+ frame.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

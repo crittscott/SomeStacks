@@ -90,7 +90,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">AutomationChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Loader-neutral automation semantics exercised directly through <code>StackRunItemAccess</code>.</div>
+<div class="block">Automation scenarios shared by every loader, each driven through that loader's own automation
+ surface: the <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold.Automation</code></a> its support class builds over Forge's or
+ NeoForge's item-handler capability or Fabric's Transfer API storage.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -106,50 +108,92 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barAutomationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barAutomationBackfillsWithoutDropping</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barAutomationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">barAutomationBackfillsWithoutDropping</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: fill a supported Bar column, automate extraction from its base, and
  verify the top bar backfills the hole without an item entity being dropped.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barBackfillKeepsAStoredItemNoLongerAccepted(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barBackfillKeepsAStoredItemNoLongerAccepted</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barBackfillKeepsAStoredItemNoLongerAccepted(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">barBackfillKeepsAStoredItemNoLongerAccepted</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: narrow the ingot rule after storing a bar, then automate extraction
  below it; backfill retains or drops the now-ineligible stored item without deleting it.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barInsertionAnswersForThePositionItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">barInsertionAnswersForThePositionItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: target individual Bar positions with automation; unsupported positions
  refuse insertion while a grounded empty position accepts exactly one bar.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesExtractionUsesThePlayerGravityPath</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barSimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">barSimulationDoesNotMutateExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">No in-game form: a simulation has no visible effect.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reentrantStructuralEditIsRefused(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">reentrantStructuralEditIsRefused</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">No in-game form: an ordinary player cannot make automation re-enter a run's handler.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singleBlocksAdvertiseConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">singleBlocksAdvertiseConfiguredHeadroom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce in-game: set <code>max_pile_height</code> to 2, connect item automation to a
+ one-block stack of each type, and verify it can address one additional block of empty
+ positions for growth; set it to 1 and verify it addresses only the existing block.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">singlesExtractionUsesThePlayerGravityPath</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: extract a lower Singles cell through item automation; the item above
  shifts down by the same gravity path used for player extraction.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesInsertionAnswersForTheCellItIsGiven(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesInsertionAnswersForTheCellItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesInsertionAnswersForTheCellItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">singlesInsertionAnswersForTheCellItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: target individual Singles cells with item automation; an unsupported
  cell refuses the item while a grounded empty cell accepts exactly one.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesSimulationDoesNotMutateAnyStack(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">singlesSimulationDoesNotMutateAnyStack</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">No in-game form: a simulation has no visible effect.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesWalkFillsFromTheBottom(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesWalkFillsFromTheBottom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesWalkFillsFromTheBottom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">singlesWalkFillsFromTheBottom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: let item automation walk advertised Singles cells in order; the first
  supported empty cells accept the offered items without mutating the caller's stack.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageInsertionAnswersForTheSlotItIsGiven(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageInsertionAnswersForTheSlotItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageFromEveryBlockAddressesTheSamePile(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">storageFromEveryBlockAddressesTheSamePile</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: target a named Storage slot with item automation; that slot accepts a
- compatible stack, refuses an incompatible one, and settling later packs it toward the base.</div>
+<div class="block">To reproduce in-game: connect item automation separately to the lower and upper blocks of one
+ Storage pile; both connections expose the same items and capacity.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageObstructionPreventsGrowthAndSimulationReportsNoRoom(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageObstructionPreventsGrowthAndSimulationReportsNoRoom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageInsertionAnswersForTheSlotItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">storageInsertionAnswersForTheSlotItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce in-game: target a named Storage slot with item automation; that slot accepts a
+ compatible stack, refuses an incompatible one, and a moment later the pile packs the stack
+ toward the base.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageObstructionPreventsGrowthAndSimulationReportsNoRoom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">storageObstructionPreventsGrowthAndSimulationReportsNoRoom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: fill a Storage pile, obstruct the space above it, and insert through
  item automation; simulation and mutation both report no room and leave the obstruction.</div>
 </div>
@@ -171,67 +215,125 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="storageInsertionAnswersForTheSlotItIsGiven(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>storageInsertionAnswersForTheSlotItIsGiven</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageInsertionAnswersForTheSlotItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: target a named Storage slot with item automation; that slot accepts a
- compatible stack, refuses an incompatible one, and settling later packs it toward the base.</div>
+<section class="detail" id="barSimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>barSimulationDoesNotMutateExtraction</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barSimulationDoesNotMutateExtraction</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">No in-game form: a simulation has no visible effect. This guards that a simulated automation
+ extraction from a Bar Stack reports the bar without changing the stored contents.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="storageObstructionPreventsGrowthAndSimulationReportsNoRoom(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>storageObstructionPreventsGrowthAndSimulationReportsNoRoom</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageObstructionPreventsGrowthAndSimulationReportsNoRoom</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: fill a Storage pile, obstruct the space above it, and insert through
- item automation; simulation and mutation both report no room and leave the obstruction.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="singlesInsertionAnswersForTheCellItIsGiven(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>singlesInsertionAnswersForTheCellItIsGiven</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesInsertionAnswersForTheCellItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: target individual Singles cells with item automation; an unsupported
- cell refuses the item while a grounded empty cell accepts exactly one.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="singlesWalkFillsFromTheBottom(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>singlesWalkFillsFromTheBottom</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesWalkFillsFromTheBottom</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: let item automation walk advertised Singles cells in order; the first
- supported empty cells accept the offered items without mutating the caller's stack.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="singlesExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>singlesExtractionUsesThePlayerGravityPath</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesExtractionUsesThePlayerGravityPath</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: extract a lower Singles cell through item automation; the item above
- shifts down by the same gravity path used for player extraction.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="barAutomationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="barAutomationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>barAutomationBackfillsWithoutDropping</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barAutomationBackfillsWithoutDropping</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barAutomationBackfillsWithoutDropping</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
 <div class="block">To reproduce in-game: fill a supported Bar column, automate extraction from its base, and
  verify the top bar backfills the hole without an item entity being dropped.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="barInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="barBackfillKeepsAStoredItemNoLongerAccepted(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>barBackfillKeepsAStoredItemNoLongerAccepted</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barBackfillKeepsAStoredItemNoLongerAccepted</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce in-game: narrow the ingot rule after storing a bar, then automate extraction
+ below it; backfill retains or drops the now-ineligible stored item without deleting it.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="barInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>barInsertionAnswersForThePositionItIsGiven</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barInsertionAnswersForThePositionItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barInsertionAnswersForThePositionItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
 <div class="block">To reproduce in-game: target individual Bar positions with automation; unsupported positions
  refuse insertion while a grounded empty position accepts exactly one bar.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="barBackfillKeepsAStoredItemNoLongerAccepted(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>barBackfillKeepsAStoredItemNoLongerAccepted</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barBackfillKeepsAStoredItemNoLongerAccepted</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: narrow the ingot rule after storing a bar, then automate extraction
- below it; backfill retains or drops the now-ineligible stored item without deleting it.</div>
+<section class="detail" id="reentrantStructuralEditIsRefused(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>reentrantStructuralEditIsRefused</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reentrantStructuralEditIsRefused</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">No in-game form: an ordinary player cannot make automation re-enter a run's handler. This
+ guards the refusal of an automation insertion that arrives while another structural edit is
+ still running (as a neighbor woken by that edit could send), and that the next insertion
+ succeeds once the edit ends.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singleBlocksAdvertiseConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>singleBlocksAdvertiseConfiguredHeadroom</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singleBlocksAdvertiseConfiguredHeadroom</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce in-game: set <code>max_pile_height</code> to 2, connect item automation to a
+ one-block stack of each type, and verify it can address one additional block of empty
+ positions for growth; set it to 1 and verify it addresses only the existing block.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>singlesExtractionUsesThePlayerGravityPath</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesExtractionUsesThePlayerGravityPath</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce in-game: extract a lower Singles cell through item automation; the item above
+ shifts down by the same gravity path used for player extraction.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesInsertionAnswersForTheCellItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>singlesInsertionAnswersForTheCellItIsGiven</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesInsertionAnswersForTheCellItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce in-game: target individual Singles cells with item automation; an unsupported
+ cell refuses the item while a grounded empty cell accepts exactly one.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesSimulationDoesNotMutateAnyStack(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>singlesSimulationDoesNotMutateAnyStack</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesSimulationDoesNotMutateAnyStack</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">No in-game form: a simulation has no visible effect. This guards that a simulated automation
+ insertion leaves a Singles column and the offered stack unchanged while reporting what one
+ cell would accept.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesWalkFillsFromTheBottom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>singlesWalkFillsFromTheBottom</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesWalkFillsFromTheBottom</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce in-game: let item automation walk advertised Singles cells in order; the first
+ supported empty cells accept the offered items without mutating the caller's stack.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageFromEveryBlockAddressesTheSamePile(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>storageFromEveryBlockAddressesTheSamePile</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageFromEveryBlockAddressesTheSamePile</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce in-game: connect item automation separately to the lower and upper blocks of one
+ Storage pile; both connections expose the same items and capacity.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageInsertionAnswersForTheSlotItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>storageInsertionAnswersForTheSlotItIsGiven</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageInsertionAnswersForTheSlotItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce in-game: target a named Storage slot with item automation; that slot accepts a
+ compatible stack, refuses an incompatible one, and a moment later the pile packs the stack
+ toward the base.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageObstructionPreventsGrowthAndSimulationReportsNoRoom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>storageObstructionPreventsGrowthAndSimulationReportsNoRoom</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageObstructionPreventsGrowthAndSimulationReportsNoRoom</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.level.block.entity.BlockEntity,<wbr><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a>&gt;&nbsp;automation)</span></div>
+<div class="block">To reproduce in-game: fill a Storage pile, obstruct the space above it, and insert through
+ item automation; simulation and mutation both report no room and leave the obstruction.</div>
 </section>
 </li>
 </ul>
