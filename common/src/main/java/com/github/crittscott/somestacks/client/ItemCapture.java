@@ -91,6 +91,10 @@ public final class ItemCapture {
         return capture;
     }
 
+    /**
+     * Whether the resolved render state has no layers to draw; layers that declare no extents show
+     * as null bounds instead.
+     */
     public boolean isEmpty() {
         return renderState.isEmpty();
     }

@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks;
 
-import com.github.crittscott.somestacks.block.FabricItemStorage;
 import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.network.ProtocolPkt;
 import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;
@@ -12,18 +11,22 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
 
-/** Fabric's common entry point and server lifecycle wiring. */
+/**
+ * Fabric's common entry point, run on both physical sides: installs the platform services and the
+ * server config, registers content, item storage, gesture callbacks, and payloads, and wires the
+ * server lifecycle, commands, ticking, the configuration-phase protocol check, and player join and
+ * leave to {@link SomeStacksServer}.
+ */
 public final class SomeStacksFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         PlatformServices.install(new FabricPlatformServices());
         ServerConfig.install(
-                new TomlServerConfig(
-                        net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir()));
+                new FabricServerConfig(FabricLoader.getInstance().getConfigDir()));
         FabricRegistry.init();
-        FabricItemStorage.init();
         FabricStackInteractionEvents.init();
         FabricNetworking.registerPayloads();
         FabricNetworking.initServer();
@@ -44,8 +47,6 @@ public final class SomeStacksFabric implements ModInitializer {
         ServerPlayConnectionEvents.DISCONNECT.register(
                 (handler, server) -> SomeStacksServer.onPlayerLeft(handler.player.getUUID()));
 
-        SomeStacksCommon.LOGGER.info(
-                "Some Stacks v{} initialized for Fabric",
-                PlatformServices.modVersion(SomeStacksCommon.MODID));
+        PlatformServices.logStartup("Fabric");
     }
 }

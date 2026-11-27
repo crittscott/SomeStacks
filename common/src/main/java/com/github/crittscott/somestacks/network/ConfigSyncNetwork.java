@@ -5,7 +5,7 @@ import com.github.crittscott.somestacks.PlatformServices;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
-/** Explicit snapshot delivery on loaders without native config synchronization. */
+/** Delivery of the client policy snapshot through the platform backend. */
 public final class ConfigSyncNetwork {
     private ConfigSyncNetwork() {}
 
@@ -13,12 +13,9 @@ public final class ConfigSyncNetwork {
         PlatformServices.sendConfig(player, snapshot);
     }
 
-    /** Returns the number of players sent an explicit payload; native sync is loader-owned. */
+    /** Broadcasts the snapshot once to all connected players; returns the connected player count. */
     public static int syncAllPlayers(MinecraftServer server, ConfigSyncPkt snapshot) {
-        int sent = 0;
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            if (PlatformServices.sendConfig(player, snapshot)) sent++;
-        }
-        return sent;
+        PlatformServices.broadcastConfig(server, snapshot);
+        return server.getPlayerList().getPlayerCount();
     }
 }

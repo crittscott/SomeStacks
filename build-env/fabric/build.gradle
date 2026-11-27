@@ -63,7 +63,10 @@ configurations {
 }
 
 repositories {
+    // Hosts the bundled common-protection-api dependency below.
     maven { url 'https://maven.nucleoid.xyz/' }
+    // Hosts the bundled NightConfig TOML library below.
+    mavenCentral()
 }
 
 dependencies {
@@ -74,6 +77,12 @@ dependencies {
 
     common(project(path: ':common')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
+
+    // Bundle and relocate the TOML library: users install only Some Stacks.
+    implementation "com.electronwill.night-config:core:$rootProject.night_config_version"
+    implementation "com.electronwill.night-config:toml:$rootProject.night_config_version"
+    shadowBundle "com.electronwill.night-config:core:$rootProject.night_config_version"
+    shadowBundle "com.electronwill.night-config:toml:$rootProject.night_config_version"
 }
 
 // Expands ${...} placeholders in fabric.mod.json (this module's own resource).
@@ -113,6 +122,7 @@ jar {
 shadowJar {
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = null
+    relocate 'com.electronwill.nightconfig', 'com.github.crittscott.somestacks.internal.nightconfig'
 }
 
 // The production Shadow artifact needs the same native nested libraries as the development jar.
@@ -128,16 +138,3 @@ sourcesJar {
 tasks.named('assemble') {
     dependsOn shadowJar
 }
-
-// Bundle and relocate the TOML library: users install only Some Stacks.
-dependencies {
-    implementation "com.electronwill.night-config:core:$rootProject.night_config_version"
-    implementation "com.electronwill.night-config:toml:$rootProject.night_config_version"
-    shadowBundle "com.electronwill.night-config:core:$rootProject.night_config_version"
-    shadowBundle "com.electronwill.night-config:toml:$rootProject.night_config_version"
-}
-shadowJar {
-    relocate 'com.electronwill.nightconfig', 'com.github.crittscott.somestacks.internal.nightconfig'
-}
-
-repositories { mavenCentral() }

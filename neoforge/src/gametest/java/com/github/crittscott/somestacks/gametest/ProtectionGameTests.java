@@ -4,10 +4,6 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
-import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.WorldEdits;
 
 import net.minecraft.core.BlockPos;
@@ -16,15 +12,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.TriState;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -183,7 +174,28 @@ public final class ProtectionGameTests {
     /** See {@link ProtectionChecks#mixedStorageSettlementUsesAutomationForCleanup}. */
     public static void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
         ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(
+                helper,
+                GameTestSupport.playerFactory(helper),
+                GameTestSupport::automation,
+                ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link ProtectionChecks#breakingAStackChargesItsCleanupToTheBreaker}. */
+    public static void breakingAStackChargesItsCleanupToTheBreaker(GameTestHelper helper) {
+        ProtectionChecks.breakingAStackChargesItsCleanupToTheBreaker(
                 helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    /** Denies block use at {@code pos} from a default-priority listener, as a claim mod does. */
+    private static Runnable denyBlockUse(ServerLevel level, BlockPos pos) {
+        Consumer<PlayerInteractEvent.RightClickBlock> listener =
+                event -> {
+                    if (event.getLevel() == level && event.getPos().equals(pos)) {
+                        event.setUseBlock(TriState.FALSE);
+                    }
+                };
+        NeoForge.EVENT_BUS.addListener(listener);
+        return () -> NeoForge.EVENT_BUS.unregister(listener);
     }
 
     private static Runnable observeRemoval(
@@ -233,107 +245,47 @@ public final class ProtectionGameTests {
     public static void storageGrowthAnswersToProtectionInSimulationAndCommit(
             GameTestHelper helper) {
         ProtectionChecks.storageGrowthAnswersToProtectionInSimulationAndCommit(
-                helper, GameTestSupport::offerAt);
+                helper, GameTestSupport::automation);
     }
 
     /** See {@link ProtectionChecks#singlesGrowthAnswersToProtectionInSimulationAndCommit}. */
     public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(
             GameTestHelper helper) {
         ProtectionChecks.singlesGrowthAnswersToProtectionInSimulationAndCommit(
-                helper, GameTestSupport::offerAt);
+                helper, GameTestSupport::automation);
     }
 
     /** See {@link ProtectionChecks#barGrowthAnswersToProtectionInSimulationAndCommit}. */
     public static void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         ProtectionChecks.barGrowthAnswersToProtectionInSimulationAndCommit(
-                helper, GameTestSupport::offerAt);
+                helper, GameTestSupport::automation);
     }
 
     // Growth through entities
 
     /**
-     * To reproduce in-game: stand in the growth space above a full Storage pile and insert through
-     * item automation; it accepts nothing and does not grow into the entity.
+     * See {@link ProtectionChecks#storageGrowthRejectsAnObstructingEntityInSimulationAndCommit}.
      */
     public static void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
-        }
-        ResourceHandler<ItemResource> capability = GameTestSupport.capability(storage);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = StorageStackBE.SLOTS;
-        checkEquals(
-                0,
-                GameTestSupport.offer(capability, headroom, offered, false),
-                "Aborted offer accepted count");
-        checkEquals(
-                0,
-                GameTestSupport.offer(capability, headroom, offered, true),
-                "Committed offer accepted count");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
     /**
-     * To reproduce in-game: stand in the growth space above a full Singles column and insert
-     * through item automation; it accepts nothing and does not grow into the entity.
+     * See {@link ProtectionChecks#singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit}.
      */
     public static void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE));
-        }
-        ResourceHandler<ItemResource> capability = GameTestSupport.capability(singles);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = SinglesStackBE.SLOTS;
-        checkEquals(
-                0,
-                GameTestSupport.offer(capability, headroom, offered, false),
-                "Aborted offer accepted count");
-        checkEquals(
-                0,
-                GameTestSupport.offer(capability, headroom, offered, true),
-                "Committed offer accepted count");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: stand in the growth space above a full Bar column and insert through
-     * item automation; it accepts nothing and does not grow into the entity.
-     */
+    /** See {@link ProtectionChecks#barGrowthRejectsAnObstructingEntityInSimulationAndCommit}. */
     public static void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
-        Item bar = GameTestScaffold.firstBarItem();
-        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar));
-        }
-        ResourceHandler<ItemResource> capability = GameTestSupport.capability(bars);
-        ItemStack offered = new ItemStack(bar, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = BarStackBE.SLOTS;
-        checkEquals(
-                0,
-                GameTestSupport.offer(capability, headroom, offered, false),
-                "Aborted offer accepted count");
-        checkEquals(
-                0,
-                GameTestSupport.offer(capability, headroom, offered, true),
-                "Committed offer accepted count");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.barStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, GameTestSupport::automation);
     }
 
     /** See {@link InteractionChecks#deniedCleanupEmitsOnlyBlockChange}. */
@@ -345,6 +297,12 @@ public final class ProtectionGameTests {
     /** See {@link ProtectionChecks#refusedRemovalStillLetsTheBarsAboveComeDown}. */
     public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
         ProtectionChecks.refusedRemovalStillLetsTheBarsAboveComeDown(
-                helper, ProtectionGameTests::observeRemoval);
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link InteractionChecks#blockUseDenialFreezesStackGestures}. */
+    public static void blockUseDenialFreezesStackGestures(GameTestHelper helper) {
+        InteractionChecks.blockUseDenialFreezesStackGestures(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::denyBlockUse);
     }
 }

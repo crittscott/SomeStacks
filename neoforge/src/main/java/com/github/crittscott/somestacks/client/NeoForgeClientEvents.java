@@ -25,10 +25,12 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 public final class NeoForgeClientEvents {
     private NeoForgeClientEvents() {}
 
+    /** Installs the sender that carries gesture state to the server. Runs once at client setup. */
     public static void init() {
         ClientGestures.setSender(packet -> ClientPacketDistributor.sendToServer(packet));
     }
 
+    /** Registers the client-side {@code /ss} subcommands. */
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
         ClientRenderCommands.register(
@@ -46,25 +48,34 @@ public final class NeoForgeClientEvents {
                 });
     }
 
+    /**
+     * Classifies an empty-hand air click and syncs gesture state. {@code HIGHEST}, like the item
+     * click, so the gesture sees the click before any other mod's listener.
+     */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty evt) {
         // RightClickEmpty is a pure notification on NeoForge: there is no vanilla action behind an
         // empty-hand air click to suppress, so the rules run but nothing is canceled.
-        ClientGestures.syncState(NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
+        ClientGestures.syncState(NeoForgeClientSetup.STACK_MODE_KEY.isDown());
         if (ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult)) return;
         ClientGestures.processClick(
                 evt.getEntity(),
                 evt.getHand(),
                 null,
                 false,
-                NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
+                NeoForgeClientSetup.STACK_MODE_KEY.isDown());
     }
 
+    /**
+     * Classifies an air click with a held item, syncs gesture state, and cancels the item use when
+     * the gesture claims the click. {@code HIGHEST}, so another mod's listener does not use the
+     * item before a claiming gesture cancels it.
+     */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem evt) {
         if (!evt.getLevel().isClientSide()) return;
 
-        ClientGestures.syncState(NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
+        ClientGestures.syncState(NeoForgeClientSetup.STACK_MODE_KEY.isDown());
         if (ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult)) return;
         var gesture =
                 ClientGestures.processClick(
@@ -72,14 +83,19 @@ public final class NeoForgeClientEvents {
                         evt.getHand(),
                         null,
                         false,
-                        NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
+                        NeoForgeClientSetup.STACK_MODE_KEY.isDown());
 
         if (gesture.consumesLocalUse(evt.getEntity().getMainHandItem())) {
             evt.setCanceled(true);
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    /**
+     * Runs last, as the server listener and Fabric's gesture phase do, so a listener that handles
+     * the click earlier keeps it. It still receives a canceled click to synchronize gesture state,
+     * because the vanilla block-use packet that follows carries the action to the server.
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public static void onRightClick(PlayerInteractEvent.RightClickBlock evt) {
         // Only the client-side firing drives the gesture rules. In single player the integrated
         // server shares this event bus, and adjacent protection consultation re-fires
@@ -87,16 +103,16 @@ public final class NeoForgeClientEvents {
         if (!evt.getLevel().isClientSide()) {
             return;
         }
-        if (evt.getFace() == null) return;
+        ClientGestures.syncState(NeoForgeClientSetup.STACK_MODE_KEY.isDown());
+        if (evt.isCanceled()) return;
 
-        ClientGestures.syncState(NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
         var gesture =
                 ClientGestures.processClick(
                         evt.getEntity(),
                         evt.getHand(),
                         BlockType.of(evt.getLevel().getBlockState(evt.getPos()).getBlock()),
                         true,
-                        NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
+                        NeoForgeClientSetup.STACK_MODE_KEY.isDown());
 
         if (gesture.consumesLocalUse(evt.getEntity().getMainHandItem())) {
             evt.setCanceled(true);
