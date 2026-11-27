@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.gametest;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.policy;
 
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.Items;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /** Wire boundaries, independent of forgiving saved-world recovery. */
@@ -40,7 +42,7 @@ public final class SynchronizationChecks {
      * atomicity.
      */
     public static void configSnapshotsRoundTripAndPublishAtomically(GameTestHelper helper) {
-        var policy = ServerConfig.settings();
+        var original = ServerConfig.settings();
         List<String> originalGallery = ClientRenderToolState.genMods();
         List<String> originalDenied = List.copyOf(ClientRenderToolState.disabledMods());
         boolean[] originalFlags = flags();
@@ -59,18 +61,19 @@ public final class SynchronizationChecks {
                     size == 0
                 };
                 ServerConfig.apply(
-                        new ServerConfig.Settings(
-                                policy.maxPileHeight(),
-                                expectedFlags[0],
-                                expectedFlags[1],
-                                expectedFlags[2],
-                                denied,
-                                policy.disableItems(),
-                                policy.renderGalleryPlacementsPerTick(),
-                                policy.galleryEnabled(),
-                                policy.galleryPermissionLevel(),
-                                gallery,
-                                policy.genItems()));
+                        policy(
+                                original,
+                                Map.of(
+                                        ServerConfig.Setting.ENABLE_STORAGE_STACK_BLOCK,
+                                        expectedFlags[0],
+                                        ServerConfig.Setting.ENABLE_SINGLES_STACK_BLOCK,
+                                        expectedFlags[1],
+                                        ServerConfig.Setting.ENABLE_BAR_STACK_BLOCK,
+                                        expectedFlags[2],
+                                        ServerConfig.Setting.DISABLE_MODS,
+                                        denied,
+                                        ServerConfig.Setting.GEN_MODS,
+                                        gallery)));
                 ConfigSyncPkt.rebuildCurrent();
                 List<ConfigSyncPkt> packets = ConfigSyncPkt.currentPackets();
                 checkEquals(1, packets.size(), "Bounded policy should fit one packet");
@@ -99,7 +102,7 @@ public final class SynchronizationChecks {
                                 "Encoded chunk too large");
                         ConfigSyncPkt decoded = ConfigSyncPkt.STREAM_CODEC.decode(buf);
                         checkEquals(packet, decoded, "Chunk codec round trip");
-                        ClientRenderPacketSink.apply(decoded);
+                        ClientRenderPacketSink.apply(decoded, null);
                     } finally {
                         raw.release();
                     }
@@ -125,7 +128,7 @@ public final class SynchronizationChecks {
                 check(Arrays.equals(expectedFlags, flags()), "Published flags");
             }
         } finally {
-            ServerConfig.apply(policy);
+            ServerConfig.apply(original);
             ConfigSyncPkt.rebuildCurrent();
             ClientRenderPacketSink.clear();
             ClientRenderToolState.replace(originalGallery, originalDenied);
@@ -145,21 +148,23 @@ public final class SynchronizationChecks {
         ClientRenderPacketSink.clear();
         try {
             rejects(
-                    () -> ClientRenderPacketSink.apply(chunk(1, false, true, 1, "tail")),
+                    () -> ClientRenderPacketSink.apply(chunk(1, false, true, 1, "tail"), null),
                     "Missing first accepted");
-            ClientRenderPacketSink.apply(chunk(2, true, false, 2, "old"));
+            ClientRenderPacketSink.apply(chunk(2, true, false, 2, "old"), null);
             checkEquals(originalGallery, ClientRenderToolState.genMods(), "Missing last published");
-            ClientRenderPacketSink.apply(chunk(3, true, true, 1, "replacement"));
+            ClientRenderPacketSink.apply(chunk(3, true, true, 1, "replacement"), null);
             checkEquals(
                     List.of("replacement"),
                     ClientRenderToolState.genMods(),
                     "New first did not replace staging");
             rejects(
-                    () -> ClientRenderPacketSink.apply(chunk(2, false, true, 2, "old_tail")),
+                    () ->
+                            ClientRenderPacketSink.apply(
+                                    chunk(2, false, true, 2, "old_tail"), null),
                     "Old tail accepted");
-            ClientRenderPacketSink.apply(chunk(4, true, false, 2, "first"));
+            ClientRenderPacketSink.apply(chunk(4, true, false, 2, "first"), null);
             rejects(
-                    () -> ClientRenderPacketSink.apply(chunk(5, false, true, 2, "tail")),
+                    () -> ClientRenderPacketSink.apply(chunk(5, false, true, 2, "tail"), null),
                     "Mismatched generation accepted");
             for (ConfigSyncPkt changed :
                     List.of(
@@ -208,22 +213,25 @@ public final class SynchronizationChecks {
                                     1,
                                     List.of("tail"),
                                     List.of()))) {
-                ClientRenderPacketSink.apply(chunk(6, true, false, 2, "first"));
-                rejects(() -> ClientRenderPacketSink.apply(changed), "Changed metadata accepted");
+                ClientRenderPacketSink.apply(chunk(6, true, false, 2, "first"), null);
                 rejects(
-                        () -> ClientRenderPacketSink.apply(chunk(6, false, true, 2, "tail")),
+                        () -> ClientRenderPacketSink.apply(changed, null),
+                        "Changed metadata accepted");
+                rejects(
+                        () -> ClientRenderPacketSink.apply(chunk(6, false, true, 2, "tail"), null),
                         "Rejected staging survived");
             }
             rejects(
-                    () -> ClientRenderPacketSink.apply(chunk(7, true, true, 2, "only")),
+                    () -> ClientRenderPacketSink.apply(chunk(7, true, true, 2, "only"), null),
                     "Total underflow accepted");
-            ClientRenderPacketSink.apply(chunk(8, true, false, 1, "first"));
+            ClientRenderPacketSink.apply(chunk(8, true, false, 1, "first"), null);
             rejects(
-                    () -> ClientRenderPacketSink.apply(chunk(8, false, true, 1, "extra")),
+                    () -> ClientRenderPacketSink.apply(chunk(8, false, true, 1, "extra"), null),
                     "Total overflow accepted");
             ClientRenderPacketSink.apply(
                     new ConfigSyncPkt(
-                            9, true, false, true, true, true, 0, 2, List.of(), List.of("denied")));
+                            9, true, false, true, true, true, 0, 2, List.of(), List.of("denied")),
+                    null);
             rejects(
                     () ->
                             ClientRenderPacketSink.apply(
@@ -237,7 +245,8 @@ public final class SynchronizationChecks {
                                             0,
                                             2,
                                             List.of(),
-                                            List.of("denied"))),
+                                            List.of("denied")),
+                                    null),
                     "Duplicate deny entry accepted");
             checkEquals(
                     List.of("replacement"),
@@ -247,7 +256,7 @@ public final class SynchronizationChecks {
                     Arrays.equals(new boolean[] {true, true, true}, flags()),
                     "Bad sequence changed flags");
             check(ClientRenderToolState.disabledMods().isEmpty(), "Bad sequence changed deny set");
-            ClientRenderPacketSink.apply(chunk(10, true, true, 1, "recovered"));
+            ClientRenderPacketSink.apply(chunk(10, true, true, 1, "recovered"), null);
             checkEquals(
                     List.of("recovered"),
                     ClientRenderToolState.genMods(),
@@ -337,16 +346,26 @@ public final class SynchronizationChecks {
         StackState.setBlockEnabled(BlockType.BAR_STACK, flags[2]);
     }
 
-    /** No in-game reproduction applies: an oversized server payload is rejected before decoding. */
+    /**
+     * No in-game reproduction applies: a chunk whose namespaces exceed the per-packet budget, which
+     * the client's staging totals rely on, is rejected when decoded; an honest server never sends
+     * one.
+     */
     public static void configDecoderEnforcesPacketBudget(GameTestHelper helper) {
         var raw = Unpooled.buffer();
         var buf = new RegistryFriendlyByteBuf(raw, helper.getLevel().registryAccess());
         try {
-            raw.writeZero(ConfigSyncPkt.MAX_PACKET_BYTES + 1);
+            int count = ConfigSyncPkt.MAX_PACKET_BYTES / 256 + 1;
+            writeHeader(buf, 1, count, 0);
+            buf.writeVarInt(count);
+            for (int i = 0; i < count; i++) {
+                String index = Integer.toString(i);
+                buf.writeUtf("n".repeat(255 - index.length()) + index);
+            }
+            buf.writeVarInt(0);
             rejects(
                     () -> ConfigSyncPkt.STREAM_CODEC.decode(buf),
-                    "Oversized config packet decoded");
-            checkEquals(0, raw.readerIndex(), "Oversized packet was read before rejection");
+                    "Over-budget config chunk decoded");
             raw.clear();
             var packet =
                     new ConfigSyncPkt(
@@ -377,27 +396,29 @@ public final class SynchronizationChecks {
         List<String> published = ClientRenderToolState.genMods();
         ClientRenderPacketSink.clear();
         try {
-            ClientRenderPacketSink.apply(chunk(1, true, false, 10, "first"));
+            ClientRenderPacketSink.apply(chunk(1, true, false, 10, "first"), null);
             checkEquals(
                     published, ClientRenderToolState.genMods(), "Incomplete snapshot published");
             rejects(
-                    () -> ClientRenderPacketSink.apply(chunk(1, false, false, 10)),
+                    () -> ClientRenderPacketSink.apply(chunk(1, false, false, 10), null),
                     "Empty intermediate chunk accepted");
             rejects(
-                    () -> ClientRenderPacketSink.apply(chunk(1, false, true, 10, "second")),
+                    () -> ClientRenderPacketSink.apply(chunk(1, false, true, 10, "second"), null),
                     "Rejected generation retained staging");
-            ClientRenderPacketSink.apply(chunk(2, true, false, 10, "first"));
+            ClientRenderPacketSink.apply(chunk(2, true, false, 10, "first"), null);
             rejects(
-                    () -> ClientRenderPacketSink.apply(chunk(2, false, true, 10, "first")),
+                    () -> ClientRenderPacketSink.apply(chunk(2, false, true, 10, "first"), null),
                     "Duplicate namespace accepted");
             for (int i = 0; i < ConfigSyncPkt.MAX_GENERATION_CHUNKS; i++) {
-                ClientRenderPacketSink.apply(chunk(3, i == 0, false, 4096, "mod" + i));
+                ClientRenderPacketSink.apply(chunk(3, i == 0, false, 4096, "mod" + i), null);
             }
             rejects(
-                    () -> ClientRenderPacketSink.apply(chunk(3, false, false, 4096, "overflow")),
+                    () ->
+                            ClientRenderPacketSink.apply(
+                                    chunk(3, false, false, 4096, "overflow"), null),
                     "Generation chunk budget was ignored");
             rejects(
-                    () -> ClientRenderPacketSink.apply(chunk(3, false, true, 4096, "tail")),
+                    () -> ClientRenderPacketSink.apply(chunk(3, false, true, 4096, "tail"), null),
                     "Over-budget generation retained staging");
             checkEquals(published, ClientRenderToolState.genMods(), "Rejected snapshot published");
         } finally {

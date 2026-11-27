@@ -42,7 +42,7 @@ Only the main hand acts; off-hand items allow cycling. Torches are retained. Rot
 
 ## Depositing and placing
 
-A placement and its first deposit are atomic: the block is not placed unless the item is valid, the target cell is supported, the final shape is unobstructed and replaceable, the run stays within its height limit, and protection allows the edit. Failed placement leaves nothing behind. Successful player creation fires the placed-block advancement criterion with the original held stack; pile growth does not.
+A placement and its first deposit are atomic: the block is not placed unless the item is valid, the target cell is supported, the final shape is unobstructed and replaceable, the run stays within its height limit, and protection allows the edit. Successful player creation fires the placed-block advancement criterion with the original held stack; pile growth does not.
 
 Placement into water waterlogs the stack and keeps the water. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
 
@@ -103,7 +103,7 @@ Every block exposes the whole run on all six sides: `IItemHandler` on Forge/NeoF
 | Singles | one display cell | 1 |
 | Bar | one bar position | 1 |
 
-The advertised storage includes every current position plus one block of headroom while below the max height; inserting into headroom can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the loader's edit authority refuses the automation actor. All three loaders present automation under the same `[SomeStacks]` identity so machine and claim policies can recognize it.
+The advertised storage includes every current position plus one block of headroom while below the max height; inserting into headroom can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the loader's edit authority refuses the automation actor. Automation acts as `[SomeStacks]` on every loader.
 
 Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named. For extraction, Storage removes from the named slot then settles, Singles uses the same one-column gravity as player extraction, and Bar moves the column's topmost bar into the hole to avoid the player-extraction collapse.
 
@@ -134,7 +134,7 @@ Forge and NeoForge use loader-managed `somestacks-server.toml`, with per-world o
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
 | `render_gallery.gen_mods` / `gen_items` | empty | Namespace and item lists used by the `list` and `items` gallery forms |
 
-Disabling a type, item, mod, or ingot category never removes or ejects existing contents. The client receives the enable flags on login and skips disabled types when cycling modes. Data-pack tag changes are picked up on reload.
+Disabling a type, item, mod, or ingot category never removes or ejects existing contents. The client receives the enable flags on login and reload, skips disabled types when cycling modes, and moves off a selected type that becomes disabled; placing a disabled type is refused with a message. Data-pack tag changes are picked up on reload.
 
 ## Commands
 
@@ -157,7 +157,7 @@ Storage and Singles show items in four modes: `2d` (flat art), `3d` (the FIXED r
 
 Resolution order is local override, resource-pack data, then automatic measurement. A server can distribute profiles through its server resource pack; local overrides keep priority. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by pack, mod-version, or reload changes.
 
-`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`. Namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only. Servers cannot invoke these commands or request client writes.
+`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`, keeping file entries it cannot use verbatim and refusing while the file cannot be read. Namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only. Servers cannot invoke these commands or request client writes.
 
 For Bar appearance, resource packs map item ids to textures and tints under `assets/<namespace>/textures/bars/*.json`, with missing tints derived from the item's sprite and color. Bar mappings are not synchronized, so players with different packs may see different bars.
 
@@ -169,7 +169,7 @@ For Bar appearance, resource packs map item ids to textures and tints under `ass
 
 ## Protection and validation
 
-Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. Forge/NeoForge consult destination interaction protection for neighbor deposits. Fabric consults destination block-use callbacks and optional Common Protection API for neighbor deposits. Fabric consults that API for placement and automation growth when available; otherwise those edits use vanilla checks. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. Forge/NeoForge publish accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
+Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. For neighbor deposits, Forge/NeoForge consult destination interaction protection; Fabric consults destination block-use callbacks and, for deposits, placement, and growth, optional Common Protection API. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. Forge/NeoForge publish accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
 
 The payload carries mode/modifier state; actions use vanilla block-use hits. The server checks hand, spectator/protection state, item, target, support, enablement, height and obstruction, then selects cells along the reach ray through the hit. Clients never choose cells.
 

@@ -17,10 +17,16 @@ import net.minecraft.world.phys.BlockHitResult;
 public final class FabricClientEvents {
     private FabricClientEvents() {}
 
+    /**
+     * Registers the client block-use listener in the shared gesture phase and the item-use listener
+     * for air clicks with a held item. Runs once from the client entry point.
+     */
     public static void init() {
         UseBlockCallback.EVENT.register(
                 FabricStackInteractionEvents.STACK_GESTURES_PHASE, FabricClientEvents::onUseBlock);
 
+        // Vanilla reaches UseItemCallback only for a nonempty hand; empty-hand air clicks arrive
+        // through MinecraftMixin.
         UseItemCallback.EVENT.register((player, level, hand) -> {
             if (!level.isClientSide) {
                 return InteractionResult.PASS;
@@ -29,13 +35,12 @@ public final class FabricClientEvents {
             InteractionContext context =
                     InteractionContext.forAirClick(
                             player,
-                            level,
                             hand,
                             ClientGestures.currentMode(),
-                            FabricKeyMappings.STACK_MODE_KEY.isDown(),
+                            FabricClientRendering.STACK_MODE_KEY.isDown(),
                             ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
-            ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
-            InteractionRuleRegistry.processItemRules(context);
+            ClientGestures.syncState(FabricClientRendering.STACK_MODE_KEY.isDown());
+            InteractionRuleRegistry.processAirRules(context);
             return context.shouldCancel() ? InteractionResult.FAIL : InteractionResult.PASS;
         });
     }
@@ -53,10 +58,9 @@ public final class FabricClientEvents {
                         level,
                         hand,
                         hit.getBlockPos(),
-                        hit.getDirection(),
                         ClientGestures.currentMode(),
-                        FabricKeyMappings.STACK_MODE_KEY.isDown());
-        ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
+                        FabricClientRendering.STACK_MODE_KEY.isDown());
+        ClientGestures.syncState(FabricClientRendering.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processBlockRules(context);
         return context.shouldCancel() ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }

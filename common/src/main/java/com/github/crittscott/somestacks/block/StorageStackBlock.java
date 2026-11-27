@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -69,16 +70,6 @@ public class StorageStackBlock extends StackBlock {
         return 0;
     }
 
-    /** Reports the whole pile's fill, so a comparator reads the same value anywhere along it. */
-    @Override
-    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
-        StoragePile pile = StoragePile.at(level, pos);
-        if (pile == null) {
-            return 0;
-        }
-        return pile.comparatorSignal();
-    }
-
     /**
      * Runs a pile pass scheduled at its base. Structural changes can leave an older tick at a
      * former base, so only the current base performs the settle.
@@ -109,8 +100,9 @@ public class StorageStackBlock extends StackBlock {
     public void onRemove(
             BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof StorageStackBE sbe) {
+            ServerPlayer breaker = null;
+            if (level.getBlockEntity(pos) instanceof StorageStackBE sbe) {
+                breaker = sbe.takeBreakingPlayer();
                 ItemOps.dropAllItems(sbe.getItems(), level, pos);
             }
             super.onRemove(state, level, pos, newState, isMoving);
@@ -120,9 +112,10 @@ public class StorageStackBlock extends StackBlock {
             StoragePile.invalidateAround(level, pos);
 
             // Losing a block splits one pile into two, or shortens one. Settle both sides rather
-            // than leaving the remains unpacked until something else touches them.
-            StoragePile.markDirtyAt(level, pos.below());
-            StoragePile.markDirtyAt(level, pos.above());
+            // than leaving the remains unpacked until something else touches them. Whatever that
+            // trims is the breaking player's doing, when a player broke the block.
+            StoragePile.markDirtyAfterRemoval(level, pos.below(), breaker);
+            StoragePile.markDirtyAfterRemoval(level, pos.above(), breaker);
         }
     }
 }

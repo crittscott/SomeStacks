@@ -15,7 +15,7 @@ Hold `V` and right-click the air to cycle through:
 3. **Bar Stack**
 4. **Toggle Permanent**
 
-The current mode is shown above your hotbar. Stack types the server has disabled are skipped by the cycle; Toggle Permanent is always available.
+The current mode is shown above your hotbar. Stack types the server has disabled are skipped by the cycle, and if the server disables the type you have selected, your mode moves on to the next one; Toggle Permanent is always available.
 
 The mode decides only what gets *placed*. Depositing into a stack that already exists always goes into that stack, whatever mode you are in.
 

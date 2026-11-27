@@ -4,9 +4,15 @@ import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 
-/** Fabric delegates for loader-neutral JSON and server-policy checks. */
+/** Fabric delegates for loader-neutral JSON, server-policy, and command-help checks. */
 public final class ConfigurationGameTests implements FabricGameTest {
     private static final String TEMPLATE = FabricGameTestSupport.TEMPLATE;
+
+    /** See {@link PolicyParityChecks#commandHelpAndNamespaceLimits}. */
+    @GameTest(template = TEMPLATE)
+    public void commandHelpAndNamespaceLimits(GameTestHelper helper) {
+        PolicyParityChecks.commandHelpAndNamespaceLimits(helper);
+    }
 
     /** See {@link ConfigurationChecks#overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes}. */
     @GameTest(template = TEMPLATE)
@@ -55,5 +61,11 @@ public final class ConfigurationGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void ingotTagControlsBarAndSinglesAdmission(GameTestHelper helper) {
         ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(helper);
+    }
+
+    /** See {@link TomlPolicyChecks#tomlPolicyParsesRoundTripsAndMigrates}. */
+    @GameTest(template = TEMPLATE)
+    public void tomlPolicyParsesRoundTripsAndMigrates(GameTestHelper helper) {
+        TomlPolicyChecks.tomlPolicyParsesRoundTripsAndMigrates(helper);
     }
 }

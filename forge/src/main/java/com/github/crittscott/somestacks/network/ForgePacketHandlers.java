@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -20,6 +21,17 @@ final class ForgePacketHandlers {
     }
 
     static void handleClient(ConfigSyncPkt msg, CustomPayloadEvent.Context ctx) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientRenderPacketSink.apply(msg));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Client.apply(msg));
+    }
+
+    /**
+     * Passing {@code Minecraft.getInstance().player} as a {@code Player} makes the verifier load
+     * {@code LocalPlayer} to check the widening, which fails on a dedicated server. Keeping that call
+     * in this nested class means only the client ever verifies it.
+     */
+    private static final class Client {
+        static void apply(ConfigSyncPkt msg) {
+            ClientRenderPacketSink.apply(msg, Minecraft.getInstance().player);
+        }
     }
 }

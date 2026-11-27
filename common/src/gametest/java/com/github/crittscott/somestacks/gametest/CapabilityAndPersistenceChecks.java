@@ -26,17 +26,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.Filterable;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -79,7 +84,7 @@ public final class CapabilityAndPersistenceChecks {
         source.setRotation(3);
         StoragePile pile = source.pile();
         check(pile != null, "Storage pile did not resolve");
-        pile.setPermanent(true);
+        pile.setPermanent(true, null);
 
         CompoundTag saved = source.saveWithoutMetadata(registries);
         check(!saved.contains("Rotation"), "Storage saved legacy block-entity rotation");
@@ -159,7 +164,7 @@ public final class CapabilityAndPersistenceChecks {
         Item barItem = firstBarItem();
         storage.getItems().insertItem(4, new ItemStack(Items.STONE, 3), false);
         storage.setRotation(2);
-        storage.pile().setPermanent(true);
+        storage.pile().setPermanent(true, null);
         singles.getItems().insertItem(5, new ItemStack(Items.APPLE), false);
         singles.setRotation(1);
         singles.setCubeRotation(5, 3);
@@ -203,6 +208,87 @@ public final class CapabilityAndPersistenceChecks {
         checkEquals(3, singlesClient.getCubeRotation(5), "Singles client item rotation");
         checkEquals(barItem, barsClient.getItems().getStackInSlot(6).getItem(), "Bar client item");
         helper.succeed();
+    }
+
+    /**
+     * A stack's update to nearby clients leaves out the contents of container items and book
+     * pages, which no renderer draws, while the stored stacks and the saved block keep them, and a
+     * client still accepts the update. To reproduce in-game: put a shulker box holding diamonds, a
+     * book and quill with writing, and a bundle holding sticks in a Storage Stack, walk out of
+     * range and back: all three still render. Save, reopen the world, and take them out: the box
+     * still holds its diamonds and the book its page. What the update omits is visible only in
+     * network traffic.
+     */
+    public static void updateTagOmitsContainerContentsAndBookPages(GameTestHelper helper) {
+        HolderLookup.Provider registries = helper.getLevel().registryAccess();
+        StorageStackBE storage = placeStorage(helper, ORIGIN);
+        ItemStack box = new ItemStack(Items.SHULKER_BOX);
+        box.set(
+                DataComponents.CONTAINER,
+                ItemContainerContents.fromItems(List.of(new ItemStack(Items.DIAMOND, 5))));
+        ItemStack book = new ItemStack(Items.WRITABLE_BOOK);
+        book.set(
+                DataComponents.WRITABLE_BOOK_CONTENT,
+                new WritableBookContent(List.of(Filterable.passThrough("page"))));
+        ItemStack bundle = new ItemStack(Items.BUNDLE);
+        bundle.set(
+                DataComponents.BUNDLE_CONTENTS,
+                new BundleContents(List.of(new ItemStack(Items.STICK, 3))));
+        GameTestScaffold.seedSlot(storage.getItems(), 0, box);
+        GameTestScaffold.seedSlot(storage.getItems(), 1, book);
+        GameTestScaffold.seedSlot(storage.getItems(), 2, bundle);
+
+        CompoundTag update = storage.getUpdateTag(registries);
+        check(
+                !componentsAt(update, 0).contains("minecraft:container"),
+                "Update carried shulker box contents");
+        check(
+                !componentsAt(update, 1).contains("minecraft:writable_book_content"),
+                "Update carried book pages");
+        check(
+                componentsAt(update, 2).contains("minecraft:bundle_contents"),
+                "Update dropped the bundle contents its model draws");
+
+        check(
+                storage.getItems().getStackInSlot(0).has(DataComponents.CONTAINER),
+                "Building the update changed the stored box");
+        check(
+                storage.getItems().getStackInSlot(1).has(DataComponents.WRITABLE_BOOK_CONTENT),
+                "Building the update changed the stored book");
+        CompoundTag saved = storage.saveWithoutMetadata(registries);
+        check(
+                componentsAt(saved, 0).contains("minecraft:container"),
+                "Saved block lost the box contents");
+        check(
+                componentsAt(saved, 1).contains("minecraft:writable_book_content"),
+                "Saved block lost the book pages");
+
+        StorageStackBE client = placeStorage(helper, ORIGIN.east(3));
+        check(client.loadClientUpdate(update, registries), "Client refused the update");
+        checkEquals(
+                Items.SHULKER_BOX,
+                client.getItems().getStackInSlot(0).getItem(),
+                "Client box item");
+        checkEquals(
+                Items.WRITABLE_BOOK,
+                client.getItems().getStackInSlot(1).getItem(),
+                "Client book item");
+        check(
+                client.getItems().getStackInSlot(2).has(DataComponents.BUNDLE_CONTENTS),
+                "Client bundle lost its contents");
+        helper.succeed();
+    }
+
+    /** The {@code components} of the saved item entry for {@code slot} in a block tag. */
+    private static CompoundTag componentsAt(CompoundTag blockTag, int slot) {
+        ListTag entries = blockTag.getCompound("Items").getList("Items", Tag.TAG_COMPOUND);
+        for (int i = 0; i < entries.size(); i++) {
+            CompoundTag entry = entries.getCompound(i);
+            if (entry.getInt("Slot") == slot) {
+                return entry.getCompound("components");
+            }
+        }
+        throw new GameTestAssertException("No item entry for slot " + slot);
     }
 
     /**
@@ -495,5 +581,102 @@ public final class CapabilityAndPersistenceChecks {
         check(
                 helper.getLevel().setBlock(target.getBlockPos(), targetState, Block.UPDATE_ALL),
                 "Could not copy stack facing");
+    }
+
+    /**
+     * A Singles block entity saved by the preceding release (Some Stacks for Minecraft 1.21.1)
+     * loads its items, item data, per-item rotations, and layout rotation. The fixture is written
+     * from string-literal keys in that release's layout ({@code Items} holding an {@code Items}
+     * list of {@code Slot}/{@code id}/int {@code count}/{@code components} entries, a 64-entry
+     * {@code CubeRotations} int array, and a block-entity {@code Rotation}), not from the current
+     * save code. To reproduce in-game: in a 1.21.1 world, deposit an apple and a stick from {@code
+     * /give @s stick[custom_data={released_marker:true}]} into a Singles Stack, turn the block and
+     * each item, and quit; open the world with this version. Both items are still in their cells,
+     * the stick keeps its data, and the block and each item face as before.
+     */
+    public static void releasedSinglesFormatLoads(GameTestHelper helper) {
+        HolderLookup.Provider registries = helper.getLevel().registryAccess();
+        SinglesStackBE loaded = placeSingles(helper, ORIGIN);
+        CompoundTag marker = new CompoundTag();
+        marker.putBoolean("released_marker", true);
+        CompoundTag components = new CompoundTag();
+        components.put("minecraft:custom_data", marker);
+        CompoundTag stick = releasedEntry(21, "minecraft:stick", 1);
+        stick.put("components", components);
+        CompoundTag saved = releasedInventory(releasedEntry(0, "minecraft:apple", 1), stick);
+        int[] rotations = new int[64];
+        rotations[0] = 1;
+        rotations[21] = 3;
+        saved.putIntArray("CubeRotations", rotations);
+        saved.putInt("Rotation", 2);
+
+        loaded.loadWithComponents(saved, registries);
+
+        checkEquals(Items.APPLE, loaded.getItems().getStackInSlot(0).getItem(), "Released apple");
+        ItemStack restored = loaded.getItems().getStackInSlot(21);
+        checkEquals(Items.STICK, restored.getItem(), "Released stick");
+        check(
+                restored.has(DataComponents.CUSTOM_DATA)
+                        && restored.get(DataComponents.CUSTOM_DATA)
+                                .copyTag()
+                                .getBoolean("released_marker"),
+                "Released item data was lost");
+        checkEquals(2, GameTestScaffold.occupied(loaded.getItems()), "Released occupied cells");
+        checkEquals(1, loaded.getCubeRotation(0), "Released apple rotation");
+        checkEquals(3, loaded.getCubeRotation(21), "Released stick rotation");
+        checkEquals(2, loaded.getRotation(), "Released layout rotation");
+        helper.succeed();
+    }
+
+    /**
+     * A Bar block entity saved by the preceding release (Some Stacks for Minecraft 1.21.1) loads
+     * the ingot in each position. The fixture is written from string-literal keys in that release's
+     * layout ({@code Items} holding an {@code Items} list of {@code Slot}/{@code id}/int {@code
+     * count} entries), not from the current save code. To reproduce in-game: in a 1.21.1 world,
+     * deposit an iron ingot and a gold ingot into a Bar Stack and quit; open the world with this
+     * version. The same two positions hold the same ingots.
+     */
+    public static void releasedBarFormatLoads(GameTestHelper helper) {
+        HolderLookup.Provider registries = helper.getLevel().registryAccess();
+        BarStackBE loaded = placeBar(helper, ORIGIN);
+        CompoundTag saved =
+                releasedInventory(
+                        releasedEntry(0, "minecraft:iron_ingot", 1),
+                        releasedEntry(37, "minecraft:gold_ingot", 1));
+
+        loaded.loadWithComponents(saved, registries);
+
+        checkEquals(
+                Items.IRON_INGOT, loaded.getItems().getStackInSlot(0).getItem(), "Released iron");
+        checkEquals(
+                Items.GOLD_INGOT, loaded.getItems().getStackInSlot(37).getItem(), "Released gold");
+        checkEquals(1, loaded.getItems().getStackInSlot(37).getCount(), "Released gold count");
+        checkEquals(2, GameTestScaffold.occupied(loaded.getItems()), "Released occupied positions");
+        helper.succeed();
+    }
+
+    /** One item entry in the preceding release's (1.21.1) layout, written key by key. */
+    private static CompoundTag releasedEntry(int slot, String id, int count) {
+        CompoundTag entry = new CompoundTag();
+        entry.putInt("Slot", slot);
+        entry.putString("id", id);
+        entry.putInt("count", count);
+        return entry;
+    }
+
+    /**
+     * A block-entity tag in the preceding release's (1.21.1) layout whose inventory holds {@code
+     * entries}. It carries no {@code DataVersion}, which migration reads as Minecraft 1.21.1's.
+     */
+    private static CompoundTag releasedInventory(CompoundTag... entries) {
+        ListTag list = new ListTag();
+        for (CompoundTag entry : entries) {
+            list.add(entry);
+        }
+        CompoundTag inventory = new CompoundTag();
+        inventory.put("Items", list);
+        CompoundTag saved = new CompoundTag();
+        saved.put("Items", inventory);
+        return saved;
     }
 }

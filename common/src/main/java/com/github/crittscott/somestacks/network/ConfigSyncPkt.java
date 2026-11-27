@@ -36,6 +36,7 @@ public record ConfigSyncPkt(
     public static final StreamCodec<RegistryFriendlyByteBuf, ConfigSyncPkt> STREAM_CODEC =
             StreamCodec.ofMember(ConfigSyncPkt::encode, ConfigSyncPkt::decode);
 
+    /** Largest encoded body of one chunk; the sender splits the snapshot to fit it. */
     public static final int MAX_PACKET_BYTES = 256 * 1024;
     private static final int PACKET_OVERHEAD_BYTES = 64;
     private static final int MAX_TOTAL_NAMESPACES = 4_096;
@@ -43,6 +44,7 @@ public record ConfigSyncPkt(
     private static final int MAX_ENCODED_NAMESPACE_BYTES = MAX_NAMESPACE_LENGTH + 2;
     private static final int MAX_NAMESPACE_BYTES =
             2 * MAX_TOTAL_NAMESPACES * MAX_ENCODED_NAMESPACE_BYTES;
+    /** Most chunks one snapshot can need; the client's staging refuses more. */
     public static final int MAX_GENERATION_CHUNKS =
             (MAX_NAMESPACE_BYTES
                             + MAX_PACKET_BYTES
@@ -50,6 +52,7 @@ public record ConfigSyncPkt(
                             - MAX_ENCODED_NAMESPACE_BYTES
                             - 1)
                     / (MAX_PACKET_BYTES - PACKET_OVERHEAD_BYTES - MAX_ENCODED_NAMESPACE_BYTES);
+    /** Most bytes one snapshot can need across its chunks; the client's staging refuses more. */
     public static final int MAX_GENERATION_BYTES =
             MAX_NAMESPACE_BYTES + MAX_GENERATION_CHUNKS * PACKET_OVERHEAD_BYTES;
 
@@ -87,21 +90,21 @@ public record ConfigSyncPkt(
     public static synchronized void rebuildCurrent() {
         nextGeneration = nextGeneration == Integer.MAX_VALUE ? 1 : nextGeneration + 1;
 
-        List<String> genMods = boundedNamespaces(ServerConfig.GEN_MODS.get(), "gallery mod");
-        List<String> disabledMods =
-                boundedNamespaces(ServerConfig.DISABLE_MODS.get(), "disabled mod");
+        ServerConfig.Settings policy = ServerConfig.settings();
+        List<String> genMods = boundedNamespaces(policy.genMods(), "gallery mod");
+        List<String> disabledMods = boundedNamespaces(policy.disableMods(), "disabled mod");
 
         currentPackets =
                 buildPackets(
                         nextGeneration,
-                        ServerConfig.enableStorageStackBlock(),
-                        ServerConfig.enableSinglesStackBlock(),
-                        ServerConfig.enableBarStackBlock(),
+                        policy.enableStorageStackBlock(),
+                        policy.enableSinglesStackBlock(),
+                        policy.enableBarStackBlock(),
                         genMods,
                         disabledMods);
     }
 
-    /** The packet sequence most recently built at server start or by {@code /ss reload}. */
+    /** The packet sequence {@link #rebuildCurrent} most recently built. */
     public static List<ConfigSyncPkt> currentPackets() {
         return currentPackets;
     }
@@ -200,9 +203,6 @@ public record ConfigSyncPkt(
     }
 
     private static ConfigSyncPkt decode(RegistryFriendlyByteBuf buf) {
-        if (buf.readableBytes() > MAX_PACKET_BYTES) {
-            throw new DecoderException("Config synchronization packet exceeds byte limit");
-        }
         int generation = buf.readVarInt();
         if (generation <= 0) {
             throw new DecoderException("Invalid config generation: " + generation);

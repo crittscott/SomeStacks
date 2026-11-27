@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -56,7 +57,10 @@ public class BarStackBlock extends ShapedStackBlock {
         }
     }
 
-    /** Invalidates cached columns and schedules publication after this block joins a run. */
+    /**
+     * Invalidates cached columns and publishes the comparator output of the runs this block joins
+     * or touches.
+     */
     @Override
     public void onPlace(
             BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
@@ -72,21 +76,23 @@ public class BarStackBlock extends ShapedStackBlock {
             BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             boolean cascading = false;
-            BarDropBatch drops = new BarDropBatch();
+            ServerPlayer breaker = null;
+            BarStackBE.DropBatch drops = new BarStackBE.DropBatch();
 
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof BarStackBE barBe) {
+            if (level.getBlockEntity(pos) instanceof BarStackBE barBe) {
                 cascading = barBe.wasRemovedByCascade();
+                breaker = barBe.takeBreakingPlayer();
                 drops.addAll(pos, barBe.getItems());
             }
             super.onRemove(state, level, pos, newState, isMoving);
             BarColumn.invalidateAround(level, pos);
 
             // Removing a block removes the supporting seam beneath the column above. A cascade
-            // already walks upward itself, so only an external removal starts another collapse.
+            // already walks upward itself, so only an external removal starts another collapse,
+            // whose cleanup is the breaking player's doing, or automation's when none broke it.
             if (level instanceof ServerLevel serverLevel) {
                 if (!isMoving && !cascading) {
-                    BarStackBE.collapseAbove(serverLevel, pos, drops);
+                    BarStackBE.collapseAbove(serverLevel, pos, drops, breaker);
                 }
                 drops.spawn(serverLevel);
             }
@@ -101,15 +107,5 @@ public class BarStackBlock extends ShapedStackBlock {
             BarColumn.markDirtyAt(level, pos.below());
             BarColumn.markDirtyAt(level, pos.above());
         }
-    }
-
-    /** Reports the whole column's fill, so a comparator reads the same value anywhere along it. */
-    @Override
-    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
-        BarColumn column = BarColumn.at(level, pos);
-        if (column == null) {
-            return 0;
-        }
-        return column.comparatorSignal();
     }
 }

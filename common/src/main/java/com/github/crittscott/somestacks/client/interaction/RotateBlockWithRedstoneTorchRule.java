@@ -1,18 +1,15 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import net.minecraft.world.item.Items;
+import com.github.crittscott.somestacks.util.StackGestures;
 
 /**
- * Shift plus a redstone torch rotates a Storage or Singles Stack's layout 90 degrees. A Bar Stack
- * is excluded: its bars are fixed to the orientation of their layer.
+ * Consumes a sneaking redstone-torch click on Storage or Singles so local item use does not run.
+ * The server rotates the block's layout 90 degrees.
  */
 public final class RotateBlockWithRedstoneTorchRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {
-        return ctx.isShift()
-                && ctx.hasItemInHand()
-                && ctx.getPlayer().getMainHandItem().is(Items.REDSTONE_TORCH)
-                && ctx.isRotatableStack();
+        return StackGestures.rotatesBlock(ctx.isShift(), ctx.getHeld(), ctx.getClickedType());
     }
 
     @Override

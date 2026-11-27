@@ -36,12 +36,22 @@ import javax.annotation.Nullable;
  * must finish with a result before capturing again.
  */
 public final class ItemCapture {
+    /**
+     * Ints per vertex in a baked quad's vertex data, which is laid out in the block vertex format.
+     */
     static final int BLOCK_VERTEX_STRIDE =
             DefaultVertexFormat.BLOCK.getVertexSize() / Integer.BYTES;
+
+    /** Offset of a vertex's three position floats within its block-format data. */
     static final int BLOCK_POSITION_OFFSET =
             DefaultVertexFormat.BLOCK.getOffset(VertexFormatElement.POSITION) / Integer.BYTES;
+
+    /** Offset of a vertex's texture coordinates within its block-format data. */
     static final int BLOCK_UV_OFFSET =
             DefaultVertexFormat.BLOCK.getOffset(VertexFormatElement.UV0) / Integer.BYTES;
+
+    /** Vertices in one baked quad. */
+    static final int QUAD_VERTICES = 4;
 
     /** A baked quad together with the color vanilla multiplies into it. */
     public record TintedQuad(BakedQuad quad, int color) {}
@@ -109,7 +119,10 @@ public final class ItemCapture {
         return capture;
     }
 
-    /** Whether the stack resolved to nothing to draw. */
+    /**
+     * Whether the resolved render state has no layers to draw; layers that draw nothing show as
+     * null bounds instead.
+     */
     public boolean isEmpty() {
         return renderState.isEmpty();
     }
@@ -164,7 +177,7 @@ public final class ItemCapture {
         if (!recordBounds) return;
         Matrix4f matrix = pose.pose();
         int[] vertices = quad.getVertices();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < QUAD_VERTICES; i++) {
             int base = i * BLOCK_VERTEX_STRIDE + BLOCK_POSITION_OFFSET;
             matrix.transformPosition(
                     Float.intBitsToFloat(vertices[base]),

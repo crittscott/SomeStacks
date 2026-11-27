@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks;
 
-import com.github.crittscott.somestacks.block.NeoForgeItemHandlers;
 import com.github.crittscott.somestacks.client.ClientSetup;
 import com.github.crittscott.somestacks.neoforge.NeoForgePlatformServices;
 import com.github.crittscott.somestacks.network.ModNetworking;
@@ -39,7 +38,6 @@ public class SomeStacksNeoForge {
 
         ModRegistry.init(modBus);
         modBus.addListener(ModNetworking::onRegisterPayloadHandlers);
-        modBus.addListener(NeoForgeItemHandlers::onRegisterCapabilities);
 
         NeoForge.EVENT_BUS.addListener(this::onServerAboutToStart);
         NeoForge.EVENT_BUS.addListener(this::onPlayerLogin);
@@ -52,8 +50,7 @@ public class SomeStacksNeoForge {
             ClientSetup.init(modBus);
         }
 
-        SomeStacksCommon.LOGGER.info(
-                "Some Stacks v{} initialized for NeoForge", PlatformServices.modVersion(MODID));
+        PlatformServices.logStartup("NeoForge");
     }
 
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
@@ -62,6 +59,7 @@ public class SomeStacksNeoForge {
 
     private void onServerStopped(ServerStoppedEvent event) {
         SomeStacksServer.onServerStopped();
+        NeoForgeServerConfig.INSTANCE.stop();
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {

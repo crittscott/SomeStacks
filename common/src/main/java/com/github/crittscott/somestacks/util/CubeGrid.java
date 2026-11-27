@@ -16,16 +16,11 @@ public final class CubeGrid {
     private final int[][] rotatedIndices;
 
     /**
-     * Creates an {@code edge}-cell grid along each axis. Cell width and axis starts are model
-     * pixels (16 per block); the same {@code edge} starts are used on all three axes. Callers
-     * supply valid cell dimensions and coordinates.
-     *
-     * @throws IllegalArgumentException when edge is nonpositive or starts has a different length
+     * Creates an {@code edge}-cell grid along each axis, precomputing every cell's box and shape,
+     * and its index under each quarter turn. Cell width and axis starts are model pixels (16 per block);
+     * {@code starts} holds one start per cell and is used on all three axes.
      */
     public CubeGrid(int edge, double cellPixels, int... starts) {
-        if (edge < 1 || starts.length != edge) {
-            throw new IllegalArgumentException("A cube grid needs one start for each axis cell");
-        }
         this.edge = edge;
         this.layerSize = edge * edge;
         this.cells = layerSize * edge;
@@ -93,6 +88,7 @@ public final class CubeGrid {
         };
     }
 
+    /** {@link #localBox} moved to the block at {@code blockPos}. */
     public AABB worldBox(int storageIndex, int rotation, BlockPos blockPos) {
         return localBox(storageIndex, rotation)
                 .move(blockPos.getX(), blockPos.getY(), blockPos.getZ());
@@ -103,6 +99,7 @@ public final class CubeGrid {
         return localBoxes[rotatedIndices[QuarterTurns.normalize(rotation)][storageIndex]];
     }
 
+    /** The cached block-local voxel shape of one stored cell at the given layout rotation. */
     public VoxelShape localShape(int storageIndex, int rotation) {
         return localShapes[rotatedIndices[QuarterTurns.normalize(rotation)][storageIndex]];
     }

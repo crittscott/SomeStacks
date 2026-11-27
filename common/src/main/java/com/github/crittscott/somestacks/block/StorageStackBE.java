@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -11,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
 
@@ -22,8 +24,8 @@ import javax.annotation.Nullable;
  * run. Everything here that reaches past this block's own slots resolves the pile first.
  *
  * <p>Automation exposure is loader-specific and lives outside this class: Forge and NeoForge use
- * item-handler capabilities, while Fabric uses the Transfer API. {@link #getItems()} is the local
- * storage each loader-specific whole-pile view adapts.
+ * item-handler capabilities, while Fabric uses the Transfer API. Those whole-pile views adapt this
+ * block through {@link #itemRun()}; {@link #getItems()} is only this block's local storage.
  */
 public class StorageStackBE extends StackBlockEntity {
     /** Slots in one block. The pile's flat slot range is this times its height. */
@@ -40,8 +42,8 @@ public class StorageStackBE extends StackBlockEntity {
     }
 
     /**
-     * Whether Storage accepts this item. The broadest of the three rules: anything nonempty from a
-     * namespace the server has not disabled. The per-item deny list applies to player deposits
+     * Whether Storage accepts this item: anything nonempty from a namespace the server has not
+     * disabled. The per-item deny list applies to player deposits
      * only.
      */
     public static boolean isValidStorageItem(ItemStack stack) {
@@ -55,12 +57,12 @@ public class StorageStackBE extends StackBlockEntity {
     }
 
     @Override
-    protected boolean isStoredItemValid(ItemStack stack) {
+    public boolean admits(ItemStack stack) {
         return isValidStorageItem(stack);
     }
 
     /**
-     * The pile this block belongs to, or null on the client and for a block being removed.
+     * The pile this block belongs to, or null on the client.
      *
      * <p>Resolved once a tick and held. A machine reading this block's item handler resolves the
      * pile once per slot it walks, which is hundreds of times a tick for one attached storage
@@ -76,6 +78,11 @@ public class StorageStackBE extends StackBlockEntity {
     @Override
     protected StackRunItemAccess resolveRun(ServerLevel serverLevel) {
         return StoragePile.resolve(serverLevel, getBlockPos());
+    }
+
+    @Override
+    protected AABB cellBox(int slot) {
+        return StorageCubeIdx.GRID.localBox(slot, getRotation());
     }
 
     public int getRotation() {
@@ -136,6 +143,25 @@ public class StorageStackBE extends StackBlockEntity {
         return actor;
     }
 
+    /** A Storage top-face click always deposits: the pile, not the cell, takes the items. */
+    @Override
+    public boolean acceptsDepositAlong(ViewRay ray) {
+        return true;
+    }
+
+    /** Deposits into the whole pile wherever the ray points; see {@link #deposit}. */
+    @Override
+    public int depositFromHand(ViewRay ray, ItemStack hand, ServerPlayer player) {
+        return deposit(hand, player);
+    }
+
+    /** Takes as much of the targeted cell as the hand has room for; see {@link #extractAt}. */
+    @Override
+    public ItemStack extractIntoHand(int index, ItemStack hand, ServerPlayer player) {
+        int room = hand.isEmpty() ? Integer.MAX_VALUE : hand.getMaxStackSize() - hand.getCount();
+        return extractAt(index, room, hand, player);
+    }
+
     /**
      * Deposits into the pile this block belongs to, filling from its base upward and growing the
      * column if it must. Which block of the pile the items were offered to makes no difference.
@@ -154,11 +180,7 @@ public class StorageStackBE extends StackBlockEntity {
      * cleanup.
      */
     public ItemStack extractAt(
-            int index, int maxCount, @Nullable ItemStack playerHand, @Nullable ServerPlayer actor) {
-        if (index < 0 || index >= items.getSlots()) {
-            return ItemStack.EMPTY;
-        }
-
+            int index, int maxCount, ItemStack playerHand, @Nullable ServerPlayer actor) {
         ItemStack inSlot = items.getStackInSlot(index);
         if (inSlot.isEmpty()) {
             return ItemStack.EMPTY;
@@ -169,8 +191,7 @@ public class StorageStackBE extends StackBlockEntity {
         }
 
         int toTake = Math.min(maxCount, inSlot.getCount());
-        ItemStack taken = inSlot.copy();
-        taken.setCount(toTake);
+        ItemStack taken = inSlot.copyWithCount(toTake);
         items.extractItem(index, toTake, false);
 
         StoragePile pile = pile();
@@ -182,19 +203,23 @@ public class StorageStackBE extends StackBlockEntity {
     }
 
     /**
-     * Writes a slot only when it does not already hold exactly that stack, so a pile-wide rewrite
-     * leaves untouched blocks clean and unsynced.
+     * Writes a slot only when it does not already hold exactly that piece, so a pile-wide rewrite
+     * leaves untouched blocks clean and unsynced; a null piece empties the slot. A written piece is
+     * a fresh copy, so no two slots share a stack.
      */
-    void setSlotIfChanged(int slot, ItemStack desired) {
+    void setSlotIfChanged(int slot, @Nullable StackKey.Piece desired) {
         ItemStack current = items.getStackInSlot(slot);
-        if (current.isEmpty() && desired.isEmpty()) {
+        if (desired == null) {
+            if (!current.isEmpty()) {
+                items.setStackInSlot(slot, ItemStack.EMPTY);
+            }
             return;
         }
-        if (current.getCount() == desired.getCount()
-                && ItemStack.isSameItemSameComponents(current, desired)) {
+        if (current.getCount() == desired.count()
+                && ItemStack.isSameItemSameComponents(current, desired.model())) {
             return;
         }
-        items.setStackInSlot(slot, desired);
+        items.setStackInSlot(slot, desired.toStack());
     }
 
     @Override

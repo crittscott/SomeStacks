@@ -1,11 +1,12 @@
 package com.github.crittscott.somestacks.mixin;
 
 import com.github.crittscott.somestacks.client.ClientGestures;
-import com.github.crittscott.somestacks.client.FabricKeyMappings;
+import com.github.crittscott.somestacks.client.FabricClientRendering;
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.HitResult;
@@ -18,27 +19,37 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
-/** Supplies Fabric's missing empty-hand, open-air right-click callback. */
+/**
+ * Supplies Fabric's missing empty-hand, open-air right-click callback. Fabric has no event for this
+ * click, and vanilla reaches {@code UseItemCallback} only for a nonempty hand. The injection sits at
+ * the head of {@code startUseItem}, before vanilla's own gates, so it applies them itself: no
+ * right-click acts while a block is being mined or while the hands are busy, as when steering a
+ * boat.
+ */
 @Mixin(Minecraft.class)
 abstract class MinecraftMixin {
-    @Shadow @Nullable public LocalPlayer player;
+    @Shadow @Nullable public MultiPlayerGameMode gameMode;
     @Shadow @Nullable public HitResult hitResult;
+    @Shadow @Nullable public LocalPlayer player;
 
     @Inject(method = "startUseItem", at = @At("HEAD"))
     private void somestacks$onEmptyHandAirClick(CallbackInfo callback) {
-        if (player == null || !ClientGestures.isEmptyMainHandAirClick(player, hitResult)) {
+        if (player == null
+                || gameMode == null
+                || gameMode.isDestroying()
+                || player.isHandsBusy()
+                || !ClientGestures.isEmptyMainHandAirClick(player, hitResult)) {
             return;
         }
 
         InteractionContext context =
                 InteractionContext.forAirClick(
                         player,
-                        player.level(),
                         InteractionHand.MAIN_HAND,
                         ClientGestures.currentMode(),
-                        FabricKeyMappings.STACK_MODE_KEY.isDown(),
+                        FabricClientRendering.STACK_MODE_KEY.isDown(),
                         ClientGestures.isHittingBlock(hitResult));
-        ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
-        InteractionRuleRegistry.processEmptyHandRules(context);
+        ClientGestures.syncState(FabricClientRendering.STACK_MODE_KEY.isDown());
+        InteractionRuleRegistry.processAirRules(context);
     }
 }

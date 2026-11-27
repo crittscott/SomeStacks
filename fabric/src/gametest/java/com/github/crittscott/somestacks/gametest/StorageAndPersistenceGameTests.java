@@ -2,28 +2,22 @@ package com.github.crittscott.somestacks.gametest;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
-import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.RunEdit;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 /**
@@ -62,32 +56,11 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
                 side);
     }
 
-    /**
-     * To reproduce in-game: connect item automation to a one-block stack below its height limit and
-     * verify it can address one additional block of empty positions for growth.
-     */
+    /** See {@link AutomationChecks#singleBlocksAdvertiseConfiguredHeadroom}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void singleBlockStorageAdvertisesConfiguredHeadroom(GameTestHelper helper) {
-        StorageStackBE storage = placeStorage(helper, ORIGIN);
-        SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
-        BarStackBE bar = placeBar(helper, ORIGIN.east(6));
-
-        int storageLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
-        int singlesLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
-        int barLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
-        checkEquals(
-                StorageStackBE.SLOTS * storageLevels,
-                FabricGameTestSupport.storage(storage).getSlotCount(),
-                "Storage advertised slots");
-        checkEquals(
-                SinglesStackBE.SLOTS * singlesLevels,
-                FabricGameTestSupport.storage(singles).getSlotCount(),
-                "Singles advertised slots");
-        checkEquals(
-                BarStackBE.SLOTS * barLevels,
-                FabricGameTestSupport.storage(bar).getSlotCount(),
-                "Bar advertised slots");
-        helper.succeed();
+        AutomationChecks.singleBlocksAdvertiseConfiguredHeadroom(
+                helper, FabricGameTestSupport::automation);
     }
 
     /**
@@ -154,52 +127,18 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
-    /** No in-game reproduction applies: a reentrant Fabric storage edit is refused. */
+    /** See {@link AutomationChecks#reentrantStructuralEditIsRefused}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void reentrantStructuralEditIsRefused(GameTestHelper helper) {
-        SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
-        ItemStack offered = new ItemStack(Items.STICK);
-        boolean claimed = RunEdit.begin();
-        try {
-            check(claimed, "Structural edit guard was already claimed");
-            checkEquals(
-                    1,
-                    FabricGameTestSupport.insertAt(storage, 0, offered, false).getCount(),
-                    "Reentrant insertion accepted an item");
-        } finally {
-            if (claimed) {
-                RunEdit.end();
-            }
-        }
-        check(
-                FabricGameTestSupport.insertAt(storage, 0, offered, false).isEmpty(),
-                "Released guard still refused insertion");
-        helper.succeed();
+        AutomationChecks.reentrantStructuralEditIsRefused(
+                helper, FabricGameTestSupport::automation);
     }
 
-    /**
-     * No in-game reproduction applies: this verifies that aborted Fabric transactions leave
-     * Storage, Singles, and Bar stacks unchanged.
-     */
+    /** See {@link AutomationChecks#singlesSimulationDoesNotMutateAnyStack}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void simulatedInsertionDoesNotMutateAnyStack(GameTestHelper helper) {
-        SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
-        ItemStack offered = new ItemStack(Items.APPLE, 5);
-
-        // Cell 0 is a bottom-layer cell of a column standing on the world, so it is grounded
-        // outright and the simulation has something to accept.
-        ItemStack remainder = FabricGameTestSupport.insertAt(storage, 0, offered, true);
-
-        checkEquals(5, offered.getCount(), "Simulation mutated its input");
-        checkEquals(
-                0,
-                FabricGameTestSupport.count(storage, Items.APPLE),
-                "Simulation mutated the column");
-        checkEquals(
-                4, remainder.getCount(), "A cell takes one item, so one call should accept one");
-        helper.succeed();
+        AutomationChecks.singlesSimulationDoesNotMutateAnyStack(
+                helper, FabricGameTestSupport::automation);
     }
 
     /** See {@link SynchronizationChecks#clientInventoryUpdatesRejectMalformedDataAtomically}. */
@@ -212,5 +151,23 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
         SynchronizationChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#releasedSinglesFormatLoads}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void releasedSinglesFormatLoads(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.releasedSinglesFormatLoads(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#releasedBarFormatLoads}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void releasedBarFormatLoads(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.releasedBarFormatLoads(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#updateTagOmitsContainerContentsAndBookPages}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void updateTagOmitsContainerContentsAndBookPages(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.updateTagOmitsContainerContentsAndBookPages(helper);
     }
 }

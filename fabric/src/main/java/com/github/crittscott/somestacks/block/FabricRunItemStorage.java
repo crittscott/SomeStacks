@@ -1,5 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.FabricRegistry;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
@@ -43,8 +45,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
 
     @Override
     public int getSlotCount() {
-        StackRunItemAccess run = blockEntity.itemRun();
-        return run != null ? run.advertisedSlots() : blockEntity.getItems().getSlots();
+        return blockEntity.advertisedSlots();
     }
 
     @Override
@@ -84,6 +85,11 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
     @Override
     public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notBlankNotNegative(resource, maxAmount);
+        // Admission does not depend on the position, so a refused resource is turned away once
+        // here instead of at every position of the sweep, which a stuck hopper repeats each tick.
+        if (!blockEntity.admits(resource.toStack())) {
+            return 0;
+        }
         return StorageUtil.insertStacking(getSlots(), resource, maxAmount, transaction);
     }
 
@@ -105,7 +111,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         if (access instanceof StackRun<?> run) {
             StackBlockEntity base =
                     (StackBlockEntity) blockEntity.getLevel().getBlockEntity(run.basePos());
-            return FabricItemStorage.of(base);
+            return FabricRegistry.itemStorage(base);
         }
         return this;
     }
@@ -121,29 +127,22 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
 
     private ItemStack liveStack(int slot) {
         if (blockEntity.isRemoved()) return ItemStack.EMPTY;
-        StackRunItemAccess run = blockEntity.itemRun();
-        if (run != null) {
-            return run.getSlot(slot);
-        }
-        return ItemStack.EMPTY;
+        return blockEntity.advertisedStack(slot);
     }
 
-    private boolean canInsert(int slot, ItemStack stack) {
-        if (blockEntity.isRemoved()) return false;
+    /** How many of {@code stack} the run would accept at {@code slot}, as a simulated insert. */
+    private int acceptedAt(int slot, ItemStack stack) {
+        if (blockEntity.isRemoved()) return 0;
         StackRunItemAccess run = blockEntity.itemRun();
-        return run != null && run.insertAt(slot, stack, true) > 0;
-    }
-
-    private boolean isValid(ItemStack stack) {
-        return blockEntity.acceptsAutomation(stack);
+        return run != null ? run.insertAt(slot, stack, true) : 0;
     }
 
     private int capacity(ItemVariant resource) {
-        return Math.min(blockEntity.automationSlotLimit(), resource.toStack().getMaxStackSize());
+        return Math.min(blockEntity.slotLimit(), resource.toStack().getMaxStackSize());
     }
 
     private boolean isStructural() {
-        return blockEntity.automationSlotLimit() == 1;
+        return blockEntity.slotLimit() == 1;
     }
 
     /** Records a slot's original live value once, then replaces its transaction-visible value. */
@@ -202,9 +201,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
                 if (ItemStack.isSameItemSameComponents(original, result)) {
                     int difference = result.getCount() - original.getCount();
                     if (difference > 0) {
-                        ItemStack inserted = result.copy();
-                        inserted.setCount(difference);
-                        commitInsert(slot, inserted);
+                        commitInsert(slot, result.copyWithCount(difference));
                     } else if (difference < 0) {
                         commitExtract(slot, -difference);
                     }
@@ -267,17 +264,19 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
             if (amount <= 0) {
                 return 0;
             }
-            ItemStack offered = resource.toStack(amount);
-            if (!isValid(offered) || !canInsert(slot, offered)) {
+            // The run's own answer decides what is staged, so the transaction never reports more
+            // moved than the commit will insert. The run's insertion also applies admission.
+            int accepted = Math.min(amount, acceptedAt(slot, resource.toStack(amount)));
+            if (accepted <= 0) {
                 return 0;
             }
 
-            ItemStack result = current.isEmpty() ? offered : current.copy();
-            if (!current.isEmpty()) {
-                result.grow(amount);
-            }
+            ItemStack result =
+                    current.isEmpty()
+                            ? resource.toStack(accepted)
+                            : current.copyWithCount(current.getCount() + accepted);
             stage(slot, result, transaction);
-            return amount;
+            return accepted;
         }
 
         @Override
@@ -307,9 +306,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
                 return 0;
             }
 
-            ItemStack result = current.copy();
-            result.shrink(amount);
-            stage(slot, result, transaction);
+            stage(slot, current.copyWithCount(current.getCount() - amount), transaction);
             if (isStructural()) {
                 structuralExtractionSlot = slot;
             }
@@ -335,7 +332,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         public long getCapacity() {
             ItemVariant resource = getResource();
             return resource.isBlank() && !isStructural()
-                    ? blockEntity.automationSlotLimit()
+                    ? blockEntity.slotLimit()
                     : capacity(resource);
         }
     }

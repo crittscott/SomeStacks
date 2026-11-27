@@ -1,23 +1,15 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import net.minecraft.world.item.Items;
+import com.github.crittscott.somestacks.util.StackGestures;
 
 /**
- * Shift plus a soul torch rotates one rendered item within a Singles Stack, leaving the block's own
- * layout alone. Only Singles carries per-item rotation.
+ * Consumes a sneaking soul-torch click on Singles so local item use does not run. The server
+ * selects and rotates the targeted item.
  */
 public final class RotateItemWithSoulTorchRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {
-        if (!ctx.isShift() || !ctx.hasItemInHand()) {
-            return false;
-        }
-
-        if (!ctx.getPlayer().getMainHandItem().is(Items.SOUL_TORCH)) {
-            return false;
-        }
-
-        return ctx.isSinglesStack();
+        return StackGestures.rotatesItem(ctx.isShift(), ctx.getHeld(), ctx.getClickedType());
     }
 
     @Override

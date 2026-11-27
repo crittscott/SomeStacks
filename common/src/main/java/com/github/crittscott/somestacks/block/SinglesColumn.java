@@ -1,19 +1,13 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.StackPlacement;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 
@@ -37,7 +31,7 @@ import javax.annotation.Nullable;
  */
 public final class SinglesColumn extends StackRun<SinglesStackBE> {
     private SinglesColumn(ServerLevel level, List<SinglesStackBE> blocks) {
-        super(level, blocks, SinglesStackBE.SLOTS, CommonRegistry.singlesStackBlock());
+        super(level, blocks, SinglesStackBE.SLOTS, BlockType.SINGLES_STACK);
     }
 
     /**
@@ -90,14 +84,6 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         StackRun.markDirtyAt(level, pos, SinglesColumn::at);
     }
 
-    /**
-     * Whether a Singles Stack may be created at {@code pos}: the contiguous column it would form,
-     * counting the runs both below and above it, must fit the configured maximum.
-     */
-    public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.singlesStackBlock());
-    }
-
     // Insertion
 
     /**
@@ -117,7 +103,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
-        if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)) {
+        if (!SinglesStackBE.isValidSinglesItem(stack)) {
             return 0;
         }
         if (flatSlot < 0 || flatSlot >= advertisedSlots() || !cellAccepts(flatSlot)) {
@@ -130,8 +116,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
             return 0;
         }
 
-        ItemStack one = stack.copy();
-        one.setCount(1);
+        ItemStack one = stack.copyWithCount(1);
         return handlerOf(flatSlot).insertItem(flatSlot % SinglesStackBE.SLOTS, one, false).isEmpty()
                 ? 1
                 : 0;
@@ -143,8 +128,8 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * below, and for the bottom block of all means the world.
      *
      * <p>A cell in the block above the column is checked against the block growth would put there
-     * â€” empty, unrotated as a player's own placement is, standing on the column's current top
-     * layer â€” and against the side-effect-free checks in {@link #canGrow(VoxelShape)}. A
+     * (empty, unrotated as a player's own placement is, standing on the column's current top layer)
+     * and against {@link #canGrowSpace} for automation and obstruction by the cell's shape. A
      * simulation therefore cannot promise a cell the commit would refuse.
      */
     private boolean cellAccepts(int flatSlot) {
@@ -161,8 +146,9 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
                     occupancy, slot, be.getRotation(), seamUnder(blockIndex));
         }
 
-        VoxelShape finalCollision = SinglesCubeIdx.shapeFor(slot, 0);
-        return canGrow(finalCollision)
+        return canGrowSpace(null)
+                && WorldEdits.isUnobstructed(
+                        level, topPos().above(), SinglesCubeIdx.shapeFor(slot, 0))
                 && SinglesCubeIdx.isGroundedIn(
                         new boolean[SinglesStackBE.SLOTS], slot, 0, seamUnder(blockIndex));
     }
@@ -182,43 +168,14 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
     }
 
     /**
-     * Whether growth is permitted and the space above the column could take a block: height,
-     * enablement, build height, replaceability, and every protection check available without side
-     * effects. Simulating and committing share this predicate, so a simulated insertion cannot
-     * promise a block the insertion itself would refuse. Growth carries no player, so protection is
-     * checked against the level's automation actor, which is never exempt from spawn protection.
-     */
-    private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= ServerConfig.maxPileHeight()
-                || !ServerConfig.enableSinglesStackBlock()) {
-            return false;
-        }
-        BlockPos above = topPos().above();
-        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
-            return false;
-        }
-        return WorldEdits.mayPlace(level, above)
-                && WorldEdits.isUnobstructed(level, above, finalCollision);
-    }
-
-    /**
-     * Adds one block on top, attributing the automated placement to the level's automation actor.
+     * Adds one block on top for an automated insertion at {@code slot}, attributing the placement
+     * to the level's automation actor.
      */
     private boolean grow(int slot) {
-        VoxelShape finalCollision = SinglesCubeIdx.shapeFor(slot, 0);
-        if (!canGrow(finalCollision)) {
+        if (!placeOnTop(null, SinglesCubeIdx.shapeFor(slot, 0))) {
             return false;
         }
-
-        BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(level);
-        BlockState newStack =
-                StackPlacement.stateFor(CommonRegistry.singlesStackBlock(), level, above);
-        if (!WorldEdits.placeChecked(
-                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
-            return false;
-        }
-        SinglesStackBE grown = (SinglesStackBE) level.getBlockEntity(above);
+        SinglesStackBE grown = (SinglesStackBE) level.getBlockEntity(topPos().above());
 
         blocks.add(grown);
         return true;
@@ -248,12 +205,10 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         }
 
         if (simulate) {
-            ItemStack taken = inSlot.copy();
-            taken.setCount(1);
-            return taken;
+            return inSlot.copyWithCount(1);
         }
 
         return blocks.get(flatSlot / SinglesStackBE.SLOTS)
-                .extractAt(flatSlot % SinglesStackBE.SLOTS);
+                .extractAt(flatSlot % SinglesStackBE.SLOTS, null);
     }
 }

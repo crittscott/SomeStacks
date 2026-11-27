@@ -10,11 +10,20 @@ import net.minecraft.world.InteractionResult;
 
 /** Applies Some Stacks gestures from Fabric's actual server-side block-use callback. */
 public final class FabricStackInteractionEvents {
+    /**
+     * The block-use phase, ordered after the default one, in which the mod's server and client
+     * gesture listeners run.
+     */
     public static final ResourceLocation STACK_GESTURES_PHASE =
             ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "stack_gestures");
 
     private FabricStackInteractionEvents() {}
 
+    /**
+     * Registers the server gesture listener for sneaking rotation and adjacent clicks in {@link
+     * #STACK_GESTURES_PHASE}, so default-phase listeners, such as protection mods, decide first
+     * and a click one of them handles never reaches it.
+     */
     public static void init() {
         UseBlockCallback.EVENT.addPhaseOrdering(Event.DEFAULT_PHASE, STACK_GESTURES_PHASE);
         UseBlockCallback.EVENT.register(

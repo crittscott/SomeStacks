@@ -16,6 +16,7 @@ public final class ViewRays {
 
     private ViewRays() {}
 
+    /** Builds a reach-length ray along the player's look direction. */
     public static ViewRay of(Player player) {
         Vec3 eye = player.getEyePosition(1.0f);
         double length = player.blockInteractionRange() + BLOCK_CROSSING;

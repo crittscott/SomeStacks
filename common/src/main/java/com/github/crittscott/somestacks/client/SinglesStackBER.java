@@ -10,9 +10,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 /**
- * Loader-neutral renderer for a Singles Stack's 64 stored items. Each occupied cell is placed at
- * its corner, rotated with the block's layout, and handed to {@link CubeRenderHelper}, which
- * applies the item's own render profile.
+ * Loader-neutral renderer for a Singles Stack's 64 stored items. {@link
+ * CubeRenderHelper#renderGridItems} places each occupied cell at its corner, rotated with the
+ * block's layout, and applies the item's own render profile.
  *
  * <p>Unlike Storage, each item also carries a rotation of its own, applied on top of the block's.
  */

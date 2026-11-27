@@ -34,13 +34,13 @@ Review references below identify the original findings. The inventory-copying fi
 
 **Issue:** `StackBlockEntityMixin` injected a cached `FabricRunItemStorage` field into the mod's own block entity class. Adapter ownership depended on that mixin, a `FabricStorageOwner` bridge interface, three sided registrations, and a separate base-ledger lookup.
 
-**Fix:** Registered one transient `AttachmentType<FabricRunItemStorage>` through Fabric's `AttachmentRegistry`. `FabricItemStorage.of` retrieves or creates the adapter attached to its owner. All three sided registrations and the run's base-ledger lookup use that accessor, preserving one adapter per block entity and a shared transaction ledger for all views of a run. Deleted the bridge interface, ownership mixin, and its mixin configuration entry. The attachment is not persisted, synchronized, or copied.
+**Fix:** Registered one transient `AttachmentType<FabricRunItemStorage>` through Fabric's `AttachmentRegistry`. `FabricRegistry.itemStorage` retrieves or creates the adapter attached to its owner. All three sided registrations and the run's base-ledger lookup use that accessor, preserving one adapter per block entity and a shared transaction ledger for all views of a run. Deleted the bridge interface, ownership mixin, and its mixin configuration entry. The attachment is not persisted, synchronized, or copied.
 
 **Project instruction:** “Boring beats clever. Do things the vanilla, Forge, NeoForge, and Fabric way: if Minecraft or the loader has a facility for a goal, use it”.
 
 **Cross-version check:** Confirm that the target Fabric API supplies the attachment facility and the required signatures. Do not introduce Fabric dependencies into common code.
 
-**Reference:** `review-Expected-way.md`, finding 1; `FabricItemStorage`, `FabricRunItemStorage`, `somestacks.mixins.json`.
+**Reference:** `review-Expected-way.md`, finding 1; `FabricRegistry.itemStorage`, `FabricRunItemStorage`, `somestacks.mixins.json`.
 
 ## 5. Inventory copying duplicated Minecraft's own operation
 

@@ -34,6 +34,12 @@ import net.minecraft.world.phys.BlockHitResult;
 
 /** Block-state and interaction plumbing shared by all three stack blocks. */
 public abstract class StackBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
+    /** Mining time, shared by every stack type. */
+    private static final float DESTROY_TIME = 0.5F;
+
+    /** Blast resistance, shared by every stack type. */
+    private static final float EXPLOSION_RESISTANCE = 6.0F;
+
     public static final IntegerProperty LIGHT_LEVEL =
             IntegerProperty.create("light", 0, LightEngine.MAX_LEVEL);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -66,7 +72,7 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
                 .mapColor(mapColor)
                 .noOcclusion()
                 .pushReaction(PushReaction.BLOCK)
-                .strength(0.5F, 6.0F)
+                .strength(DESTROY_TIME, EXPLOSION_RESISTANCE)
                 .lightLevel(state -> state.getValue(LIGHT_LEVEL));
     }
 
@@ -136,5 +142,30 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
     @Override
     public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
+    }
+
+    /** Reports the whole run's fill, so a comparator reads the same value anywhere along it. */
+    @Override
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return level.getBlockEntity(pos) instanceof StackBlockEntity be
+                        && be.itemRun() instanceof StackRun<?> run
+                ? run.comparatorSignal()
+                : 0;
+    }
+
+    /**
+     * Records the breaking player on the block entity before vanilla removes the block, so the
+     * removal hook can attribute the cleanup it causes (Bar collapse, Storage trimming) to that
+     * player. Explosions, commands, and other mods' removals never call this and keep the
+     * automation actor.
+     */
+    @Override
+    public BlockState playerWillDestroy(
+            Level level, BlockPos pos, BlockState state, Player player) {
+        if (player instanceof ServerPlayer serverPlayer
+                && level.getBlockEntity(pos) instanceof StackBlockEntity be) {
+            be.noteBreakingPlayer(serverPlayer);
+        }
+        return super.playerWillDestroy(level, pos, state, player);
     }
 }

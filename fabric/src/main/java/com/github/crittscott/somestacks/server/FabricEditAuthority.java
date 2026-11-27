@@ -10,10 +10,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -28,6 +29,12 @@ public final class FabricEditAuthority implements EditAuthority {
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
         return FakePlayer.get(level, AutomationActor.PROFILE);
+    }
+
+    /** Common Protection API's presence does not show that a claim mod registered a provider. */
+    @Override
+    public List<String> detectedIntegrations() {
+        return protectionQueries != null ? List.of("Common Protection API") : List.of();
     }
 
     @Override
@@ -46,18 +53,19 @@ public final class FabricEditAuthority implements EditAuthority {
     }
 
     @Override
-    public boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
+    public boolean mayPlace(ServerPlayer placer, ServerLevel level, BlockPos pos) {
         return protectionQueries == null || protectionQueries.mayPlace(placer, level, pos);
     }
 
+    /** Fabric has no placement event; the protection queries already ran in {@link #mayPlace}. */
     @Override
     public boolean place(
-            Player placer,
+            ServerPlayer placer,
             ServerLevel level,
             BlockPos pos,
             BlockState state,
             Direction placedAgainst) {
-        return mayPlace(placer, level, pos) && level.setBlock(pos, state, Block.UPDATE_ALL);
+        return level.setBlock(pos, state, Block.UPDATE_ALL);
     }
 
     @Override

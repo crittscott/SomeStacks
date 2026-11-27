@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.BarStackBlock;
+import com.github.crittscott.somestacks.block.RunItemHandler;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StackBlock;
@@ -9,10 +10,11 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -20,8 +22,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.Set;
 
 /**
- * The mod's registered blocks and block entity types, and the NeoForge registration glue behind
- * them. Common code reads the registered values through {@link CommonRegistry}.
+ * The mod's registered blocks, block entity types, and sounds, the NeoForge registration glue
+ * behind them, and the block entities' item-handler capability. Common code reads the registered
+ * values through {@link CommonRegistry}.
  */
 public final class ModRegistry {
     private ModRegistry() {}
@@ -51,25 +54,6 @@ public final class ModRegistry {
                     StorageStackBlock::new,
                     StackBlock.storageProperties());
 
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_DEPOSIT_SOUND =
-            sound(CommonRegistry.STORAGE_DEPOSIT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_EXTRACT_SOUND =
-            sound(CommonRegistry.STORAGE_EXTRACT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_ROTATE_SOUND =
-            sound(CommonRegistry.STORAGE_ROTATE_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_DEPOSIT_SOUND =
-            sound(CommonRegistry.SINGLES_DEPOSIT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_EXTRACT_SOUND =
-            sound(CommonRegistry.SINGLES_EXTRACT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_SOUND =
-            sound(CommonRegistry.SINGLES_ROTATE_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_ITEM_SOUND =
-            sound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_DEPOSIT_SOUND =
-            sound(CommonRegistry.BAR_DEPOSIT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_EXTRACT_SOUND =
-            sound(CommonRegistry.BAR_EXTRACT_SOUND);
-
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BarStackBE>>
             BAR_STACK_BE =
                     BLOCK_ENTITIES.register(
@@ -96,13 +80,39 @@ public final class ModRegistry {
                                             StorageStackBE::new,
                                             Set.of(STORAGE_STACK_BLOCK.get())));
 
-    private static DeferredHolder<SoundEvent, SoundEvent> sound(ResourceLocation id) {
-        return SOUNDS.register(id.getPath(), () -> SoundEvent.createVariableRangeEvent(id));
-    }
-
+    /**
+     * Subscribes the block, block entity, and sound registers (after adding every sound) and the
+     * capability registration to the mod bus. Runs once from the mod constructor.
+     */
     public static void init(IEventBus modBus) {
         BLOCKS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
+        for (CommonRegistry.Sound sound : CommonRegistry.Sound.values()) {
+            SOUNDS.register(
+                    sound.id().getPath(), () -> SoundEvent.createVariableRangeEvent(sound.id()));
+        }
         SOUNDS.register(modBus);
+        modBus.addListener(ModRegistry::onRegisterCapabilities);
+    }
+
+    /**
+     * Exposes {@code Capabilities.ItemHandler.BLOCK} on the three block entity types. Each provider
+     * hands back a {@link RunItemHandler} whole-run view, so a machine on any block of a run sees
+     * the entire run. The handler reads its run live on every call, so a run growing or shrinking
+     * does not stale it.
+     */
+    private static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                STORAGE_STACK_BE.get(),
+                (blockEntity, side) -> new RunItemHandler(blockEntity));
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                SINGLES_STACK_BE.get(),
+                (blockEntity, side) -> new RunItemHandler(blockEntity));
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                BAR_STACK_BE.get(),
+                (blockEntity, side) -> new RunItemHandler(blockEntity));
     }
 }

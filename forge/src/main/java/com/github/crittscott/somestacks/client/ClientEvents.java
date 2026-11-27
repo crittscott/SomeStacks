@@ -29,11 +29,13 @@ import net.minecraftforge.network.PacketDistributor;
 public final class ClientEvents {
     private ClientEvents() {}
 
+    /** Installs the sender that carries gesture state to the server. Runs once at client setup. */
     public static void init() {
         ClientGestures.setSender(
                 payload -> ModNetworking.CHANNEL.send(payload, PacketDistributor.SERVER.noArg()));
     }
 
+    /** Registers the client-side {@code /ss} subcommands. */
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
         ClientRenderCommands.register(
@@ -51,6 +53,10 @@ public final class ClientEvents {
                 });
     }
 
+    /**
+     * Runs the air rules for an empty-hand air click and syncs gesture state. {@code HIGHEST}, like
+     * the item click, so the rules see the click before any other mod's listener.
+     */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty evt) {
         // RightClickEmpty is a pure notification: there is no vanilla action behind an empty-hand
@@ -58,37 +64,44 @@ public final class ClientEvents {
         InteractionContext ctx =
                 InteractionContext.forAirClick(
                         evt.getEntity(),
-                        evt.getLevel(),
                         evt.getHand(),
                         ClientGestures.currentMode(),
-                        KeyMappings.STACK_MODE_KEY.isDown(),
+                        ClientSetup.STACK_MODE_KEY.isDown(),
                         ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
-        ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
-        InteractionRuleRegistry.processEmptyHandRules(ctx);
+        ClientGestures.syncState(ClientSetup.STACK_MODE_KEY.isDown());
+        InteractionRuleRegistry.processAirRules(ctx);
     }
 
+    /**
+     * Runs the air rules for an air click with a held item, syncs gesture state, and cancels the
+     * item use when a rule claims the click. {@code HIGHEST}, so the item is not used by another
+     * mod's listener before a claiming rule cancels it.
+     */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem evt) {
         if (!evt.getLevel().isClientSide()) return;
-        if (evt.isCanceled()) return;
 
         InteractionContext ctx =
                 InteractionContext.forAirClick(
                         evt.getEntity(),
-                        evt.getLevel(),
                         evt.getHand(),
                         ClientGestures.currentMode(),
-                        KeyMappings.STACK_MODE_KEY.isDown(),
+                        ClientSetup.STACK_MODE_KEY.isDown(),
                         ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
-        ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
-        InteractionRuleRegistry.processItemRules(ctx);
+        ClientGestures.syncState(ClientSetup.STACK_MODE_KEY.isDown());
+        InteractionRuleRegistry.processAirRules(ctx);
 
         if (ctx.shouldCancel()) {
             evt.setCanceled(true);
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    /**
+     * Runs last, as the server listener and Fabric's gesture phase do, so a listener that handles
+     * the click earlier keeps it. It still receives a canceled click to synchronize gesture state,
+     * because the vanilla block-use packet that follows carries the action to the server.
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public static void onRightClick(PlayerInteractEvent.RightClickBlock evt) {
         // Only the client-side firing drives the gesture rules. In single player the integrated
         // server shares this event bus, and adjacent protection consultation re-fires
@@ -96,8 +109,8 @@ public final class ClientEvents {
         if (!evt.getLevel().isClientSide()) {
             return;
         }
+        ClientGestures.syncState(ClientSetup.STACK_MODE_KEY.isDown());
         if (evt.isCanceled()) return;
-        if (evt.getFace() == null) return;
 
         InteractionContext ctx =
                 InteractionContext.forBlockClick(
@@ -105,10 +118,8 @@ public final class ClientEvents {
                         evt.getLevel(),
                         evt.getHand(),
                         evt.getPos(),
-                        evt.getFace(),
                         ClientGestures.currentMode(),
-                        KeyMappings.STACK_MODE_KEY.isDown());
-        ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
+                        ClientSetup.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processBlockRules(ctx);
 
         if (ctx.shouldCancel()) {

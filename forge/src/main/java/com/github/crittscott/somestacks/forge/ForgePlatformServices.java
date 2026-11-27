@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -15,6 +16,11 @@ import java.nio.file.Path;
 /** Forge implementations of the common platform services. */
 public final class ForgePlatformServices implements PlatformServices.Backend {
     private final ForgeEditAuthority editAuthority = new ForgeEditAuthority();
+
+    @Override
+    public void broadcastConfig(MinecraftServer server, ConfigSyncPkt packet) {
+        ModNetworking.CHANNEL.send(packet, PacketDistributor.ALL.noArg());
+    }
 
     @Override
     public Path configFolder() {

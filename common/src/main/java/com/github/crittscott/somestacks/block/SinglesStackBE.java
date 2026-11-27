@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -15,10 +16,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -30,8 +30,9 @@ import javax.annotation.Nullable;
  * SinglesColumn}, which is what automation addresses; this class owns one block's cells, its shape,
  * its layout rotation, and a rotation for each rendered item.
  *
- * <p>Capability exposure is loader-specific and lives outside this class; {@link #getItems()} is
- * what a loader-specific capability view adapts.
+ * <p>Automation exposure is loader-specific and lives outside this class; those views adapt this
+ * block's whole column through {@link #itemRun()}, and {@link #getItems()} is only this block's
+ * local storage.
  */
 public class SinglesStackBE extends StackBlockEntity {
     /** Cells in one block. The column's flat range is this times its height. */
@@ -48,12 +49,12 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     @Override
-    protected boolean isStoredItemValid(ItemStack stack) {
+    public boolean admits(ItemStack stack) {
         return isValidSinglesItem(stack);
     }
 
     @Override
-    protected int localSlotLimit() {
+    public int slotLimit() {
         return 1;
     }
 
@@ -63,7 +64,7 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /**
-     * The column this block belongs to, or null on the client and for a block being removed.
+     * The column this block belongs to, or null on the client.
      *
      * <p>Resolved once a tick and held, because a machine reading this block's item handler
      * resolves the column once per slot it walks. See {@link StorageStackBE#pile()} for the full
@@ -92,6 +93,11 @@ public class SinglesStackBE extends StackBlockEntity {
             return false;
         }
         return !BarStackBE.isValidBarItem(stack);
+    }
+
+    @Override
+    protected AABB cellBox(int slot) {
+        return SinglesCubeIdx.GRID.localBox(slot, getRotation());
     }
 
     public int getRotation() {
@@ -154,25 +160,41 @@ public class SinglesStackBE extends StackBlockEntity {
         return cachedShape;
     }
 
+    @Override
+    public boolean acceptsDepositAlong(ViewRay ray) {
+        int index = depositTarget(ray);
+        return index >= 0 && canDepositAt(index);
+    }
+
+    /** Puts one item into the cell the ray targets; see {@link #depositAt}. */
+    @Override
+    public int depositFromHand(ViewRay ray, ItemStack hand, ServerPlayer player) {
+        int index = depositTarget(ray);
+        return index >= 0 && depositAt(index, hand) ? 1 : 0;
+    }
+
+    /** Takes the one item only when the hand can hold it; see {@link #extractAt}. */
+    @Override
+    public ItemStack extractIntoHand(int index, ItemStack hand, ServerPlayer player) {
+        return ItemOps.canTakeIntoHand(hand, items.getStackInSlot(index))
+                ? extractAt(index, player)
+                : ItemStack.EMPTY;
+    }
+
     /**
-     * Puts one item from the given stack into the named cell, if that cell is empty and supported.
-     * Refuses rather than redirecting the item elsewhere, so a caller walking cells from the bottom
-     * fills the supported ones in order.
+     * Puts one item from the given stack into the named cell, if that cell is empty and supported
+     * and the item is admitted. Refuses rather than redirecting the item elsewhere, so a caller
+     * walking cells from the bottom fills the supported ones in order.
      *
      * @param index the cell to fill, in {@code [0, SLOTS)}
      * @return whether the item moved; the hand shrinks by one only then
      */
     public boolean depositAt(int index, ItemStack fromHand) {
-        if (fromHand.isEmpty()) {
-            return false;
-        }
-        if (!canDepositAt(index)) {
+        if (fromHand.isEmpty() || !canDepositAt(index)) {
             return false;
         }
 
-        ItemStack toInsert = fromHand.copy();
-        toInsert.setCount(1);
-        ItemStack remainder = items.insertItem(index, toInsert, false);
+        ItemStack remainder = items.insertItem(index, fromHand.copyWithCount(1), false);
 
         if (remainder.isEmpty()) {
             fromHand.shrink(1);
@@ -184,20 +206,16 @@ public class SinglesStackBE extends StackBlockEntity {
 
     /**
      * Takes the item out of the named cell and settles the visual column above it downward, drawing
-     * items across block seams as needed so nothing is left unsupported.
+     * items across block seams as needed so nothing is left unsupported. {@code actor} is kept
+     * through structural cleanup; null means automation.
      *
      * @param index the cell to empty, in {@code [0, SLOTS)}
      * @return the extracted item, or empty when the cell held nothing
      */
-    public ItemStack extractAt(int index) {
-        return extractAt(index, null);
-    }
-
-    /** Player-facing extraction variant that preserves the actor through structural cleanup. */
     public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
-        ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
+        ServerLevel serverLevel = (ServerLevel) level;
         int column = SinglesCubeIdx.columnFromIndex(index);
-        int y = SinglesCubeIdx.xyzFromIndex(index)[1];
+        int y = SinglesCubeIdx.GRID.xyzFromIndex(index)[1];
 
         ItemStack extracted;
         beginBatch();
@@ -215,30 +233,21 @@ public class SinglesStackBE extends StackBlockEntity {
         return extracted;
     }
 
-    /**
-     * The support this block's bottom layer rests on: the top-layer occupancy of the Singles Stack
-     * directly below, or null when this block stands on the world instead of on another Singles
-     * Stack.
-     */
+    /** Whether the cell at {@code index} is empty and supported by the cell or seam below. */
     public boolean canDepositAt(int index) {
-        return index >= 0
-                && index < SLOTS
-                && items.getStackInSlot(index).isEmpty()
+        return items.getStackInSlot(index).isEmpty()
                 && SinglesCubeIdx.isGrounded(
                         index, items, getRotation(), supportSeamBeneath(level, getBlockPos()));
     }
 
-    /** Whether an empty, unrotated Singles block at {@code pos} supports its first item. */
-    public static boolean supportsFreshDeposit(Level level, BlockPos pos, int index) {
-        return index >= 0
-                && index < SLOTS
-                && SinglesCubeIdx.freshBlockSupports(index, supportSeamBeneath(level, pos));
-    }
-
-    /** The visual-column occupancy supporting the bottom layer at {@code pos}. */
+    /**
+     * The top-layer occupancy, in visual columns, of the Singles Stack directly below {@code pos},
+     * which supports the bottom layer there; null when no Singles Stack is beneath it, so the
+     * bottom layer stands on the world.
+     */
     @Nullable
-    public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
-        if (level != null && level.getBlockEntity(pos.below()) instanceof SinglesStackBE below) {
+    public static boolean[] supportSeamBeneath(Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos.below()) instanceof SinglesStackBE below) {
             return SinglesCubeIdx.topLayerOccupancy(below.items, below.getRotation());
         }
         return null;
@@ -341,7 +350,7 @@ public class SinglesStackBE extends StackBlockEntity {
 
         if (isEmpty()
                 && !(columnLevel.getBlockEntity(getBlockPos().above()) instanceof SinglesStackBE)
-                && removeChecked(actor, columnLevel, getBlockPos())) {
+                && WorldEdits.removeChecked(actor, columnLevel, getBlockPos())) {
             removeEmptyBelow(columnLevel, getBlockPos().below(), actor);
             return;
         }
@@ -356,18 +365,11 @@ public class SinglesStackBE extends StackBlockEntity {
         BlockPos current = pos;
 
         while (columnLevel.getBlockEntity(current) instanceof SinglesStackBE be && be.isEmpty()) {
-            if (!removeChecked(actor, columnLevel, current)) {
+            if (!WorldEdits.removeChecked(actor, columnLevel, current)) {
                 return;
             }
             current = current.below();
         }
-    }
-
-    private static boolean removeChecked(
-            @Nullable ServerPlayer actor, ServerLevel level, BlockPos pos) {
-        return actor == null
-                ? WorldEdits.removeChecked(level, pos)
-                : WorldEdits.removeChecked(actor, level, pos);
     }
 
     /**

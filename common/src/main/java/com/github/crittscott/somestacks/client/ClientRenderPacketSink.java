@@ -3,9 +3,13 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.util.BlockType;
 
+import net.minecraft.world.entity.player.Player;
+
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 /** Stages config chunks and atomically publishes a complete server snapshot. */
 public final class ClientRenderPacketSink {
@@ -24,12 +28,14 @@ public final class ClientRenderPacketSink {
 
     /**
      * Stages a decoded chunk on the client thread. A first chunk replaces incomplete staging; only
-     * a complete final chunk publishes flags and lists. Rejection clears staging and throws a
-     * runtime exception to the loader's receive handler.
+     * a complete final chunk publishes flags and lists. Publication moves the selected placement
+     * mode off a type the new policy disables, with the mode message when a local player exists to
+     * show it. Rejection clears staging and throws a runtime exception to the loader's receive
+     * handler.
      */
-    public static void apply(ConfigSyncPkt packet) {
+    public static void apply(ConfigSyncPkt packet, @Nullable Player localPlayer) {
         try {
-            stage(packet);
+            stage(packet, localPlayer);
         } catch (RuntimeException rejected) {
             clear();
             throw rejected;
@@ -45,7 +51,7 @@ public final class ClientRenderPacketSink {
         DISABLED_MODS.clear();
     }
 
-    private static void stage(ConfigSyncPkt packet) {
+    private static void stage(ConfigSyncPkt packet, @Nullable Player localPlayer) {
         if (packet.first()) {
             begin(packet);
         } else if (packet.generation() != generation) {
@@ -67,7 +73,7 @@ public final class ClientRenderPacketSink {
         addUnique(DISABLED_MODS, packet.disabledMods(), "disabled mod");
 
         if (packet.last()) {
-            finish();
+            finish(localPlayer);
         }
     }
 
@@ -101,7 +107,7 @@ public final class ClientRenderPacketSink {
         }
     }
 
-    private static void finish() {
+    private static void finish(@Nullable Player localPlayer) {
         if (GEN_MODS.size() != expectedGenMods || DISABLED_MODS.size() != expectedDisabledMods) {
             throw new IllegalStateException(
                     "Config sync ended before reaching its declared totals");
@@ -112,5 +118,8 @@ public final class ClientRenderPacketSink {
         StackState.setBlockEnabled(BlockType.BAR_STACK, enableBar);
         ClientRenderToolState.replace(List.copyOf(GEN_MODS), List.copyOf(DISABLED_MODS));
         clear();
+        if (ClientGestures.leaveDisabledMode() && localPlayer != null) {
+            ClientGestures.displayModeMessage(localPlayer);
+        }
     }
 }

@@ -2,10 +2,7 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nullable;
 
 /**
  * Geometry and slot indexing shared by Singles Stack rendering, collision, ray targeting, and
@@ -58,7 +55,7 @@ public final class SinglesCubeIdx {
      */
     public static boolean isGrounded(
             int index, SlotAccess handler, int blockRotation, boolean[] seamBelow) {
-        int[] xyz = xyzFromIndex(index);
+        int[] xyz = GRID.xyzFromIndex(index);
         int y = xyz[1];
 
         if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
@@ -74,7 +71,7 @@ public final class SinglesCubeIdx {
      */
     public static boolean isGroundedIn(
             boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
-        int y = xyzFromIndex(index)[1];
+        int y = GRID.xyzFromIndex(index)[1];
 
         if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
 
@@ -103,7 +100,7 @@ public final class SinglesCubeIdx {
      */
     public static int storageColumnFromVisual(int visualColumn, int blockRotation) {
         int[] storage =
-                rotateXYZ(
+                GRID.rotateXYZ(
                         visualColumn % GRID_EDGE,
                         0,
                         visualColumn / GRID_EDGE,
@@ -126,40 +123,13 @@ public final class SinglesCubeIdx {
     }
 
     /**
-     * Finds the deposit target for a Singles Stack that does not yet exist and therefore has no
-     * occupied slots. Placement uses this to validate the initial deposit and its resulting
-     * collision shape before adding the block to the world. New blocks are unrotated.
-     */
-    public static int traceAllPositions(ViewRay ray, BlockPos blockPos) {
-        return traceAllPositions(ray, blockPos, null, 0);
-    }
-
-    /**
-     * Finds the slot a deposit targets: the last empty slot along the view ray before the first
-     * occupied one, or the farthest intersected slot if the ray meets no occupied item. A null
-     * handler describes a prospective, entirely empty block.
-     */
-    public static int traceAllPositions(
-            ViewRay ray, BlockPos blockPos, @Nullable SlotAccess handler, int blockRotation) {
-        return ray.lastEmptyBeforeOccupied(
-                SinglesStackBE.SLOTS,
-                handler,
-                slot -> GRID.worldBox(slot, blockRotation, blockPos));
-    }
-
-    /** Returns the nearest occupied cell intersected by the view ray, or {@code -1} on a miss. */
-    public static int traceCubes(ViewRay ray, BlockPos blockPos, SinglesStackBE be) {
-        int rotation = be.getRotation();
-        return ray.nearestOccupied(be.getItems(), slot -> GRID.worldBox(slot, rotation, blockPos));
-    }
-
-    /**
      * The visual column a storage column occupies under a block rotation. Rotation permutes x and z
      * but never y, so columns always map to columns and only their horizontal identity moves.
      */
     public static int visualColumnFromStorage(int storageColumn, int blockRotation) {
         int[] visual =
-                rotateXYZ(storageColumn % GRID_EDGE, 0, storageColumn / GRID_EDGE, blockRotation);
+                GRID.rotateXYZ(
+                        storageColumn % GRID_EDGE, 0, storageColumn / GRID_EDGE, blockRotation);
         return visual[2] * GRID_EDGE + visual[0];
     }
 
@@ -180,18 +150,5 @@ public final class SinglesCubeIdx {
             occupancy[i] = !handler.getStackInSlot(i).isEmpty();
         }
         return occupancy;
-    }
-
-    /**
-     * The visual position of a stored cell under a block rotation. A rotation is that many quarter
-     * turns counterclockwise seen from above, matching the direction of per-item rotation.
-     */
-    public static int[] rotateXYZ(int x, int y, int z, int rotation) {
-        return GRID.rotateXYZ(x, y, z, rotation);
-    }
-
-    /** Converts a slot index to its cell coordinates, indexed from the bottom layer upward. */
-    public static int[] xyzFromIndex(int idx) {
-        return GRID.xyzFromIndex(idx);
     }
 }

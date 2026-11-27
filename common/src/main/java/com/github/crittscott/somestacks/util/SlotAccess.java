@@ -6,9 +6,9 @@ import javax.annotation.Nonnull;
 
 /**
  * A numbered range of item slots, matching the Forge and NeoForge {@code IItemHandler} contract so
- * their capability views stay thin adapters. This is the internal storage primitive for block
- * entities, piles, and columns; only the Forge/NeoForge capability and Fabric Transfer API adapters
- * that expose it to automation are loader-specific.
+ * the code written against it reads like ordinary item-handler code. It is the per-block storage
+ * ({@link StackItemStorage}) that block entities, renderers, and cell math read; automation reaches
+ * whole runs through {@code StackRunItemAccess} instead.
  */
 public interface SlotAccess {
     /** The number of slots, indexed {@code [0, getSlots())}. */
@@ -21,7 +21,8 @@ public interface SlotAccess {
     /**
      * Inserts as much of {@code stack} into {@code slot} as {@link #isItemValid} and {@link
      * #getSlotLimit} allow. Returns the remainder that was not accepted — {@link ItemStack#EMPTY}
-     * if all of it was — and never mutates {@code stack} itself. When {@code simulate} is {@code
+     * if all of it was — and never mutates {@code stack} itself, though it may store that
+     * instance, so callers must not mutate it afterward. When {@code simulate} is {@code
      * true}, the slot is left unchanged and only the would-be remainder is computed.
      */
     @Nonnull

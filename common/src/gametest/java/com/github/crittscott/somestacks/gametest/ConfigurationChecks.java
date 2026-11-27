@@ -3,10 +3,14 @@ package com.github.crittscott.somestacks.gametest;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.toml.TomlFormat;
+import com.electronwill.nightconfig.toml.TomlParser;
+import com.electronwill.nightconfig.toml.TomlWriter;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.TomlServerConfig;
+import com.github.crittscott.somestacks.TomlPolicyFile;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -15,8 +19,6 @@ import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.github.crittscott.somestacks.server.ServerGestureState;
-import com.github.crittscott.somestacks.server.StackInteractions;
-import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -57,7 +59,8 @@ public final class ConfigurationChecks {
 
     /**
      * Valid render-override fields round-trip in stable item-id order while malformed entries and
-     * fields are skipped independently. No in-game reproduction applies: this directly verifies the
+     * fields are skipped independently, and every entry with an unusable part is reported verbatim
+     * for a writer to keep. No in-game reproduction applies: this directly verifies the
      * JSON codec rather than a player-visible action.
      */
     public static void overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(
@@ -81,9 +84,13 @@ public final class ConfigurationChecks {
                                 """)
                         .getAsJsonObject();
 
-        Map<ResourceLocation, ItemRenderConfig> parsed =
-                OverrideJsonCodec.parse(root, "GameTest fixture");
+        OverrideJsonCodec.Document document = OverrideJsonCodec.parse(root, "GameTest fixture");
+        Map<ResourceLocation, ItemRenderConfig> parsed = document.entries();
         checkEquals(2, parsed.size(), "Parsed override count");
+        checkEquals(
+                List.of("minecraft:dirt", "minecraft:stick", "not an item id"),
+                new ArrayList<>(document.malformed().keySet()),
+                "Entries kept verbatim as malformed");
 
         ItemRenderConfig stone = parsed.get(ResourceLocation.parse("minecraft:stone"));
         check(stone != null, "Stone override was skipped");
@@ -102,7 +109,7 @@ public final class ConfigurationChecks {
                 new ArrayList<>(serialized.keySet()),
                 "Serialized item-id order");
         Map<ResourceLocation, ItemRenderConfig> reparsed =
-                OverrideJsonCodec.parse(serialized, "GameTest round trip");
+                OverrideJsonCodec.parse(serialized, "GameTest round trip").entries();
         checkConfigEquals(
                 stone, reparsed.get(ResourceLocation.parse("minecraft:stone")), "Stone round trip");
         checkConfigEquals(
@@ -155,7 +162,7 @@ public final class ConfigurationChecks {
                                 """)
                         .getAsJsonObject();
         Map<ResourceLocation, ItemRenderConfig> parsed =
-                OverrideJsonCodec.parse(root, "GameTest bounds fixture");
+                OverrideJsonCodec.parse(root, "GameTest bounds fixture").entries();
         checkEquals(
                 OverrideJsonCodec.MIN_SCALE,
                 parsed.get(ResourceLocation.parse("minecraft:stone")).scale(),
@@ -194,18 +201,12 @@ public final class ConfigurationChecks {
 
     /**
      * Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
-     * validates Fabric TOML fields independently. To reproduce in-game on Fabric: edit the world's
+     * validates TOML policy fields independently. To reproduce in-game on Fabric: edit the world's
      * {@code somestacks-server.toml}, run {@code /ss reload}, and verify the height limits, enabled
      * stack modes, denied deposits, gallery pacing, and Bar/Singles admission follow each valid
      * field while malformed fields revert independently to defaults.
      */
     public static void serverConfigLoadsBoundsAndLists(GameTestHelper helper) {
-        TomlPolicyChecks.verify(
-                helper.getLevel()
-                        .getServer()
-                        .getWorldPath(LevelResource.ROOT)
-                        .resolve("serverconfig"),
-                ServerConfig.defaults());
         Path serverConfigDir =
                 helper.getLevel()
                         .getServer()
@@ -222,19 +223,21 @@ public final class ConfigurationChecks {
             Files.writeString(fixture, configToml(999, -3, 0));
             loadFixture(fixture);
 
-            checkEquals(64, ServerConfig.maxPileHeight(), "Maximum pile-height clamp");
+            checkEquals(
+                    64, ServerConfig.settings().maxPileHeight(), "Maximum pile-height clamp");
             checkEquals(
                     0,
-                    ServerConfig.galleryRequiredPermissionLevel(),
+                    ServerConfig.settings().galleryPermissionLevel(),
                     "Minimum gallery-permission clamp");
             checkEquals(
                     1,
-                    ServerConfig.renderGalleryPlacementsPerTick(),
+                    ServerConfig.settings().renderGalleryPlacementsPerTick(),
                     "Minimum gallery placement budget");
-            check(!ServerConfig.enableStorageStackBlock(), "Storage enable flag");
-            check(ServerConfig.enableSinglesStackBlock(), "Singles enable flag");
-            check(!ServerConfig.enableBarStackBlock(), "Bar enable flag");
-            check(ServerConfig.galleryEnabled(), "Gallery enable flag");
+            check(
+                    !ServerConfig.settings().enableStorageStackBlock(), "Storage enable flag");
+            check(ServerConfig.settings().enableSinglesStackBlock(), "Singles enable flag");
+            check(!ServerConfig.settings().enableBarStackBlock(), "Bar enable flag");
+            check(ServerConfig.settings().galleryEnabled(), "Gallery enable flag");
             checkEquals(List.of("minecraft"), ServerConfig.GEN_MODS.get(), "Gallery mod list");
             checkEquals(
                     List.of("minecraft:stone"), ServerConfig.GEN_ITEMS.get(), "Gallery item list");
@@ -247,14 +250,15 @@ public final class ConfigurationChecks {
                     "Disabled item was not baked");
             Files.writeString(fixture, configToml(-9, 99, 7));
             loadFixture(fixture);
-            checkEquals(1, ServerConfig.maxPileHeight(), "Minimum pile-height clamp");
+            checkEquals(
+                    1, ServerConfig.settings().maxPileHeight(), "Minimum pile-height clamp");
             checkEquals(
                     4,
-                    ServerConfig.galleryRequiredPermissionLevel(),
+                    ServerConfig.settings().galleryPermissionLevel(),
                     "Maximum gallery-permission clamp");
             checkEquals(
                     7,
-                    ServerConfig.renderGalleryPlacementsPerTick(),
+                    ServerConfig.settings().renderGalleryPlacementsPerTick(),
                     "Positive gallery placement budget");
             Files.writeString(
                     fixture,
@@ -271,13 +275,13 @@ public final class ConfigurationChecks {
             check(ServerConfig.reload(), "Server config did not reload its current file");
             checkEquals(
                     8,
-                    ServerConfig.maxPileHeight(),
+                    ServerConfig.settings().maxPileHeight(),
                     "Malformed height did not fall back independently");
             check(
-                    !ServerConfig.enableStorageStackBlock(),
+                    !ServerConfig.settings().enableStorageStackBlock(),
                     "Valid field beside a malformed field was lost");
             check(
-                    ServerConfig.enableSinglesStackBlock(),
+                    ServerConfig.settings().enableSinglesStackBlock(),
                     "Missing field retained the previous file's value");
             checkEquals(
                     List.of("minecraft"),
@@ -322,11 +326,7 @@ public final class ConfigurationChecks {
                     policyToml(8, true, true, true, List.of(), List.of("minecraft:stone")));
             loadFixture(fixture);
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
-            StackInteractions.handleExistingStack(
-                    player,
-                    InteractionHand.MAIN_HAND,
-                    centerHit(storage.getBlockPos()),
-                    BlockType.STORAGE_STACK);
+            InteractionChecks.use(player, centerHit(storage.getBlockPos()));
             checkEquals(
                     4,
                     player.getMainHandItem().getCount(),
@@ -388,12 +388,18 @@ public final class ConfigurationChecks {
                     storage.itemRun()
                             .insertAt(StorageStackBE.SLOTS, new ItemStack(Items.STONE), false),
                     "Height-capped automation grew the run");
-            ItemStack deposit = new ItemStack(Items.STONE);
-            checkEquals(
-                    0,
-                    storage.deposit(deposit, playerFactory.apply(ItemStack.EMPTY)),
-                    "Height-capped player deposit grew the run");
-            checkEquals(1, deposit.getCount(), "Rejected deposit spent its input");
+            ServerPlayer depositor = playerFactory.apply(new ItemStack(Items.STONE));
+            ServerGestureState.set(depositor, StackMode.STORAGE_STACK, true);
+            try {
+                InteractionChecks.use(depositor, centerHit(storage.getBlockPos()));
+                checkEquals(
+                        1,
+                        depositor.getMainHandItem().getCount(),
+                        "Height-capped player deposit spent its input");
+            } finally {
+                depositor.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                ServerGestureState.clear(depositor.getUUID());
+            }
             helper.assertBlockNotPresent(
                     CommonRegistry.storageStackBlock(), GameTestScaffold.ORIGIN.above());
 
@@ -404,9 +410,8 @@ public final class ConfigurationChecks {
             ServerPlayer player = playerFactory.apply(new ItemStack(barItem, 3));
             ServerGestureState.set(player, StackMode.BAR_STACK, true);
             try {
-                StackInteractions.handleAdjacentClick(
+                InteractionChecks.use(
                         player,
-                        InteractionHand.MAIN_HAND,
                         new BlockHitResult(
                                 new Vec3(
                                         support.getX() + 0.5,
@@ -414,9 +419,7 @@ public final class ConfigurationChecks {
                                         support.getZ() + 0.5),
                                 Direction.UP,
                                 support,
-                                false),
-                        true,
-                        true);
+                                false));
                 checkEquals(
                         3,
                         player.getMainHandItem().getCount(),
@@ -444,12 +447,9 @@ public final class ConfigurationChecks {
             ServerPlayer invalidPlayer = playerFactory.apply(new ItemStack(Items.STICK, 2));
             ServerGestureState.set(invalidPlayer, StackMode.BAR_STACK, true);
             try {
-                StackInteractions.handleAdjacentClick(
+                InteractionChecks.use(
                         invalidPlayer,
-                        InteractionHand.MAIN_HAND,
-                        new BlockHitResult(Vec3.atCenterOf(support), Direction.UP, support, false),
-                        true,
-                        true);
+                        new BlockHitResult(Vec3.atCenterOf(support), Direction.UP, support, false));
                 checkEquals(
                         2,
                         invalidPlayer.getMainHandItem().getCount(),
@@ -475,7 +475,6 @@ public final class ConfigurationChecks {
      */
     public static void serverCommandsEnforcePermissionsAndPersistEdits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
-        PolicyParityChecks.verify(helper);
         ServerConfig.Backend original = ServerConfig.backend();
         Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-commands-gametest.toml");
         MinecraftServer server = helper.getLevel().getServer();
@@ -505,10 +504,10 @@ public final class ConfigurationChecks {
                     execute(commands.getDispatcher(), operator, "ss gen mod add examplemod") > 0,
                     "Operator gallery-list command failed");
             var written =
-                    new com.electronwill.nightconfig.toml.TomlParser()
+                    new TomlParser()
                             .parse(Files.readString(fixture));
             check(
-                    written.<java.util.List<String>>get("compatibility.disable_items")
+                    written.<List<String>>get("compatibility.disable_items")
                             .contains("minecraft:stone"),
                     "Deny command was not saved immediately");
             check(
@@ -596,21 +595,37 @@ public final class ConfigurationChecks {
             boolean bars,
             List<String> mods,
             List<String> items) {
-        var config =
-                com.electronwill.nightconfig.core.CommentedConfig.of(
-                        com.electronwill.nightconfig.toml.TomlFormat.instance());
+        var config = CommentedConfig.of(TomlFormat.instance());
         config.set("piles.max_pile_height", height);
         config.set("stacks.enable_storage_stack_block", storage);
         config.set("stacks.enable_singles_stack_block", singles);
         config.set("stacks.enable_bar_stack_block", bars);
         config.set("compatibility.disable_mods", mods);
         config.set("compatibility.disable_items", items);
-        return new com.electronwill.nightconfig.toml.TomlWriter().writeToString(config);
+        return new TomlWriter().writeToString(config);
     }
 
+    /** Installs a test backend that reads and saves {@code fixture} through the TOML policy file. */
     private static void loadFixture(Path fixture) {
-        TomlServerConfig backend = new TomlServerConfig();
-        ServerConfig.Settings loaded = backend.load(fixture);
+        TomlPolicyFile file = new TomlPolicyFile(fixture);
+        ServerConfig.Backend backend =
+                new ServerConfig.Backend() {
+                    @Override
+                    public ServerConfig.Settings loadFor(MinecraftServer server) {
+                        return reload();
+                    }
+
+                    @Override
+                    public ServerConfig.Settings reload() {
+                        return file.read(ServerConfig.defaults());
+                    }
+
+                    @Override
+                    public boolean save(ServerConfig.Settings settings) {
+                        return file.write(settings);
+                    }
+                };
+        ServerConfig.Settings loaded = backend.reload();
         ServerConfig.install(backend);
         ServerConfig.apply(loaded);
     }

@@ -2,15 +2,13 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.StorageStackBE;
 
-import net.minecraft.core.BlockPos;
-
 /**
- * The geometry of a Storage Stack's 3 x 3 x 3 grid: where each of the 27 cells sits in the block,
- * what box it occupies, and which one a player's reach ray hits first. Cells are separated by gaps,
- * so the grid does not fill the block even when every slot is occupied.
+ * The geometry of a Storage Stack's 3 x 3 x 3 grid: where each of the 27 cells sits in the block
+ * and what box it occupies. Cells are separated by gaps, so the grid does not fill the block even
+ * when every slot is occupied.
  *
- * <p>Positions are computed at the block's layout rotation, which reflects cell coordinates about
- * the grid's center rather than moving the contents between slots.
+ * <p>{@link #GRID} gives cell boxes at the block's layout rotation, a quarter turn of cell
+ * coordinates about the vertical axis, rather than moving the contents between slots.
  */
 public final class StorageCubeIdx {
     private StorageCubeIdx() {}
@@ -28,9 +26,4 @@ public final class StorageCubeIdx {
 
     /** Cells in one block, and therefore slots in one {@link StorageStackBE}. */
     public static final int CELLS = GRID.cells();
-
-    /** Returns the nearest occupied cell intersected by the view ray, or {@code -1} on a miss. */
-    public static int traceCubes(ViewRay ray, BlockPos blockPos, StorageStackBE be, int rotation) {
-        return ray.nearestOccupied(be.getItems(), slot -> GRID.worldBox(slot, rotation, blockPos));
-    }
 }

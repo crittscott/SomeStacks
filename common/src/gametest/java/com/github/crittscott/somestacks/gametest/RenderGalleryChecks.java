@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The render-gallery world builder: that a queued gallery lays out its floor and rows as described
@@ -104,18 +105,8 @@ public final class RenderGalleryChecks {
         RenderGalleryGenerator.Result[] completed = new RenderGalleryGenerator.Result[2];
         try {
             ServerConfig.apply(
-                    new ServerConfig.Settings(
-                            original.maxPileHeight(),
-                            original.enableStorageStackBlock(),
-                            original.enableSinglesStackBlock(),
-                            original.enableBarStackBlock(),
-                            original.disableMods(),
-                            original.disableItems(),
-                            4,
-                            original.galleryEnabled(),
-                            original.galleryPermissionLevel(),
-                            original.genMods(),
-                            original.genItems()));
+                    GameTestScaffold.policy(
+                            original, Map.of(ServerConfig.Setting.PLACEMENTS_PER_TICK, 4)));
             for (int job = 0; job < bases.length; job++) {
                 BlockPos base = bases[job];
                 for (int x = -1; x <= 1; x++) {

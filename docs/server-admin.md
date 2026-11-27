@@ -6,7 +6,7 @@ Server policy is stored in documented TOML; loader-specific locations are:
 
 - **Forge:** `<world>/serverconfig/somestacks-server.toml`, managed and watched by Forge.
 - **NeoForge:** `config/somestacks-server.toml`, with optional `<world>/serverconfig/somestacks-server.toml` overrides, managed and watched by NeoForge.
-- **Fabric:** `config/somestacks-server.toml` supplies instance defaults; `<world>/serverconfig/somestacks-server.toml`, when present, overrides it for that world. Every setting has an explanation. After editing the active file, run `/ss reload`. Malformed fields use their defaults and are logged; a TOML syntax error uses the complete defaults.
+- **Fabric:** `config/somestacks-server.toml` supplies instance defaults; `<world>/serverconfig/somestacks-server.toml`, when present, overrides it for that world. The instance file is created with defaults when missing; only the file in use is read. Every setting has an explanation. After editing the active file, run `/ss reload`. Malformed fields use their defaults and are logged with the file name; a TOML syntax error uses the complete defaults.
 
 `/ss deny` and `/ss gen` edits update the running values and save the file immediately.
 
@@ -21,12 +21,14 @@ Server policy is stored in documented TOML; loader-specific locations are:
 | `placements_per_tick` | `render_gallery` | `64` | Blocks the gallery commands place per tick, floor included. |
 | `enabled` | `render_gallery` | `false` | Whether `/ss gallery` and `/ss ingotgallery` can be run at all. |
 | `required_permission_level` | `render_gallery` | `3` | Permission level `/ss gallery` and `/ss ingotgallery` require. Range 0–4. |
-| `gen_mods` | `render_gallery` | empty | Namespaces the `list` gallery forms build, in the order given. |
+| `gen_mods` | `render_gallery` | empty | Namespaces the `list` gallery forms and `/ss write list` build, in alphabetical order. |
 | `gen_items` | `render_gallery` | empty | Items `/ss gallery items` builds a row from. |
 
 Disabling a type, mod, or item bars *new* contents. Anything already stored can still be taken out.
 
-Existing world JSON policy is migrated once to a world TOML override; the original is retained as `somestacks-server.json.migrated`. An existing TOML takes precedence. Invalid JSON that cannot be migrated is retained for repair. Custom `compatibility.ingots` entries are logged for transfer to a data-pack item tag.
+On every loader, an existing world JSON policy (`<world>/serverconfig/somestacks-server.json`) is migrated once to `<world>/serverconfig/somestacks-server.toml` before the world's policy is read; the original is retained as `somestacks-server.json.migrated`. An existing world TOML takes precedence and the JSON is left in place. JSON that cannot be migrated is retained for repair, and the server does not start until it is fixed or removed. Custom `compatibility.ingots` entries, in a migrated JSON or one left beside a world TOML, are logged for transfer to a data-pack item tag.
+
+The server log records the active policy, including whether the gallery commands are enabled, their permission level, and their placements per tick, at startup and whenever it changes.
 
 ## Ingots
 
@@ -105,8 +107,8 @@ Item appearance is client resource data. To give players shared render profiles 
 
 ## Protection and claim mods
 
-On all three loaders, structural edits answer to build limits, replaceability, obstruction, border, and spawn protection. Player gestures use the real vanilla interaction pipeline; the mod never invents additional right-click events. Forge/NeoForge fire native placement events before publishing new blocks, restoring full snapshots on denial, and consult destination interaction protection before a deposit reaches an adjacent Singles or Bar Stack. Fabric checks destination block-use callbacks for those deposits, and queries Common Protection API for placement, growth, and neighbor deposits when it is installed; without it, vanilla checks govern placement and growth.
+On all three loaders, every placement and growth answers to one check: build limits, replaceability, the placing player's build permission (in Adventure mode, the held item's `can_place_on`; automation counts as a builder), border, spawn protection, and obstruction. Player gestures use the real vanilla interaction pipeline; the mod never invents additional right-click events. Forge/NeoForge fire native placement events before publishing new blocks, restoring full snapshots on denial, and consult destination interaction protection before a deposit reaches an adjacent Singles or Bar Stack. Fabric checks destination block-use callbacks for those deposits, and queries Common Protection API for placement, growth, and neighbor deposits when it is installed; without it, vanilla checks govern placement and growth. At startup the log lists the protection mods queried directly, or `none detected`; Common Protection API's presence there does not show that a claim mod has registered with it.
 
-Blocks the mod removes during cleanup fire native break hooks: Forge/NeoForge `BreakEvent`, or Fabric's `PlayerBlockBreakEvents` lifecycle. Player cleanup retains the player actor; automated or mixed deferred Storage edits use `[SomeStacks]`. A refused removal leaves the empty block standing. Extracting the final Single or Bar emits destruction only when cleanup succeeds; a surviving block emits change.
+Blocks the mod removes during cleanup fire native break hooks: Forge/NeoForge `BreakEvent`, or Fabric's `PlayerBlockBreakEvents` lifecycle. Player cleanup retains the player actor, including the Bar collapse or Storage trimming that a player's break causes; automated or mixed deferred Storage edits use `[SomeStacks]`. A refused removal leaves the empty block standing. Extracting the final Single or Bar emits destruction only when cleanup succeeds; a surviving block emits change.
 
 The gesture payload carries placement mode and modifier state; actions use vanilla block-use packets and their actual hit results. The server validates the main hand, spectator state, held item, target, support, enablement, height, obstruction, and edit authority. Cell targeting is recomputed server-side along the reach ray through the hit point.

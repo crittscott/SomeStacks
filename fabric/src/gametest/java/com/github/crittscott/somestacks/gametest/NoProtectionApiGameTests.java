@@ -25,7 +25,9 @@ public final class NoProtectionApiGameTests implements FabricGameTest {
     public void placementAndAdjacentDepositsWorkWithoutProtectionApi(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(ORIGIN);
         ServerPlayer player = FakePlayer.get(helper.getLevel());
-        check(WorldEdits.mayPlace(player, pos), "Unprotected placement was denied");
+        check(
+                WorldEdits.mayPlace(player, helper.getLevel(), pos, Direction.DOWN),
+                "Unprotected placement was denied");
         check(WorldEdits.mayUseAdjacent(player, pos), "Unprotected neighboring deposit was denied");
         check(
                 WorldEdits.placeChecked(

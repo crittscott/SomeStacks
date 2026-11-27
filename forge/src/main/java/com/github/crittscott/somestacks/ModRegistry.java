@@ -22,8 +22,8 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.Set;
 
 /**
- * The mod's registered blocks and block entity types, and the Forge registration glue behind them.
- * Common code reads the registered values through {@link CommonRegistry}.
+ * The mod's registered blocks, block entity types, and sounds, and the Forge registration glue
+ * behind them. Common code reads the registered values through {@link CommonRegistry}.
  *
  * <p>There are deliberately no block items, no recipes, and no menus: stacks reach the world only
  * through a player gesture or capability-driven growth, and their contents are reached by clicking
@@ -66,25 +66,6 @@ public final class ModRegistry {
                                     StackBlock.storageProperties()
                                             .setId(blockKey(CommonRegistry.STORAGE_STACK_BLOCK))));
 
-    public static final RegistryObject<SoundEvent> STORAGE_DEPOSIT_SOUND =
-            sound(CommonRegistry.STORAGE_DEPOSIT_SOUND);
-    public static final RegistryObject<SoundEvent> STORAGE_EXTRACT_SOUND =
-            sound(CommonRegistry.STORAGE_EXTRACT_SOUND);
-    public static final RegistryObject<SoundEvent> STORAGE_ROTATE_SOUND =
-            sound(CommonRegistry.STORAGE_ROTATE_SOUND);
-    public static final RegistryObject<SoundEvent> SINGLES_DEPOSIT_SOUND =
-            sound(CommonRegistry.SINGLES_DEPOSIT_SOUND);
-    public static final RegistryObject<SoundEvent> SINGLES_EXTRACT_SOUND =
-            sound(CommonRegistry.SINGLES_EXTRACT_SOUND);
-    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_SOUND =
-            sound(CommonRegistry.SINGLES_ROTATE_SOUND);
-    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_ITEM_SOUND =
-            sound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND);
-    public static final RegistryObject<SoundEvent> BAR_DEPOSIT_SOUND =
-            sound(CommonRegistry.BAR_DEPOSIT_SOUND);
-    public static final RegistryObject<SoundEvent> BAR_EXTRACT_SOUND =
-            sound(CommonRegistry.BAR_EXTRACT_SOUND);
-
     public static final RegistryObject<BlockEntityType<BarStackBE>> BAR_STACK_BE =
             BLOCK_ENTITIES.register(
                     CommonRegistry.BAR_STACK_BE.getPath(),
@@ -108,13 +89,17 @@ public final class ModRegistry {
         return ResourceKey.create(Registries.BLOCK, id);
     }
 
-    private static RegistryObject<SoundEvent> sound(ResourceLocation id) {
-        return SOUNDS.register(id.getPath(), () -> SoundEvent.createVariableRangeEvent(id));
-    }
-
+    /**
+     * Subscribes the block, block entity, and sound registers (after adding every sound) to the mod
+     * bus. Runs once from the mod constructor.
+     */
     public static void init(IEventBus modBus) {
         BLOCKS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
+        for (CommonRegistry.Sound sound : CommonRegistry.Sound.values()) {
+            SOUNDS.register(
+                    sound.id().getPath(), () -> SoundEvent.createVariableRangeEvent(sound.id()));
+        }
         SOUNDS.register(modBus);
     }
 }

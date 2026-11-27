@@ -1,18 +1,16 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.util.StackMode;
+import com.github.crittscott.somestacks.util.StackGestures;
 
 /**
- * Modifier plus an empty-handed right-click on a Storage Stack, in Toggle Permanent mode, switches
- * automatic removal for the whole pile. The empty hand is what separates this from a deposit.
+ * Consumes an empty-main-hand modifier click on Storage while Toggle Permanent mode is selected.
+ * The server switches automatic removal for the whole pile.
  */
 public final class TogglePermanentRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {
-        return ctx.isVDown()
-                && !ctx.hasItemInHand()
-                && ctx.getCurrentMode() == StackMode.TOGGLE_PERMANENT
-                && ctx.isStorageStack();
+        return StackGestures.togglesPermanence(
+                ctx.isModifierDown(), ctx.getCurrentMode(), ctx.getHeld(), ctx.getClickedType());
     }
 
     @Override
