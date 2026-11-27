@@ -1,7 +1,7 @@
 {
   "type": "minecraft:function",
-  "function": "somestacks:itemopsgametests/merge_returns_moved_count_and_does_not_shrink_incoming",
+  "function": "somestacks:storagepilegametests/stored_light_is_per_occupied_slot_and_capped",
   "environment": "minecraft:default",
   "structure": "somestacks:somestacks_empty",
-  "max_ticks": 100
+  "max_ticks": 20
 }

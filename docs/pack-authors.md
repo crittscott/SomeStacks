@@ -79,7 +79,7 @@ Rotation is limited to one sound per player every four ticks, because the gestur
 - A **bare string** names a texture and asks for the tint to be **computed** from the item's own sprite and registered colour.
 - An **object** may carry `texture` and `tint`. A mapping that carries a tint is settled by it — including a white one, which is how you say *draw this texture as it is*. A mapping with no tint gets a computed one.
 - An item with **no mapping at all** uses the base ingot texture with an automatically derived tint where one can be found.
-
+
 The sprite uses a 32-unit grid. Each face stretches the following rectangle over the corresponding cuboid face; coordinates are rectangle endpoints, with the origin at the sprite's upper left.
 
 | Face | From (u, v) | To (u, v) |
@@ -141,7 +141,7 @@ The `/ss` command exists mostly for this loop. `/ss item` and `/ss write` run on
 1. `/ss gallery <modid>` — build a wall of Storage Stacks holding that namespace's items, so you can see everything at once. `/ss ingotgallery <modid>` does the same for Bar Stacks.
 2. `/ss item <item> <mode> [<scale> [<x> <y> [<z>]]]` — correct one item. It applies to your view immediately, in memory.
 3. `/ss item <item> reset` — drop your entry and go back to whatever the layer below gave it.
-4. `/ss write changed` — save your entries to `config/somestacks/item_overrides.json`, which your client loads at startup. Only entries you set are ever written.
+4. `/ss write changed` — save your entries to `config/somestacks/item_overrides.json`, which your client loads at startup. Only entries you set are ever written; entries already in the file that cannot be used are kept exactly as written. If the file cannot be read (for example after a hand edit with a syntax error), the command refuses rather than replace it, and the log says why.
 5. `/ss write <modid>` — dump a *complete* resolved profile for every item of that namespace to `config/somestacks/generated_overrides/<namespace>.json`, measuring whatever no layer configures.
 
 Nothing reads `generated_overrides` back. A file there is a starting point: correct it by hand and drop it into a resource pack's `item_render_overrides`.

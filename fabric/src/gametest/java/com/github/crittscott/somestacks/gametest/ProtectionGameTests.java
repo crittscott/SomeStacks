@@ -57,6 +57,8 @@ public final class ProtectionGameTests {
 
     private static final Set<TestTarget> GROWTH_REFUSALS = ConcurrentHashMap.newKeySet();
 
+    private static final Set<TestTarget> BLOCK_USE_DENIALS = ConcurrentHashMap.newKeySet();
+
     static {
         CommonProtection.register(
                 Identifier.fromNamespaceAndPath("somestacks_gametest", "protection"),
@@ -89,6 +91,9 @@ public final class ProtectionGameTests {
                     }
                 });
         UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
+            if (BLOCK_USE_DENIALS.contains(new TestTarget(level, hit.getBlockPos()))) {
+                return InteractionResult.FAIL;
+            }
             check(
                     !GROWTH_REFUSALS.contains(new TestTarget(level, hit.getBlockPos()))
                             && !ADJACENT_USE_RESULTS.containsKey(
@@ -167,7 +172,9 @@ public final class ProtectionGameTests {
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
         ProtectionChecks.refusedRemovalStillLetsTheBarsAboveComeDown(
-                helper, ProtectionGameTests::observeRemoval);
+                helper,
+                FabricGameTestSupport.playerFactory(helper),
+                ProtectionGameTests::observeRemoval);
     }
 
     /** See {@link ProtectionChecks#checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight}. */
@@ -239,7 +246,7 @@ public final class ProtectionGameTests {
         BlockPos pos = helper.absolutePos(ORIGIN);
         ServerPlayer player = FakePlayer.get(helper.getLevel());
         check(
-                WorldEdits.mayPlace(player, helper.getLevel(), pos),
+                WorldEdits.mayPlace(player, helper.getLevel(), pos, Direction.DOWN),
                 "Unprotected placement was denied");
         check(WorldEdits.mayUseAdjacent(player, pos), "Unprotected neighboring deposit was denied");
         check(
@@ -277,7 +284,7 @@ public final class ProtectionGameTests {
                 player, com.github.crittscott.somestacks.util.StackMode.STORAGE_STACK, true);
         try {
             check(
-                    !WorldEdits.mayPlace(player, level, destination),
+                    !WorldEdits.mayPlace(player, level, destination, Direction.DOWN),
                     "Player destination query ignored denial");
             check(
                     com.github.crittscott.somestacks.server.StackInteractions.handleAdjacentClick(
@@ -322,7 +329,27 @@ public final class ProtectionGameTests {
         ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(
                 helper,
                 FabricGameTestSupport.playerFactory(helper),
+                FabricGameTestSupport::automation,
                 ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link ProtectionChecks#breakingAStackChargesItsCleanupToTheBreaker}. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void breakingAStackChargesItsCleanupToTheBreaker(GameTestHelper helper) {
+        ProtectionChecks.breakingAStackChargesItsCleanupToTheBreaker(
+                helper,
+                FabricGameTestSupport.playerFactory(helper),
+                ProtectionGameTests::observeRemoval);
+    }
+
+    /**
+     * Denies block use at {@code pos} by failing the default-phase {@code UseBlockCallback}, which
+     * runs before the mod's gesture phase, as a claim mod does.
+     */
+    private static Runnable denyBlockUse(ServerLevel level, BlockPos pos) {
+        TestTarget key = new TestTarget(level, pos);
+        BLOCK_USE_DENIALS.add(key);
+        return () -> BLOCK_USE_DENIALS.remove(key);
     }
 
     private static Runnable observeRemoval(
@@ -347,21 +374,21 @@ public final class ProtectionGameTests {
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         ProtectionChecks.storageGrowthAnswersToProtectionInSimulationAndCommit(
-                helper, FabricGameTestSupport::offerAt);
+                helper, FabricGameTestSupport::automation);
     }
 
     /** See {@link ProtectionChecks#singlesGrowthAnswersToProtectionInSimulationAndCommit}. */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         ProtectionChecks.singlesGrowthAnswersToProtectionInSimulationAndCommit(
-                helper, FabricGameTestSupport::offerAt);
+                helper, FabricGameTestSupport::automation);
     }
 
     /** See {@link ProtectionChecks#barGrowthAnswersToProtectionInSimulationAndCommit}. */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         ProtectionChecks.barGrowthAnswersToProtectionInSimulationAndCommit(
-                helper, FabricGameTestSupport::offerAt);
+                helper, FabricGameTestSupport::automation);
     }
 
     /**
@@ -449,90 +476,30 @@ public final class ProtectionGameTests {
     // Growth through entities
 
     /**
-     * To reproduce in-game: stand in the growth space above a full Storage pile and insert through
-     * item automation; it accepts nothing and does not grow into the entity.
+     * See {@link ProtectionChecks#storageGrowthRejectsAnObstructingEntityInSimulationAndCommit}.
      */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        StorageStackBE blockEntity = GameTestScaffold.placeStorage(helper, ORIGIN);
-        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            blockEntity.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
-        }
-        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = StorageStackBE.SLOTS;
-        checkEquals(
-                4,
-                FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, FabricGameTestSupport::automation);
     }
 
     /**
-     * To reproduce in-game: stand in the growth space above a full Singles column and insert
-     * through item automation; it accepts nothing and does not grow into the entity.
+     * See {@link ProtectionChecks#singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit}.
      */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE));
-        }
-        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
-        ItemStack offered = new ItemStack(Items.STONE, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = SinglesStackBE.SLOTS;
-        checkEquals(
-                4,
-                FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, FabricGameTestSupport::automation);
     }
 
-    /**
-     * To reproduce in-game: stand in the growth space above a full Bar column and insert through
-     * item automation; it accepts nothing and does not grow into the entity.
-     */
+    /** See {@link ProtectionChecks#barGrowthRejectsAnObstructingEntityInSimulationAndCommit}. */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(GameTestHelper helper) {
-        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
-        Item bar = GameTestScaffold.firstBarItem();
-        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar));
-        }
-        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(bars);
-        ItemStack offered = new ItemStack(bar, 4);
-        GameTestScaffold.putCowIn(helper, ORIGIN.above());
-
-        int headroom = BarStackBE.SLOTS;
-        checkEquals(
-                4,
-                FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(
-                4,
-                FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
-                "Committed remainder");
-        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
-        helper.assertBlockNotPresent(CommonRegistry.barStackBlock(), ORIGIN.above());
-        helper.succeed();
+        ProtectionChecks.barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+                helper, FabricGameTestSupport::automation);
     }
 
     /** See {@link InteractionChecks#deniedCleanupEmitsOnlyBlockChange}. */
@@ -542,5 +509,14 @@ public final class ProtectionGameTests {
                 helper,
                 FabricGameTestSupport.playerFactory(helper),
                 ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link InteractionChecks#blockUseDenialFreezesStackGestures}. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void blockUseDenialFreezesStackGestures(GameTestHelper helper) {
+        InteractionChecks.blockUseDenialFreezesStackGestures(
+                helper,
+                FabricGameTestSupport.playerFactory(helper),
+                ProtectionGameTests::denyBlockUse);
     }
 }

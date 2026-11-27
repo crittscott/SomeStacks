@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.server.FabricEditAuthority;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.nio.file.Path;
@@ -12,6 +13,12 @@ import java.nio.file.Path;
 /** Fabric implementations of the common platform services. */
 public final class FabricPlatformServices implements PlatformServices.Backend {
     private final FabricEditAuthority editAuthority = new FabricEditAuthority();
+
+    /** Builds one vanilla packet for the payload and sends that same packet to every player. */
+    @Override
+    public void broadcastConfig(MinecraftServer server, ConfigSyncPkt packet) {
+        server.getPlayerList().broadcastAll(ServerPlayNetworking.createClientboundPacket(packet));
+    }
 
     @Override
     public Path configFolder() {
@@ -27,9 +34,8 @@ public final class FabricPlatformServices implements PlatformServices.Backend {
     }
 
     @Override
-    public boolean sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
+    public void sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
         ServerPlayNetworking.send(player, packet);
-        return true;
     }
 
     @Override

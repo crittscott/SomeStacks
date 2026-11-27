@@ -220,7 +220,7 @@ public final class NeoForgeTransferGameTests {
             ItemResource resource =
                     ItemResource.of(base instanceof BarStackBE ? firstBarItem() : Items.STONE);
             for (int slot = 0; slot < base.getItems().getSlots(); slot++) {
-                base.getItems().insertItem(slot, resource.toStack(base.localSlotLimit()));
+                base.getItems().insertItem(slot, resource.toStack(base.slotLimit()));
             }
             BlockPos above = base.getBlockPos().above();
             helper.getLevel().setBlock(above, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
