@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">StackSort</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Comparator used to lay out the contents of a settled Storage pile.</div>
+<div class="block">Sort key that orders the contents of a settled Storage pile.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -104,9 +104,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-first even-row-color"><code>static final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="StackSort.SortKey.html" class="type-name-link" title="class in com.github.crittscott.somestacks.util">StackSort.SortKey</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Sort fields for one identity.</div>
+</div>
 </div>
 </section>
 </li>
@@ -124,7 +126,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StackSort.SortKey.html" title="class in com.github.crittscott.somestacks.util">StackSort.SortKey</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#key(net.minecraft.world.item.ItemStack)" class="member-name-link">key</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Computes the identity's sortable fields once for a settlement group.</div>
+<div class="block">The identity's sortable fields: item id, then damage, then untagged before component-bearing,
+ then the component patch's text.</div>
 </div>
 </div>
 </div>
@@ -147,7 +150,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="key(net.minecraft.world.item.ItemStack)">
 <h3>key</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StackSort.SortKey.html" title="class in com.github.crittscott.somestacks.util">StackSort.SortKey</a></span>&nbsp;<span class="element-name">key</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
-<div class="block">Computes the identity's sortable fields once for a settlement group.</div>
+<div class="block">The identity's sortable fields: item id, then damage, then untagged before component-bearing,
+ then the component patch's text. The patch is immutable, so the key stays valid whatever
+ later happens to the stack.</div>
 </section>
 </li>
 </ul>

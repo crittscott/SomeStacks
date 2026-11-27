@@ -91,8 +91,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">GameTestSupport</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">NeoForge-native scaffolding for the GameTests: the unprefixed template name, <code>IItemHandler</code>
- capability access through <code>Capabilities.ItemHandler.BLOCK</code>, and the level's fake player.
- Everything loader-neutral lives in <a href="GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold</code></a>.</div>
+ capability access through <code>Capabilities.ItemHandler.BLOCK</code> and the shared scenarios'
+ automation view of it, and the level's fake player. Everything loader-neutral lives in <a href="GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -124,22 +124,21 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.neoforged.neoforge.items.IItemHandler</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capability(net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">capability</a><wbr>(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilityPresent(net.minecraft.world.level.block.entity.BlockEntity,net.minecraft.core.Direction)" class="member-name-link">capabilityPresent</a><wbr>(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#automation(net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">automation</a><wbr>(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold.Automation</code></a> view of <code>blockEntity</code>'s item-handler
+ capability, as a hopper or pipe reaches it.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.neoforged.neoforge.items.IItemHandler</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capability(net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">capability</a><wbr>(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilityPresent(net.minecraft.world.level.block.entity.BlockEntity,net.minecraft.core.Direction)" class="member-name-link">capabilityPresent</a><wbr>(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity,
  net.minecraft.core.Direction&nbsp;side)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether the whole-run item handler is exposed on <code>side</code>; <code>null</code> is the sideless
  query.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#count(net.neoforged.neoforge.items.IItemHandler,net.minecraft.world.item.Item)" class="member-name-link">count</a><wbr>(net.neoforged.neoforge.items.IItemHandler&nbsp;handler,
- net.minecraft.world.item.Item&nbsp;item)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block"><a href="GameTestScaffold.html#count(com.github.crittscott.somestacks.util.SlotAccess,net.minecraft.world.item.Item)"><code>GameTestScaffold.count(com.github.crittscott.somestacks.util.SlotAccess, net.minecraft.world.item.Item)</code></a> for a real NeoForge capability, as <a href="#capability(net.minecraft.world.level.block.entity.BlockEntity)"><code>capability(net.minecraft.world.level.block.entity.BlockEntity)</code></a>
- returns.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.server.level.ServerPlayer</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fakePlayer(net.minecraft.server.level.ServerLevel)" class="member-name-link">fakePlayer</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
@@ -194,6 +193,14 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="automation(net.minecraft.world.level.block.entity.BlockEntity)">
+<h3>automation</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest">GameTestScaffold.Automation</a></span>&nbsp;<span class="element-name">automation</span><wbr><span class="parameters">(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</span></div>
+<div class="block">The <a href="GameTestScaffold.Automation.html" title="interface in com.github.crittscott.somestacks.gametest"><code>GameTestScaffold.Automation</code></a> view of <code>blockEntity</code>'s item-handler
+ capability, as a hopper or pipe reaches it.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="capability(net.minecraft.world.level.block.entity.BlockEntity)">
 <h3>capability</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.neoforged.neoforge.items.IItemHandler</span>&nbsp;<span class="element-name">capability</span><wbr><span class="parameters">(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</span></div>
@@ -206,15 +213,6 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.Direction&nbsp;side)</span></div>
 <div class="block">Whether the whole-run item handler is exposed on <code>side</code>; <code>null</code> is the sideless
  query.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="count(net.neoforged.neoforge.items.IItemHandler,net.minecraft.world.item.Item)">
-<h3>count</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">count</span><wbr><span class="parameters">(net.neoforged.neoforge.items.IItemHandler&nbsp;handler,
- net.minecraft.world.item.Item&nbsp;item)</span></div>
-<div class="block"><a href="GameTestScaffold.html#count(com.github.crittscott.somestacks.util.SlotAccess,net.minecraft.world.item.Item)"><code>GameTestScaffold.count(com.github.crittscott.somestacks.util.SlotAccess, net.minecraft.world.item.Item)</code></a> for a real NeoForge capability, as <a href="#capability(net.minecraft.world.level.block.entity.BlockEntity)"><code>capability(net.minecraft.world.level.block.entity.BlockEntity)</code></a>
- returns.</div>
 </section>
 </li>
 <li>

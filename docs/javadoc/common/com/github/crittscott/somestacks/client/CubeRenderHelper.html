@@ -91,9 +91,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">CubeRenderHelper</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Draws one stored item inside one cell according to its render profile. The Storage and Singles
- renderers position a cell and delegate here; everything about how the item itself is presented
- lives in this class.
+<div class="block">Draws stored items inside their cells according to their render profiles. The Storage and Singles
+ renderers hand their whole grid to <a href="#renderGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,net.minecraft.client.renderer.block.BlockRenderDispatcher)"><code>renderGridItems(com.github.crittscott.somestacks.util.SlotAccess, int, com.github.crittscott.somestacks.util.CubeGrid, int, float, java.util.function.IntUnaryOperator, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.MultiBufferSource, net.minecraft.client.renderer.block.BlockRenderDispatcher)</code></a>, which positions each cell; everything
+ about how the item itself is presented lives in this class.
 
  <p>The <code>3d</code>, <code>gui</code>, and <code>block</code> modes hand off to Minecraft's own renderers.
  The <code>2d</code> mode is the one implemented here: flat item art projected onto the visible faces
@@ -123,13 +123,13 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final float</code></div>
 <div class="col-second odd-row-color"><code><a href="#CELL_LOCAL_SIZE" class="member-name-link">CELL_LOCAL_SIZE</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">One four-pixel cell in those local units, where 1.0 is the eight pixels above.</div>
+<div class="block">One Singles cell in those local units, where 1.0 is <code>RENDER_UNIT_PIXELS</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static final float</code></div>
 <div class="col-second even-row-color"><code><a href="#CELL_RENDER_SCALE" class="member-name-link">CELL_RENDER_SCALE</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Scale a stack block's renderer applies before handing a cell's contents here: an item's unit
- cube becomes eight pixels.</div>
+<div class="block">Singles' cell scale, applied by <a href="#renderGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,net.minecraft.client.renderer.block.BlockRenderDispatcher)"><code>renderGridItems(com.github.crittscott.somestacks.util.SlotAccess, int, com.github.crittscott.somestacks.util.CubeGrid, int, float, java.util.function.IntUnaryOperator, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.MultiBufferSource, net.minecraft.client.renderer.block.BlockRenderDispatcher)</code></a> at each cell's corner: an item's unit
+ cube becomes <code>RENDER_UNIT_PIXELS</code> pixels of the 16-pixel block.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second odd-row-color"><code><a href="#RENDER_CACHE_RELOAD_LISTENER_ID" class="member-name-link">RENDER_CACHE_RELOAD_LISTENER_ID</a></code></div>
@@ -145,8 +145,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static final float</code></div>
 <div class="col-second even-row-color"><code><a href="#STORAGE_CELL_RENDER_SCALE" class="member-name-link">STORAGE_CELL_RENDER_SCALE</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Storage's own cell-render scale, grown so a cell's rendered content fills more of its
- 4.5-pixel cell, halving the gap between Storage's cells.</div>
+<div class="block">Storage's own cell-render scale, grown by the ratio of a Storage cell to a Singles cell so a
+ cell's rendered content fills more of its cell, halving the gap between Storage's cells.</div>
 </div>
 </div>
 </section>
@@ -165,12 +165,15 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#applyGuiCounterRotation(com.mojang.blaze3d.vertex.PoseStack)" class="member-name-link">applyGuiCounterRotation</a><wbr>(com.mojang.blaze3d.vertex.PoseStack&nbsp;pose)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Applies the counter-rotation shared by GUI rendering and automatic GUI measurement.</div>
+<div class="block">Turns the pose so that an item drawn with the GUI display context faces as it does in a FIXED
+ display instead of tilted like an inventory icon: it cancels the 30-degree tilt and 45
+ degrees of the 225-degree turn of the GUI transform vanilla's block model parent gives.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onResourceReload()" class="member-name-link">onResourceReload</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Immediately discards prepared models and failure state tied to the replaced resources.</div>
+<div class="block">Immediately discards prepared models, failure state, Bar sprite UV regions, and resolved
+ profiles tied to the replaced resources.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#renderGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,net.minecraft.client.renderer.block.BlockRenderDispatcher)" class="member-name-link">renderGridItems</a><wbr>(<a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;items,
@@ -227,8 +230,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="CELL_RENDER_SCALE">
 <h3>CELL_RENDER_SCALE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">CELL_RENDER_SCALE</span></div>
-<div class="block">Scale a stack block's renderer applies before handing a cell's contents here: an item's unit
- cube becomes eight pixels.</div>
+<div class="block">Singles' cell scale, applied by <a href="#renderGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,net.minecraft.client.renderer.block.BlockRenderDispatcher)"><code>renderGridItems(com.github.crittscott.somestacks.util.SlotAccess, int, com.github.crittscott.somestacks.util.CubeGrid, int, float, java.util.function.IntUnaryOperator, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.MultiBufferSource, net.minecraft.client.renderer.block.BlockRenderDispatcher)</code></a> at each cell's corner: an item's unit
+ cube becomes <code>RENDER_UNIT_PIXELS</code> pixels of the 16-pixel block.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -243,9 +246,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="STORAGE_CELL_RENDER_SCALE">
 <h3>STORAGE_CELL_RENDER_SCALE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">STORAGE_CELL_RENDER_SCALE</span></div>
-<div class="block">Storage's own cell-render scale, grown so a cell's rendered content fills more of its
- 4.5-pixel cell, halving the gap between Storage's cells. Storage-only: Singles' cells already
- tile edge to edge with no gap to absorb growth into.</div>
+<div class="block">Storage's own cell-render scale, grown by the ratio of a Storage cell to a Singles cell so a
+ cell's rendered content fills more of its cell, halving the gap between Storage's cells.
+ Storage-only: Singles' cells already tile edge to edge with no gap to absorb growth into.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -260,7 +263,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="CELL_LOCAL_SIZE">
 <h3>CELL_LOCAL_SIZE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">CELL_LOCAL_SIZE</span></div>
-<div class="block">One four-pixel cell in those local units, where 1.0 is the eight pixels above.</div>
+<div class="block">One Singles cell in those local units, where 1.0 is <code>RENDER_UNIT_PIXELS</code>. Storage
+ cells occupy the same local size, because <a href="#STORAGE_CELL_RENDER_SCALE"><code>STORAGE_CELL_RENDER_SCALE</code></a> grows the whole
+ frame instead.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -308,21 +313,29 @@ loadScripts(document, 'script');</script>
  com.mojang.blaze3d.vertex.PoseStack&nbsp;pose,
  net.minecraft.client.renderer.MultiBufferSource&nbsp;buffers,
  net.minecraft.client.renderer.block.BlockRenderDispatcher&nbsp;blockRenderer)</span></div>
-<div class="block">Draws every occupied position in a regular Storage or Singles cube grid.</div>
+<div class="block">Draws every occupied position in a regular Storage or Singles cube grid. <code>pose</code> is at
+ the block origin; each cell is placed at its corner for <code>blockRotation</code>, scaled by
+ <code>renderScale</code>, and turned by <code>itemRotation</code>'s quarter turns for that slot. Light
+ is sampled once, at <code>blockPos</code>, for every cell.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="applyGuiCounterRotation(com.mojang.blaze3d.vertex.PoseStack)">
 <h3>applyGuiCounterRotation</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyGuiCounterRotation</span><wbr><span class="parameters">(com.mojang.blaze3d.vertex.PoseStack&nbsp;pose)</span></div>
-<div class="block">Applies the counter-rotation shared by GUI rendering and automatic GUI measurement.</div>
+<div class="block">Turns the pose so that an item drawn with the GUI display context faces as it does in a FIXED
+ display instead of tilted like an inventory icon: it cancels the 30-degree tilt and 45
+ degrees of the 225-degree turn of the GUI transform vanilla's block model parent gives. The
+ <code>gui</code> render path and GUI measurement both call this, so an item is fitted at the angle
+ it is drawn.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="onResourceReload()">
 <h3>onResourceReload</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onResourceReload</span>()</div>
-<div class="block">Immediately discards prepared models and failure state tied to the replaced resources.</div>
+<div class="block">Immediately discards prepared models, failure state, Bar sprite UV regions, and resolved
+ profiles tied to the replaced resources.</div>
 </section>
 </li>
 </ul>

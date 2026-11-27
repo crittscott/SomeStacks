@@ -111,14 +111,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#automationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationBackfillsWithoutDropping</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: fill a supported Bar column, let item automation extract a lower
- position, and verify the top bar fills the hole without dropping an item.</div>
+<div class="block">See <a href="AutomationChecks.html#barAutomationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barAutomationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#backfillKeepsABarItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">backfillKeepsABarItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Validity gates insertion only, so a bar stored before a data pack reload narrowed the rule
- has to survive the backfill an automated extraction moves it through.</div>
+<div class="block">See <a href="AutomationChecks.html#barBackfillKeepsAStoredItemNoLongerAccepted(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barBackfillKeepsAStoredItemNoLongerAccepted(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#breakingFullColumnConsolidatesDrops(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">breakingFullColumnConsolidatesDrops</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -138,20 +136,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilityInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">capabilityInsertionAnswersForThePositionItIsGiven</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
- positions; unsupported positions refuse insertion while a supported empty position accepts
- it.</div>
+<div class="block">See <a href="AutomationChecks.html#barInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilitySimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">capabilitySimulationDoesNotMutateExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">No in-game reproduction applies: this verifies the loader capability simulation contract; a
- simulated Bar extraction reports the result without changing the stored bar.</div>
+<div class="block">See <a href="AutomationChecks.html#barSimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barSimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">collapseDoesNotMergeDifferentComponents</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="BarColumnChecks.html#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorFollowsAColumnLosingABlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorFollowsAColumnLosingABlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -181,31 +176,26 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCascadeConsolidatesAcrossBlocks</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="BarColumnChecks.html#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerExtractionDropsUnsupportedBars</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="BarColumnChecks.html#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#refusedRemovalStillLetsTheBarsAboveComeDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">refusedRemovalStillLetsTheBarsAboveComeDown</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">supportedNeighborSurvivesPlayerExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">A cascade still settles the column above an empty block that protection refuses to remove.</div>
+<div class="block">See <a href="BarColumnChecks.html#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">supportedNeighborSurvivesPlayerExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upperBarRequiresOverlappingSupport(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">upperBarRequiresOverlappingSupport</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="BarColumnChecks.html#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upperBarRequiresOverlappingSupport(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">upperBarRequiresOverlappingSupport</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="BarColumnChecks.html#upperBarRequiresOverlappingSupport(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.upperBarRequiresOverlappingSupport(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#validityAndBottomGroundingAreEnforced(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">validityAndBottomGroundingAreEnforced</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#validityAndBottomGroundingAreEnforced(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">validityAndBottomGroundingAreEnforced</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="BarColumnChecks.html#validityAndBottomGroundingAreEnforced(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.validityAndBottomGroundingAreEnforced(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
 </div>
@@ -250,14 +240,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>playerExtractionDropsUnsupportedBars</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerExtractionDropsUnsupportedBars</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="BarColumnChecks.html#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>supportedNeighborSurvivesPlayerExtraction</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">supportedNeighborSurvivesPlayerExtraction</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="BarColumnChecks.html#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
@@ -278,39 +268,28 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="automationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>automationBackfillsWithoutDropping</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">automationBackfillsWithoutDropping</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: fill a supported Bar column, let item automation extract a lower
- position, and verify the top bar fills the hole without dropping an item.</div>
+<div class="block">See <a href="AutomationChecks.html#barAutomationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barAutomationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="capabilityInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>capabilityInsertionAnswersForThePositionItIsGiven</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">capabilityInsertionAnswersForThePositionItIsGiven</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
- positions; unsupported positions refuse insertion while a supported empty position accepts
- it.</div>
+<div class="block">See <a href="AutomationChecks.html#barInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barInsertionAnswersForThePositionItIsGiven(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="backfillKeepsABarItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>backfillKeepsABarItWouldNoLongerAccept</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">backfillKeepsABarItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Validity gates insertion only, so a bar stored before a data pack reload narrowed the rule
- has to survive the backfill an automated extraction moves it through. A stick stands in for
- such a bar: a Bar Stack refuses one from a deposit, but may be holding contents the current
- ingot set no longer covers.
-
- <p>To reproduce in-game: fill a Bar Stack, narrow the ingot rule so one stored bar is no
- longer accepted, then automate extraction below it. Backfill retains or drops that legacy bar
- without deleting or changing it.</div>
+<div class="block">See <a href="AutomationChecks.html#barBackfillKeepsAStoredItemNoLongerAccepted(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barBackfillKeepsAStoredItemNoLongerAccepted(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="capabilitySimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>capabilitySimulationDoesNotMutateExtraction</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">capabilitySimulationDoesNotMutateExtraction</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">No in-game reproduction applies: this verifies the loader capability simulation contract; a
- simulated Bar extraction reports the result without changing the stored bar.</div>
+<div class="block">See <a href="AutomationChecks.html#barSimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationChecks.barSimulationDoesNotMutateExtraction(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.level.block.entity.BlockEntity, com.github.crittscott.somestacks.gametest.GameTestScaffold.Automation&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
@@ -331,14 +310,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>playerCascadeConsolidatesAcrossBlocks</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCascadeConsolidatesAcrossBlocks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="BarColumnChecks.html#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>collapseDoesNotMergeDifferentComponents</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">collapseDoesNotMergeDifferentComponents</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="BarColumnChecks.html#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="BarColumnChecks.html#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>BarColumnChecks.collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
@@ -360,19 +339,6 @@ loadScripts(document, 'script');</script>
 <h3>comparatorFollowsAColumnLosingABlock</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorFollowsAColumnLosingABlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">See <a href="BarColumnChecks.html#comparatorFollowsAColumnLosingABlock(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.comparatorFollowsAColumnLosingABlock(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="refusedRemovalStillLetsTheBarsAboveComeDown(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>refusedRemovalStillLetsTheBarsAboveComeDown</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">refusedRemovalStillLetsTheBarsAboveComeDown</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">A cascade still settles the column above an empty block that protection refuses to remove.
- Support depends on the seam's occupancy, which is empty whether or not the block remains;
- protection controls only the world edit.
-
- <p>To reproduce in-game: build a supported two-block Bar column, deny [SomeStacks] permission
- to remove the lower block, and extract its bottom support. The empty lower block remains,
- while the unsupported upper block comes down.</div>
 </section>
 </li>
 </ul>

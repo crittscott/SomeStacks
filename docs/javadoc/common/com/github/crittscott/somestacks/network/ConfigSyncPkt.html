@@ -122,13 +122,19 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static final int</code></div>
 <div class="col-second even-row-color"><code><a href="#MAX_GENERATION_BYTES" class="member-name-link">MAX_GENERATION_BYTES</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Most bytes one snapshot can need across its chunks; the client's staging refuses more.</div>
+</div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
 <div class="col-second odd-row-color"><code><a href="#MAX_GENERATION_CHUNKS" class="member-name-link">MAX_GENERATION_CHUNKS</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Most chunks one snapshot can need; the client's staging refuses more.</div>
+</div>
 <div class="col-first even-row-color"><code>static final int</code></div>
 <div class="col-second even-row-color"><code><a href="#MAX_PACKET_BYTES" class="member-name-link">MAX_PACKET_BYTES</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Largest encoded body of one chunk; the sender splits the snapshot to fit it.</div>
+</div>
 <div class="col-first odd-row-color"><code>static final net.minecraft.network.codec.StreamCodec<wbr>&lt;net.minecraft.network.RegistryFriendlyByteBuf,<wbr><a href="ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#STREAM_CODEC" class="member-name-link">STREAM_CODEC</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
@@ -181,7 +187,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#currentPackets()" class="member-name-link">currentPackets</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The packet sequence most recently built at server start or by <code>/ss reload</code>.</div>
+<div class="block">The packet sequence <a href="#rebuildCurrent()"><code>rebuildCurrent()</code></a> most recently built.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#disabledMods()" class="member-name-link">disabledMods</a>()</code></div>
@@ -290,6 +296,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <section class="detail" id="MAX_PACKET_BYTES">
 <h3>MAX_PACKET_BYTES</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MAX_PACKET_BYTES</span></div>
+<div class="block">Largest encoded body of one chunk; the sender splits the snapshot to fit it.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -304,6 +311,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <section class="detail" id="MAX_GENERATION_CHUNKS">
 <h3>MAX_GENERATION_CHUNKS</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MAX_GENERATION_CHUNKS</span></div>
+<div class="block">Most chunks one snapshot can need; the client's staging refuses more.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -318,6 +326,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <section class="detail" id="MAX_GENERATION_BYTES">
 <h3>MAX_GENERATION_BYTES</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MAX_GENERATION_BYTES</span></div>
+<div class="block">Most bytes one snapshot can need across its chunks; the client's staging refuses more.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -395,7 +404,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <section class="detail" id="currentPackets()">
 <h3>currentPackets</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&gt;</span>&nbsp;<span class="element-name">currentPackets</span>()</div>
-<div class="block">The packet sequence most recently built at server start or by <code>/ss reload</code>.</div>
+<div class="block">The packet sequence <a href="#rebuildCurrent()"><code>rebuildCurrent()</code></a> most recently built.</div>
 </section>
 </li>
 <li>

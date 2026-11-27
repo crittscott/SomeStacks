@@ -87,7 +87,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="DepositIntoAdjacentStackRule.html" title="class in com.github.crittscott.somestacks.client.interaction">DepositIntoAdjacentStackRule</a></code>, <code><a href="DepositIntoClickedStackRule.html" title="class in com.github.crittscott.somestacks.client.interaction">DepositIntoClickedStackRule</a></code>, <code><a href="ExtractionRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ExtractionRule</a></code>, <code><a href="ModeCycleRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ModeCycleRule</a></code>, <code><a href="PlaceAdjacentGenericRule.html" title="class in com.github.crittscott.somestacks.client.interaction">PlaceAdjacentGenericRule</a></code>, <code><a href="RotateBlockWithRedstoneTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateBlockWithRedstoneTorchRule</a></code>, <code><a href="RotateItemWithSoulTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateItemWithSoulTorchRule</a></code>, <code><a href="TogglePermanentRule.html" title="class in com.github.crittscott.somestacks.client.interaction">TogglePermanentRule</a></code></dd>
+<dd><code><a href="ExtractionRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ExtractionRule</a></code>, <code><a href="ModeCycleRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ModeCycleRule</a></code>, <code><a href="ModifiedItemClickRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ModifiedItemClickRule</a></code>, <code><a href="RotateBlockWithRedstoneTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateBlockWithRedstoneTorchRule</a></code>, <code><a href="RotateItemWithSoulTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateItemWithSoulTorchRule</a></code>, <code><a href="TogglePermanentRule.html" title="class in com.github.crittscott.somestacks.client.interaction">TogglePermanentRule</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">InteractionRule</span></div>
@@ -96,8 +96,9 @@ loadScripts(document, 'script');</script>
  in that list to settle overlaps with broader rules behind it.
 
  <p>Rules run on the client, which owns gesture recognition. They only decide whether to consume
- the local click; the vanilla block-use packet carries the action and the server decides whether
- the gesture is allowed.</div>
+ the local click. For a block rule the vanilla block-use packet carries the action and the server
+ decides whether the gesture is allowed; the air rule's mode change reaches the server in the
+ gesture-state sync.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

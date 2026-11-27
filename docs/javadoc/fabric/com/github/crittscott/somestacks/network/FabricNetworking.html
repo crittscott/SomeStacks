@@ -107,17 +107,28 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#initServer()" class="member-name-link">initServer</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#broadcast(net.minecraft.server.MinecraftServer,net.minecraft.network.protocol.common.custom.CustomPacketPayload)" class="member-name-link">broadcast</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server,
+ net.minecraft.network.protocol.common.custom.CustomPacketPayload&nbsp;packet)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Builds one vanilla packet for the payload and sends that same packet to every player.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerPayloads()" class="member-name-link">registerPayloads</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#initServer()" class="member-name-link">initServer</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Registers the configuration marker in both directions and every play payload.</div>
+<div class="block">Registers the server receivers: the configuration-phase protocol marker, whose presence the
+ common entry point checks before play, and the gesture-state payload, handed to <code>GestureStatePkt.handleServer(com.github.crittscott.somestacks.network.GestureStatePkt, net.minecraft.server.level.ServerPlayer)</code> with its sender.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#send(net.minecraft.server.level.ServerPlayer,net.minecraft.network.protocol.common.custom.CustomPacketPayload)" class="member-name-link">send</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerPayloads()" class="member-name-link">registerPayloads</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers the configuration marker in both directions and every play payload.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#send(net.minecraft.server.level.ServerPlayer,net.minecraft.network.protocol.common.custom.CustomPacketPayload)" class="member-name-link">send</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.network.protocol.common.custom.CustomPacketPayload&nbsp;packet)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sends a registered play payload to one player.</div>
+</div>
 </div>
 </div>
 </div>
@@ -144,9 +155,19 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="broadcast(net.minecraft.server.MinecraftServer,net.minecraft.network.protocol.common.custom.CustomPacketPayload)">
+<h3>broadcast</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">broadcast</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server,
+ net.minecraft.network.protocol.common.custom.CustomPacketPayload&nbsp;packet)</span></div>
+<div class="block">Builds one vanilla packet for the payload and sends that same packet to every player.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="initServer()">
 <h3>initServer</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">initServer</span>()</div>
+<div class="block">Registers the server receivers: the configuration-phase protocol marker, whose presence the
+ common entry point checks before play, and the gesture-state payload, handed to <code>GestureStatePkt.handleServer(com.github.crittscott.somestacks.network.GestureStatePkt, net.minecraft.server.level.ServerPlayer)</code> with its sender.</div>
 </section>
 </li>
 <li>
@@ -154,6 +175,7 @@ loadScripts(document, 'script');</script>
 <h3>send</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">send</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.network.protocol.common.custom.CustomPacketPayload&nbsp;packet)</span></div>
+<div class="block">Sends a registered play payload to one player.</div>
 </section>
 </li>
 </ul>

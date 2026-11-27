@@ -91,7 +91,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ServerConfig</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Immutable server policy, command edits, and normalized admission lookups.</div>
+<div class="block">Immutable server policy, its file declaration (<a href="ServerConfig.Section.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Section</code></a>, <a href="ServerConfig.Setting.html" title="enum class in com.github.crittscott.somestacks"><code>ServerConfig.Setting</code></a>), command edits,
+ and normalized admission lookups. Loader backends own persistence and build their files from the
+ declaration.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -113,6 +115,17 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="ServerConfig.ListSetting.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">A command-editable policy list.</div>
+</div>
+<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ServerConfig.Section.html" class="type-name-link" title="enum class in com.github.crittscott.somestacks">ServerConfig.Section</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">A table of the server policy file; its declaration order is the order in the file.</div>
+</div>
+<div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="ServerConfig.Setting.html" class="type-name-link" title="enum class in com.github.crittscott.somestacks">ServerConfig.Setting</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">One field of the server policy file: its table, key, kind, bounds, explanation, and the
+ <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks"><code>ServerConfig.Settings</code></a> component it holds.</div>
 </div>
 <div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="ServerConfig.Settings.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
@@ -137,22 +150,28 @@ loadScripts(document, 'script');</script>
 <div class="block">Items barred by default.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#DEFAULT_GALLERY_PLACEMENTS_PER_TICK" class="member-name-link">DEFAULT_GALLERY_PLACEMENTS_PER_TICK</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#DEFAULT_GALLERY_PERMISSION_LEVEL" class="member-name-link">DEFAULT_GALLERY_PERMISSION_LEVEL</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#DEFAULT_MAX_PILE_HEIGHT" class="member-name-link">DEFAULT_MAX_PILE_HEIGHT</a></code></div>
+<div class="col-second even-row-color"><code><a href="#DEFAULT_GALLERY_PLACEMENTS_PER_TICK" class="member-name-link">DEFAULT_GALLERY_PLACEMENTS_PER_TICK</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#DISABLE_ITEMS" class="member-name-link">DISABLE_ITEMS</a></code></div>
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#DEFAULT_MAX_PILE_HEIGHT" class="member-name-link">DEFAULT_MAX_PILE_HEIGHT</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
-<div class="col-second even-row-color"><code><a href="#DISABLE_MODS" class="member-name-link">DISABLE_MODS</a></code></div>
+<div class="col-second even-row-color"><code><a href="#DISABLE_ITEMS" class="member-name-link">DISABLE_ITEMS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#GEN_ITEMS" class="member-name-link">GEN_ITEMS</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#DISABLE_MODS" class="member-name-link">DISABLE_MODS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
-<div class="col-second even-row-color"><code><a href="#GEN_MODS" class="member-name-link">GEN_MODS</a></code></div>
+<div class="col-second even-row-color"><code><a href="#GEN_ITEMS" class="member-name-link">GEN_ITEMS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#GEN_MODS" class="member-name-link">GEN_MODS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#MAX_GALLERY_PERMISSION_LEVEL" class="member-name-link">MAX_GALLERY_PERMISSION_LEVEL</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
 <div class="col-second odd-row-color"><code><a href="#MAX_NAMESPACE_ENTRIES" class="member-name-link">MAX_NAMESPACE_ENTRIES</a></code></div>
@@ -161,8 +180,17 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="#MAX_NAMESPACE_LENGTH" class="member-name-link">MAX_NAMESPACE_LENGTH</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#MAX_PILE_HEIGHT" class="member-name-link">MAX_PILE_HEIGHT</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#MAX_PILE_HEIGHT_LIMIT" class="member-name-link">MAX_PILE_HEIGHT_LIMIT</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#MIN_GALLERY_PERMISSION_LEVEL" class="member-name-link">MIN_GALLERY_PERMISSION_LEVEL</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#MIN_GALLERY_PLACEMENTS_PER_TICK" class="member-name-link">MIN_GALLERY_PLACEMENTS_PER_TICK</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#MIN_PILE_HEIGHT" class="member-name-link">MIN_PILE_HEIGHT</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -191,7 +219,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#backend()" class="member-name-link">backend</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Installed loader persistence, or null before installation.</div>
+<div class="block">Installed loader persistence.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#bakeServerLists()" class="member-name-link">bakeServerLists</a>()</code></div>
@@ -199,68 +227,55 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#defaults()" class="member-name-link">defaults</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableBarStackBlock()" class="member-name-link">enableBarStackBlock</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableSinglesStackBlock()" class="member-name-link">enableSinglesStackBlock</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableStorageStackBlock()" class="member-name-link">enableStorageStackBlock</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#galleryEnabled()" class="member-name-link">galleryEnabled</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#galleryRequiredPermissionLevel()" class="member-name-link">galleryRequiredPermissionLevel</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#install(com.github.crittscott.somestacks.ServerConfig.Backend)" class="member-name-link">install</a><wbr>(<a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a>&nbsp;implementation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Installs loader persistence before loadFor; does not load or apply policy.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isItemDisabled(net.minecraft.resources.ResourceLocation)" class="member-name-link">isItemDisabled</a><wbr>(net.minecraft.resources.ResourceLocation&nbsp;itemId)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#install(com.github.crittscott.somestacks.ServerConfig.Backend)" class="member-name-link">install</a><wbr>(<a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a>&nbsp;implementation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Installs loader persistence; each loader entry point calls this once, before any server
+ starts.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isItemDisabled(net.minecraft.resources.ResourceLocation)" class="member-name-link">isItemDisabled</a><wbr>(net.minecraft.resources.ResourceLocation&nbsp;itemId)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether the item registered as <code>itemId</code> is barred from stacks.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isModDisabled(java.lang.String)" class="member-name-link">isModDisabled</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isModDisabled(java.lang.String)" class="member-name-link">isModDisabled</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether items from <code>namespace</code>, in any case, are barred from stacks.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isValidNamespace(java.lang.String)" class="member-name-link">isValidNamespace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isValidNamespace(java.lang.String)" class="member-name-link">isValidNamespace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Validates namespace syntax using the platform's public identifier parser.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#loadFor(net.minecraft.server.MinecraftServer)" class="member-name-link">loadFor</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#loadFor(net.minecraft.server.MinecraftServer)" class="member-name-link">loadFor</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Loads and applies this world's policy using the installed backend before world activity.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxPileHeight()" class="member-name-link">maxPileHeight</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#logPolicy(java.lang.String,com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">logPolicy</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;heading,
+ <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;policy)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Logs <code>policy</code> under <code>heading</code>, including the gallery settings that decide whether
+ the gallery commands exist for a player.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Refreshes policy without saving or sending packets; rejected namespaces preserve active
  policy.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" class="member-name-link">removeListEntry</a><wbr>(<a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" class="member-name-link">removeListEntry</a><wbr>(<a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entry)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Removes an entry from one of the server's text lists, re-bakes the lookup sets, and saves.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#renderGalleryPlacementsPerTick()" class="member-name-link">renderGalleryPlacementsPerTick</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#save()" class="member-name-link">save</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Saves current policy without changing it; false when no backend exists or saving fails.</div>
+<div class="block">Saves current policy without changing it; false when saving fails.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settings()" class="member-name-link">settings</a>()</code></div>
@@ -299,14 +314,28 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="MAX_PILE_HEIGHT">
-<h3>MAX_PILE_HEIGHT</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MAX_PILE_HEIGHT</span></div>
+<section class="detail" id="MIN_PILE_HEIGHT">
+<h3>MIN_PILE_HEIGHT</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MIN_PILE_HEIGHT</span></div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
 <ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MAX_PILE_HEIGHT">Constant Field Values</a></li>
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MIN_PILE_HEIGHT">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MAX_PILE_HEIGHT_LIMIT">
+<h3>MAX_PILE_HEIGHT_LIMIT</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MAX_PILE_HEIGHT_LIMIT</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MAX_PILE_HEIGHT_LIMIT">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -321,6 +350,62 @@ loadScripts(document, 'script');</script>
 <dd>
 <ul class="tag-list">
 <li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.DEFAULT_GALLERY_PLACEMENTS_PER_TICK">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MIN_GALLERY_PLACEMENTS_PER_TICK">
+<h3>MIN_GALLERY_PLACEMENTS_PER_TICK</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MIN_GALLERY_PLACEMENTS_PER_TICK</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MIN_GALLERY_PLACEMENTS_PER_TICK">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="DEFAULT_GALLERY_PERMISSION_LEVEL">
+<h3>DEFAULT_GALLERY_PERMISSION_LEVEL</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DEFAULT_GALLERY_PERMISSION_LEVEL</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.DEFAULT_GALLERY_PERMISSION_LEVEL">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MIN_GALLERY_PERMISSION_LEVEL">
+<h3>MIN_GALLERY_PERMISSION_LEVEL</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MIN_GALLERY_PERMISSION_LEVEL</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MIN_GALLERY_PERMISSION_LEVEL">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MAX_GALLERY_PERMISSION_LEVEL">
+<h3>MAX_GALLERY_PERMISSION_LEVEL</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MAX_GALLERY_PERMISSION_LEVEL</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MAX_GALLERY_PERMISSION_LEVEL">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -403,14 +488,15 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="install(com.github.crittscott.somestacks.ServerConfig.Backend)">
 <h3>install</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">install</span><wbr><span class="parameters">(<a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a>&nbsp;implementation)</span></div>
-<div class="block">Installs loader persistence before loadFor; does not load or apply policy.</div>
+<div class="block">Installs loader persistence; each loader entry point calls this once, before any server
+ starts. Does not load or apply policy.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="backend()">
 <h3>backend</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></span>&nbsp;<span class="element-name">backend</span>()</div>
-<div class="block">Installed loader persistence, or null before installation.</div>
+<div class="block">Installed loader persistence.</div>
 </section>
 </li>
 <li>
@@ -446,7 +532,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="save()">
 <h3>save</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">save</span>()</div>
-<div class="block">Saves current policy without changing it; false when no backend exists or saving fails.</div>
+<div class="block">Saves current policy without changing it; false when saving fails.</div>
 </section>
 </li>
 <li>
@@ -456,45 +542,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="maxPileHeight()">
-<h3>maxPileHeight</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">maxPileHeight</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="enableStorageStackBlock()">
-<h3>enableStorageStackBlock</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">enableStorageStackBlock</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="enableSinglesStackBlock()">
-<h3>enableSinglesStackBlock</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">enableSinglesStackBlock</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="enableBarStackBlock()">
-<h3>enableBarStackBlock</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">enableBarStackBlock</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="renderGalleryPlacementsPerTick()">
-<h3>renderGalleryPlacementsPerTick</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">renderGalleryPlacementsPerTick</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="galleryEnabled()">
-<h3>galleryEnabled</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">galleryEnabled</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="galleryRequiredPermissionLevel()">
-<h3>galleryRequiredPermissionLevel</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">galleryRequiredPermissionLevel</span>()</div>
+<section class="detail" id="logPolicy(java.lang.String,com.github.crittscott.somestacks.ServerConfig.Settings)">
+<h3>logPolicy</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">logPolicy</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;heading,
+ <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;policy)</span></div>
+<div class="block">Logs <code>policy</code> under <code>heading</code>, including the gallery settings that decide whether
+ the gallery commands exist for a player.</div>
 </section>
 </li>
 <li>
@@ -518,7 +571,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Adds an entry to one of the server's text lists, re-bakes the lookup sets, and saves.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>whether the entry was added; false when the list already contains it</dd>
+<dd>whether the entry was added; false when the list already contains it. A failed save
+     does not change the result.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - for an invalid or overlong namespace, or a full list</dd>
 </dl>
 </section>
 </li>

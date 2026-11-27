@@ -91,13 +91,12 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">InteractionRuleRegistry</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">The ordered rule lists behind each loader's right-click callbacks, one list per kind of click.
+<div class="block">The ordered rule lists behind each loader's right-click callbacks: one for clicks on a block, one
+ for clicks that reach no block (an empty-hand click at air, or a held-item use).
 
  <p>Order is the precedence rule: the first match wins and the walk stops. The block list starts
- with the empty-handed permanence toggle, then runs through the item gestures from the most
- specific to the least: the torch gestures precede deposit, deposit into the clicked stack
- precedes deposit into its neighbor, generic placement catches the modified clicks none of those
- claimed, and unmodified extraction sits last.</div>
+ with the empty-handed permanence toggle, then the sneaking torch gestures, then the modified-item
+ click that the server resolves into a deposit or placement, and ends with unmodified extraction.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -113,19 +112,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#processBlockRules(com.github.crittscott.somestacks.client.interaction.InteractionContext)" class="member-name-link">processBlockRules</a><wbr>(<a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a>&nbsp;ctx)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#processAirRules(com.github.crittscott.somestacks.client.interaction.InteractionContext)" class="member-name-link">processAirRules</a><wbr>(<a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a>&nbsp;ctx)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Runs the first matching main-hand block rule; returns the claimed rule or null.</div>
+<div class="block">Runs the first matching main-hand air or held-item rule; returns that rule or null when none
+ claims it.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#processEmptyHandRules(com.github.crittscott.somestacks.client.interaction.InteractionContext)" class="member-name-link">processEmptyHandRules</a><wbr>(<a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a>&nbsp;ctx)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#processBlockRules(com.github.crittscott.somestacks.client.interaction.InteractionContext)" class="member-name-link">processBlockRules</a><wbr>(<a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a>&nbsp;ctx)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Runs the first matching main-hand air rule; returns that rule or null when none claims it.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#processItemRules(com.github.crittscott.somestacks.client.interaction.InteractionContext)" class="member-name-link">processItemRules</a><wbr>(<a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a>&nbsp;ctx)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Runs the first matching main-hand held-item rule; returns the claimed rule or null.</div>
+<div class="block">Runs the first matching main-hand block rule; returns the claimed rule or null.</div>
 </div>
 </div>
 </div>
@@ -145,19 +140,12 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="processEmptyHandRules(com.github.crittscott.somestacks.client.interaction.InteractionContext)">
-<h3>processEmptyHandRules</h3>
+<section class="detail" id="processAirRules(com.github.crittscott.somestacks.client.interaction.InteractionContext)">
+<h3>processAirRules</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></span>&nbsp;<span class="element-name">processEmptyHandRules</span><wbr><span class="parameters">(<a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a>&nbsp;ctx)</span></div>
-<div class="block">Runs the first matching main-hand air rule; returns that rule or null when none claims it.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="processItemRules(com.github.crittscott.somestacks.client.interaction.InteractionContext)">
-<h3>processItemRules</h3>
-<div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></span>&nbsp;<span class="element-name">processItemRules</span><wbr><span class="parameters">(<a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a>&nbsp;ctx)</span></div>
-<div class="block">Runs the first matching main-hand held-item rule; returns the claimed rule or null.</div>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></span>&nbsp;<span class="element-name">processAirRules</span><wbr><span class="parameters">(<a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a>&nbsp;ctx)</span></div>
+<div class="block">Runs the first matching main-hand air or held-item rule; returns that rule or null when none
+ claims it.</div>
 </section>
 </li>
 <li>

@@ -96,9 +96,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">StorageStackBER</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements net.minecraft.client.renderer.blockentity.BlockEntityRenderer&lt;<a href="../block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&gt;</span></div>
-<div class="block">Loader-neutral renderer for a Storage Stack's 27 stored stacks. Each occupied slot is placed at
- its cell's corner, rotated with the block's layout, and handed to <a href="CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client"><code>CubeRenderHelper</code></a>, which
- applies the item's own render profile.
+<div class="block">Loader-neutral renderer for a Storage Stack's 27 stored stacks. <a href="CubeRenderHelper.html#renderGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,net.minecraft.client.renderer.block.BlockRenderDispatcher)"><code>CubeRenderHelper.renderGridItems(com.github.crittscott.somestacks.util.SlotAccess, int, com.github.crittscott.somestacks.util.CubeGrid, int, float, java.util.function.IntUnaryOperator, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.MultiBufferSource, net.minecraft.client.renderer.block.BlockRenderDispatcher)</code></a> places each occupied slot at its cell's corner, rotated with the
+ block's layout, and applies the item's own render profile.
 
  <p>A slot's item count does not affect what is drawn; one stack is one item's worth of art.</div>
 </section>

@@ -90,10 +90,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">BarColumnChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Bar support and collapse in a live level that does not touch loader-native automation directly:
- item validity, grounding at the bottom of a column, footprint overlap deciding support across the
- alternating layer orientations, and player extraction dropping what it unsupports. Loader-native
- automation and protection-event tests stay in each loader's GameTest classes.</div>
+<div class="block">Bar support and collapse in a live level: item validity, grounding at the bottom of a column,
+ footprint overlap deciding support across the alternating layer orientations, and player
+ extraction dropping what it unsupports. Player scenarios click through the loader; automation
+ scenarios are in <a href="AutomationChecks.html" title="class in com.github.crittscott.somestacks.gametest"><code>AutomationChecks</code></a> and protection scenarios in <a href="ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest"><code>ProtectionChecks</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -124,7 +124,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Bar holds brick items on every loader but not blocks built from bricks.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">collapseDoesNotMergeDifferentComponents</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">collapseDoesNotMergeDifferentComponents</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">A Bar collapse never merges stacks with different data components.</div>
 </div>
@@ -164,12 +165,14 @@ loadScripts(document, 'script');</script>
  int&nbsp;to)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCascadeConsolidatesAcrossBlocks</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">playerCascadeConsolidatesAcrossBlocks</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">A player-triggered cascade consolidates matching drops across block boundaries.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerExtractionDropsUnsupportedBars</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">playerExtractionDropsUnsupportedBars</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Player extraction cascades through Bars that lose support.</div>
 </div>
@@ -179,7 +182,8 @@ loadScripts(document, 'script');</script>
  int&nbsp;to)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">supportedNeighborSurvivesPlayerExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">supportedNeighborSurvivesPlayerExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">A neighboring Bar with another overlapping support survives a player cascade.</div>
 </div>
@@ -239,17 +243,19 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>playerExtractionDropsUnsupportedBars</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerExtractionDropsUnsupportedBars</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerExtractionDropsUnsupportedBars</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Player extraction cascades through Bars that lose support. To reproduce in-game: build a
  vertical chain of supported Bars and extract its bottom Bar. The unsupported Bars above drop.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>supportedNeighborSurvivesPlayerExtraction</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">supportedNeighborSurvivesPlayerExtraction</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">supportedNeighborSurvivesPlayerExtraction</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">A neighboring Bar with another overlapping support survives a player cascade. To reproduce
  in-game: support an upper Bar with two lower Bars, then extract one lower support. The upper
  Bar remains on the other.</div>
@@ -292,18 +298,20 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>playerCascadeConsolidatesAcrossBlocks</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCascadeConsolidatesAcrossBlocks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCascadeConsolidatesAcrossBlocks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">A player-triggered cascade consolidates matching drops across block boundaries. To reproduce
  in-game: build a dense supported Bar column spanning two blocks and remove its lowest
  support. All unsupported Bars are returned in consolidated item entities.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>collapseDoesNotMergeDifferentComponents</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">collapseDoesNotMergeDifferentComponents</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">collapseDoesNotMergeDifferentComponents</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">A Bar collapse never merges stacks with different data components. To reproduce in-game:
  build a supported Bar chain from otherwise identical items carrying distinct components, then
  remove the support. Each component identity remains a separate drop.</div>
