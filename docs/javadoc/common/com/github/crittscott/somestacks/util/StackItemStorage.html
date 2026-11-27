@@ -82,10 +82,10 @@ loadScripts(document, 'script');</script>
 <li><a href="#onContentsChanged(int)" tabindex="0">onContentsChanged(int)</a></li>
 <li><a href="#codec(int)" tabindex="0">codec(int)</a></li>
 <li><a href="#save(net.minecraft.core.HolderLookup.Provider)" tabindex="0">save(HolderLookup.Provider)</a></li>
+<li><a href="#saveClientUpdate(net.minecraft.core.HolderLookup.Provider)" tabindex="0">saveClientUpdate(HolderLookup.Provider)</a></li>
 <li><a href="#load(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" tabindex="0">load(HolderLookup.Provider, CompoundTag)</a></li>
 <li><a href="#isValidClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" tabindex="0">isValidClientUpdate(HolderLookup.Provider, CompoundTag)</a></li>
 <li><a href="#deserializeClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" tabindex="0">deserializeClientUpdate(HolderLookup.Provider, CompoundTag)</a></li>
-<li><a href="#stripSetAside(net.minecraft.nbt.CompoundTag)" tabindex="0">stripSetAside(CompoundTag)</a></li>
 </ol>
 </li>
 </ol>
@@ -236,21 +236,22 @@ and retried on every load, so contents from a temporarily missing mod return whe
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.nbt.CompoundTag</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#save(net.minecraft.core.HolderLookup.Provider)" class="member-name-link">save</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)" class="member-name-link">setStackInSlot</a><wbr>(int&nbsp;slot,
- net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.nbt.CompoundTag</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveClientUpdate(net.minecraft.core.HolderLookup.Provider)" class="member-name-link">saveClientUpdate</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The client update form: every nonempty slot without its <code>UNDRAWN_COMPONENTS</code>, and no
+set-aside data, which clients have no use for.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)" class="member-name-link">setStackInSlot</a><wbr>(int&nbsp;slot,
+ net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Replaces a slot directly and reports the change, bypassing admission and capacity checks.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageSlotLimit(net.minecraft.world.item.ItemStack)" class="member-name-link">storageSlotLimit</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Storage capacity after applying the item's own maximum.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripSetAside(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripSetAside</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageSlotLimit(net.minecraft.world.item.ItemStack)" class="member-name-link">storageSlotLimit</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Removes the set-aside tags from serialized storage, which clients have no use for.</div>
+<div class="block">Storage capacity after applying the item's own maximum.</div>
 </div>
 </div>
 </div>
@@ -481,6 +482,16 @@ Internal relocation and settlement use this only for already-stored contents. Th
 </section>
 </li>
 <li>
+<section class="detail" id="saveClientUpdate(net.minecraft.core.HolderLookup.Provider)">
+<h3>saveClientUpdate</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.nbt.CompoundTag</span>&nbsp;<span class="element-name">saveClientUpdate</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries)</span></div>
+<div class="block">The client update form: every nonempty slot without its <code>UNDRAWN_COMPONENTS</code>, and no
+set-aside data, which clients have no use for. Stored stacks are not changed.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="load(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)">
 <h3>load</h3>
 <div class="horizontal-scroll">
@@ -510,15 +521,6 @@ returned retention counts once it knows the world location.</div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">deserializeClientUpdate</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
 <div class="block">Validates a current-format client snapshot before replacing any local contents.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="stripSetAside(net.minecraft.nbt.CompoundTag)">
-<h3>stripSetAside</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stripSetAside</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
-<div class="block">Removes the set-aside tags from serialized storage, which clients have no use for.</div>
 </div>
 </section>
 </li>

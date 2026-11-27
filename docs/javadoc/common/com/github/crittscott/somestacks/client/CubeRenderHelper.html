@@ -90,9 +90,9 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">CubeRenderHelper</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Draws the stored items of a Storage or Singles grid according to their render profiles. The
-Storage and Singles renderers supply the grid geometry and delegate here; everything about how an
-item itself is presented lives in this class.
+<div class="block">Draws the stored items of a Storage or Singles grid according to their render profiles. <a href="GridStackBER.html" title="class in com.github.crittscott.somestacks.client"><code>GridStackBER</code></a> supplies the grid geometry and hands each frame to <a href="#extractGridItems(com.github.crittscott.somestacks.client.CubeRenderHelper.GridCache,com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.client.renderer.block.BlockModelResolver,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.phys.Vec3,com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState)"><code>extractGridItems(CubeRenderHelper.GridCache, SlotAccess, int, CubeGrid, int, float, IntUnaryOperator, BlockModelResolver, Level, BlockPos, Vec3, CubeRenderHelper.GridRenderState)</code></a> and
+<a href="#submitGridItems(com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.SubmitNodeCollector)"><code>submitGridItems(CubeRenderHelper.GridRenderState, PoseStack, SubmitNodeCollector)</code></a>, which position each cell; everything about how an item itself is
+presented lives in this class.
 
 <p>The <code>3d</code>, <code>gui</code>, and <code>block</code> modes hand off to Minecraft's own renderers.
 The <code>2d</code> mode is the one implemented here: flat item art projected onto the visible faces
@@ -146,13 +146,13 @@ one submission per render type.</div>
 <div class="col-first odd-row-color"><code>static final float</code></div>
 <div class="col-second odd-row-color"><code><a href="#CELL_LOCAL_SIZE" class="member-name-link">CELL_LOCAL_SIZE</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">One four-pixel cell in those local units, where 1.0 is the eight pixels above.</div>
+<div class="block">One Singles cell in those local units, where 1.0 is <code>RENDER_UNIT_PIXELS</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static final float</code></div>
 <div class="col-second even-row-color"><code><a href="#CELL_RENDER_SCALE" class="member-name-link">CELL_RENDER_SCALE</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Scale a stack block's renderer applies before handing a cell's contents here: an item's unit
-cube becomes eight pixels.</div>
+<div class="block">Singles' cell scale, applied by <a href="#submitGridItems(com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.SubmitNodeCollector)"><code>submitGridItems(CubeRenderHelper.GridRenderState, PoseStack, SubmitNodeCollector)</code></a> at each cell's corner: an item's unit
+cube becomes <code>RENDER_UNIT_PIXELS</code> pixels of the 16-pixel block.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final net.minecraft.resources.Identifier</code></div>
 <div class="col-second odd-row-color"><code><a href="#RENDER_CACHE_RELOAD_LISTENER_ID" class="member-name-link">RENDER_CACHE_RELOAD_LISTENER_ID</a></code></div>
@@ -168,8 +168,8 @@ cube becomes eight pixels.</div>
 <div class="col-first even-row-color"><code>static final float</code></div>
 <div class="col-second even-row-color"><code><a href="#STORAGE_CELL_RENDER_SCALE" class="member-name-link">STORAGE_CELL_RENDER_SCALE</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Storage's own cell-render scale, grown so a cell's rendered content fills more of its
-4.5-pixel cell, halving the gap between Storage's cells.</div>
+<div class="block">Storage's own cell-render scale, grown by the ratio of a Storage cell to a Singles cell so a
+cell's rendered content fills more of its cell, halving the gap between Storage's cells.</div>
 </div>
 </div>
 </section>
@@ -188,7 +188,9 @@ cube becomes eight pixels.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#applyGuiCounterRotation(com.mojang.blaze3d.vertex.PoseStack)" class="member-name-link">applyGuiCounterRotation</a><wbr>(com.mojang.blaze3d.vertex.PoseStack&nbsp;pose)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Applies the counter-rotation shared by GUI submission and automatic GUI measurement.</div>
+<div class="block">Turns the pose so that an item drawn with the GUI display context faces as it does in a FIXED
+display instead of tilted like an inventory icon: it cancels the 30-degree tilt and 45
+degrees of the 225-degree turn of the GUI transform vanilla's block model parent gives.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CubeRenderHelper.GridCache.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridCache</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractGridItems(com.github.crittscott.somestacks.client.CubeRenderHelper.GridCache,com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.client.renderer.block.BlockModelResolver,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.phys.Vec3,com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState)" class="member-name-link">extractGridItems</a><wbr>(<a href="CubeRenderHelper.GridCache.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridCache</a>&nbsp;previous,
@@ -265,8 +267,8 @@ cube becomes eight pixels.</div>
 <h3>CELL_RENDER_SCALE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">CELL_RENDER_SCALE</span></div>
-<div class="block">Scale a stack block's renderer applies before handing a cell's contents here: an item's unit
-cube becomes eight pixels.</div>
+<div class="block">Singles' cell scale, applied by <a href="#submitGridItems(com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.SubmitNodeCollector)"><code>submitGridItems(CubeRenderHelper.GridRenderState, PoseStack, SubmitNodeCollector)</code></a> at each cell's corner: an item's unit
+cube becomes <code>RENDER_UNIT_PIXELS</code> pixels of the 16-pixel block.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -283,9 +285,9 @@ cube becomes eight pixels.</div>
 <h3>STORAGE_CELL_RENDER_SCALE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">STORAGE_CELL_RENDER_SCALE</span></div>
-<div class="block">Storage's own cell-render scale, grown so a cell's rendered content fills more of its
-4.5-pixel cell, halving the gap between Storage's cells. Storage-only: Singles' cells already
-tile edge to edge with no gap to absorb growth into.</div>
+<div class="block">Storage's own cell-render scale, grown by the ratio of a Storage cell to a Singles cell so a
+cell's rendered content fills more of its cell, halving the gap between Storage's cells.
+Storage-only: Singles' cells already tile edge to edge with no gap to absorb growth into.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -302,7 +304,9 @@ tile edge to edge with no gap to absorb growth into.</div>
 <h3>CELL_LOCAL_SIZE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">CELL_LOCAL_SIZE</span></div>
-<div class="block">One four-pixel cell in those local units, where 1.0 is the eight pixels above.</div>
+<div class="block">One Singles cell in those local units, where 1.0 is <code>RENDER_UNIT_PIXELS</code>. Storage
+cells occupy the same local size, because <a href="#STORAGE_CELL_RENDER_SCALE"><code>STORAGE_CELL_RENDER_SCALE</code></a> grows the whole
+frame instead.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -359,7 +363,10 @@ tile edge to edge with no gap to absorb growth into.</div>
  net.minecraft.world.phys.Vec3&nbsp;cameraPos,
  <a href="CubeRenderHelper.GridRenderState.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridRenderState</a>&nbsp;state)</span></div>
 <div class="block">Prepares one frame of a grid. <code>previous</code> is what this call returned last time for the
-same block entity, or null; it is reused while still current.</div>
+same block entity, or null; it is reused while still current. Each occupied cell is placed at
+its corner for <code>blockRotation</code>, scaled by <code>renderScale</code>, and turned by <code>
+itemRotation</code>'s quarter turns for that slot. Every cell is drawn with the frame light
+already extracted into <code>state</code>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the grid cache to hand back on the next frame.</dd>
@@ -383,7 +390,11 @@ same block entity, or null; it is reused while still current.</div>
 <h3>applyGuiCounterRotation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyGuiCounterRotation</span><wbr><span class="parameters">(com.mojang.blaze3d.vertex.PoseStack&nbsp;pose)</span></div>
-<div class="block">Applies the counter-rotation shared by GUI submission and automatic GUI measurement.</div>
+<div class="block">Turns the pose so that an item drawn with the GUI display context faces as it does in a FIXED
+display instead of tilted like an inventory icon: it cancels the 30-degree tilt and 45
+degrees of the 225-degree turn of the GUI transform vanilla's block model parent gives. The
+<code>gui</code> submission path and GUI measurement both call this, so an item is fitted at the
+angle it is drawn.</div>
 </div>
 </section>
 </li>
