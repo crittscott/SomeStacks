@@ -1,186 +1,124 @@
 package com.github.crittscott.somestacks;
 
+import com.github.crittscott.somestacks.ServerConfig.Section;
+import com.github.crittscott.somestacks.ServerConfig.Setting;
+import com.github.crittscott.somestacks.ServerConfig.Settings;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 import java.nio.file.Path;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
-/** Loader-managed server configuration exposed as one immutable common policy snapshot. */
+/**
+ * Loader-managed server configuration exposed as one immutable common policy snapshot. The spec is
+ * built from {@link ServerConfig}'s declaration of sections and settings.
+ */
 public final class ForgeServerConfig implements ServerConfig.Backend {
     public static final ForgeServerConfig INSTANCE = new ForgeServerConfig();
+
     private ModConfig loadedConfig;
-
-    public Path path() {
-        return loadedConfig.getFullPath();
-    }
-
+    private volatile MinecraftServer runningServer;
     public final ForgeConfigSpec spec;
-    private final ForgeConfigSpec.IntValue maxHeight;
-    private final ForgeConfigSpec.BooleanValue storage;
-    private final ForgeConfigSpec.BooleanValue singles;
-    private final ForgeConfigSpec.BooleanValue bars;
-    private final ForgeConfigSpec.IntValue placements;
-    private final ForgeConfigSpec.BooleanValue gallery;
-    private final ForgeConfigSpec.IntValue permission;
-    private final ForgeConfigSpec.ConfigValue<List<? extends String>> disabledMods;
-    private final ForgeConfigSpec.ConfigValue<List<? extends String>> disabledItems;
-    private final ForgeConfigSpec.ConfigValue<List<? extends String>> genMods;
-    private final ForgeConfigSpec.ConfigValue<List<? extends String>> genItems;
+    private final Map<Setting, ForgeConfigSpec.ConfigValue<?>> values =
+            new EnumMap<>(Setting.class);
 
     private ForgeServerConfig() {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-        ServerConfig.Settings defaults = ServerConfig.defaults();
-
-        builder.comment("Stack piles: vertical runs of one stack type that share one inventory.")
-                .push(ServerConfig.SECTION_PILES);
-        maxHeight =
-                builder.comment(
-                                "Tallest a run of one stack type may grow, in blocks. Player deposits and automation stop growing a run at this height.")
-                        .defineInRange(
-                                ServerConfig.KEY_MAX_PILE_HEIGHT,
-                                defaults.maxPileHeight(),
-                                1,
-                                ServerConfig.MAX_PILE_HEIGHT);
-        builder.pop();
-
-        builder.comment(
-                        "Which stack types players and automation may create.",
-                        "Turning a type off blocks new placement and growth only; existing stacks keep working and their contents stay extractable.")
-                .push(ServerConfig.SECTION_STACKS);
-        storage =
-                builder.comment(
-                                "Storage Stack: 27 item stacks per block that merge, sort, and pack down.")
-                        .define(
-                                ServerConfig.KEY_ENABLE_STORAGE,
-                                defaults.enableStorageStackBlock());
-        singles =
-                builder.comment(
-                                "Singles Stack: a 4 x 4 x 4 display grid holding one item per cell.")
-                        .define(
-                                ServerConfig.KEY_ENABLE_SINGLES,
-                                defaults.enableSinglesStackBlock());
-        bars =
-                builder.comment(
-                                "Bar Stack: 64 ingots per block in eight alternating layers; ingots are the somestacks:ingots item tag.")
-                        .define(ServerConfig.KEY_ENABLE_BAR, defaults.enableBarStackBlock());
-        builder.pop();
-
-        builder.comment(
-                        "Items refused by stacks. Disabling never removes or ejects existing contents.")
-                .push(ServerConfig.SECTION_COMPATIBILITY);
-        disabledMods =
-                builder.comment(
-                                "Mod ids (item namespaces) whose items players and automation may not put into stacks, e.g. [\"examplemod\"].",
-                                "Galleries skip these mods. Edit in game with /ss deny.")
-                        .defineListAllowEmpty(
-                                ServerConfig.KEY_DISABLE_MODS,
-                                defaults.disableMods(),
-                                value -> value instanceof String);
-        disabledItems =
-                builder.comment(
-                                "Item ids players may not deposit into stacks, e.g. [\"minecraft:stone\"]. Automation is not affected.",
-                                "Galleries skip these items. The default lists items known to crash clients when drawn. Edit in game with /ss deny.")
-                        .defineListAllowEmpty(
-                                ServerConfig.KEY_DISABLE_ITEMS,
-                                defaults.disableItems(),
-                                value -> value instanceof String);
-        builder.pop();
-
-        builder.comment(
-                        "Render galleries: /ss gallery and /ss ingotgallery build rows of stacks showing every item of chosen mods,",
-                        "for checking how items render. Galleries bypass placement protection, so they are off by default.")
-                .push(ServerConfig.SECTION_RENDER_GALLERY);
-        gallery =
-                builder.comment("Whether /ss gallery and /ss ingotgallery are available.")
-                        .define(ServerConfig.KEY_GALLERY_ENABLED, defaults.galleryEnabled());
-        permission =
-                builder.comment(
-                                "Permission level needed to run the gallery commands (0 = everyone, 4 = owner).")
-                        .defineInRange(
-                                ServerConfig.KEY_REQUIRED_PERMISSION_LEVEL,
-                                defaults.galleryPermissionLevel(),
-                                0,
-                                ServerConfig.GALLERY_PERMISSION_LEVEL_MAX);
-        placements =
-                builder.comment(
-                                "Stacks a gallery places per server tick; lower values spread the work over more ticks.")
-                        .defineInRange(
-                                ServerConfig.KEY_PLACEMENTS_PER_TICK,
-                                defaults.renderGalleryPlacementsPerTick(),
-                                1,
-                                Integer.MAX_VALUE);
-        genMods =
-                builder.comment(
-                                "Mod ids the gallery 'list' form builds, one column per mod. Edit in game with /ss gen.")
-                        .defineListAllowEmpty(
-                                ServerConfig.KEY_GEN_MODS,
-                                defaults.genMods(),
-                                value -> value instanceof String);
-        genItems =
-                builder.comment(
-                                "Item ids the gallery 'items' form builds as a single column. Edit in game with /ss gen.")
-                        .defineListAllowEmpty(
-                                ServerConfig.KEY_GEN_ITEMS,
-                                defaults.genItems(),
-                                value -> value instanceof String);
-        builder.pop();
-
+        Settings defaults = ServerConfig.defaults();
+        for (Section section : Section.values()) {
+            builder.comment(section.comment().toArray(String[]::new)).push(section.key());
+            for (Setting setting : section.settings()) {
+                builder.comment(setting.comment().toArray(String[]::new));
+                values.put(setting, define(builder, setting, setting.get(defaults)));
+            }
+            builder.pop();
+        }
         spec = builder.build();
     }
 
-    public void onLoading(ModConfigEvent.Loading event) {
-        onConfigChanged(event.getConfig());
+    /** Declares one shared setting; the spec adds the range line to bounded integers itself. */
+    @SuppressWarnings("unchecked")
+    private static ForgeConfigSpec.ConfigValue<?> define(
+            ForgeConfigSpec.Builder builder, Setting setting, Object fallback) {
+        return switch (setting.kind()) {
+            case INTEGER ->
+                    builder.defineInRange(
+                            setting.key(), (int) (Integer) fallback, setting.min(), setting.max());
+            case BOOLEAN -> builder.define(setting.key(), (boolean) (Boolean) fallback);
+            case STRINGS ->
+                    builder.defineListAllowEmpty(
+                            setting.key(),
+                            (List<String>) fallback,
+                            value -> value instanceof String);
+        };
     }
 
-    public void onReloading(ModConfigEvent.Reloading event) {
-        onConfigChanged(event.getConfig());
+    @Override
+    public ServerConfig.Settings loadFor(MinecraftServer server) {
+        runningServer = server;
+        return reload();
     }
 
     private void onConfigChanged(ModConfig config) {
         if (config.getSpec() != spec) return;
         loadedConfig = config;
-        if (ServerConfig.backend() == this) SomeStacksServer.onPolicyReloaded();
+        if (ServerConfig.backend() != this) return;
+        MinecraftServer server = runningServer;
+        if (server != null) {
+            server.execute(() -> {
+                if (runningServer == server) SomeStacksServer.reloadPolicy(server);
+            });
+        }
     }
 
-    @Override
-    public ServerConfig.Settings loadFor(MinecraftServer server) {
-        return reload();
+    /**
+     * Mod-bus listener for the loader loading this spec's file. Records the loaded config and,
+     * while a server is running with this backend installed, reapplies the policy and resyncs
+     * clients on the server thread.
+     */
+    public void onLoading(ModConfigEvent.Loading event) {
+        onConfigChanged(event.getConfig());
+    }
+
+    /**
+     * Mod-bus listener for an edit to this spec's file. Records the reloaded config and, while a
+     * server is running with this backend installed, reapplies the policy and resyncs clients on
+     * the server thread.
+     */
+    public void onReloading(ModConfigEvent.Reloading event) {
+        onConfigChanged(event.getConfig());
+    }
+
+    public Path path() {
+        return loadedConfig.getFullPath();
     }
 
     /** Reads the values published by the loader's load/reload lifecycle. */
     @Override
     public ServerConfig.Settings reload() {
-        return new ServerConfig.Settings(
-                maxHeight.get(),
-                storage.get(),
-                singles.get(),
-                bars.get(),
-                List.copyOf(disabledMods.get()),
-                List.copyOf(disabledItems.get()),
-                placements.get(),
-                gallery.get(),
-                permission.get(),
-                List.copyOf(genMods.get()),
-                List.copyOf(genItems.get()));
+        return Settings.from(setting -> values.get(setting).get());
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean save(ServerConfig.Settings settings) {
-        maxHeight.set(settings.maxPileHeight());
-        storage.set(settings.enableStorageStackBlock());
-        singles.set(settings.enableSinglesStackBlock());
-        bars.set(settings.enableBarStackBlock());
-        disabledMods.set(settings.disableMods());
-        disabledItems.set(settings.disableItems());
-        placements.set(settings.renderGalleryPlacementsPerTick());
-        gallery.set(settings.galleryEnabled());
-        permission.set(settings.galleryPermissionLevel());
-        genMods.set(settings.genMods());
-        genItems.set(settings.genItems());
+        for (Setting setting : Setting.values()) {
+            ((ForgeConfigSpec.ConfigValue<Object>) values.get(setting)).set(setting.get(settings));
+        }
         spec.save();
         return true;
+    }
+
+    /**
+     * Forgets the running server on server stop, so a later file event does not reload or resync a
+     * stopped server.
+     */
+    public void stop() {
+        runningServer = null;
     }
 }

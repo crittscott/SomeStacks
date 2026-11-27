@@ -94,7 +94,7 @@ public final class ProtectionApiGameTests {
         BlockPos pos = helper.absolutePos(ORIGIN);
         ServerPlayer player = FakePlayer.get(helper.getLevel());
         check(
-                WorldEdits.mayPlace(player, helper.getLevel(), pos),
+                WorldEdits.mayPlace(player, helper.getLevel(), pos, Direction.DOWN),
                 "Unprotected placement was denied");
         check(WorldEdits.mayUseAdjacent(player, pos), "Unprotected neighboring deposit was denied");
         check(

@@ -1,5 +1,7 @@
 package com.github.crittscott.somestacks.command;
 
+import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -41,24 +43,26 @@ final class SsHelp {
 
     /**
      * One top-level subcommand. The summary is its line in the index, the usage keys describe its
-     * exact forms, and the detail is what a player needs to know before running it.
+     * exact forms, and the details are what a player needs to know before running it.
      */
     private enum Topic {
         ITEM(
-                "item",
+                SsCommand.COMMAND_ITEM,
                 "somestacks.command.help.item.summary",
                 Gate.ANYONE,
                 List.of(
                         "somestacks.command.help.item.usage.1",
                         "somestacks.command.help.item.usage.2"),
                 List.of(
-                        "somestacks.command.help.item.detail.1",
-                        "somestacks.command.help.item.detail.2",
-                        "somestacks.command.help.item.detail.3",
-                        "somestacks.command.help.item.detail.4")),
+                        detail("somestacks.command.help.item.detail.1"),
+                        detail(
+                                "somestacks.command.help.item.detail.2",
+                                OverrideJsonCodec.DEFAULT_SCALE),
+                        detail("somestacks.command.help.item.detail.3"),
+                        detail("somestacks.command.help.item.detail.4"))),
 
         GALLERY(
-                "gallery",
+                SsCommand.COMMAND_GALLERY,
                 "somestacks.command.help.gallery.summary",
                 Gate.SERVER_ADMIN_IN_GAME,
                 List.of(
@@ -67,14 +71,14 @@ final class SsHelp {
                         "somestacks.command.help.gallery.usage.3",
                         "somestacks.command.help.gallery.usage.4"),
                 List.of(
-                        "somestacks.command.help.gallery.detail.1",
-                        "somestacks.command.help.gallery.detail.2",
-                        "somestacks.command.help.gallery.detail.3",
-                        "somestacks.command.help.gallery.detail.4",
-                        "somestacks.command.help.gallery.detail.5")),
+                        detail("somestacks.command.help.gallery.detail.1"),
+                        detail("somestacks.command.help.gallery.detail.2"),
+                        detail("somestacks.command.help.gallery.detail.3"),
+                        detail("somestacks.command.help.gallery.detail.4"),
+                        detail("somestacks.command.help.gallery.detail.5"))),
 
         INGOTGALLERY(
-                "ingotgallery",
+                SsCommand.COMMAND_INGOT_GALLERY,
                 "somestacks.command.help.ingotgallery.summary",
                 Gate.SERVER_ADMIN_IN_GAME,
                 List.of(
@@ -82,11 +86,11 @@ final class SsHelp {
                         "somestacks.command.help.ingotgallery.usage.2",
                         "somestacks.command.help.ingotgallery.usage.3"),
                 List.of(
-                        "somestacks.command.help.ingotgallery.detail.1",
-                        "somestacks.command.help.ingotgallery.detail.2")),
+                        detail("somestacks.command.help.ingotgallery.detail.1"),
+                        detail("somestacks.command.help.ingotgallery.detail.2"))),
 
         WRITE(
-                "write",
+                SsCommand.COMMAND_WRITE,
                 "somestacks.command.help.write.summary",
                 Gate.ANYONE,
                 List.of(
@@ -95,20 +99,20 @@ final class SsHelp {
                         "somestacks.command.help.write.usage.3",
                         "somestacks.command.help.write.usage.4"),
                 List.of(
-                        "somestacks.command.help.write.detail.1",
-                        "somestacks.command.help.write.detail.2",
-                        "somestacks.command.help.write.detail.3",
-                        "somestacks.command.help.write.detail.4")),
+                        detail("somestacks.command.help.write.detail.1"),
+                        detail("somestacks.command.help.write.detail.2"),
+                        detail("somestacks.command.help.write.detail.3"),
+                        detail("somestacks.command.help.write.detail.4"))),
 
         RELOAD(
-                "reload",
+                SsCommand.COMMAND_RELOAD,
                 "somestacks.command.help.reload.summary",
                 Gate.OPERATOR,
                 List.of("somestacks.command.help.reload.usage.1"),
-                List.of("somestacks.command.help.reload.detail.1")),
+                List.of(detail("somestacks.command.help.reload.detail.1"))),
 
         GEN(
-                "gen",
+                SsCommand.COMMAND_GEN,
                 "somestacks.command.help.gen.summary",
                 Gate.OPERATOR,
                 List.of(
@@ -119,12 +123,15 @@ final class SsHelp {
                         "somestacks.command.help.gen.usage.5",
                         "somestacks.command.help.gen.usage.6"),
                 List.of(
-                        "somestacks.command.help.gen.detail.1",
-                        "somestacks.command.help.gen.detail.2",
-                        "somestacks.command.help.gen.detail.3")),
+                        detail("somestacks.command.help.gen.detail.1"),
+                        detail("somestacks.command.help.gen.detail.2"),
+                        detail(
+                                "somestacks.command.help.gen.detail.3",
+                                ServerConfig.MAX_NAMESPACE_ENTRIES,
+                                ServerConfig.MAX_NAMESPACE_LENGTH))),
 
         DENY(
-                "deny",
+                SsCommand.COMMAND_DENY,
                 "somestacks.command.help.deny.summary",
                 Gate.OPERATOR,
                 List.of(
@@ -135,35 +142,38 @@ final class SsHelp {
                         "somestacks.command.help.deny.usage.5",
                         "somestacks.command.help.deny.usage.6"),
                 List.of(
-                        "somestacks.command.help.deny.detail.1",
-                        "somestacks.command.help.deny.detail.2")),
+                        detail("somestacks.command.help.deny.detail.1"),
+                        detail(
+                                "somestacks.command.help.deny.detail.2",
+                                ServerConfig.MAX_NAMESPACE_ENTRIES,
+                                ServerConfig.MAX_NAMESPACE_LENGTH))),
 
         HELP(
-                "help",
+                SsCommand.COMMAND_HELP,
                 "somestacks.command.help.help.summary",
                 Gate.ANYONE,
                 List.of(
                         "somestacks.command.help.help.usage.1",
                         "somestacks.command.help.help.usage.2"),
-                List.of("somestacks.command.help.help.detail.1"));
+                List.of(detail("somestacks.command.help.help.detail.1")));
 
         private final String name;
         private final String summaryKey;
         private final Gate gate;
         private final List<String> usageKeys;
-        private final List<String> detailKeys;
+        private final List<Component> details;
 
         Topic(
                 String name,
                 String summaryKey,
                 Gate gate,
                 List<String> usageKeys,
-                List<String> detailKeys) {
+                List<Component> details) {
             this.name = name;
             this.summaryKey = summaryKey;
             this.gate = gate;
             this.usageKeys = usageKeys;
-            this.detailKeys = detailKeys;
+            this.details = details;
         }
 
         @Nullable
@@ -183,7 +193,7 @@ final class SsHelp {
     }
 
     static LiteralArgumentBuilder<CommandSourceStack> tree() {
-        return Commands.literal("help")
+        return Commands.literal(SsCommand.COMMAND_HELP)
                 .executes(SsHelp::index)
                 .then(
                         Commands.argument("command", StringArgumentType.word())
@@ -256,11 +266,16 @@ final class SsHelp {
                                 Component.translatable(topic.gate.audienceKey))
                         .withStyle(ChatFormatting.GRAY));
 
-        for (String detailKey : topic.detailKeys) {
-            send(ctx, Component.translatable(detailKey));
+        for (Component detail : topic.details) {
+            send(ctx, detail);
         }
 
         return 1;
+    }
+
+    /** One detail line, with the values it states taken from the code that owns them. */
+    private static Component detail(String key, Object... args) {
+        return Component.translatable(key, args);
     }
 
     /** Sends help only to the requesting source. */

@@ -14,7 +14,7 @@ import net.minecraft.resources.Identifier;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-/** Complete client policy snapshot; Fabric sends it as one bounded play payload. */
+/** Complete client policy snapshot, sent by every loader as one bounded play payload. */
 public record ConfigSyncPkt(
         boolean enableStorage,
         boolean enableSingles,
@@ -56,7 +56,7 @@ public record ConfigSyncPkt(
         for (String namespace : namespaces) {
             if (namespace.isEmpty()
                     || namespace.length() > MAX_NAMESPACE_LENGTH
-                    || !Identifier.isValidNamespace(namespace)
+                    || !ServerConfig.isValidNamespace(namespace)
                     || !unique.add(namespace)) {
                 throw new DecoderException("Invalid or duplicate synchronized namespace");
             }
@@ -64,7 +64,7 @@ public record ConfigSyncPkt(
         return List.copyOf(namespaces);
     }
 
-    /** Normalizes policy for either native NeoForge receipt or Fabric payload delivery. */
+    /** Normalizes the published policy into the client snapshot. */
     public static ConfigSyncPkt fromSettings(ServerConfig.Settings settings) {
         return new ConfigSyncPkt(
                 settings.enableStorageStackBlock(),
@@ -81,7 +81,7 @@ public record ConfigSyncPkt(
             String namespace = ServerConfig.normalizeNamespace(entry);
             if (namespace.isEmpty()) continue;
             if (namespace.length() > MAX_NAMESPACE_LENGTH
-                    || !Identifier.isValidNamespace(namespace)) {
+                    || !ServerConfig.isValidNamespace(namespace)) {
                 SomeStacksCommon.LOGGER.warn(
                         "Ignoring invalid {} namespace '{}' in client policy", label, entry);
             } else if (result.contains(namespace)) {

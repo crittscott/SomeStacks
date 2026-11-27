@@ -36,12 +36,44 @@ import javax.annotation.Nullable;
  * texture runs along each bar's long axis whichever way its layer lies.
  */
 public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.BarRenderState> {
-    private static final float TEXTURE_GRID = 32f;
-    private static final float[] TOP_BOTTOM_RECT = {0f, 0f, 24f, 12f};
-    private static final float[] LONG_SIDE_RECT = {0f, 12f, 24f, 20f};
-    private static final float[] END_CAP_RECT = {0f, 20f, 12f, 28f};
+    /**
+     * Units of the bar texture's layout grid per model pixel of bar face. Declared first because
+     * the face sizes below are computed from it.
+     */
+    private static final float GRID_UNITS_PER_PIXEL = 4f;
+
+    // Every bar has the same shape, whichever way its layer runs; layer 0 merely names one. The
+    // texture lays the top (length x width), a long side (length x height), and an end cap
+    // (width x height) one below another from the grid's top-left corner. Each rectangle below is
+    // {u0, v0, u1, v1} on that grid, declared after the sizes it is computed from.
+
+    /** A bar's height, in layout grid units. */
+    private static final float BAR_GRID_HEIGHT =
+            (float) BarCubeIdx.barHeight(0) * GRID_UNITS_PER_PIXEL;
+
+    /** A bar's long-axis length, in layout grid units. */
+    private static final float BAR_GRID_LENGTH =
+            (float) Math.max(BarCubeIdx.barWidth(0), BarCubeIdx.barDepth(0))
+                    * GRID_UNITS_PER_PIXEL;
+
+    /** A bar's short horizontal span, in layout grid units. */
+    private static final float BAR_GRID_WIDTH =
+            (float) Math.min(BarCubeIdx.barWidth(0), BarCubeIdx.barDepth(0))
+                    * GRID_UNITS_PER_PIXEL;
+
+    private static final float[] END_CAP_RECT = {
+        0f, BAR_GRID_WIDTH + BAR_GRID_HEIGHT, BAR_GRID_WIDTH, BAR_GRID_WIDTH + 2 * BAR_GRID_HEIGHT
+    };
+    private static final float[] LONG_SIDE_RECT = {
+        0f, BAR_GRID_WIDTH, BAR_GRID_LENGTH, BAR_GRID_WIDTH + BAR_GRID_HEIGHT
+    };
     private static final Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS =
             new IdentityHashMap<>();
+
+    /** Units along each edge of the bar texture's layout grid, which spans the whole sprite. */
+    private static final float TEXTURE_GRID = 32f;
+
+    private static final float[] TOP_BOTTOM_RECT = {0f, 0f, BAR_GRID_LENGTH, BAR_GRID_WIDTH};
 
     private static int resourceGeneration;
 
@@ -146,7 +178,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
                 sp -> {
                     float u0 = sp.getU0(), v0 = sp.getV0();
                     float uRange = sp.getU1() - u0, vRange = sp.getV1() - v0;
-                    // Top/bottom, long side, and end cap on the sprite's 32-unit grid.
+                    // Top/bottom, long side, and end cap on the sprite's layout grid.
                     return new UvRegion[] {
                         region(u0, v0, uRange, vRange, TOP_BOTTOM_RECT),
                         region(u0, v0, uRange, vRange, LONG_SIDE_RECT),
@@ -165,9 +197,9 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
         int overlay = OverlayTexture.NO_OVERLAY;
         UvRegion top = regions[0], longSide = regions[1], endCap = regions[2];
 
-        // Even layers lay their bars along X (6x2x3), so the Z faces are the long sides and
-        // the X faces the end caps. Odd layers lay them along Z (3x2x6) and the two trade places.
-        boolean rotated = (layer % 2) == 1;
+        // East-west layers lay their bars along X, so the Z faces are the long sides and the X
+        // faces the end caps. North-south layers lay them along Z and the two trade places.
+        boolean rotated = !BarCubeIdx.isEWLayer(layer);
         UvRegion zFace = rotated ? endCap : longSide;
         UvRegion xFace = rotated ? longSide : endCap;
 
@@ -317,7 +349,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
     /** A sub-rectangle of a sprite, in atlas UV coordinates. */
     private record UvRegion(float u0, float v0, float u1, float v1) {}
 
-    /** Maps a rectangle of the sprite's 32-unit grid onto its place in the atlas. */
+    /** Maps a rectangle of the sprite's layout grid onto its place in the atlas. */
     private static UvRegion region(
             float u0, float v0, float uRange, float vRange, float[] rectangle) {
         return new UvRegion(

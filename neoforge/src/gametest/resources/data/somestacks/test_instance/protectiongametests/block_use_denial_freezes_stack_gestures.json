@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:function",
+  "function": "somestacks:protectiongametests/block_use_denial_freezes_stack_gestures",
+  "environment": "minecraft:default",
+  "structure": "somestacks:somestacks_empty",
+  "max_ticks": 100
+}

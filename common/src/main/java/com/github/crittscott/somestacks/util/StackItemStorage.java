@@ -7,6 +7,8 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
@@ -16,7 +18,9 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,6 +44,16 @@ public class StackItemStorage implements SlotAccess {
 
     /** Per-slot max-stack-size cap advertised to automation. */
     public static final int STORAGE_SLOT_LIMIT = 64;
+
+    /**
+     * Item data no renderer draws that can be large: the contents of container items and book
+     * pages. Client updates leave it out, as a chest sends nearby players none of its contents.
+     */
+    private static final List<DataComponentType<?>> UNDRAWN_COMPONENTS =
+            List.of(
+                    DataComponents.CONTAINER,
+                    DataComponents.WRITABLE_BOOK_CONTENT,
+                    DataComponents.WRITTEN_BOOK_CONTENT);
 
     /** Storage capacity after applying the item's own maximum. */
     public static int storageSlotLimit(ItemStack stack) {
@@ -178,14 +192,32 @@ public class StackItemStorage implements SlotAccess {
         return save(RegistryOps.create(NbtOps.INSTANCE, registries));
     }
 
+    /** The saved form: every nonempty slot, plus the retained set-aside entries. */
     private <T> CompoundTag save(DynamicOps<T> ops) {
+        CompoundTag nbt = saveSlots(ops, UnaryOperator.identity());
+        savedItems.saveTo(nbt);
+        return nbt;
+    }
+
+    /**
+     * The client update form: every nonempty slot without its {@code UNDRAWN_COMPONENTS}, and no
+     * set-aside data, which clients have no use for. Stored stacks are not changed.
+     */
+    public CompoundTag saveClientUpdate(HolderLookup.Provider registries) {
+        return saveSlots(
+                RegistryOps.create(NbtOps.INSTANCE, registries),
+                StackItemStorage::withoutUndrawnData);
+    }
+
+    private <T> CompoundTag saveSlots(DynamicOps<T> ops, UnaryOperator<ItemStack> view) {
         ListTag list = new ListTag();
         for (int i = 0; i < stacks.length; i++) {
             if (!stacks[i].isEmpty()) {
                 // Never publish a partial inventory when a component cannot be encoded.
                 T encoded;
                 try {
-                    encoded = ItemStack.CODEC.encodeStart(ops, stacks[i]).getOrThrow();
+                    encoded =
+                            ItemStack.CODEC.encodeStart(ops, view.apply(stacks[i])).getOrThrow();
                 } catch (RuntimeException failure) {
                     throw new IllegalStateException(
                             "Cannot encode stored item in slot " + i, failure);
@@ -201,8 +233,20 @@ public class StackItemStorage implements SlotAccess {
         }
         CompoundTag nbt = new CompoundTag();
         nbt.put(TAG_ITEMS, list);
-        savedItems.saveTo(nbt);
         return nbt;
+    }
+
+    private static ItemStack withoutUndrawnData(ItemStack stack) {
+        ItemStack view = stack;
+        for (DataComponentType<?> type : UNDRAWN_COMPONENTS) {
+            if (view.has(type)) {
+                if (view == stack) {
+                    view = stack.copy();
+                }
+                view.remove(type);
+            }
+        }
+        return view;
     }
 
     /**
@@ -255,10 +299,5 @@ public class StackItemStorage implements SlotAccess {
             decoded[slot] = parsed.get();
         }
         return decoded;
-    }
-
-    /** Removes the set-aside tags from serialized storage, which clients have no use for. */
-    public static void stripSetAside(CompoundTag nbt) {
-        nbt.remove(TAG_SET_ASIDE);
     }
 }

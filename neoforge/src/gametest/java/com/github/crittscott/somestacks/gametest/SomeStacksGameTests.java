@@ -187,9 +187,6 @@ public final class SomeStacksGameTests {
                 "interactiongametests/rotation_validates_held_item_and_block_type",
                 () -> InteractionGameTests::rotationValidatesHeldItemAndBlockType);
         TEST_FUNCTIONS.register(
-                "interactiongametests/sneaking_rotations_reach_the_loader_hook",
-                () -> InteractionGameTests::sneakingRotationsReachTheLoaderHook);
-        TEST_FUNCTIONS.register(
                 "interactiongametests/vanilla_interaction_reaches_deposit_extract_and_placement",
                 () -> InteractionGameTests::vanillaInteractionReachesDepositExtractAndPlacement);
         TEST_FUNCTIONS.register(
@@ -226,23 +223,11 @@ public final class SomeStacksGameTests {
                 "interactiongametests/block_rules_respect_precedence_and_hands",
                 () -> InteractionGameTests::blockRulesRespectPrecedenceAndHands);
         TEST_FUNCTIONS.register(
-                "interactiongametests/full_top_faces_fall_through_to_placement",
-                () -> InteractionGameTests::fullTopFacesFallThroughToPlacement);
-        TEST_FUNCTIONS.register(
                 "interactiongametests/air_rules_and_disabled_mode_cycling",
                 () -> InteractionGameTests::airRulesAndDisabledModeCycling);
         TEST_FUNCTIONS.register(
                 "interactiongametests/gesture_sync_sends_changes_and_resets",
                 () -> InteractionGameTests::gestureSyncSendsChangesAndResets);
-        TEST_FUNCTIONS.register(
-                "itemopsgametests/hand_compatibility_uses_exact_item_components_and_capacity",
-                () -> ItemOpsGameTests::handCompatibilityUsesExactItemComponentsAndCapacity);
-        TEST_FUNCTIONS.register(
-                "itemopsgametests/merge_returns_moved_count_and_does_not_shrink_incoming",
-                () -> ItemOpsGameTests::mergeReturnsMovedCountAndDoesNotShrinkIncoming);
-        TEST_FUNCTIONS.register(
-                "itemopsgametests/light_is_per_occupied_slot_integer_divided_and_capped",
-                () -> ItemOpsGameTests::lightIsPerOccupiedSlotIntegerDividedAndCapped);
         TEST_FUNCTIONS.register(
                 "protectiongametests/automation_uses_shared_identity",
                 () -> ProtectionGameTests::automationUsesSharedIdentity);
@@ -382,9 +367,6 @@ public final class SomeStacksGameTests {
                 "singlescolumngametests/comparator_follows_a_column_losing_a_block",
                 () -> SinglesColumnGameTests::comparatorFollowsAColumnLosingABlock);
         TEST_FUNCTIONS.register(
-                "stacksortgametests/comparator_orders_every_identity_component",
-                () -> StackSortGameTests::comparatorOrdersEveryIdentityComponent);
-        TEST_FUNCTIONS.register(
                 "storagepilegametests/deposit_fills_compatible_partial_before_empty_slot",
                 () -> StoragePileGameTests::depositFillsCompatiblePartialBeforeEmptySlot);
         TEST_FUNCTIONS.register(
@@ -456,6 +438,58 @@ public final class SomeStacksGameTests {
         TEST_FUNCTIONS.register(
                 "neoforgetransfergametests/storage_slot_replacement_uses_staged_capacity",
                 () -> NeoForgeTransferGameTests::storageSlotReplacementUsesStagedCapacity);
+        TEST_FUNCTIONS.register(
+                "automationandpersistencegametests/released_bar_format_loads",
+                () -> AutomationAndPersistenceGameTests::releasedBarFormatLoads);
+        TEST_FUNCTIONS.register(
+                "automationandpersistencegametests/released_singles_format_loads",
+                () -> AutomationAndPersistenceGameTests::releasedSinglesFormatLoads);
+        TEST_FUNCTIONS.register(
+                "automationandpersistencegametests/update_tag_omits_container_contents_and_book_pages",
+                () ->
+                        AutomationAndPersistenceGameTests
+                                ::updateTagOmitsContainerContentsAndBookPages);
+        TEST_FUNCTIONS.register(
+                "configurationgametests/command_help_and_namespace_limits",
+                () -> ConfigurationGameTests::commandHelpAndNamespaceLimits);
+        TEST_FUNCTIONS.register(
+                "configurationgametests/toml_policy_parses_round_trips_and_migrates",
+                () -> ConfigurationGameTests::tomlPolicyParsesRoundTripsAndMigrates);
+        TEST_FUNCTIONS.register(
+                "interactiongametests/adventure_placement_and_growth_share_the_build_check",
+                () -> InteractionGameTests::adventurePlacementAndGrowthShareTheBuildCheck);
+        TEST_FUNCTIONS.register(
+                "interactiongametests/bar_gesture_deposit_refuses_non_ingots",
+                () -> InteractionGameTests::barGestureDepositRefusesNonIngots);
+        TEST_FUNCTIONS.register(
+                "interactiongametests/denied_items_refuse_deposits_and_only_mod_denial_stops_automation",
+                () ->
+                        InteractionGameTests
+                                ::deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation);
+        TEST_FUNCTIONS.register(
+                "interactiongametests/disabled_types_refuse_new_blocks_but_keep_existing_ones",
+                () -> InteractionGameTests::disabledTypesRefuseNewBlocksButKeepExistingOnes);
+        TEST_FUNCTIONS.register(
+                "interactiongametests/full_max_height_deposit_explains_refusal",
+                () -> InteractionGameTests::fullMaxHeightDepositExplainsRefusal);
+        TEST_FUNCTIONS.register(
+                "interactiongametests/maximum_height_refuses_growth_and_hides_headroom",
+                () -> InteractionGameTests::maximumHeightRefusesGrowthAndHidesHeadroom);
+        TEST_FUNCTIONS.register(
+                "interactiongametests/top_face_modified_clicks_are_consumed",
+                () -> InteractionGameTests::topFaceModifiedClicksAreConsumed);
+        TEST_FUNCTIONS.register(
+                "protectiongametests/block_use_denial_freezes_stack_gestures",
+                () -> ProtectionGameTests::blockUseDenialFreezesStackGestures);
+        TEST_FUNCTIONS.register(
+                "protectiongametests/breaking_a_stack_charges_its_cleanup_to_the_breaker",
+                () -> ProtectionGameTests::breakingAStackChargesItsCleanupToTheBreaker);
+        TEST_FUNCTIONS.register(
+                "storagepilegametests/settle_writes_only_changed_cells_with_fresh_stacks",
+                () -> StoragePileGameTests::settleWritesOnlyChangedCellsWithFreshStacks);
+        TEST_FUNCTIONS.register(
+                "storagepilegametests/stored_light_is_per_occupied_slot_and_capped",
+                () -> StoragePileGameTests::storedLightIsPerOccupiedSlotAndCapped);
     }
 
     public SomeStacksGameTests(IEventBus modBus) {

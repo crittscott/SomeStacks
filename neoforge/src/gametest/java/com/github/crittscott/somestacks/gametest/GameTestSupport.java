@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.core.Direction;
@@ -28,11 +27,54 @@ import java.util.function.Function;
 
 /**
  * NeoForge-native scaffolding for the GameTests: {@code ResourceHandler} capability access through
- * {@code Capabilities.Item.BLOCK}, and the level's fake player. Everything loader-neutral lives in
- * {@link GameTestScaffold}.
+ * {@code Capabilities.Item.BLOCK} and the shared scenarios' automation view of it, and the level's
+ * fake player. Everything loader-neutral lives in {@link GameTestScaffold}.
  */
 public final class GameTestSupport {
     private GameTestSupport() {}
+
+    /**
+     * The {@link GameTestScaffold.Automation} view of {@code blockEntity}'s item-resource
+     * capability, as a hopper or pipe reaches it; each call runs in its own outer transaction,
+     * committed unless it simulates.
+     */
+    public static GameTestScaffold.Automation automation(BlockEntity blockEntity) {
+        ResourceHandler<ItemResource> handler = capability(blockEntity);
+        return new GameTestScaffold.Automation() {
+            @Override
+            public ItemStack extract(int slot, int amount, boolean simulate) {
+                ItemResource resource = handler.getResource(slot);
+                if (resource.isEmpty()) return ItemStack.EMPTY;
+                try (Transaction transaction = Transaction.open(null)) {
+                    int extracted = handler.extract(slot, resource, amount, transaction);
+                    if (!simulate) transaction.commit();
+                    return resource.toStack(extracted);
+                }
+            }
+
+            @Override
+            public ItemStack insert(int slot, ItemStack stack, boolean simulate) {
+                if (stack.isEmpty()) return ItemStack.EMPTY;
+                try (Transaction transaction = Transaction.open(null)) {
+                    int accepted =
+                            handler.insert(
+                                    slot, ItemResource.of(stack), stack.getCount(), transaction);
+                    if (!simulate) transaction.commit();
+                    return stack.copyWithCount(stack.getCount() - accepted);
+                }
+            }
+
+            @Override
+            public int slots() {
+                return handler.size();
+            }
+
+            @Override
+            public ItemStack stackAt(int slot) {
+                return handler.getResource(slot).toStack(handler.getAmountAsInt(slot));
+            }
+        };
+    }
 
     public static ResourceHandler<ItemResource> capability(BlockEntity blockEntity) {
         ResourceHandler<ItemResource> handler = handlerOn(blockEntity, null);
@@ -40,12 +82,6 @@ public final class GameTestSupport {
                 handler != null,
                 "Missing item-resource capability at " + blockEntity.getBlockPos());
         return handler;
-    }
-
-    /** Shared scenario adapter: accepted count, with an explicit commit flag. */
-    public static int offerAt(
-            StackBlockEntity blockEntity, int slot, ItemStack stack, boolean commit) {
-        return offer(capability(blockEntity), slot, stack, commit);
     }
 
     /**

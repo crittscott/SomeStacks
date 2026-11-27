@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:function",
+  "function": "somestacks:configurationgametests/command_help_and_namespace_limits",
+  "environment": "minecraft:default",
+  "structure": "somestacks:somestacks_empty",
+  "max_ticks": 100
+}

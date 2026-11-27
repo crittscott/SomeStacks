@@ -242,7 +242,7 @@ public final class FabricTransferGameTests {
             ItemVariant resource =
                     ItemVariant.of(base instanceof BarStackBE ? firstBarItem() : Items.STONE);
             for (int slot = 0; slot < base.getItems().getSlots(); slot++) {
-                base.getItems().insertItem(slot, resource.toStack(base.localSlotLimit()));
+                base.getItems().insertItem(slot, resource.toStack(base.slotLimit()));
             }
             BlockPos above = base.getBlockPos().above();
             helper.getLevel().setBlock(above, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
@@ -397,6 +397,33 @@ public final class FabricTransferGameTests {
         checkEquals(
                 Items.DIRT, base.getItems().getStackInSlot(0).getItem(), "Replacement identity");
         checkEquals(8, base.getItems().getStackInSlot(0).getCount(), "Replacement amount");
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: point a hopper holding sticks into a Bar Stack. Nothing moves and the
+     * stack stays empty; a hopper holding an ingot fills the first bottom position.
+     */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void refusedResourceIsTurnedAwayBeforeAnyPosition(GameTestHelper helper) {
+        BarStackBE bars = placeBar(helper, ORIGIN);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(bars);
+        ItemVariant stick = ItemVariant.of(Items.STICK);
+        try (Transaction transaction = Transaction.openOuter()) {
+            checkEquals(0L, storage.insert(stick, 1, transaction), "Whole-run stick insertion");
+            checkEquals(
+                    0L, storage.getSlot(0).insert(stick, 1, transaction), "Slot stick insertion");
+            transaction.commit();
+        }
+        check(bars.isEmpty(), "A refused resource reached the Bar Stack");
+        try (Transaction transaction = Transaction.openOuter()) {
+            checkEquals(
+                    1L,
+                    storage.insert(ItemVariant.of(firstBarItem()), 1, transaction),
+                    "Ingot control insertion");
+            transaction.commit();
+        }
+        checkEquals(1, occupied(bars.getItems()), "Ingot control did not reach the Bar Stack");
         helper.succeed();
     }
 }

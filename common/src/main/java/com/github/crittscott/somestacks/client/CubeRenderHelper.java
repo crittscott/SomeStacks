@@ -58,9 +58,10 @@ import java.util.function.IntUnaryOperator;
 import javax.annotation.Nullable;
 
 /**
- * Draws the stored items of a Storage or Singles grid according to their render profiles. The
- * Storage and Singles renderers supply the grid geometry and delegate here; everything about how an
- * item itself is presented lives in this class.
+ * Draws the stored items of a Storage or Singles grid according to their render profiles. {@link
+ * GridStackBER} supplies the grid geometry and hands each frame to {@link #extractGridItems} and
+ * {@link #submitGridItems}, which position each cell; everything about how an item itself is
+ * presented lives in this class.
  *
  * <p>The {@code 3d}, {@code gui}, and {@code block} modes hand off to Minecraft's own renderers.
  * The {@code 2d} mode is the one implemented here: flat item art projected onto the visible faces
@@ -106,24 +107,32 @@ public final class CubeRenderHelper {
      */
     private static final float CUBE_INSET = 0.9f;
 
-    /**
-     * Scale a stack block's renderer applies before handing a cell's contents here: an item's unit
-     * cube becomes eight pixels.
-     */
-    public static final float CELL_RENDER_SCALE = 8.0f / 16.0f;
+    /** Block pixels an item's unit cube spans once a stack block's renderer has scaled it. */
+    private static final float RENDER_UNIT_PIXELS = 8.0f;
 
     /**
-     * Storage's own cell-render scale, grown so a cell's rendered content fills more of its
-     * 4.5-pixel cell, halving the gap between Storage's cells. Storage-only: Singles' cells already
-     * tile edge to edge with no gap to absorb growth into.
+     * Singles' cell scale, applied by {@link #submitGridItems} at each cell's corner: an item's unit
+     * cube becomes {@link #RENDER_UNIT_PIXELS} pixels of the 16-pixel block.
+     */
+    public static final float CELL_RENDER_SCALE = RENDER_UNIT_PIXELS / 16.0f;
+
+    /**
+     * Storage's own cell-render scale, grown by the ratio of a Storage cell to a Singles cell so a
+     * cell's rendered content fills more of its cell, halving the gap between Storage's cells.
+     * Storage-only: Singles' cells already tile edge to edge with no gap to absorb growth into.
      */
     public static final float STORAGE_CELL_RENDER_SCALE =
             CELL_RENDER_SCALE
                     * (float) StorageCubeIdx.CELL_PIXELS
                     / (float) SinglesCubeIdx.CELL_PIXELS;
 
-    /** One four-pixel cell in those local units, where 1.0 is the eight pixels above. */
-    public static final float CELL_LOCAL_SIZE = (float) SinglesCubeIdx.CELL_PIXELS / 8.0f;
+    /**
+     * One Singles cell in those local units, where 1.0 is {@link #RENDER_UNIT_PIXELS}. Storage
+     * cells occupy the same local size, because {@link #STORAGE_CELL_RENDER_SCALE} grows the whole
+     * frame instead.
+     */
+    public static final float CELL_LOCAL_SIZE =
+            (float) SinglesCubeIdx.CELL_PIXELS / RENDER_UNIT_PIXELS;
 
     /** The cell's center in the same units, which a cell's contents are drawn about. */
     public static final float CELL_LOCAL_CENTRE = CELL_LOCAL_SIZE / 2.0f;
@@ -287,7 +296,10 @@ public final class CubeRenderHelper {
 
     /**
      * Prepares one frame of a grid. {@code previous} is what this call returned last time for the
-     * same block entity, or null; it is reused while still current.
+     * same block entity, or null; it is reused while still current. Each occupied cell is placed at
+     * its corner for {@code blockRotation}, scaled by {@code renderScale}, and turned by {@code
+     * itemRotation}'s quarter turns for that slot. Every cell is drawn with the frame light
+     * already extracted into {@code state}.
      *
      * @return the grid cache to hand back on the next frame.
      */
@@ -529,7 +541,13 @@ public final class CubeRenderHelper {
     private static final float GUI_Y_COUNTER_ROTATION_DEGREES = -45.0f;
     private static final float GUI_X_COUNTER_ROTATION_DEGREES = -30.0f;
 
-    /** Applies the counter-rotation shared by GUI submission and automatic GUI measurement. */
+    /**
+     * Turns the pose so that an item drawn with the GUI display context faces as it does in a FIXED
+     * display instead of tilted like an inventory icon: it cancels the 30-degree tilt and 45
+     * degrees of the 225-degree turn of the GUI transform vanilla's block model parent gives. The
+     * {@code gui} submission path and GUI measurement both call this, so an item is fitted at the
+     * angle it is drawn.
+     */
     public static void applyGuiCounterRotation(PoseStack pose) {
         pose.mulPose(Axis.YP.rotationDegrees(GUI_Y_COUNTER_ROTATION_DEGREES));
         pose.mulPose(Axis.XP.rotationDegrees(GUI_X_COUNTER_ROTATION_DEGREES));

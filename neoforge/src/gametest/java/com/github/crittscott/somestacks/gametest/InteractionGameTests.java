@@ -1,13 +1,26 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.server.NeoForgeStackInteractionEvents;
-
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 /** NeoForge delegates for loader-neutral interaction and validation checks. */
 public final class InteractionGameTests {
     private InteractionGameTests() {}
+
+    /** See {@link InteractionChecks#fullMaxHeightDepositExplainsRefusal}. */
+    public static void fullMaxHeightDepositExplainsRefusal(GameTestHelper helper) {
+        InteractionChecks.fullMaxHeightDepositExplainsRefusal(helper);
+    }
+
+    /** See {@link InteractionChecks#adventurePlacementAndGrowthShareTheBuildCheck}. */
+    public static void adventurePlacementAndGrowthShareTheBuildCheck(GameTestHelper helper) {
+        InteractionChecks.adventurePlacementAndGrowthShareTheBuildCheck(helper);
+    }
+
+    /** See {@link InteractionChecks#barGestureDepositRefusesNonIngots}. */
+    public static void barGestureDepositRefusesNonIngots(GameTestHelper helper) {
+        InteractionChecks.barGestureDepositRefusesNonIngots(
+                helper, GameTestSupport.playerFactory(helper));
+    }
 
     /** See {@link InteractionChecks#malformedGestureStateFailsDuringDecoding}. */
     public static void malformedGestureStateFailsDuringDecoding(GameTestHelper helper) {
@@ -30,20 +43,6 @@ public final class InteractionGameTests {
     public static void rotationValidatesHeldItemAndBlockType(GameTestHelper helper) {
         InteractionChecks.rotationValidatesHeldItemAndBlockType(
                 helper, GameTestSupport.playerFactory(helper));
-    }
-
-    /** See {@link InteractionChecks#sneakingRotationsReachTheLoaderHook}. */
-    public static void sneakingRotationsReachTheLoaderHook(GameTestHelper helper) {
-        InteractionChecks.sneakingRotationsReachTheLoaderHook(
-                helper,
-                GameTestSupport.playerFactory(helper),
-                (player, hit) -> {
-                    var event =
-                            new PlayerInteractEvent.RightClickBlock(
-                                    player, InteractionChecks.HAND, hit.getBlockPos(), hit);
-                    NeoForgeStackInteractionEvents.onRightClickBlock(event);
-                    return event.isCanceled();
-                });
     }
 
     /** See {@link InteractionChecks#vanillaInteractionReachesDepositExtractAndPlacement}. */
@@ -115,9 +114,9 @@ public final class InteractionGameTests {
                 helper, GameTestSupport.playerFactory(helper));
     }
 
-    /** See {@link ClientGestureChecks#fullTopFacesFallThroughToPlacement}. */
-    public static void fullTopFacesFallThroughToPlacement(GameTestHelper helper) {
-        ClientGestureChecks.fullTopFacesFallThroughToPlacement(
+    /** See {@link ClientGestureChecks#topFaceModifiedClicksAreConsumed}. */
+    public static void topFaceModifiedClicksAreConsumed(GameTestHelper helper) {
+        ClientGestureChecks.topFaceModifiedClicksAreConsumed(
                 helper, GameTestSupport.playerFactory(helper));
     }
 
@@ -130,5 +129,24 @@ public final class InteractionGameTests {
     /** See {@link ClientGestureChecks#gestureSyncSendsChangesAndResets}. */
     public static void gestureSyncSendsChangesAndResets(GameTestHelper helper) {
         ClientGestureChecks.gestureSyncSendsChangesAndResets(helper);
+    }
+
+    /** See {@link InteractionChecks#disabledTypesRefuseNewBlocksButKeepExistingOnes}. */
+    public static void disabledTypesRefuseNewBlocksButKeepExistingOnes(GameTestHelper helper) {
+        InteractionChecks.disabledTypesRefuseNewBlocksButKeepExistingOnes(
+                helper, GameTestSupport::automation);
+    }
+
+    /** See {@link InteractionChecks#maximumHeightRefusesGrowthAndHidesHeadroom}. */
+    public static void maximumHeightRefusesGrowthAndHidesHeadroom(GameTestHelper helper) {
+        InteractionChecks.maximumHeightRefusesGrowthAndHidesHeadroom(
+                helper, GameTestSupport::automation);
+    }
+
+    /** See {@link InteractionChecks#deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation}. */
+    public static void deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(
+            GameTestHelper helper) {
+        InteractionChecks.deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(
+                helper, GameTestSupport::automation);
     }
 }

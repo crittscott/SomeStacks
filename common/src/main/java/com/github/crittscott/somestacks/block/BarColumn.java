@@ -1,9 +1,9 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.BlockType;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -44,7 +44,7 @@ import javax.annotation.Nullable;
  */
 public final class BarColumn extends StackRun<BarStackBE> {
     private BarColumn(ServerLevel level, List<BarStackBE> blocks) {
-        super(level, blocks, BarStackBE.SLOTS, CommonRegistry.barStackBlock());
+        super(level, blocks, BarStackBE.SLOTS, BlockType.BAR_STACK);
     }
 
     /**
@@ -95,14 +95,6 @@ public final class BarColumn extends StackRun<BarStackBE> {
     /** Schedules the publication pass for the column at {@code pos}, if one is there. */
     static void markDirtyAt(Level level, BlockPos pos) {
         StackRun.markDirtyAt(level, pos, BarColumn::at);
-    }
-
-    /**
-     * Whether a Bar Stack may be created at {@code pos}: the contiguous column it would form,
-     * counting the runs both below and above it, must fit the configured maximum.
-     */
-    public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.barStackBlock());
     }
 
     /** The highest occupied position in the column, or -1 when it holds no bars. */
@@ -162,7 +154,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
      */
     @Override
     public int acceptsAt(int flatSlot, ItemStack stack, IntFunction<ItemStack> contents) {
-        if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)) {
+        if (!BarStackBE.isValidBarItem(stack)) {
             return 0;
         }
         if (flatSlot < 0 || flatSlot >= advertisedSlots() || !contents.apply(flatSlot).isEmpty()) {
@@ -197,7 +189,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        return canGrowBlock(ServerConfig.enableBarStackBlock(), null)
+        return canGrowBlock(null)
                 && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
     }
 
@@ -239,8 +231,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
             return ItemStack.EMPTY;
         }
 
-        ItemStack taken = inSlot.copy();
-        taken.setCount(1);
+        ItemStack taken = inSlot.copyWithCount(1);
         if (simulate) {
             return taken;
         }

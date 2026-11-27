@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:function",
+  "function": "somestacks:storagepilegametests/stored_light_is_per_occupied_slot_and_capped",
+  "environment": "minecraft:default",
+  "structure": "somestacks:somestacks_empty",
+  "max_ticks": 20
+}

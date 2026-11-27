@@ -13,7 +13,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.HitResult;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
@@ -45,17 +44,15 @@ public final class ClientGestures {
         return stackMode;
     }
 
-    /** Advances to the next mode, skipping disabled block types but always retaining permanence. */
+    /**
+     * Advances the selected mode along {@link StackMode#next()}, skipping server-disabled block
+     * types. Toggle Permanent is always available, so the walk ends there at the latest. This
+     * changes local selection only; it neither sends state nor displays a message.
+     */
     public static void cycleMode() {
-        StackMode startMode = stackMode;
         do {
-            stackMode =
-                    StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
-            if (stackMode == StackMode.TOGGLE_PERMANENT) break;
-            if (stackMode.isBlockType()
-                    && ClientServerSettings.isBlockTypeEnabled(stackMode.toBlockType())) break;
-            if (stackMode == startMode) break;
-        } while (true);
+            stackMode = stackMode.next();
+        } while (!isSelectable(stackMode));
     }
 
     public static void displayModeMessage(Player player) {
@@ -64,13 +61,33 @@ public final class ClientGestures {
                 Component.translatable("somestacks.message.storage_mode", modeComponent), true);
     }
 
-    /** Sends only state that changed since the last interaction on this connection. */
+    /**
+     * Moves the selection off a block type the current server policy disables, as {@link
+     * #cycleMode()} would, so a placement never names a type the server refuses.
+     *
+     * @return whether the selected mode changed
+     */
+    public static boolean leaveDisabledMode() {
+        if (isSelectable(stackMode)) {
+            return false;
+        }
+        cycleMode();
+        return true;
+    }
+
+    private static boolean isSelectable(StackMode mode) {
+        return !mode.isBlockType() || ClientServerSettings.isBlockTypeEnabled(mode.toBlockType());
+    }
+
+    /**
+     * Sends only state that changed since the last interaction on this connection, through the
+     * sender the loader's client initializer installed.
+     */
     public static void syncState(boolean modifierDown) {
         if (lastSentMode == stackMode && lastSentModifier == modifierDown) {
             return;
         }
-        Objects.requireNonNull(sender, "Client gesture sender is not installed")
-                .accept(new GestureStatePkt(stackMode, modifierDown));
+        sender.accept(new GestureStatePkt(stackMode, modifierDown));
         lastSentMode = stackMode;
         lastSentModifier = modifierDown;
     }

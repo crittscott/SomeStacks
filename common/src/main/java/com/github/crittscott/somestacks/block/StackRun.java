@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 
 import net.minecraft.core.BlockPos;
@@ -22,15 +23,17 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 /**
- * Mechanics shared by every maximal vertical run of one stack type. Concrete runs retain their
- * distinct insertion, extraction, growth, settlement, and collapse rules.
+ * Mechanics shared by every maximal vertical run of one stack type, including the one gate on
+ * growing a run one block taller. Concrete runs retain their distinct insertion, extraction,
+ * settlement, and collapse rules, and what a grown block must hold clear.
  */
 public abstract class StackRun<BE extends StackBlockEntity> implements StackRunItemAccess {
     protected final ServerLevel level;
     protected final List<BE> blocks;
 
-    private final int slotsPerBlock;
     private final Block block;
+    private final int slotsPerBlock;
+    private final BlockType type;
     private int growthQueryDepth;
     @Nullable private Boolean queriedGrowthPermission;
 
@@ -51,26 +54,35 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         return new GrowthQuery();
     }
 
-    /** Shared shape-independent growth checks; player authority is always queried afresh. */
-    protected final boolean canGrowBlock(boolean enabled, @Nullable ServerPlayer actor) {
-        if (blocks.size() >= ServerConfig.maxPileHeight() || !enabled) return false;
+    /**
+     * Whether the run may grow one block taller as far as anything without side effects and
+     * independent of the new block's shape can tell: the height limit, the type's enablement,
+     * build height, replaceability, and {@link WorldEdits#mayPlace} for the space above, checked
+     * against {@code actor} or, when null, the automation identity. Player authority is always
+     * queried afresh; automation's is shared within one {@link GrowthQuery}.
+     */
+    protected final boolean canGrowBlock(@Nullable ServerPlayer actor) {
+        if (!isBelowMaximumHeight() || !type.isEnabled()) return false;
         BlockPos above = topPos().above();
+        // Build height and replaceability are part of mayPlace too; they are tested here, before
+        // the shared automation answer, because that answer outlives a change of top block.
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced())
             return false;
         if (actor == null && growthQueryDepth > 0 && queriedGrowthPermission != null) {
             return queriedGrowthPermission;
         }
-        boolean allowed = WorldEdits.mayPlace(actor, level, above);
+        boolean allowed = WorldEdits.mayPlace(actor, level, above, Direction.DOWN);
         if (actor == null && growthQueryDepth > 0) queriedGrowthPermission = allowed;
         return allowed;
     }
 
     /** Creates a server-only run over a nonempty bottom-to-top list of same-type block entities. */
-    protected StackRun(ServerLevel level, List<BE> blocks, int slotsPerBlock, Block block) {
+    protected StackRun(ServerLevel level, List<BE> blocks, int slotsPerBlock, BlockType type) {
         this.level = level;
         this.blocks = blocks;
         this.slotsPerBlock = slotsPerBlock;
-        this.block = block;
+        this.type = type;
+        this.block = type.getBlock();
         for (BE member : blocks) {
             member.cacheRun(this, level.getGameTime());
         }
@@ -172,13 +184,17 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
     }
 
     /**
-     * Tests the height of the same-type run a block at pos would join, including both neighbors.
+     * Whether a block of {@code type} may be created at {@code pos}: the contiguous column it would
+     * form, counting the runs both below and above it, must fit the configured maximum. Testing the
+     * whole resulting column rather than one neighboring run is what stops a block placed into the
+     * gap between two runs from joining them into an over-tall one.
      */
-    protected static boolean columnHasRoomFor(Level level, BlockPos pos, Block block) {
+    public static boolean columnHasRoomFor(Level level, BlockPos pos, BlockType type) {
+        Block block = type.getBlock();
         return 1
                         + runLength(level, pos, Direction.DOWN, block)
                         + runLength(level, pos, Direction.UP, block)
-                <= ServerConfig.maxPileHeight();
+                <= ServerConfig.settings().maxPileHeight();
     }
 
     private static int runLength(Level level, BlockPos from, Direction direction, Block block) {
@@ -218,9 +234,13 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
 
     @Override
     public final int advertisedSlots() {
-        int levels =
-                blocks.size() < ServerConfig.maxPileHeight() ? blocks.size() + 1 : blocks.size();
+        int levels = isBelowMaximumHeight() ? blocks.size() + 1 : blocks.size();
         return slotsPerBlock * levels;
+    }
+
+    /** Whether the run is shorter than the configured maximum, so growth or headroom may exist. */
+    private boolean isBelowMaximumHeight() {
+        return blocks.size() < ServerConfig.settings().maxPileHeight();
     }
 
     @Override

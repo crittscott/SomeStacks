@@ -6,9 +6,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -20,14 +21,28 @@ import javax.annotation.Nullable;
  * world logic can run.
  */
 public interface EditAuthority {
-    /** Side-effect-free placement permission, where the loader provides a query API. */
-    default boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
+    /**
+     * Display names of installed protection mods this authority queries directly, beyond the
+     * loader's native events; empty when it queries none.
+     */
+    default List<String> detectedIntegrations() {
+        return List.of();
+    }
+
+    /**
+     * Side-effect-free placement permission, where the loader provides a query API. {@link
+     * WorldEdits#mayPlace} asks it as the last part of the placement gate.
+     */
+    default boolean mayPlace(ServerPlayer placer, ServerLevel level, BlockPos pos) {
         return true;
     }
 
-    /** Places a block through the loader's native protection transaction. */
+    /**
+     * Places a block, through the loader's placement event where it has one. {@link
+     * WorldEdits#placeChecked} has already applied the placement gate, {@link #mayPlace} included.
+     */
     boolean place(
-            Player placer,
+            ServerPlayer placer,
             ServerLevel level,
             BlockPos pos,
             BlockState state,

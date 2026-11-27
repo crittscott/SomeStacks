@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
@@ -11,7 +12,6 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * The mod's payloads and their handler registration. Every packet class is shared; this binds the
@@ -25,13 +25,17 @@ import java.util.function.Consumer;
 public final class NeoForgeNetworking {
     private NeoForgeNetworking() {}
 
-    private static Consumer<ConfigSyncPkt> clientReceiver;
+    private static BiConsumer<ConfigSyncPkt, Player> clientReceiver;
 
     /** Installed once by {@code NeoForgeClientSetup} on the physical client. */
-    public static void setClientReceiver(Consumer<ConfigSyncPkt> receiver) {
+    public static void setClientReceiver(BiConsumer<ConfigSyncPkt, Player> receiver) {
         clientReceiver = Objects.requireNonNull(receiver);
     }
 
+    /**
+     * Mod-bus listener that registers the gesture-state payload to the server and the config
+     * snapshot to the client under the shared protocol version.
+     */
     public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar =
                 event.registrar(Integer.toString(SomeStacksCommon.PROTOCOL_VERSION));
@@ -52,6 +56,6 @@ public final class NeoForgeNetworking {
 
     private static void toClient(ConfigSyncPkt payload, IPayloadContext context) {
         Objects.requireNonNull(clientReceiver, "Client packet receiver has not been installed")
-                .accept(payload);
+                .accept(payload, context.player());
     }
 }

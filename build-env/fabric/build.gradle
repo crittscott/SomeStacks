@@ -63,7 +63,10 @@ configurations {
 }
 
 repositories {
+    // Hosts the bundled common-protection-api dependency below.
     maven { url = 'https://maven.nucleoid.xyz/' }
+    // Hosts the bundled NightConfig TOML library below.
+    mavenCentral()
 }
 
 dependencies {
@@ -77,6 +80,12 @@ dependencies {
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
+
+    // Bundle and relocate the TOML library: users install only Some Stacks.
+    implementation "com.electronwill.night-config:core:$rootProject.night_config_version"
+    implementation "com.electronwill.night-config:toml:$rootProject.night_config_version"
+    shadowBundle "com.electronwill.night-config:core:$rootProject.night_config_version"
+    shadowBundle "com.electronwill.night-config:toml:$rootProject.night_config_version"
 }
 
 // Expands ${...} placeholders in fabric.mod.json (this module's own resource).
@@ -110,6 +119,7 @@ tasks.named('processGametestResources', ProcessResources).configure {
 shadowJar {
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = 'dev-shadow'
+    relocate 'com.electronwill.nightconfig', 'com.github.crittscott.somestacks.internal.nightconfig'
 }
 
 // The production jar bundles common, so the sources jar carries common's sources as well.
@@ -122,16 +132,3 @@ sourcesJar {
 remapJar {
     inputFile.set shadowJar.archiveFile
 }
-
-// Bundle and relocate the TOML library: users install only Some Stacks.
-dependencies {
-    implementation "com.electronwill.night-config:core:$rootProject.night_config_version"
-    implementation "com.electronwill.night-config:toml:$rootProject.night_config_version"
-    shadowBundle "com.electronwill.night-config:core:$rootProject.night_config_version"
-    shadowBundle "com.electronwill.night-config:toml:$rootProject.night_config_version"
-}
-shadowJar {
-    relocate 'com.electronwill.nightconfig', 'com.github.crittscott.somestacks.internal.nightconfig'
-}
-
-repositories { mavenCentral() }

@@ -19,8 +19,7 @@ public final class RunItemHandler implements IItemHandler {
      */
     @Override
     public int getSlots() {
-        StackRunItemAccess run = blockEntity.itemRun();
-        return run != null ? run.advertisedSlots() : blockEntity.getItems().getSlots();
+        return blockEntity.advertisedSlots();
     }
 
     /**
@@ -30,13 +29,7 @@ public final class RunItemHandler implements IItemHandler {
     @Override
     @Nonnull
     public ItemStack getStackInSlot(int slot) {
-        StackRunItemAccess run = blockEntity.itemRun();
-        if (run != null) {
-            return run.getSlot(slot);
-        }
-        return slot >= 0 && slot < blockEntity.getItems().getSlots()
-                ? blockEntity.getItems().getStackInSlot(slot)
-                : ItemStack.EMPTY;
+        return blockEntity.advertisedStack(slot);
     }
 
     /**
@@ -104,7 +97,7 @@ public final class RunItemHandler implements IItemHandler {
      */
     @Override
     public int getSlotLimit(int slot) {
-        return blockEntity.localSlotLimit();
+        return blockEntity.slotLimit();
     }
 
     /**
@@ -113,6 +106,6 @@ public final class RunItemHandler implements IItemHandler {
      */
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return blockEntity.isStoredItemValid(stack);
+        return blockEntity.admits(stack);
     }
 }

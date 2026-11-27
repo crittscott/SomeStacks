@@ -1,7 +1,0 @@
-{
-  "type": "minecraft:function",
-  "function": "somestacks:itemopsgametests/hand_compatibility_uses_exact_item_components_and_capacity",
-  "environment": "minecraft:default",
-  "structure": "somestacks:somestacks_empty",
-  "max_ticks": 100
-}

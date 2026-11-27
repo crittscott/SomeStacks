@@ -17,9 +17,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 /**
- * Vanilla world-edit mechanics for stack growth and removal: world border and spawn protection,
- * entity obstruction, actor propagation, and the actual block edit. Automation identity and
- * loader-native claim/logging hooks are delegated to {@link EditAuthority}.
+ * Vanilla world-edit mechanics for stack placement, growth, and removal: the one placement gate,
+ * world border and spawn protection, entity obstruction, actor propagation, and the actual block
+ * edit. Automation identity and loader-native claim/logging hooks are delegated to {@link
+ * EditAuthority}.
  */
 public final class WorldEdits {
     // Consultation suppresses recursive gesture dispatch. The loader's placing guard protects
@@ -38,11 +39,33 @@ public final class WorldEdits {
         return actor != null ? actor : automationActor(level);
     }
 
-    /** Vanilla and loader queries before growth can promise capacity. */
-    public static boolean mayPlace(@Nullable ServerPlayer source, ServerLevel level, BlockPos pos) {
-        ServerPlayer player = actor(level, source);
-        return !isProtected(player, pos)
-                && PlatformServices.editAuthority().mayPlace(player, level, pos);
+    /**
+     * The one gate on putting a block at {@code pos}, without side effects: build height,
+     * replaceability, vanilla's item-placement check ({@link ServerPlayer#mayUseItemAt}) for the
+     * actor's main-hand item against the block at {@code pos.relative(placedAgainst)}, world border
+     * and spawn protection, and the loader's protection queries. {@link #placeChecked} applies it to
+     * every placement; player placement and growth simulation ask it first, so they refuse before
+     * promising anything. A null actor uses the level's automation identity.
+     *
+     * <p>The item-placement check rather than {@code mayBuild} alone is what an Adventure mode
+     * player's {@code can_place_on} item answers to, so a player who may place a stack by gesture
+     * may also grow one by depositing that item. Automation holds nothing, so only its build ability
+     * counts. Spawn protection exempts operators, so the answer depends on the actor.
+     *
+     * @param placedAgainst the direction from {@code pos} to the block the new one is placed
+     *     against
+     */
+    public static boolean mayPlace(
+            @Nullable ServerPlayer source,
+            ServerLevel level,
+            BlockPos pos,
+            Direction placedAgainst) {
+        ServerPlayer actor = actor(level, source);
+        return !level.isOutsideBuildHeight(pos)
+                && level.getBlockState(pos).canBeReplaced()
+                && actor.mayUseItemAt(pos, placedAgainst.getOpposite(), actor.getMainHandItem())
+                && !isProtected(actor, pos)
+                && PlatformServices.editAuthority().mayPlace(actor, level, pos);
     }
 
     /** Consults destination protection without allowing the consultation to execute gestures. */
@@ -58,6 +81,10 @@ public final class WorldEdits {
         }
     }
 
+    /**
+     * Whether this thread is inside {@link #mayUseAdjacent}'s consultation of other listeners. Every
+     * gesture entry point refuses while it is set, so a consulted listener cannot start a gesture.
+     */
     public static boolean isConsultingAdjacent() {
         return consultingAdjacent;
     }
@@ -87,11 +114,11 @@ public final class WorldEdits {
     }
 
     /**
-     * Places {@code state} at {@code pos}. Loader checks that can run as queries happen before the
-     * world changes; loader placement transactions defer publication until protection accepts the
-     * edit, restoring captured state and block-entity data on denial. {@code finalCollision} is the
-     * completed placement's collision shape, since a block-entity stack can start empty and acquire
-     * its real shape only with its first deposit.
+     * Places {@code state} at {@code pos} after {@link #mayPlace} and an obstruction test. Loader
+     * placement transactions defer publication until protection accepts the edit, restoring
+     * captured state and block-entity data on denial. {@code finalCollision} is the completed
+     * placement's collision shape, since a block-entity stack can start empty and acquire its real
+     * shape only with its first deposit. A null placer uses the level's automation identity.
      */
     public static boolean placeChecked(
             @Nullable ServerPlayer source,
@@ -101,8 +128,7 @@ public final class WorldEdits {
             Direction placedAgainst,
             VoxelShape finalCollision) {
         ServerPlayer placer = actor(level, source);
-        if (level.isOutsideBuildHeight(pos)
-                || !mayPlace(placer, level, pos)
+        if (!mayPlace(placer, level, pos, placedAgainst)
                 || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
@@ -113,7 +139,10 @@ public final class WorldEdits {
         return true;
     }
 
-    /** Finishes loader-accepted placement with the actor callback and one placement game event. */
+    /**
+     * Finishes loader-accepted placement with the actor callback and one placement game event.
+     * NeoForge's deferred automation growth calls it once a transfer commit publishes the block.
+     */
     public static void completePlacement(ServerPlayer placer, ServerLevel level, BlockPos pos) {
         BlockState placedState = level.getBlockState(pos);
         placedState

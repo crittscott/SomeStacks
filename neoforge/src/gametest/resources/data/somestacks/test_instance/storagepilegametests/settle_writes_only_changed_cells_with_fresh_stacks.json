@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:function",
+  "function": "somestacks:storagepilegametests/settle_writes_only_changed_cells_with_fresh_stacks",
+  "environment": "minecraft:default",
+  "structure": "somestacks:somestacks_empty",
+  "max_ticks": 100
+}
