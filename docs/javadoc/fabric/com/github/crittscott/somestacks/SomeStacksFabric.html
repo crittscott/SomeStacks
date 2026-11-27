@@ -85,7 +85,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">SomeStacksFabric</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements net.fabricmc.api.ModInitializer</span></div>
-<div class="block">Fabric's common entry point and server lifecycle wiring.</div>
+<div class="block">Fabric's common entry point, run on both physical sides: installs the platform services and the
+server config, registers content, item storage, gesture callbacks, and payloads, and wires the
+server lifecycle, commands, ticking, the configuration-phase protocol check, and player join and
+leave to <code>SomeStacksServer</code>.</div>
 </div>
 </section>
 <section class="summary">

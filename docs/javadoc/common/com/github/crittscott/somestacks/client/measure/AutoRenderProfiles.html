@@ -84,7 +84,7 @@ measured only once across sessions.
 <ul>
   <li>A measurement-format change rejects the previous algorithm's entries.
   <li>A mod-version change drops entries from that mod's namespace.
-  <li>A manual resource reload drops the entire cache.
+  <li>Any resource reload after the initial one drops the entire cache and its file.
   <li>A different resource-pack selection between sessions rejects the persisted cache.
 </ul>
 
@@ -121,7 +121,8 @@ the file are discarded.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#saveCache()" class="member-name-link">saveCache</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Writes the measured cache only when a profile has changed since its last load or save.</div>
+<div class="block">Writes the measured cache only when it differs from the file: new measurements, or entries
+dropped on load.</div>
 </div>
 </div>
 </div>
@@ -166,7 +167,8 @@ the file are discarded.</div>
 <h3>saveCache</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">saveCache</span>()</div>
-<div class="block">Writes the measured cache only when a profile has changed since its last load or save.</div>
+<div class="block">Writes the measured cache only when it differs from the file: new measurements, or entries
+dropped on load.</div>
 </div>
 </section>
 </li>

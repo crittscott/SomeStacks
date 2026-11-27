@@ -63,9 +63,10 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#automationActor(net.minecraft.server.level.ServerLevel)" tabindex="0">automationActor(ServerLevel)</a></li>
+<li><a href="#detectedIntegrations()" tabindex="0">detectedIntegrations()</a></li>
 <li><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" tabindex="0">mayUseAdjacent(ServerPlayer, BlockPos)</a></li>
-<li><a href="#mayPlace(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" tabindex="0">mayPlace(Player, ServerLevel, BlockPos)</a></li>
-<li><a href="#place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" tabindex="0">place(Player, ServerLevel, BlockPos, BlockState, Direction)</a></li>
+<li><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" tabindex="0">mayPlace(ServerPlayer, ServerLevel, BlockPos)</a></li>
+<li><a href="#place(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" tabindex="0">place(ServerPlayer, ServerLevel, BlockPos, BlockState, Direction)</a></li>
 <li><a href="#vetoesRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" tabindex="0">vetoesRemoval(ServerPlayer, ServerLevel, BlockPos, BlockState, BlockEntity)</a></li>
 <li><a href="#afterRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" tabindex="0">afterRemoval(ServerPlayer, ServerLevel, BlockPos, BlockState, BlockEntity)</a></li>
 </ol>
@@ -131,29 +132,37 @@ edits.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.server.level.ServerPlayer</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#automationActor(net.minecraft.server.level.ServerLevel)" class="member-name-link">automationActor</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mayPlace(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
- net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#detectedIntegrations()" class="member-name-link">detectedIntegrations</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Common Protection API is a required dependency, so it is always queried; its presence does
+not show that a claim mod registered a provider.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseAdjacent</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;placer,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">place</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseAdjacent</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#place(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">place</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.core.Direction&nbsp;placedAgainst)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#vetoesRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">vetoesRemoval</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Fabric has no placement event; the protection query already ran in <a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)"><code>mayPlace(ServerPlayer, ServerLevel, BlockPos)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#vetoesRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">vetoesRemoval</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -200,6 +209,20 @@ edits.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="detectedIntegrations()">
+<h3>detectedIntegrations</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">detectedIntegrations</span>()</div>
+<div class="block">Common Protection API is a required dependency, so it is always queried; its presence does
+not show that a claim mod registered a provider.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>detectedIntegrations</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.EditAuthority</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)">
 <h3>mayUseAdjacent</h3>
 <div class="horizontal-scroll">
@@ -213,10 +236,10 @@ edits.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="mayPlace(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
+<section class="detail" id="mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
 <h3>mayPlace</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayPlace</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;placer,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayPlace</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 <dl class="notes">
@@ -227,14 +250,15 @@ edits.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)">
+<section class="detail" id="place(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)">
 <h3>place</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">place</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;placer,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">place</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.core.Direction&nbsp;placedAgainst)</span></div>
+<div class="block">Fabric has no placement event; the protection query already ran in <a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)"><code>mayPlace(ServerPlayer, ServerLevel, BlockPos)</code></a>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>place</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.EditAuthority</code></dd>
