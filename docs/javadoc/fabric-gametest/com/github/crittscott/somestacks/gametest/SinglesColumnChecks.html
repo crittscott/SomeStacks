@@ -59,11 +59,11 @@ loadScripts(document, 'script');</script>
 <li><a href="#standaloneBottomIsGroundedAndFloatingCellIsRejected(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">standaloneBottomIsGroundedAndFloatingCellIsRejected(GameTestHelper)</a></li>
 <li><a href="#upperCellUsesTheCellImmediatelyBelow(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">upperCellUsesTheCellImmediatelyBelow(GameTestHelper)</a></li>
 <li><a href="#differentlyRotatedBlocksShareVisualSeamColumns(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">differentlyRotatedBlocksShareVisualSeamColumns(GameTestHelper)</a></li>
-<li><a href="#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">extractionShiftsOneColumnAndCarriesItemRotation(GameTestHelper)</a></li>
-<li><a href="#shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">shiftKeepsAnItemItWouldNoLongerAccept(GameTestHelper)</a></li>
-<li><a href="#drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">drawDownKeepsAnItemItWouldNoLongerAccept(GameTestHelper)</a></li>
-<li><a href="#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">extractionPreservesAnExistingGap(GameTestHelper)</a></li>
-<li><a href="#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper)</a></li>
+<li><a href="#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" tabindex="0">extractionShiftsOneColumnAndCarriesItemRotation(GameTestHelper, Function)</a></li>
+<li><a href="#shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" tabindex="0">shiftKeepsAnItemItWouldNoLongerAccept(GameTestHelper, Function)</a></li>
+<li><a href="#drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" tabindex="0">drawDownKeepsAnItemItWouldNoLongerAccept(GameTestHelper, Function)</a></li>
+<li><a href="#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" tabindex="0">extractionPreservesAnExistingGap(GameTestHelper, Function)</a></li>
+<li><a href="#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" tabindex="0">extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper, Function)</a></li>
 <li><a href="#depositTraceStopsAtLastEmptyBeforeOccupiedCell(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">depositTraceStopsAtLastEmptyBeforeOccupiedCell(GameTestHelper)</a></li>
 <li><a href="#depositTraceUsesFarthestCellWhenNothingIsOccupied(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">depositTraceUsesFarthestCellWhenNothingIsOccupied(GameTestHelper)</a></li>
 <li><a href="#breakingMiddleBlockDropsItsContentsWithoutClosingTheGap(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">breakingMiddleBlockDropsItsContentsWithoutClosingTheGap(GameTestHelper)</a></li>
@@ -87,11 +87,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">SinglesColumnChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Singles support and gravity in a live level that does not touch loader-native automation
-directly: grounding at the bottom of a column, a cell resting on the one below it, visual columns
-lining up across differently rotated blocks, and extraction shifting a column down while carrying
-each item's rotation with it. Loader-automation-facing tests stay in each loader's own <code>
-SinglesColumnGameTests</code>.</div>
+<div class="block">Singles support and gravity in a live level: grounding at the bottom of a column, a cell resting
+on the one below it, visual columns lining up across differently rotated blocks, and extraction
+shifting a column down while carrying each item's rotation with it. Player scenarios click
+through the loader; automation scenarios are in <a href="AutomationChecks.html" title="class in com.github.crittscott.somestacks.gametest"><code>AutomationChecks</code></a>.</div>
 </div>
 </section>
 <section class="summary">
@@ -146,29 +145,34 @@ cell holds one item, so full means every cell of every block occupied.</div>
 <div class="block">Support across a block seam follows visual columns despite different block rotations.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">drawDownKeepsAnItemItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">drawDownKeepsAnItemItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The same conservation across a block boundary: the item handed down from the block above is
 one the receiving block would refuse from a deposit.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionDrawsAcrossDifferentlyRotatedBlockBoundary</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionDrawsAcrossDifferentlyRotatedBlockBoundary</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extraction draws from the visually aligned column across a differently rotated block seam.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionPreservesAnExistingGap</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionPreservesAnExistingGap</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Singles gravity shifts occupied cells exactly one layer and does not compact a preexisting
 gap.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionShiftsOneColumnAndCarriesItemRotation</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionShiftsOneColumnAndCarriesItemRotation</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extraction shifts only the aimed visual column down one layer and carries item rotations.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">shiftKeepsAnItemItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">shiftKeepsAnItemItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Validity gates insertion only, so an item stored before the rule narrowed under it has to
 survive the shift that closes the gap beneath it.</div>
@@ -233,10 +237,11 @@ lower block, then deposit into the visually aligned bottom cell above. The depos
 </section>
 </li>
 <li>
-<section class="detail" id="extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>extractionShiftsOneColumnAndCarriesItemRotation</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionShiftsOneColumnAndCarriesItemRotation</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionShiftsOneColumnAndCarriesItemRotation</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Extraction shifts only the aimed visual column down one layer and carries item rotations. To
 reproduce in-game: make a three-item vertical Singles column, rotate the upper two items, and
 extract the bottom item. The other two descend with their orientations unchanged.</div>
@@ -244,10 +249,11 @@ extract the bottom item. The other two descend with their orientations unchanged
 </section>
 </li>
 <li>
-<section class="detail" id="shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>shiftKeepsAnItemItWouldNoLongerAccept</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">shiftKeepsAnItemItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">shiftKeepsAnItemItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Validity gates insertion only, so an item stored before the rule narrowed under it has to
 survive the shift that closes the gap beneath it. An ingot stands in for such an item: a
 Singles Stack refuses one from a deposit, because Bar accepts it, but may be holding one that
@@ -260,10 +266,11 @@ item moves down rather than being lost.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>drawDownKeepsAnItemItWouldNoLongerAccept</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawDownKeepsAnItemItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawDownKeepsAnItemItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">The same conservation across a block boundary: the item handed down from the block above is
 one the receiving block would refuse from a deposit.
 
@@ -274,10 +281,11 @@ crosses the seam rather than being lost.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>extractionPreservesAnExistingGap</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionPreservesAnExistingGap</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionPreservesAnExistingGap</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Singles gravity shifts occupied cells exactly one layer and does not compact a preexisting
 gap. To reproduce in-game: use automation to leave a gap between two items in one column,
 then extract the bottom item. The gap remains and the upper item descends only one layer.</div>
@@ -285,10 +293,11 @@ then extract the bottom item. The gap remains and the upper item descends only o
 </section>
 </li>
 <li>
-<section class="detail" id="extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>extractionDrawsAcrossDifferentlyRotatedBlockBoundary</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionDrawsAcrossDifferentlyRotatedBlockBoundary</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionDrawsAcrossDifferentlyRotatedBlockBoundary</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Extraction draws from the visually aligned column across a differently rotated block seam. To
 reproduce in-game: rotate two stacked Singles blocks differently, put items across one visual
 seam column, rotate the upper item, and extract the lower item. The upper item crosses the

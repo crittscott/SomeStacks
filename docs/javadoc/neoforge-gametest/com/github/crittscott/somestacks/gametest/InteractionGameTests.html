@@ -56,12 +56,14 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#fullMaxHeightDepositExplainsRefusal(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">fullMaxHeightDepositExplainsRefusal(GameTestHelper)</a></li>
+<li><a href="#adventurePlacementAndGrowthShareTheBuildCheck(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">adventurePlacementAndGrowthShareTheBuildCheck(GameTestHelper)</a></li>
+<li><a href="#barGestureDepositRefusesNonIngots(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">barGestureDepositRefusesNonIngots(GameTestHelper)</a></li>
 <li><a href="#playerPlacementAwardsCriterionAfterDeposit(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">playerPlacementAwardsCriterionAfterDeposit(GameTestHelper)</a></li>
 <li><a href="#malformedGestureStateFailsDuringDecoding(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">malformedGestureStateFailsDuringDecoding(GameTestHelper)</a></li>
 <li><a href="#gestureStateTracksModeAndModifier(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">gestureStateTracksModeAndModifier(GameTestHelper)</a></li>
 <li><a href="#interactionReadsOnlyTheMainHand(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">interactionReadsOnlyTheMainHand(GameTestHelper)</a></li>
 <li><a href="#rotationValidatesHeldItemAndBlockType(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">rotationValidatesHeldItemAndBlockType(GameTestHelper)</a></li>
-<li><a href="#sneakingRotationsReachTheLoaderHook(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">sneakingRotationsReachTheLoaderHook(GameTestHelper)</a></li>
 <li><a href="#vanillaInteractionReachesDepositExtractAndPlacement(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">vanillaInteractionReachesDepositExtractAndPlacement(GameTestHelper)</a></li>
 <li><a href="#itemRotationTargetsOnlyAnOccupiedCell(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">itemRotationTargetsOnlyAnOccupiedCell(GameTestHelper)</a></li>
 <li><a href="#permanenceRequiresEmptyHandAndHonorsProtection(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">permanenceRequiresEmptyHandAndHonorsProtection(GameTestHelper)</a></li>
@@ -74,9 +76,12 @@ loadScripts(document, 'script');</script>
 <li><a href="#configSnapshotsRoundTripAndPublishAtomically(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">configSnapshotsRoundTripAndPublishAtomically(GameTestHelper)</a></li>
 <li><a href="#configDecoderRejectsMalformedCountsAndNamespaces(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">configDecoderRejectsMalformedCountsAndNamespaces(GameTestHelper)</a></li>
 <li><a href="#blockRulesRespectPrecedenceAndHands(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">blockRulesRespectPrecedenceAndHands(GameTestHelper)</a></li>
-<li><a href="#fullTopFacesFallThroughToPlacement(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">fullTopFacesFallThroughToPlacement(GameTestHelper)</a></li>
+<li><a href="#topFaceModifiedClicksAreConsumed(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">topFaceModifiedClicksAreConsumed(GameTestHelper)</a></li>
 <li><a href="#airRulesAndDisabledModeCycling(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">airRulesAndDisabledModeCycling(GameTestHelper)</a></li>
 <li><a href="#gestureSyncSendsChangesAndResets(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">gestureSyncSendsChangesAndResets(GameTestHelper)</a></li>
+<li><a href="#disabledTypesRefuseNewBlocksButKeepExistingOnes(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">disabledTypesRefuseNewBlocksButKeepExistingOnes(GameTestHelper)</a></li>
+<li><a href="#maximumHeightRefusesGrowthAndHidesHeadroom(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">maximumHeightRefusesGrowthAndHidesHeadroom(GameTestHelper)</a></li>
+<li><a href="#deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(GameTestHelper)</a></li>
 </ol>
 </li>
 </ol>
@@ -111,9 +116,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#airRulesAndDisabledModeCycling(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">airRulesAndDisabledModeCycling</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#adventurePlacementAndGrowthShareTheBuildCheck(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adventurePlacementAndGrowthShareTheBuildCheck</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="InteractionChecks.html#adventurePlacementAndGrowthShareTheBuildCheck(net.minecraft.gametest.framework.GameTestHelper)"><code>InteractionChecks.adventurePlacementAndGrowthShareTheBuildCheck(GameTestHelper)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#airRulesAndDisabledModeCycling(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">airRulesAndDisabledModeCycling</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="ClientGestureChecks.html#airRulesAndDisabledModeCycling(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ClientGestureChecks.airRulesAndDisabledModeCycling(GameTestHelper, Function)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barGestureDepositRefusesNonIngots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barGestureDepositRefusesNonIngots</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="InteractionChecks.html#barGestureDepositRefusesNonIngots(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.barGestureDepositRefusesNonIngots(GameTestHelper, Function)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#blockRulesRespectPrecedenceAndHands(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">blockRulesRespectPrecedenceAndHands</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -131,6 +146,16 @@ loadScripts(document, 'script');</script>
 <div class="block">See <a href="SynchronizationChecks.html#configSnapshotsRoundTripAndPublishAtomically(net.minecraft.gametest.framework.GameTestHelper)"><code>SynchronizationChecks.configSnapshotsRoundTripAndPublishAtomically(GameTestHelper)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="InteractionChecks.html#deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(GameTestHelper, Function)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#disabledTypesRefuseNewBlocksButKeepExistingOnes(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">disabledTypesRefuseNewBlocksButKeepExistingOnes</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="InteractionChecks.html#disabledTypesRefuseNewBlocksButKeepExistingOnes(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.disabledTypesRefuseNewBlocksButKeepExistingOnes(GameTestHelper, Function)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#everyStackTypeBlocksPistons(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">everyStackTypeBlocksPistons</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="InteractionChecks.html#everyStackTypeBlocksPistons(net.minecraft.gametest.framework.GameTestHelper)"><code>InteractionChecks.everyStackTypeBlocksPistons(GameTestHelper)</code></a>.</div>
@@ -146,14 +171,14 @@ loadScripts(document, 'script');</script>
 <div class="block">See <a href="InteractionChecks.html#extractionRefusesIncompatibleOrFullHands(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.extractionRefusesIncompatibleOrFullHands(GameTestHelper, Function)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullTopFacePlacesTheSelectedStackType(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">fullTopFacePlacesTheSelectedStackType</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullMaxHeightDepositExplainsRefusal(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">fullMaxHeightDepositExplainsRefusal</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="InteractionChecks.html#fullTopFacePlacesTheSelectedStackType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.fullTopFacePlacesTheSelectedStackType(GameTestHelper, Function)</code></a>.</div>
+<div class="block">See <a href="InteractionChecks.html#fullMaxHeightDepositExplainsRefusal(net.minecraft.gametest.framework.GameTestHelper)"><code>InteractionChecks.fullMaxHeightDepositExplainsRefusal(GameTestHelper)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullTopFacesFallThroughToPlacement(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">fullTopFacesFallThroughToPlacement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullTopFacePlacesTheSelectedStackType(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">fullTopFacePlacesTheSelectedStackType</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="ClientGestureChecks.html#fullTopFacesFallThroughToPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ClientGestureChecks.fullTopFacesFallThroughToPlacement(GameTestHelper, Function)</code></a>.</div>
+<div class="block">See <a href="InteractionChecks.html#fullTopFacePlacesTheSelectedStackType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.fullTopFacePlacesTheSelectedStackType(GameTestHelper, Function)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#gestureStateTracksModeAndModifier(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">gestureStateTracksModeAndModifier</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -181,38 +206,43 @@ loadScripts(document, 'script');</script>
 <div class="block">See <a href="InteractionChecks.html#malformedGestureStateFailsDuringDecoding(net.minecraft.gametest.framework.GameTestHelper)"><code>InteractionChecks.malformedGestureStateFailsDuringDecoding(GameTestHelper)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#permanenceRequiresEmptyHandAndHonorsProtection(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">permanenceRequiresEmptyHandAndHonorsProtection</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maximumHeightRefusesGrowthAndHidesHeadroom(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">maximumHeightRefusesGrowthAndHidesHeadroom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="InteractionChecks.html#maximumHeightRefusesGrowthAndHidesHeadroom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.maximumHeightRefusesGrowthAndHidesHeadroom(GameTestHelper, Function)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#permanenceRequiresEmptyHandAndHonorsProtection(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">permanenceRequiresEmptyHandAndHonorsProtection</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="InteractionChecks.html#permanenceRequiresEmptyHandAndHonorsProtection(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.permanenceRequiresEmptyHandAndHonorsProtection(GameTestHelper, Function)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerMutationEmitsBlockChange(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerMutationEmitsBlockChange</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerMutationEmitsBlockChange(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerMutationEmitsBlockChange</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="InteractionChecks.html#playerMutationEmitsBlockChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.playerMutationEmitsBlockChange(GameTestHelper, Function)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerPlacementAwardsCriterionAfterDeposit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerPlacementAwardsCriterionAfterDeposit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerPlacementAwardsCriterionAfterDeposit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerPlacementAwardsCriterionAfterDeposit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="InteractionChecks.html#playerPlacementAwardsCriterionAfterDeposit(net.minecraft.gametest.framework.GameTestHelper)"><code>InteractionChecks.playerPlacementAwardsCriterionAfterDeposit(GameTestHelper)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rotationSoundThrottleSuppressesSameTickAndClears(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">rotationSoundThrottleSuppressesSameTickAndClears</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rotationSoundThrottleSuppressesSameTickAndClears(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">rotationSoundThrottleSuppressesSameTickAndClears</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="InteractionChecks.html#rotationSoundThrottleSuppressesSameTickAndClears(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.rotationSoundThrottleSuppressesSameTickAndClears(GameTestHelper, Function)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rotationValidatesHeldItemAndBlockType(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">rotationValidatesHeldItemAndBlockType</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rotationValidatesHeldItemAndBlockType(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">rotationValidatesHeldItemAndBlockType</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="InteractionChecks.html#rotationValidatesHeldItemAndBlockType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.rotationValidatesHeldItemAndBlockType(GameTestHelper, Function)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sneakingRotationsReachTheLoaderHook(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">sneakingRotationsReachTheLoaderHook</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="InteractionChecks.html#sneakingRotationsReachTheLoaderHook(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderBlockClick)"><code>InteractionChecks.sneakingRotationsReachTheLoaderHook(GameTestHelper, Function, InteractionChecks.LoaderBlockClick)</code></a>.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vanillaInteractionReachesDepositExtractAndPlacement(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">vanillaInteractionReachesDepositExtractAndPlacement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topFaceModifiedClicksAreConsumed(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">topFaceModifiedClicksAreConsumed</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="ClientGestureChecks.html#topFaceModifiedClicksAreConsumed(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ClientGestureChecks.topFaceModifiedClicksAreConsumed(GameTestHelper, Function)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vanillaInteractionReachesDepositExtractAndPlacement(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">vanillaInteractionReachesDepositExtractAndPlacement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="InteractionChecks.html#vanillaInteractionReachesDepositExtractAndPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.vanillaInteractionReachesDepositExtractAndPlacement(GameTestHelper, Function)</code></a>.</div>
 </div>
 </div>
@@ -232,6 +262,33 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="fullMaxHeightDepositExplainsRefusal(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>fullMaxHeightDepositExplainsRefusal</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullMaxHeightDepositExplainsRefusal</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="InteractionChecks.html#fullMaxHeightDepositExplainsRefusal(net.minecraft.gametest.framework.GameTestHelper)"><code>InteractionChecks.fullMaxHeightDepositExplainsRefusal(GameTestHelper)</code></a>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="adventurePlacementAndGrowthShareTheBuildCheck(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>adventurePlacementAndGrowthShareTheBuildCheck</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">adventurePlacementAndGrowthShareTheBuildCheck</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="InteractionChecks.html#adventurePlacementAndGrowthShareTheBuildCheck(net.minecraft.gametest.framework.GameTestHelper)"><code>InteractionChecks.adventurePlacementAndGrowthShareTheBuildCheck(GameTestHelper)</code></a>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="barGestureDepositRefusesNonIngots(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>barGestureDepositRefusesNonIngots</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barGestureDepositRefusesNonIngots</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="InteractionChecks.html#barGestureDepositRefusesNonIngots(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.barGestureDepositRefusesNonIngots(GameTestHelper, Function)</code></a>.</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="playerPlacementAwardsCriterionAfterDeposit(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>playerPlacementAwardsCriterionAfterDeposit</h3>
@@ -274,15 +331,6 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">rotationValidatesHeldItemAndBlockType</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">See <a href="InteractionChecks.html#rotationValidatesHeldItemAndBlockType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.rotationValidatesHeldItemAndBlockType(GameTestHelper, Function)</code></a>.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="sneakingRotationsReachTheLoaderHook(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>sneakingRotationsReachTheLoaderHook</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sneakingRotationsReachTheLoaderHook</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="InteractionChecks.html#sneakingRotationsReachTheLoaderHook(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderBlockClick)"><code>InteractionChecks.sneakingRotationsReachTheLoaderHook(GameTestHelper, Function, InteractionChecks.LoaderBlockClick)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -395,11 +443,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="fullTopFacesFallThroughToPlacement(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>fullTopFacesFallThroughToPlacement</h3>
+<section class="detail" id="topFaceModifiedClicksAreConsumed(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>topFaceModifiedClicksAreConsumed</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullTopFacesFallThroughToPlacement</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="ClientGestureChecks.html#fullTopFacesFallThroughToPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ClientGestureChecks.fullTopFacesFallThroughToPlacement(GameTestHelper, Function)</code></a>.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">topFaceModifiedClicksAreConsumed</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="ClientGestureChecks.html#topFaceModifiedClicksAreConsumed(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ClientGestureChecks.topFaceModifiedClicksAreConsumed(GameTestHelper, Function)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -418,6 +466,33 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">gestureSyncSendsChangesAndResets</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">See <a href="ClientGestureChecks.html#gestureSyncSendsChangesAndResets(net.minecraft.gametest.framework.GameTestHelper)"><code>ClientGestureChecks.gestureSyncSendsChangesAndResets(GameTestHelper)</code></a>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="disabledTypesRefuseNewBlocksButKeepExistingOnes(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>disabledTypesRefuseNewBlocksButKeepExistingOnes</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">disabledTypesRefuseNewBlocksButKeepExistingOnes</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="InteractionChecks.html#disabledTypesRefuseNewBlocksButKeepExistingOnes(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.disabledTypesRefuseNewBlocksButKeepExistingOnes(GameTestHelper, Function)</code></a>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="maximumHeightRefusesGrowthAndHidesHeadroom(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>maximumHeightRefusesGrowthAndHidesHeadroom</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">maximumHeightRefusesGrowthAndHidesHeadroom</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="InteractionChecks.html#maximumHeightRefusesGrowthAndHidesHeadroom(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.maximumHeightRefusesGrowthAndHidesHeadroom(GameTestHelper, Function)</code></a>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="InteractionChecks.html#deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>InteractionChecks.deniedItemsRefuseDepositsAndOnlyModDenialStopsAutomation(GameTestHelper, Function)</code></a>.</div>
 </div>
 </section>
 </li>

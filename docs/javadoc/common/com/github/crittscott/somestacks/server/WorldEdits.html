@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#isProtected(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" tabindex="0">isProtected(ServerPlayer, BlockPos)</a></li>
-<li><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" tabindex="0">mayPlace(ServerPlayer, ServerLevel, BlockPos)</a></li>
+<li><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)" tabindex="0">mayPlace(ServerPlayer, ServerLevel, BlockPos, Direction)</a></li>
 <li><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" tabindex="0">mayUseAdjacent(ServerPlayer, BlockPos)</a></li>
 <li><a href="#consulting(java.util.function.BooleanSupplier)" tabindex="0">consulting(BooleanSupplier)</a></li>
 <li><a href="#isConsultingAdjacent()" tabindex="0">isConsultingAdjacent()</a></li>
@@ -84,9 +84,9 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">WorldEdits</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Vanilla world-edit mechanics for stack growth and removal: world border and spawn protection,
-entity obstruction, actor propagation, and the actual block edit. Automation identity and
-loader-native claim/logging hooks are delegated to <a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server"><code>EditAuthority</code></a>.</div>
+<div class="block">Vanilla world-edit mechanics for stack placement, growth, and removal: the one placement gate,
+world border and spawn protection, entity obstruction, actor propagation, and the actual block
+edit. Automation identity and loader-native claim/logging hooks are delegated to <a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server"><code>EditAuthority</code></a>.</div>
 </div>
 </section>
 <section class="summary">
@@ -128,7 +128,9 @@ running so a listener cannot re-enter a stack gesture through it.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isConsultingAdjacent()" class="member-name-link">isConsultingAdjacent</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether this thread is inside <a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)"><code>mayUseAdjacent(ServerPlayer, BlockPos)</code></a>'s consultation of other listeners.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isProtected(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">isProtected</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
@@ -143,11 +145,15 @@ running so a listener cannot re-enter a stack gesture through it.</div>
 <div class="block">Vanilla's placement obstruction test for a block-local collision shape.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;source,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;source,
  net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.core.Direction&nbsp;placedAgainst)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Vanilla and loader queries before growth can promise capacity.</div>
+<div class="block">The one gate on putting a block at <code>pos</code>, without side effects: build height,
+replaceability, vanilla's item-placement check (<code>Player.mayUseItemAt(BlockPos, Direction, ItemStack)</code>) for the
+actor's main-hand item against the block at <code>pos.relative(placedAgainst)</code>, world border
+and spawn protection, and the loader's protection queries.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseAdjacent</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
@@ -163,7 +169,7 @@ running so a listener cannot re-enter a stack gesture through it.</div>
  net.minecraft.core.Direction&nbsp;placedAgainst,
  net.minecraft.world.phys.shapes.VoxelShape&nbsp;finalCollision)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Places <code>state</code> at <code>pos</code>.</div>
+<div class="block">Places <code>state</code> at <code>pos</code> after <a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)"><code>mayPlace(ServerPlayer, ServerLevel, BlockPos, Direction)</code></a> and an obstruction test.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">removeChecked</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;source,
@@ -201,14 +207,30 @@ vanilla protection, loader-native removal events, and the emitted game event.</d
 </section>
 </li>
 <li>
-<section class="detail" id="mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
+<section class="detail" id="mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)">
 <h3>mayPlace</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayPlace</span><wbr><span class="parameters">(@Nullable
  net.minecraft.server.level.ServerPlayer&nbsp;source,
  net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Vanilla and loader queries before growth can promise capacity.</div>
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.core.Direction&nbsp;placedAgainst)</span></div>
+<div class="block">The one gate on putting a block at <code>pos</code>, without side effects: build height,
+replaceability, vanilla's item-placement check (<code>Player.mayUseItemAt(BlockPos, Direction, ItemStack)</code>) for the
+actor's main-hand item against the block at <code>pos.relative(placedAgainst)</code>, world border
+and spawn protection, and the loader's protection queries. <a href="#placeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction,net.minecraft.world.phys.shapes.VoxelShape)"><code>placeChecked(ServerPlayer, ServerLevel, BlockPos, BlockState, Direction, VoxelShape)</code></a> applies it to
+every placement; player placement and growth simulation ask it first, so they refuse before
+promising anything. A null actor uses the level's automation identity.
+
+<p>The item-placement check rather than <code>mayBuild</code> alone is what an Adventure mode
+player's <code>can_place_on</code> item answers to, so a player who may place a stack by gesture
+may also grow one by depositing that item. Automation holds nothing, so only its build ability
+counts. Spawn protection exempts operators, so the answer depends on the actor.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>placedAgainst</code> - the direction from <code>pos</code> to the block the new one is placed
+    against</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -237,6 +259,8 @@ running so a listener cannot re-enter a stack gesture through it.</div>
 <h3>isConsultingAdjacent</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isConsultingAdjacent</span>()</div>
+<div class="block">Whether this thread is inside <a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)"><code>mayUseAdjacent(ServerPlayer, BlockPos)</code></a>'s consultation of other listeners. Every
+gesture entry point refuses while it is set, so a consulted listener cannot start a gesture.</div>
 </div>
 </section>
 </li>
@@ -281,11 +305,11 @@ running so a listener cannot re-enter a stack gesture through it.</div>
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.core.Direction&nbsp;placedAgainst,
  net.minecraft.world.phys.shapes.VoxelShape&nbsp;finalCollision)</span></div>
-<div class="block">Places <code>state</code> at <code>pos</code>. Loader checks that can run as queries happen before the
-world changes; loader placement transactions defer publication until protection accepts the
-edit, restoring captured state and block-entity data on denial. <code>finalCollision</code> is the
-completed placement's collision shape, since a block-entity stack can start empty and acquire
-its real shape only with its first deposit.</div>
+<div class="block">Places <code>state</code> at <code>pos</code> after <a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.Direction)"><code>mayPlace(ServerPlayer, ServerLevel, BlockPos, Direction)</code></a> and an obstruction test. Loader
+placement transactions defer publication until protection accepts the edit, restoring
+captured state and block-entity data on denial. <code>finalCollision</code> is the completed
+placement's collision shape, since a block-entity stack can start empty and acquire its real
+shape only with its first deposit. A null placer uses the level's automation identity.</div>
 </div>
 </section>
 </li>
@@ -296,7 +320,8 @@ its real shape only with its first deposit.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">completePlacement</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;placer,
  net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Finishes loader-accepted placement with the actor callback and one placement game event.</div>
+<div class="block">Finishes loader-accepted placement with the actor callback and one placement game event.
+NeoForge's deferred automation growth calls it once a transfer commit publishes the block.</div>
 </div>
 </section>
 </li>

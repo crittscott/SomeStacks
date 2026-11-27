@@ -59,9 +59,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#enum-constant-detail" tabindex="0">Enum Constant Details</a>
 <ol class="toc-list">
-<li><a href="#STORAGE_STACK" tabindex="0">STORAGE_STACK</a></li>
-<li><a href="#SINGLES_STACK" tabindex="0">SINGLES_STACK</a></li>
 <li><a href="#BAR_STACK" tabindex="0">BAR_STACK</a></li>
+<li><a href="#SINGLES_STACK" tabindex="0">SINGLES_STACK</a></li>
+<li><a href="#STORAGE_STACK" tabindex="0">STORAGE_STACK</a></li>
 <li><a href="#TOGGLE_PERMANENT" tabindex="0">TOGGLE_PERMANENT</a></li>
 </ol>
 </li>
@@ -74,9 +74,10 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#values()" tabindex="0">values()</a></li>
 <li><a href="#valueOf(java.lang.String)" tabindex="0">valueOf(String)</a></li>
-<li><a href="#fromOrdinal(int)" tabindex="0">fromOrdinal(int)</a></li>
 <li><a href="#getTranslationKey()" tabindex="0">getTranslationKey()</a></li>
+<li><a href="#id()" tabindex="0">id()</a></li>
 <li><a href="#isBlockType()" tabindex="0">isBlockType()</a></li>
+<li><a href="#next()" tabindex="0">next()</a></li>
 <li><a href="#toBlockType()" tabindex="0">toBlockType()</a></li>
 </ol>
 </li>
@@ -102,11 +103,13 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public enum </span><span class="element-name type-name-label">StackMode</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&gt;</span></div>
 <div class="block">What the placement modifier does next, as cycled by the mode gesture: place one of the three
-stack types, or toggle a Storage pile's permanence. Client-side selection state only; the server
-learns the choice from the packet the gesture sends.
+stack types, or toggle a Storage pile's permanence. It is the client's selected mode and the
+server's record of it (<code>ServerGestureState</code>); the client sends it in a <code>
+GestureStatePkt</code> when it changes.
 
 <p>Toggle Permanent is a mode but not a stack type, so <a href="#toBlockType()"><code>toBlockType()</code></a> rejects it and
-<a href="#isBlockType()"><code>isBlockType()</code></a> is how callers ask first.</div>
+<a href="#isBlockType()"><code>isBlockType()</code></a> is how callers ask first. The wire id and the cycle order are explicit, so
+the constants can be reordered freely.</div>
 </div>
 </section>
 <section class="summary">
@@ -150,7 +153,9 @@ learns the choice from the packet the gesture sends.
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static final net.minecraft.network.codec.StreamCodec<wbr>&lt;io.netty.buffer.ByteBuf, <a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#STREAM_CODEC" class="member-name-link">STREAM_CODEC</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Encodes <a href="#id()"><code>id()</code></a>; decoding an id no mode has fails.</div>
+</div>
 </div>
 </section>
 </li>
@@ -165,26 +170,33 @@ learns the choice from the packet the gesture sends.
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromOrdinal(int)" class="member-name-link">fromOrdinal</a><wbr>(int&nbsp;ordinal)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTranslationKey()" class="member-name-link">getTranslationKey</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTranslationKey()" class="member-name-link">getTranslationKey</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#id()" class="member-name-link">id</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The stable id this mode has in the gesture-state packet.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isBlockType()" class="member-name-link">isBlockType</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toBlockType()" class="member-name-link">toBlockType</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#next()" class="member-name-link">next</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The mode after this one in the mode gesture's cycle.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toBlockType()" class="member-name-link">toBlockType</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#values()" class="member-name-link">values</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#values()" class="member-name-link">values</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
 </div>
@@ -209,10 +221,10 @@ the order they are declared.</div>
 <h2>Enum Constant Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="STORAGE_STACK">
-<h3>STORAGE_STACK</h3>
+<section class="detail" id="BAR_STACK">
+<h3>BAR_STACK</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></span>&nbsp;<span class="element-name">STORAGE_STACK</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></span>&nbsp;<span class="element-name">BAR_STACK</span></div>
 </div>
 </section>
 </li>
@@ -225,10 +237,10 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="BAR_STACK">
-<h3>BAR_STACK</h3>
+<section class="detail" id="STORAGE_STACK">
+<h3>STORAGE_STACK</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></span>&nbsp;<span class="element-name">BAR_STACK</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></span>&nbsp;<span class="element-name">STORAGE_STACK</span></div>
 </div>
 </section>
 </li>
@@ -253,6 +265,7 @@ the order they are declared.</div>
 <h3>STREAM_CODEC</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.network.codec.StreamCodec&lt;io.netty.buffer.ByteBuf, <a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&gt;</span>&nbsp;<span class="element-name">STREAM_CODEC</span></div>
+<div class="block">Encodes <a href="#id()"><code>id()</code></a>; decoding an id no mode has fails.</div>
 </div>
 </section>
 </li>
@@ -300,14 +313,6 @@ not permitted.)</div>
 </section>
 </li>
 <li>
-<section class="detail" id="fromOrdinal(int)">
-<h3>fromOrdinal</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></span>&nbsp;<span class="element-name">fromOrdinal</span><wbr><span class="parameters">(int&nbsp;ordinal)</span></div>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="getTranslationKey()">
 <h3>getTranslationKey</h3>
 <div class="horizontal-scroll">
@@ -316,10 +321,28 @@ not permitted.)</div>
 </section>
 </li>
 <li>
+<section class="detail" id="id()">
+<h3>id</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">id</span>()</div>
+<div class="block">The stable id this mode has in the gesture-state packet.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="isBlockType()">
 <h3>isBlockType</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isBlockType</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="next()">
+<h3>next</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></span>&nbsp;<span class="element-name">next</span>()</div>
+<div class="block">The mode after this one in the mode gesture's cycle.</div>
 </div>
 </section>
 </li>
