@@ -22,6 +22,7 @@ These decisions apply across release checkouts where the relevant behavior exist
 
 - There is one command root: /ss. Keep the client/server routing needed to support it, including the client-side `/ss item` and `/ss write`. Do not propose a second root to simplify the code.
 - Code complexity may support a simpler player interface.
+- The current click handling is accepted as it is. A right-click on a stack that matches no gesture is consumed rather than passed to the held item; do not propose returning `PASS` or otherwise changing which clicks the mod claims. Refactors of the gesture code must keep every click's current outcome on both client and server.
 
 ## Data and networking
 
